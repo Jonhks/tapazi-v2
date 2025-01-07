@@ -1,0 +1,23 @@
+.container {
+  background-image: url("../assets/img/basketballBG.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  min-height: 1000px;
+  height: fit-content;
+  display: flex;
+  justify-content: center;
+}
+
+.containerApp {
+  background-image: url("../assets/img/home.jpeg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: left;
+  width: 100%;
+  min-height: 1100px;
+  height: fit-content;
+  /* display: flex;
+  justify-content: space-evenly; */
+}
