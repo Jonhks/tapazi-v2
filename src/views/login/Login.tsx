@@ -11,9 +11,46 @@ import classes from "./Login.module.css";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import HttpsIcon from "@mui/icons-material/Https";
 import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { UserLogin } from "@/types/index";
+import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import { useMutation } from "@tanstack/react-query";
+import { getLogin } from "@/api/AuthAPI";
+import { toast } from "react-toastify";
 
 const Login = () => {
   const navigate = useNavigate();
+  const initialValues: UserLogin = {
+    email: "",
+    password: "",
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserLogin>({ defaultValues: initialValues });
+
+  const { mutate } = useMutation({
+    mutationFn: getLogin,
+    onSuccess: (data) => {
+      if (!data.success) {
+        toast.error(data.error.description);
+      } else {
+        toast.success("User successfully logged in");
+        localStorage.setItem("userTapaszi", JSON.stringify(data?.data));
+        navigate(`/home/${data.data.id}`, {
+          replace: true,
+        });
+      }
+    },
+    onError: (err) => toast.error(err.message),
+  });
+
+  const handleRegister = (formData: UserLogin) => {
+    mutate(formData);
+  };
+
   return (
     <Grid
       container
@@ -44,62 +81,67 @@ const Login = () => {
                   display={"flex"}
                   className={classes.form}
                 >
-                  <Input
-                    required
-                    type={"e-mail"}
-                    sx={{ width: "80%", m: 2 }}
-                    id="input-with-icon-adornment"
-                    name="user"
-                    placeholder="E-mail or Username"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <MailOutlineIcon color="inherit" />
-                      </InputAdornment>
-                    }
-                    // onChange={(e) => getUserData(e)}
-                  />
-                  <Input
-                    required
-                    type={"password"}
-                    sx={{ width: "80%", m: 2 }}
-                    id="input-with-icon-adornment"
-                    name="password"
-                    placeholder="Password"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <HttpsIcon color="inherit" />
-                      </InputAdornment>
-                    }
-                    // onChange={(e) => getUserData(e)}
-                  />
-                  <div className={classes.containerCheckBox}>
-                    <span onClick={() => navigate("/forgot")}>
-                      Forgot password?
-                    </span>
-                  </div>
-                  <Grid
-                    size={12}
-                    display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    flexDirection={"column"}
-                    className={classes.containerBtnLogin}
+                  <form
+                    onSubmit={handleSubmit(handleRegister)}
+                    noValidate
                   >
-                    <Button
-                      variant="contained"
-                      // onClick={() => validateForm()}
-                      sx={{ m: 2 }}
+                    <Input
+                      required
+                      type={"e-mail"}
+                      sx={{ width: "80%", m: 2 }}
+                      id="input-with-icon-adornment-1"
+                      placeholder="E-mail or Username"
+                      color={"warning"}
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <MailOutlineIcon color="inherit" />
+                        </InputAdornment>
+                      }
+                      {...register("email", {
+                        required: "The user is required",
+                      })}
+                    />
+                    <Input
+                      required
+                      type={"password"}
+                      sx={{ width: "80%", m: 2 }}
+                      id="input-with-icon-adornment"
+                      placeholder="Password"
+                      color={"warning"}
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <HttpsIcon color="inherit" />
+                        </InputAdornment>
+                      }
+                      {...register("password", {
+                        required: "The password is required",
+                      })}
+                    />
+                    <div className={classes.containerCheckBox}>
+                      <span onClick={() => navigate("/forgot")}>
+                        Forgot password?
+                      </span>
+                    </div>
+                    <Grid
+                      size={12}
+                      display={"flex"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      flexDirection={"column"}
+                      className={classes.containerBtnLogin}
                     >
-                      Login
-                    </Button>
-                    {/* {error && (
-                      <div>
-                        <p className={classes.error}>
-                          All fields are mandatory
-                        </p>
-                      </div>
-                    )} */}
-                  </Grid>
+                      {!!Object.keys(errors).length && (
+                        <ErrorMessage>{"All fields are required"}</ErrorMessage>
+                      )}
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ m: 2 }}
+                      >
+                        Login
+                      </Button>
+                    </Grid>
+                  </form>
                 </Grid>
               </div>
               <div className={classes.containerSignUp}>

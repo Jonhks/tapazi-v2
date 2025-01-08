@@ -6,6 +6,7 @@ import Signup from "@/views/login/SignUp";
 import Forgot from "./views/login/Forgot";
 import AppLayout from "@/layouts/AppLayout";
 import Home from "./views/home/Home";
+import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 
 const Router = () => {
   return (
@@ -32,8 +33,12 @@ const Router = () => {
 
         <Route element={<AppLayout />}>
           <Route
-            path="/home"
-            element={<Home />}
+            path="/home/:userId"
+            element={
+              <PrivateRoute>
+                <Home />
+              </PrivateRoute>
+            }
           />
         </Route>
       </Routes>

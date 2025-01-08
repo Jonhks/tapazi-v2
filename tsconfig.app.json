@@ -12,7 +12,9 @@
       "@/layouts/*": ["layouts/*"],
       "@/assets/*": ["assets/*"],
       "@/api/*": ["api/*"],
-      "@/lib/*": ["lib/*"]
+      "@/lib/*": ["lib/*"],
+      "@/types/*": ["types/*"],
+      "@/hooks/*": ["hooks/*"]
     },
 
     /* Bundler mode */

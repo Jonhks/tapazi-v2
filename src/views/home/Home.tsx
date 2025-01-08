@@ -2,24 +2,24 @@ import { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { Zoom } from "@mui/material";
 import classes from "./Home.module.css";
-// import Table from "@/components/Table/Table";
+import Table from "@/components/Table/Table";
 // import HomeContext from "../../../context/HomeContext";
 import BallLoader from "@/components/BallLoader/BallLoader";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import { getScores } from "@/api/HomeAPI";
 
 const Home = () => {
+  const params = useParams();
+  const userId = params.userId!;
   const [selected, setSelected] = useState("first");
-  // const {
-  //   participantScore,
-  //   othersParticipants,
-  //   popona,
-  //   portfFoliosCount,
-  //   participantsCount,
-  //   arrPayout,
-  //   isLoading,
-  // } = useContext(HomeContext);
-  // console.log(isLoading);
-  // const selected = "first";
-  const isLoading = false;
+  const { data, isLoading } = useQuery({
+    queryKey: ["scores", userId],
+    queryFn: () => getScores(userId),
+  });
+
+  console.log(data);
+
   return (
     <>
       {isLoading ? (
@@ -131,10 +131,10 @@ const Home = () => {
             ></Grid>
             <Zoom in={true}>
               <Grid size={12}>
-                {/* <Table
-                  participantScore={participantScore}
-                  othersParticipants={othersParticipants}
-                /> */}
+                <Table
+                  participantScore={data.data.participant}
+                  othersParticipants={data.data.others}
+                />
               </Grid>
             </Zoom>
           </Grid>

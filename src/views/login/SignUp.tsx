@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import { useForm } from "react-hook-form";
-
 import {
   Container,
   Slide,
@@ -10,26 +9,36 @@ import {
   Input,
   InputAdornment,
   FormControl,
-  // InputLabel,
-  // Select,
-  // MenuItem,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import HttpsIcon from "@mui/icons-material/Https";
-// import FlagIcon from "@mui/icons-material/Flag";
+import FlagIcon from "@mui/icons-material/Flag";
 import PersonIcon from "@mui/icons-material/Person";
 import SecurityIcon from "@mui/icons-material/Security";
 import classes from "./Login.module.css";
-import { User } from "types";
+import { State, User } from "types";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
-import { useMutation } from "@tanstack/react-query";
-import { getSignUp } from "@/api/AuthAPI";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getSignUp, getStates } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
+import Loader from "@/components/BallLoader/BallLoader";
+import { useState } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
+  const [select, setSelect] = useState("");
+
+  const { data: states, isLoading } = useQuery({
+    queryKey: ["states"],
+    queryFn: getStates,
+    retry: false,
+  });
 
   const initialValues: User = {
+    id: "",
     name: "",
     surname: "",
     email: "",
@@ -42,24 +51,22 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    // watch,
-    // reset,
     formState: { errors },
   } = useForm<User>({ defaultValues: initialValues });
 
   const { mutate } = useMutation({
     mutationFn: getSignUp,
-    onSuccess: (resp) => {
-      console.log(resp);
-
-      toast.success("Usuario registrado");
+    onSuccess: () => {
+      toast.success("User registered");
     },
-    onError: (error) => toast.error(error.message),
+    onError: () => toast.error("An error has occurred"),
   });
 
   const handleRegister = (formData: User) => {
     mutate(formData);
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <Slide
@@ -93,7 +100,7 @@ const Login = () => {
                     required
                     type={"text"}
                     sx={{ width: "80%", m: 2 }}
-                    // name="name"
+                    color={"warning"}
                     placeholder="First Name"
                     startAdornment={
                       <InputAdornment position="start">
@@ -106,6 +113,7 @@ const Login = () => {
                   />
                   <Input
                     required
+                    color={"warning"}
                     type={"text"}
                     sx={{ width: "80%", m: 2 }}
                     placeholder="Last Name"
@@ -122,6 +130,7 @@ const Login = () => {
                     required
                     type={"e-mail"}
                     sx={{ width: "80%", m: 2 }}
+                    color={"warning"}
                     placeholder="E-mail"
                     startAdornment={
                       <InputAdornment position="start">
@@ -140,47 +149,42 @@ const Login = () => {
                     variant="standard"
                     sx={{ m: 1, minWidth: "80%" }}
                   >
-                    {/* <InputLabel className={classes.selectClass}>
+                    <InputLabel className={classes.selectClass}>
                       <FlagIcon color="inherit" />
                       State
-                    </InputLabel> */}
-                    {/* <Select
+                    </InputLabel>
+                    <Select
                       labelId="demo-simple-select-standard-label"
-                      onChange={() => {
-                        // handleChange(e);
-                        // getUserData(e);
-                      }}
-                      // name="stateId"
-                      // label="State"
-                      // placeholder="State"
+                      id="demo-simple-select-standard"
+                      color={"warning"}
+                      label="State"
                       className={classes.selectClass}
+                      value={select}
+                      {...register("stateId", {
+                        required: "The stateId is required",
+                      })}
+                      onChange={(e) => setSelect(e.target.value)}
                     >
-                      <MenuItem
-                        // key={state?.id}
-                        // id={state?.id}
-                        value={""}
-                      >
-                        {"state?.name"}
-                      </MenuItem>
                       {states &&
-                        states?.map((state) => {
+                        states?.map((state: State) => {
                           return (
                             <MenuItem
-                              key={state?.id}
-                              id={state?.id}
+                              key={state?.id.toString()}
                               value={state?.id}
+                              style={{ fontSize: ".7rem" }}
                             >
                               {state?.name}
                             </MenuItem>
                           );
                         })}
-                    </Select> */}
+                    </Select>
                   </FormControl>
                   <Input
                     required
                     type={"e-mail"}
                     sx={{ width: "80%", m: 2 }}
                     placeholder="Username"
+                    color={"warning"}
                     startAdornment={
                       <InputAdornment position="start">
                         <PersonIcon color="inherit" />
@@ -195,6 +199,7 @@ const Login = () => {
                     type={"password"}
                     sx={{ width: "80%", m: 2 }}
                     placeholder="Password"
+                    color={"warning"}
                     startAdornment={
                       <InputAdornment position="start">
                         <HttpsIcon color="inherit" />
@@ -209,6 +214,7 @@ const Login = () => {
                     type={"password"}
                     sx={{ width: "80%", m: 2 }}
                     placeholder="Code"
+                    color={"warning"}
                     startAdornment={
                       <InputAdornment position="start">
                         <SecurityIcon color="inherit" />

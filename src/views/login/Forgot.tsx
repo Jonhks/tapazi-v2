@@ -1,8 +1,4 @@
-// import React, { useState, useContext } from "react";
-// import * as alertify from "alertifyjs";
-// import "alertifyjs/build/css/alertify.css";
 import { useNavigate } from "react-router-dom";
-// import UserContext from "../../../context/UserContext";
 import Grid from "@mui/material/Grid2";
 
 import {
@@ -16,32 +12,37 @@ import {
 } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import classes from "./Login.module.css";
+import { UserForgot } from "@/types/index";
+import { useForm } from "react-hook-form";
+import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import { useMutation } from "@tanstack/react-query";
+import { postForgot } from "@/api/AuthAPI";
+import { toast } from "react-toastify";
 
 const Forgot = () => {
   const navigate = useNavigate();
-  // const [userData, setUserData] = useState({});
-  // const [error, setError] = useState(false);
-  // const { postForgot } = useContext(UserContext);
 
-  // const getUserData = (e) => {
-  //   setUserData({
-  //     ...userData,
-  //     [e?.target?.name]: e?.target.value,
-  //   });
-  // };
+  const initialValues: UserForgot = {
+    email: "",
+  };
 
-  // const validateForm = () => {
-  //   setError(true);
-  //   const { user } = userData;
-  //   if (user && user?.length >= 2) {
-  //     setError(false);
-  //     postForgot(userData);
-  //   } else {
-  //     setError(true);
-  //     alertify.error("All fields are mandatory!!");
-  //     setTimeout(() => setError(false), 2000);
-  //   }
-  // };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<UserForgot>({ defaultValues: initialValues });
+
+  const { mutate } = useMutation({
+    mutationFn: postForgot,
+    onSuccess: () => {
+      toast.success("your new password has been sent");
+    },
+    onError: () => toast.error("An error has occurred"),
+  });
+
+  const handleRegister = (formData: UserForgot) => {
+    mutate(formData);
+  };
 
   return (
     <Grid
@@ -72,57 +73,60 @@ const Forgot = () => {
                 </p>
               </div>
               <div className={classes.containerForm}>
-                <Grid
-                  size={12}
-                  display={"flex"}
-                  className={classes.form}
+                <form
+                  onSubmit={handleSubmit(handleRegister)}
+                  noValidate
                 >
-                  <Input
-                    required
-                    type={"e-mail"}
-                    sx={{ width: "80%", m: 2 }}
-                    id="input-with-icon-adornment"
-                    name="user"
-                    placeholder="E-mail or Username"
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <MailOutlineIcon color="inherit" />
-                      </InputAdornment>
-                    }
-                    // onChange={(e) => getUserData(e)}
-                  />
                   <Grid
                     size={12}
                     display={"flex"}
-                    justifyContent={"center"}
-                    alignItems={"center"}
-                    flexDirection={"column"}
-                    className={classes.containerBtnLogin}
+                    className={classes.form}
                   >
-                    <Button
-                      variant="contained"
-                      // onClick={() => validateForm()}
-                      sx={{ m: 2 }}
+                    <Input
+                      required
+                      type={"e-mail"}
+                      sx={{ width: "80%", m: 2 }}
+                      color={"warning"}
+                      id="input-with-icon-adornment"
+                      placeholder="E-mail or Username"
+                      startAdornment={
+                        <InputAdornment position="start">
+                          <MailOutlineIcon color="inherit" />
+                        </InputAdornment>
+                      }
+                      {...register("email", {
+                        required: "The email is required",
+                      })}
+                    />
+                    <Grid
+                      size={12}
+                      display={"flex"}
+                      justifyContent={"center"}
+                      alignItems={"center"}
+                      flexDirection={"column"}
+                      className={classes.containerBtnLogin}
                     >
-                      Send
-                    </Button>
-                    {/* {error && (
-                      <div>
-                        <p className={classes.error}>
-                          All fields are mandatory
-                        </p>
-                      </div>
-                    )} */}
+                      {!!Object.keys(errors).length && (
+                        <ErrorMessage>{"All fields are required"}</ErrorMessage>
+                      )}
+                      <Button
+                        type="submit"
+                        variant="contained"
+                        sx={{ m: 2 }}
+                      >
+                        Send
+                      </Button>
+                    </Grid>
+                    <div
+                      className={classes.containerCheckBox}
+                      style={{ textAlign: "center" }}
+                    >
+                      <span onClick={() => navigate("/login")}>
+                        {"<"} Back to Login
+                      </span>
+                    </div>
                   </Grid>
-                  <div
-                    className={classes.containerCheckBox}
-                    style={{ textAlign: "center" }}
-                  >
-                    <span onClick={() => navigate("/login")}>
-                      {"<"} Back to Login
-                    </span>
-                  </div>
-                </Grid>
+                </form>
               </div>
             </Box>
           </Container>
