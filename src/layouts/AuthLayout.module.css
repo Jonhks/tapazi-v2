@@ -13,11 +13,9 @@
 .containerApp {
   background-image: url("../assets/img/home.jpeg");
   background-size: cover;
-  background-repeat: no-repeat;
+  background-repeat: space;
   background-position: left;
   width: 100%;
   min-height: 1100px;
   height: fit-content;
-  /* display: flex;
-  justify-content: space-evenly; */
 }

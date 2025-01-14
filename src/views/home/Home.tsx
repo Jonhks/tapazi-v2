@@ -8,17 +8,19 @@ import BallLoader from "@/components/BallLoader/BallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { getScores } from "@/api/HomeAPI";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const Home = () => {
+  const isMobile = useMediaQuery("(max-width:800px)");
+
   const params = useParams();
   const userId = params.userId!;
+
   const [selected, setSelected] = useState("first");
   const { data, isLoading } = useQuery({
     queryKey: ["scores", userId],
     queryFn: () => getScores(userId),
   });
-
-  console.log(data);
 
   return (
     <>
@@ -31,6 +33,7 @@ const Home = () => {
             spacing={1}
             flexWrap={"wrap"}
             justifyContent={"center"}
+            ml={!isMobile ? "25px" : 0}
           >
             <Grid
               size={{ xs: 12, md: 5 }}
@@ -124,13 +127,17 @@ const Home = () => {
           <Grid
             container
             spacing={2}
+            mb={3}
           >
             <Grid
               size={12}
               className={classes.containerBtn}
             ></Grid>
             <Zoom in={true}>
-              <Grid size={12}>
+              <Grid
+                size={11}
+                offset={0.5}
+              >
                 <Table
                   participantScore={data.data.participant}
                   othersParticipants={data.data.others}

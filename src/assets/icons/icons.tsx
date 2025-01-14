@@ -1,5 +1,3 @@
-import React from "react";
-
 export const BasquetIcon = () => {
   return (
     <svg
@@ -10,7 +8,7 @@ export const BasquetIcon = () => {
     >
       <g
         id="SVGRepo_bgCarrier"
-        strokeidth="0"
+        // strokeidth="0"
       ></g>
       <g
         id="SVGRepo_tracerCarrier"
@@ -42,7 +40,7 @@ export const PodiumIcon = () => (
   >
     <g
       id="SVGRepo_bgCarrier"
-      strokeidth="0"
+      // strokeidth="0"
     ></g>
     <g
       id="SVGRepo_tracerCarrier"

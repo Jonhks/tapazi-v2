@@ -122,13 +122,13 @@ export default function CustomizedTables({
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "transparent" }}
+      sx={{ backgroundColor: "transparent", maxHeight: "580px" }}
     >
       <Table
         sx={{ minWidth: 100, opacity: ".87" }}
         aria-label="customized table"
       >
-        <TableHead>
+        <TableHead sx={{ position: "sticky", top: 0 }}>
           <TableRow className={classes?.tableRow}>
             <StyledTableCell>Portfolio Name</StyledTableCell>
             <StyledTableCell>Portfolio Weight</StyledTableCell>
@@ -151,7 +151,6 @@ export default function CustomizedTables({
                 component="th"
                 scope="row"
               >
-                {/* {console.log(row)} */}
                 {row?.portfolioName}
               </StyledTableCell>
               <StyledTableCell>{row?.portfolioWeight}</StyledTableCell>
