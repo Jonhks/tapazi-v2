@@ -17,8 +17,8 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import Grid from "@mui/material/Grid";
-import { useNavigate } from "react-router-dom";
+import Grid from "@mui/material/Grid2";
+import { useNavigate, useParams } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import HistoryIcon from "@mui/icons-material/History";
@@ -104,6 +104,8 @@ export default function MiniDrawer() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const params = useParams();
+  const userId = params.userId!;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -113,11 +115,10 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
-  // const removeUser = () => {
-  //   localStorage.removeItem("userTapaszi");
-  //   setIsAuthenticated(false);
-  //   navigate("/login");
-  // };
+  const removeUser = () => {
+    localStorage.removeItem("userTapaszi");
+    navigate("/login");
+  };
 
   const Icons = [
     <BallIcon key="ball" />,
@@ -129,7 +130,6 @@ export default function MiniDrawer() {
 
   return (
     <>
-      {/* {!hideMenu ? ( */}
       <Box
         sx={{ display: "flex" }}
         className={classes.containerHome}
@@ -175,16 +175,13 @@ export default function MiniDrawer() {
           )}
           <List>
             {[
-              { text: "Home", id: "home" },
-              { text: "My Portfolios", id: "myPorfolio" },
-              { text: "Instructions", id: "instructions" },
-              { text: "Stats & History", id: "history" },
+              { text: "Home", id: `home/${userId}` },
+              { text: "My Portfolios", id: `myPortfolio/${userId}` },
+              { text: "Instructions", id: `instructions/${userId}` },
+              { text: "Stats & History", id: `history/${userId}` },
               { text: "LogOut", id: "logOut" },
             ].map((el, index) => (
-              <Grid
-                item
-                key={index}
-              >
+              <Grid key={index}>
                 <Tooltip
                   title={el?.text}
                   placement="right"
@@ -199,9 +196,9 @@ export default function MiniDrawer() {
                         justifyContent: open ? "initial" : "center",
                         px: 2.5,
                       }}
-                      onClick={() => {
-                        // el?.id !== "logOut" ? navigate(el?.id) : removeUser();
-                      }}
+                      onClick={() =>
+                        el?.id !== "logOut" ? navigate(el?.id) : removeUser()
+                      }
                     >
                       <ListItemIcon
                         sx={{

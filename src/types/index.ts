@@ -53,3 +53,10 @@ export const scoresSchema = z.object({
 export type ScoresOthers = z.infer<typeof scoresSchema>;
 export type OtherScores = z.infer<typeof otherSchema>;
 export type ParticipantsScores = z.infer<typeof participantSchema>;
+
+export const PayOutSchema = z.object({
+  place: z.number(),
+  percentage: z.number(),
+});
+
+export type PayOut = z.infer<typeof PayOutSchema>;

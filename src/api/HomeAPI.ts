@@ -17,3 +17,75 @@ export const getScores = async (id: User["id"]) => {
     return;
   }
 };
+
+export const getPopona = async () => {
+  try {
+    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=POPONA`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (data.success) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getParticipants = async () => {
+  try {
+    const url = `/participants/count?api-key=TESTAPIKEY`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (data.success) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getPortfoliosCount = async () => {
+  try {
+    const url = `/portfolios/count?api-key=TESTAPIKEY`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (data.success) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const gatPayout = async (portfFoliosCount: number) => {
+  try {
+    const url = `/payout?api-key=TESTAPIKEY&portfolios=${portfFoliosCount}`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (data.success) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

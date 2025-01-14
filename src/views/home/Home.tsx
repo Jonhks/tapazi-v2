@@ -3,12 +3,18 @@ import Grid from "@mui/material/Grid2";
 import { Zoom } from "@mui/material";
 import classes from "./Home.module.css";
 import Table from "@/components/Table/Table";
-// import HomeContext from "../../../context/HomeContext";
 import BallLoader from "@/components/BallLoader/BallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { getScores } from "@/api/HomeAPI";
+import {
+  gatPayout,
+  getParticipants,
+  getPopona,
+  getPortfoliosCount,
+  getScores,
+} from "@/api/HomeAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { PayOut } from "@/types/index";
 
 const Home = () => {
   const isMobile = useMediaQuery("(max-width:800px)");
@@ -20,6 +26,26 @@ const Home = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["scores", userId],
     queryFn: () => getScores(userId),
+  });
+
+  const { data: DataPopona } = useQuery({
+    queryKey: ["popona", userId],
+    queryFn: () => getPopona(),
+  });
+
+  const { data: participants } = useQuery({
+    queryKey: ["participants", userId],
+    queryFn: () => getParticipants(),
+  });
+
+  const { data: portfolios } = useQuery({
+    queryKey: ["portfolios", userId],
+    queryFn: () => getPortfoliosCount(),
+  });
+
+  const { data: payout } = useQuery({
+    queryKey: ["payout", userId],
+    queryFn: () => gatPayout(portfolios.count),
   });
 
   return (
@@ -45,10 +71,7 @@ const Home = () => {
               onClick={() => setSelected("first")}
             >
               <p className={classes.titleBox}>
-                {
-                  // popona.toUpperCase()
-                }{" "}
-                IS HERE!!!
+                {DataPopona?.value?.toUpperCase()} IS HERE!!!
               </p>
               <div className={classes.subBox}>
                 <p>
@@ -80,20 +103,14 @@ const Home = () => {
             >
               <p className={classes.titleBox}>Payouts</p>
               <div className={classes.subBoxTwo}>
-                <p>
-                  Total Contestants:
-                  {/* {participantsCount} */}
-                </p>
-                <p>
-                  Total Entries:
-                  {/* {portfFoliosCount}  */}
-                </p>
+                <p>Total Contestants: {participants.count}</p>
+                <p>Total Entries: {portfolios.count}</p>
                 <br />
-                {/* {arrPayout?.map((pay, i) => (
+                {payout?.payout?.map((pay: PayOut, i: number) => (
                   <p key={i}>
                     Place {pay?.place}: <span>{pay?.percentage}%</span>
                   </p>
-                ))} */}
+                ))}
               </div>
             </Grid>
             <Grid
