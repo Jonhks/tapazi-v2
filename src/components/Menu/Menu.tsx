@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { styled, Theme, useTheme } from "@mui/material/styles";
 import { MUIStyledCommonProps } from "@mui/system"; // Add this import statement
 import Box from "@mui/material/Box";
@@ -99,12 +99,6 @@ const Drawer = styled(MuiDrawer, {
     "& .MuiDrawer-paper": closedMixin(theme),
   }),
 }));
-
-// interface MiniDrawerProps {
-//   // isAuthenticated: boolean;
-//   // setIsAuthenticated: (isAuthenticated: boolean) => void;
-//   // children: React.ReactNode;
-// }
 
 export default function MiniDrawer() {
   const navigate = useNavigate();

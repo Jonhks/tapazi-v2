@@ -7,6 +7,9 @@ import Forgot from "./views/login/Forgot";
 import AppLayout from "@/layouts/AppLayout";
 import Home from "./views/home/Home";
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
+import MyPortfolio from "./views/myPortfolio/MyPortfolio";
+import Instructions from "./views/instructions/Instructions";
+import History from "./views/history/History";
 
 const Router = () => {
   return (
@@ -37,6 +40,30 @@ const Router = () => {
             element={
               <PrivateRoute>
                 <Home />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/myPortfolio/:userId"
+            element={
+              <PrivateRoute>
+                <MyPortfolio />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/instructions/:userId"
+            element={
+              <PrivateRoute>
+                <Instructions />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/history/:userId"
+            element={
+              <PrivateRoute>
+                <History />
               </PrivateRoute>
             }
           />
