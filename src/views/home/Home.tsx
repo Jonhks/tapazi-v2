@@ -103,8 +103,8 @@ const Home = () => {
             >
               <p className={classes.titleBox}>Payouts</p>
               <div className={classes.subBoxTwo}>
-                <p>Total Contestants: {participants.count}</p>
-                <p>Total Entries: {portfolios.count}</p>
+                <p>Total Contestants: {participants?.count}</p>
+                <p>Total Entries: {portfolios?.count}</p>
                 <br />
                 {payout?.payout?.map((pay: PayOut, i: number) => (
                   <p key={i}>
@@ -156,8 +156,8 @@ const Home = () => {
                 offset={0.5}
               >
                 <Table
-                  participantScore={data.data.participant}
-                  othersParticipants={data.data.others}
+                  participantScore={data?.data?.participant}
+                  othersParticipants={data?.data?.others}
                 />
               </Grid>
             </Zoom>
