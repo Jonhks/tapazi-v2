@@ -13,7 +13,8 @@ export default defineConfig({
         name: "Portfolio App",
         short_name: "Portfolio",
         description: "New App for Portfolio",
-        theme_color: "000",
+        theme_color: "#000",
+        background_color: "#000",
         icons: [
           {
             src: "tapasziLogoTrans.webp",
