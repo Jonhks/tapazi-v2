@@ -59,4 +59,47 @@ export const PayOutSchema = z.object({
   percentage: z.number(),
 });
 
+export const teamSchema = z.object({
+  description: z.string(),
+  id: z.number(),
+  key: z.string(),
+  name: z.string(),
+  play_in_team: z.boolean(),
+  seed: z.number(),
+});
+
+export type Team = z.infer<typeof teamSchema>;
+
 export type PayOut = z.infer<typeof PayOutSchema>;
+
+export const portfolioSchema = z.object({
+  championshipPoints: z.number(),
+  newPortfolio: z.boolean(),
+  teams: z.union([z.array(teamSchema), z.array(z.boolean())]),
+  name: z.string().optional(),
+  id: z.number().optional(),
+});
+
+export const portfolioCompleteSchema = z.object({
+  championshipPoints: z.number(),
+  newPortfolio: z.boolean(),
+  teams: z.union([z.array(teamSchema), z.array(z.boolean())]),
+  name: z.string(),
+  id: z.number(),
+});
+
+export type Portfolios = z.infer<typeof portfoliosSchema>;
+export type NewPortfolio = z.infer<typeof portfolioSchema>;
+export type PortfolioComplete = z.infer<typeof portfolioCompleteSchema>;
+
+export const createPortfolioSchema = z.object({
+  championshipPoints: z.number(),
+  teamsId: z.array(
+    z.object({
+      id: z.number(),
+    })
+  ),
+});
+
+export const portfoliosSchema = z.array(portfolioSchema);
+export type CreatePortfolio = z.infer<typeof createPortfolioSchema>;
