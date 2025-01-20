@@ -8,7 +8,6 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      includeAssets: ["favicon.ico", "apple-touch-icon.png", "mask-icon.svg"],
       manifest: {
         name: "Portfolio App",
         short_name: "Portfolio",
