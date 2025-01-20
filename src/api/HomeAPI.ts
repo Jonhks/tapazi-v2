@@ -80,6 +80,11 @@ export const gatPayout = async (portfFoliosCount: number) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+
+    if (!data.success) {
+      return [{ payout: 0 }];
+    }
+
     if (data.success) {
       return data.data;
     }

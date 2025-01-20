@@ -21,11 +21,13 @@ const Home = () => {
 
   const params = useParams();
   const userId = params.userId!;
+  // const queryClient = useQueryClient()
 
   const [selected, setSelected] = useState("first");
   const { data, isLoading } = useQuery({
     queryKey: ["scores", userId],
     queryFn: () => getScores(userId),
+    // queryClient.invalidateQueries({ queryKey: ["portfolios"] })
   });
 
   const { data: DataPopona } = useQuery({
@@ -38,14 +40,14 @@ const Home = () => {
     queryFn: () => getParticipants(),
   });
 
-  const { data: portfolios } = useQuery({
-    queryKey: ["portfolios", userId],
+  const { data: portfoliosHome } = useQuery({
+    queryKey: ["portfoliosHome", userId],
     queryFn: () => getPortfoliosCount(),
   });
 
   const { data: payout } = useQuery({
     queryKey: ["payout", userId],
-    queryFn: () => gatPayout(portfolios.count),
+    queryFn: () => gatPayout(portfoliosHome.count),
   });
 
   return (
@@ -104,7 +106,7 @@ const Home = () => {
               <p className={classes.titleBox}>Payouts</p>
               <div className={classes.subBoxTwo}>
                 <p>Total Contestants: {participants?.count}</p>
-                <p>Total Entries: {portfolios?.count}</p>
+                <p>Total Entries: {portfoliosHome?.count}</p>
                 <br />
                 {payout?.payout?.map((pay: PayOut, i: number) => (
                   <p key={i}>
