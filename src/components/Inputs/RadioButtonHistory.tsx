@@ -4,13 +4,18 @@ import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FormControl from "@mui/material/FormControl";
 
+type Props = {
+  setSelectedOrderBy: (value: string) => void;
+  selectedOrderBy: string;
+};
+
 export default function ControlledRadioButtonsGroup({
   setSelectedOrderBy,
   selectedOrderBy,
-}) {
+}: Props) {
   const [value, setValue] = React.useState(selectedOrderBy);
 
-  const handleChange = (event) => {
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setValue(event?.target?.value);
     setSelectedOrderBy(event?.target?.value);
   };

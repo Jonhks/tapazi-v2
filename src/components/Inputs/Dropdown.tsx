@@ -1,12 +1,9 @@
-import * as React from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import classes from "./Dropdown.module.css";
 export default function SelectVariants({
-  // id,
-  indexPortfolio,
   disabled,
   indexTeam,
   label,
@@ -14,6 +11,14 @@ export default function SelectVariants({
   options,
   handleChange,
   name,
+}: {
+  disabled: boolean;
+  indexTeam: number;
+  label: string;
+  value: string;
+  options: Array<{ name: string }>;
+  handleChange: (option: { name: string }, index: number) => void;
+  name: string;
 }) {
   return (
     <FormControl

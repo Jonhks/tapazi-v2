@@ -1,17 +1,27 @@
-import React, { useState } from "react";
 import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 
+import { SelectChangeEvent } from "@mui/material/Select";
+
+type ChangeHandler = (event: SelectChangeEvent<unknown>) => void;
+
 export default function BasicSelect({
   label,
   className,
   value,
-  handleChange,
+  handleChange: handleChange,
   name,
   options,
+}: {
+  label: string;
+  className: string;
+  value: unknown;
+  handleChange: ChangeHandler;
+  name: string;
+  options: { id: string; name: string }[] | undefined;
 }) {
   return (
     <Box
