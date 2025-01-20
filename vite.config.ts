@@ -11,9 +11,9 @@ export default defineConfig({
       manifest: {
         name: "Portfolio App",
         short_name: "Portfolio",
-        description: "New App for Portfolio",
-        theme_color: "#000",
-        background_color: "#000",
+        description: "New App for Portfolios",
+        theme_color: "black",
+        background_color: "black",
         icons: [
           {
             src: "tapasziLogoTrans.webp",
