@@ -8,8 +8,8 @@ import AppLayout from "@/layouts/AppLayout";
 import Home from "./views/home/Home";
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import MyPortfolio from "./views/myPortfolio/MyPortfolio";
-import Instructions from "./views/instructions/Instructions";
-import History from "./views/history/History";
+import Instructions from "./views/Instructions/Instructions";
+import History from "./views/History/History";
 
 const Router = () => {
   return (

@@ -103,3 +103,18 @@ export const createPortfolioSchema = z.object({
 
 export const portfoliosSchema = z.array(portfolioSchema);
 export type CreatePortfolio = z.infer<typeof createPortfolioSchema>;
+
+// Tournaments
+
+export const tournamentSchema = z.object({
+  current: z.boolean(),
+  description: z.string(),
+  id: z.number(),
+  key: z.string(),
+  name: z.string(),
+});
+
+export const tournamentsSchema = z.array(tournamentSchema);
+
+export type Tournament = z.infer<typeof tournamentSchema>;
+export type Tournaments = z.infer<typeof tournamentsSchema>;

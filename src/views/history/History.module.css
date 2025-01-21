@@ -1,0 +1,67 @@
+.boxHistory {
+  background-color: #b45705;
+  width: 100%;
+  min-height: 30vh;
+  color: white;
+  opacity: 0.6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding: 24px;
+}
+
+.active {
+  opacity: 0.9;
+}
+
+.titleBox {
+  background-color: #c7630b;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  margin: 0 0 10px 0;
+}
+
+.titleBox svg {
+  margin-right: 5px;
+}
+
+.subBoxHistory {
+  border: 2px solid #e27d25;
+  padding: 12px;
+  width: 100%;
+  height: 100%;
+}
+
+.containerDrop {
+  padding: 0 16px;
+  display: flex;
+  justify-content: center;
+  align-items: end;
+}
+
+.containerDrop svg {
+  margin-right: 8px;
+}
+
+.containerHeadHistory {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.DropDownHistory div label,
+.DropDownHistory div div div,
+.DropDownHistory div label:focus,
+.DropDownHistory div svg {
+  color: white !important;
+}
+
+.DropDownHistory div div::after {
+  border-bottom: 2px solid white;
+}

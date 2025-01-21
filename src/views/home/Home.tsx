@@ -21,13 +21,11 @@ const Home = () => {
 
   const params = useParams();
   const userId = params.userId!;
-  // const queryClient = useQueryClient()
 
   const [selected, setSelected] = useState("first");
   const { data, isLoading } = useQuery({
     queryKey: ["scores", userId],
     queryFn: () => getScores(userId),
-    // queryClient.invalidateQueries({ queryKey: ["portfolios"] })
   });
 
   const { data: DataPopona } = useQuery({

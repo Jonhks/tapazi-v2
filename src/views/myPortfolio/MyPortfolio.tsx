@@ -9,9 +9,7 @@ import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolio.module.css";
 import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
 import Dropdown from "@/components/Inputs/Dropdown";
-// import PortfoliosContext from "../../../context/PortfoliosContext";
-// import Loader from "@/components/BallLoader/BallLoader";
-// import * as alertify from "alertifyjs";
+import Loader from "@/components/BallLoader/BallLoader";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -21,18 +19,13 @@ import {
   postNewPortfolio,
   removeportfolio,
 } from "@/api/PortfoliosAPI";
-import {
-  //  NewPortfolio, PortfolioComplete,
-  Portfolios,
-} from "@/types/index";
+import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-// import { PodiumIcon } from "@/assets/icons/icons";
 
 const MyPortfolio = () => {
   const params = useParams();
   const userId = params.userId!;
-  // const queryClient = useQueryClient();
 
   const [value, setValue] = React.useState(0);
   const [portfolios, setPortfolios] = useState<Portfolios>([]);
@@ -41,7 +34,7 @@ const MyPortfolio = () => {
   const [duplicates, setDuplicates] = useState(false);
   const [focused, setFocused] = useState(false);
 
-  const { data: portfoliosObtained } = useQuery({
+  const { data: portfoliosObtained, isLoading } = useQuery({
     queryKey: ["portfolios", userId],
     queryFn: () => getPortfolios(userId),
   });
@@ -74,20 +67,6 @@ const MyPortfolio = () => {
   useEffect(() => {
     setPortfolios(portfoliosObtained);
   }, [portfoliosObtained]);
-
-  console.log(portfoliosObtained);
-
-  // useEffect(() => {
-  //   if (errorSavePortfolio) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: "Can't register portfolio, tournament already started.",
-  //     });
-  //     setTimeout(() => setErrorSavePortfolio(false), 2000);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [errorSavePortfolio]);
 
   interface CustomTabPanelProps {
     children: React.ReactNode;
@@ -354,6 +333,8 @@ const MyPortfolio = () => {
         }
       });
   };
+
+  if (isLoading) return <Loader />;
 
   if ((portfolios, portfoliosObtained))
     return (
