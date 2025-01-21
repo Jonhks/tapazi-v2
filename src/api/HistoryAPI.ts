@@ -23,8 +23,6 @@ export const getTournaments = async () => {
 export const getScorePPR = async (id: Tournament["id"]) => {
   if (id) {
     const urlGetScorePPR = `https://ercom-b.dev:8443/com.tapaszi.ws/rest/points-per-round?api-key=TESTAPIKEY&tournament-id=${id}`;
-    console.log(id);
-
     try {
       const { data } = await api.get(urlGetScorePPR, {
         headers: {
@@ -39,15 +37,29 @@ export const getScorePPR = async (id: Tournament["id"]) => {
         throw new Error(error.response.data.error);
       return;
     }
-
-    //   .then((response) => {
-    //     if (response?.data) {
-    //       setPointsPerRound(response?.data?.data?.pointsPerRound);
-    //       // setTimeout(() => setIsLoading(false), 1000);
-    //     }
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   }
+};
+
+export const getScoreHistory = () => {
+  const urlGetScoreHistory = `https://ercom-b.dev:8443/com.tapaszi.ws/rest/score/history?api-key=TESTAPIKEY&tournament-id=${
+    selectedTournament?.id
+  }&round=${
+    selectedScore?.consecutive ? selectedScore?.consecutive : 8
+  }&order=${selectedOrderBy}`;
+
+  axios
+    .get(urlGetScoreHistory, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    })
+    .then((response) => {
+      if (response?.data) {
+        setArrHistory(response?.data?.data?.history);
+        setTimeout(() => setIsLoading(false), 1000);
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    });
 };

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import classes from "./History.module.css";
 import { Zoom, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
@@ -8,12 +8,13 @@ import TimerIcon from "@mui/icons-material/Timer";
 // import BallLoader from "../../UI/BallLoader/BallLoader";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getScorePPR, getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
-// import RadioButtonHistory from "../../UI/Inputs/RadioButtonHistory";
+import Loader from "@/components/BallLoader/BallLoader";
+import RadioButtonHistory from "@/components/Inputs/RadioButtonHistory";
 // import HistoryContext from "../../../context/HistoryContext";
-// import TableHistory from "../../UI/Table/TableHistory";
+import TableHistory from "@/components/Table/TableHistory";
 
 const History = () => {
   const params = useParams();
@@ -23,18 +24,6 @@ const History = () => {
     queryKey: ["tournaments", userId],
     queryFn: () => getTournaments(),
   });
-
-  const { mutate: getScorePPRMutate } = useMutation({
-    mutationKey: ["getScorePPR", userId],
-    mutationFn: getScorePPR,
-    onSuccess: (resp) => {
-      console.log(resp);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-  // console.log(tournaments);
 
   // const {
   //   tournaments,
@@ -54,6 +43,7 @@ const History = () => {
   const [score, setScore] = useState("");
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   const [pointsPerRound, setPointsPerRound] = useState([]);
+  const [selectedOrderBy, setSelectedOrderBy] = useState(1);
 
   useEffect(() => {
     if (tournaments) {
@@ -63,9 +53,9 @@ const History = () => {
       console.log(current);
       setScore("CURRENT SCORE");
       setSelectedTournament(current);
-      setTimeout(() => {
+      setTimeout(async () => {
         if (selectedTournament?.id) {
-          const responsePointsPerRound = getScorePPRMutate(
+          const responsePointsPerRound = await getScorePPR(
             selectedTournament?.id
           );
           setPointsPerRound(responsePointsPerRound);
@@ -76,7 +66,16 @@ const History = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tournaments]);
 
-  const handleChange = (e) => {
+  console.log(pointsPerRound);
+  console.log(score);
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    console.log(e);
+
     // if (e?.target?.name === "tournament") {
     //   const optionSelect = tournaments.filter(
     //     (el) => el?.name === e?.target?.value
@@ -91,6 +90,8 @@ const History = () => {
     //   setSelectedScore(optionSelect);
     // }
   };
+
+  if (isLoading) return <Loader />;
 
   return (
     <>
@@ -143,7 +144,7 @@ const History = () => {
                       label={"Tournament"}
                       className={classes.DropDownHistory}
                       value={tournament}
-                      handleChange={handleChange}
+                      // handleChange={handleChange}
                       options={tournaments}
                     />
                   </div>
@@ -153,30 +154,33 @@ const History = () => {
                   <span>Scrore:</span>
                   <div className={classes.containerDrop}>
                     <TimerIcon />
-                    {/* <DropDownHistory
+                    <DropDownHistory
                       name={"score"}
                       label={"Score"}
                       className={classes.DropDownHistory}
                       value={score}
                       handleChange={handleChange}
                       options={pointsPerRound}
-                    /> */}
+                    />
                   </div>
                 </Grid>
               </Grid>
               <Grid
                 container
+                size={12}
                 display={"flex"}
                 flexDirection={"column"}
+                justifyContent={"center"}
+                alignItems={"end"}
               >
                 <Grid size={4}></Grid>
                 <Grid size={8}>
                   <span>Order by:</span>
                   <div style={{ paddingLeft: "16px" }}>
-                    {/* <RadioButtonHistory
+                    <RadioButtonHistory
                       setSelectedOrderBy={setSelectedOrderBy}
                       selectedOrderBy={selectedOrderBy}
-                    /> */}
+                    />
                   </div>
                 </Grid>
               </Grid>
@@ -186,17 +190,20 @@ const History = () => {
         <Grid
           container
           spacing={2}
+          display={"flex"}
+          justifyContent={"center"}
+          alignContent={"center"}
         >
           <Grid
             size={12}
             className={classes.containerBtn}
           ></Grid>
           <Zoom in={true}>
-            <Grid size={12}>
-              {/* <TableHistory
-                arrHistory={arrHistory}
+            <Grid size={11}>
+              <TableHistory
+                arrHistory={[]}
                 score={score}
-              /> */}
+              />
             </Grid>
           </Zoom>
         </Grid>
