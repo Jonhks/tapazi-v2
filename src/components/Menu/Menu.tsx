@@ -26,6 +26,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
 import classes from "./Menu.module.css";
 import { PodiumIcon } from "@/assets/icons/icons";
+import Swal from "sweetalert2";
 
 const drawerWidth = 240;
 
@@ -118,8 +119,25 @@ export default function MiniDrawer() {
   };
 
   const removeUser = () => {
-    localStorage.removeItem("userTapaszi");
-    navigate("/login");
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to log out",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#238b94",
+      cancelButtonColor: "#c7630b",
+      confirmButtonText: "Yes, delete it!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("userTapaszi");
+        navigate("/login");
+        Swal.fire({
+          title: "Logged out!",
+          text: "You have logged out.",
+          icon: "success",
+        });
+      }
+    });
   };
 
   const Icons = [

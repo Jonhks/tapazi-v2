@@ -59,9 +59,9 @@ function ResponsiveAppBar() {
       cancelButtonColor: "#c7630b",
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
-      localStorage.removeItem("userTapaszi");
-      navigate("/login");
       if (result.isConfirmed) {
+        localStorage.removeItem("userTapaszi");
+        navigate("/login");
         Swal.fire({
           title: "Logged out!",
           text: "You have logged out.",
