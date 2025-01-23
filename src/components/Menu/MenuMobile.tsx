@@ -13,7 +13,8 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useNavigate, useParams } from "react-router-dom";
 import { Badge, Menu, MenuItem } from "@mui/material";
 import Swal from "sweetalert2";
-
+import InstallMobileIcon from "@mui/icons-material/InstallMobile";
+import { messagemodalInstall } from "@/utils/app";
 const Icons = [
   <BallIcon key="ball" />,
   <BasquetIcon key="basquet" />,
@@ -71,6 +72,18 @@ function ResponsiveAppBar() {
     });
   };
 
+  const showInstructions = () => {
+    handleMobileMenuClose();
+    Swal.fire({
+      title: "How to Install The Portfolio Pool on Your Device?",
+      html: messagemodalInstall,
+      icon: "question",
+      heightAuto: false,
+      scrollbarPadding: true,
+      confirmButtonColor: "#238b94",
+    });
+  };
+
   const openMenuMobile = (e: React.MouseEvent<HTMLElement>) => {
     setMobileMoreAnchorEl(e.currentTarget);
   };
@@ -92,6 +105,18 @@ function ResponsiveAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={showInstructions}>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <InstallMobileIcon />
+        </IconButton>
+        <p>Install</p>
+      </MenuItem>
       <MenuItem>
         <IconButton
           size="large"

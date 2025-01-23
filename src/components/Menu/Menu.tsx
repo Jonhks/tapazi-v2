@@ -27,6 +27,8 @@ import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
 import classes from "./Menu.module.css";
 import { PodiumIcon } from "@/assets/icons/icons";
 import Swal from "sweetalert2";
+import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
+import { messagemodalInstall } from "@/utils/app";
 
 const drawerWidth = 240;
 
@@ -140,6 +142,17 @@ export default function MiniDrawer() {
     });
   };
 
+  const showInstructions = () => {
+    Swal.fire({
+      title: "How to Install The Portfolio Pool on Your Device?",
+      html: messagemodalInstall,
+      icon: "question",
+      heightAuto: false,
+      scrollbarPadding: true,
+      confirmButtonColor: "#238b94",
+    });
+  };
+
   const Icons = [
     <BallIcon key="ball" />,
     <BasquetIcon key="basquet" />,
@@ -171,6 +184,27 @@ export default function MiniDrawer() {
             >
               <MenuIcon />
             </IconButton>
+            <div
+              style={{
+                width: "100%",
+                textAlign: "right",
+              }}
+            >
+              <Tooltip
+                title="¿How to Install The Portfolio Pool?"
+                placement="bottom"
+              >
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={showInstructions}
+                  edge="end"
+                  sx={{ marginRight: 5 }}
+                >
+                  <InstallDesktopIcon />
+                </IconButton>
+              </Tooltip>
+            </div>
           </Toolbar>
         </AppBar>
         <Drawer
