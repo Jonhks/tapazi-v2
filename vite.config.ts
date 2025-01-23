@@ -27,6 +27,18 @@ export default defineConfig({
           },
         ],
       },
+      registerType: "prompt",
+      injectRegister: false,
+      pwaAssets: {
+        disabled: false,
+        config: true,
+      },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,svg,png,ico}"],
+        cleanupOutdatedCaches: true,
+        clientsClaim: true,
+        maximumFileSizeToCacheInBytes: 7000000,
+      },
     }),
   ],
   resolve: {
