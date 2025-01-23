@@ -14,6 +14,8 @@ import HistoryLayout from "./layouts/HistoryLayout";
 import StatsLayout from "./layouts/StatsLayout";
 import Stats from "./views/Stats/Stats";
 
+// comentario apra deploy
+
 const Router = () => {
   return (
     <BrowserRouter>
