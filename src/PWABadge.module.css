@@ -7,23 +7,36 @@
 .PWABadgeToast {
   position: fixed;
   right: 0;
-  bottom: 0;
+  bottom: -6px;
   margin: 16px;
   padding: 12px;
   border: 1px solid #8885;
-  border-radius: 4px;
+  border-radius: 20px;
   z-index: 1;
-  text-align: left;
+  text-align: center;
   box-shadow: 3px 4px 5px 0 #8885;
-  background-color: white;
+  background-color: #238b94;
 }
+
+#toastMessage {
+  color: white;
+  padding: 5px;
+}
+
 .PWABadgeToastMessage {
   margin-bottom: 8px;
 }
+
 .PWABadgeToastButton {
   border: 1px solid #8885;
   outline: none;
   margin-right: 5px;
-  border-radius: 2px;
-  padding: 3px 10px;
+  background: #d95818;
+  padding: 5px 10px;
+  border-radius: 10px;
+  width: 40%;
+  border-color: #d95818;
+  color: white;
+  margin-top: 5px;
+  box-shadow: 3px 4px 5px 0 #343333;
 }

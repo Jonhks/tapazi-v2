@@ -36,7 +36,10 @@ function PWABadge() {
       {needRefresh && (
         <div className={classes.PWABadgeToast}>
           <div className={classes.PWABadgeMessage}>
-            <span id="toast-message">
+            <span
+              id="toastMessage"
+              className={classes.toastMessage}
+            >
               New content available, click on reload button to update.
             </span>
           </div>
