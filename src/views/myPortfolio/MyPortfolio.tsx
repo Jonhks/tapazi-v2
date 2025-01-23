@@ -11,7 +11,7 @@ import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
 import Dropdown from "@/components/Inputs/Dropdown";
 import Loader from "@/components/BallLoader/BallLoader";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
   getPortfolios,
@@ -26,6 +26,7 @@ import Swal from "sweetalert2";
 const MyPortfolio = () => {
   const params = useParams();
   const userId = params.userId!;
+  const queryClient = useQueryClient();
 
   const [value, setValue] = React.useState(0);
   const [portfolios, setPortfolios] = useState<Portfolios>([]);
@@ -48,6 +49,7 @@ const MyPortfolio = () => {
     mutationFn: postNewPortfolio,
     onSuccess: (resp) => {
       toast.success(resp);
+      queryClient.invalidateQueries(["portfolios", userId]);
     },
     onError: (error) => {
       toast.error(error.message);

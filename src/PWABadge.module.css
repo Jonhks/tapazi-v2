@@ -18,7 +18,8 @@
   background-color: #238b94;
 }
 
-#toastMessage {
+#toastMessage,
+.toastMessage {
   color: white;
   padding: 5px;
 }
