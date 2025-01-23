@@ -11,8 +11,8 @@ import MyPortfolio from "./views/myPortfolio/MyPortfolio";
 import HistoryLayout from "./layouts/HistoryLayout";
 import StatsLayout from "./layouts/StatsLayout";
 import Stats from "./views/Stats/Stats";
-import Instructions from "./views/Instructions/Instructions";
-import History from "./views/History/History";
+import Instructions from "@/views/Instructions/Instructions";
+import History from "@/views/History/History";
 
 const Router = () => {
   return (
