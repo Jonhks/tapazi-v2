@@ -194,8 +194,6 @@ const MyPortfolio = () => {
     }
   };
 
-  // #238b94
-
   const sendPortfolio = (port: { championshipPoints: number; teamsId: [] }) => {
     const swalWithBootstrapButtons = Swal.mixin({});
     swalWithBootstrapButtons
@@ -367,10 +365,6 @@ const MyPortfolio = () => {
                     {portfolios?.length > 0 && portfolios?.length}
                   </h2>
                 </div>
-                {/* <div>
-                <PodiumIcon />
-                <h4>Name Tournament</h4>
-              </div> */}
               </div>
               <Box>
                 <Grid size={12}>

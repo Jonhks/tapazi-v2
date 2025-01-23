@@ -7,7 +7,7 @@
 .PWABadgeToast {
   position: fixed;
   right: 0;
-  bottom: -6px;
+  top: 50%;
   margin: 16px;
   padding: 12px;
   border: 1px solid #8885;
@@ -16,11 +16,12 @@
   text-align: center;
   box-shadow: 3px 4px 5px 0 #8885;
   background-color: #238b94;
+  color: white;
 }
 
 #toastMessage,
 .toastMessage {
-  color: white;
+  color: white !important;
   padding: 5px;
 }
 
