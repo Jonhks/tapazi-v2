@@ -342,7 +342,7 @@ const MyPortfolio = () => {
         size={12}
         sx={{
           minHeight: "700px",
-          height: "calc(100vh - 54px)",
+          height: "calc(100vh - 56px)",
           overflow: "scroll",
         }}
       >

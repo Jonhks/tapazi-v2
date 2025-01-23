@@ -107,7 +107,7 @@ const Stats = () => {
         size={12}
         style={{
           minHeight: "700px",
-          height: "calc(100vh - 54px)",
+          height: "calc(100vh - 56px)",
           overflow: "scroll",
         }}
       >
