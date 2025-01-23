@@ -4,61 +4,72 @@ import { Zoom, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
 import { PodiumIcon } from "@/assets/icons/icons";
-import TimerIcon from "@mui/icons-material/Timer";
 // import BallLoader from "../../UI/BallLoader/BallLoader";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getScorePPR, getTournaments } from "@/api/HistoryAPI";
+import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 import Loader from "@/components/BallLoader/BallLoader";
-import RadioButtonHistory from "@/components/Inputs/RadioButtonHistory";
-// import HistoryContext from "../../../context/HistoryContext";
 import TableHistory from "@/components/Table/TableHistory";
+import DescriptionIcon from "@mui/icons-material/Description";
 
 const History = () => {
   const params = useParams();
   const userId = params.userId!;
+
+  const dataDropdowndata = [
+    {
+      name: "Historical All Rounds",
+      id: "1",
+    },
+    {
+      name: "Historical Perfect Portfolios",
+      id: "2",
+    },
+    {
+      name: "Teams Picked",
+      id: "3",
+    },
+    {
+      name: "Teams Filtered by Portfolio Risk",
+      id: "4",
+    },
+  ];
+
+  type dataDropdowndataType = {
+    name: string;
+    id: string;
+  };
 
   const { data: tournaments, isLoading } = useQuery({
     queryKey: ["tournaments", userId],
     queryFn: () => getTournaments(),
   });
 
-  // const {
-  //   tournaments,
-  //   isLoading,
-  //   setSelectedTournament,
-  //   pointsPerRound,
-  //   selectedOrderBy,
-  //   setSelectedScore,
-  //   setSelectedOrderBy,
-  //   arrHistory,
-  //   getScoreHistory,
-  //   getScorePPR,
-  //   selectedTournament,
-  // } = useContext(HistoryContext);
-
   const [tournament, setTournament] = useState("");
   const [score, setScore] = useState("");
+  const [selectedScore, setSelectedScore] = useState({
+    name: "Historical All Rounds",
+    id: "1",
+  });
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
-  const [pointsPerRound, setPointsPerRound] = useState([]);
-  const [selectedOrderBy, setSelectedOrderBy] = useState(1);
+  // const [pointsPerRound, setPointsPerRound] = useState([]);
+  // const [selectedOrderBy, setSelectedOrderBy] = useState(1);
 
   useEffect(() => {
     if (tournaments) {
       const current = tournaments.filter((el: Tournament) => el?.current)[0];
 
       setTournament(current?.name);
-      console.log(current);
-      setScore("CURRENT SCORE");
+      setScore("Teams Picked Tables");
       setSelectedTournament(current);
       setTimeout(async () => {
         if (selectedTournament?.id) {
-          const responsePointsPerRound = await getScorePPR(
-            selectedTournament?.id
-          );
-          setPointsPerRound(responsePointsPerRound);
+          // const responsePointsPerRound = await getScorePPR(
+          //   selectedTournament?.id
+          // );
+          // setPointsPerRound(responsePointsPerRound);
           // getScoreHistory();
         }
       }, 1000);
@@ -66,36 +77,40 @@ const History = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tournaments]);
 
-  console.log(pointsPerRound);
-  console.log(score);
+  // console.log(selectedScore);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
-  ) => {
-    console.log(e);
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const handleChange = (e) => {
+    console.log(e.target.name);
 
-    // if (e?.target?.name === "tournament") {
-    //   const optionSelect = tournaments.filter(
-    //     (el) => el?.name === e?.target?.value
-    //   )[0];
-    //   setTournament(e?.target?.value);
-    //   setSelectedTournament(optionSelect);
-    // } else if (e?.target?.name === "score") {
-    //   const optionSelect = pointsPerRound.filter(
-    //     (el) => el?.name === e?.target?.value
-    //   )[0];
-    //   setScore(e?.target?.value);
-    //   setSelectedScore(optionSelect);
-    // }
+    if (e?.target?.name === "tournament") {
+      const optionSelect = tournaments.filter(
+        (el: Tournament) => el?.name === e?.target?.value
+      )[0];
+      setTournament(e?.target?.value);
+      setSelectedTournament(optionSelect);
+    } else if (e?.target?.name === "dataDropdowndata") {
+      const optionSelect = dataDropdowndata.filter(
+        (el: dataDropdowndataType) => el?.name === e?.target?.value
+      )[0];
+      setScore(e?.target?.value);
+      setSelectedScore(optionSelect);
+    }
   };
 
   if (isLoading) return <Loader />;
 
   return (
     <>
-      <Grid size={12}>
+      <Grid
+        size={12}
+        style={{
+          minHeight: "700px",
+          height: "calc(100vh - 54px)",
+          overflow: "scroll",
+        }}
+      >
         <Grid
           container
           spacing={1}
@@ -106,29 +121,36 @@ const History = () => {
           size={12}
         >
           <Grid
-            size={10}
+            size={{ xs: 11, md: 8 }}
             m={1}
             className={`${classes.boxHistory} ${classes.active}`}
             id="first"
           >
-            <div className={classes.containerHeadHistory}>
-              <p className={classes.titleBox}>
-                <HistoryIcon /> Stats & history
-              </p>
-              <Button
-                variant="contained"
-                // color="success"
-                style={{
-                  width: "35%",
-                  textTransform: "capitalize",
-                  backgroundColor: "#238b94",
-                }}
-                className={classes.btnSubmit}
-                // onClick={() => getScoreHistory()}
-              >
-                Send
-              </Button>
-            </div>
+            <Grid
+              size={12}
+              className={classes.containerHeadHistory}
+            >
+              <Grid size={{ xs: 6, sm: 6, md: 6 }}>
+                <p className={classes.titleBox}>
+                  <HistoryIcon /> History
+                </p>
+              </Grid>
+              <Grid size={{ xs: 6, sm: 4, md: 4 }}>
+                <Button
+                  variant="contained"
+                  // color="success"
+                  style={{
+                    width: "100%",
+                    textTransform: "capitalize",
+                    backgroundColor: "#238b94",
+                  }}
+                  className={classes.btnSubmit}
+                  // onClick={() => getScoreHistory()}
+                >
+                  Send
+                </Button>
+              </Grid>
+            </Grid>
             <Grid
               container
               className={classes.subBoxHistory}
@@ -144,42 +166,23 @@ const History = () => {
                       label={"Tournament"}
                       className={classes.DropDownHistory}
                       value={tournament}
-                      // handleChange={handleChange}
+                      handleChange={handleChange}
                       options={tournaments}
                     />
                   </div>
                 </Grid>
 
                 <Grid size={12}>
-                  <span>Scrore:</span>
+                  <span>Data:</span>
                   <div className={classes.containerDrop}>
-                    <TimerIcon />
+                    <DescriptionIcon />
                     <DropDownHistory
-                      name={"score"}
-                      label={"Score"}
+                      name={"dataDropdowndata"}
+                      label={"Data"}
                       className={classes.DropDownHistory}
-                      value={score}
+                      value={selectedScore?.name}
                       handleChange={handleChange}
-                      options={pointsPerRound}
-                    />
-                  </div>
-                </Grid>
-              </Grid>
-              <Grid
-                container
-                size={12}
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent={"center"}
-                alignItems={"end"}
-              >
-                <Grid size={4}></Grid>
-                <Grid size={8}>
-                  <span>Order by:</span>
-                  <div style={{ paddingLeft: "16px" }}>
-                    <RadioButtonHistory
-                      setSelectedOrderBy={setSelectedOrderBy}
-                      selectedOrderBy={selectedOrderBy}
+                      options={dataDropdowndata}
                     />
                   </div>
                 </Grid>

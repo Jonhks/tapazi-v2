@@ -25,6 +25,8 @@ import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
 import classes from "./Menu.module.css";
+import { PodiumIcon } from "@/assets/icons/icons";
+
 const drawerWidth = 240;
 
 const openedMixin = (theme: Theme) => ({
@@ -125,6 +127,7 @@ export default function MiniDrawer() {
     <BasquetIcon key="basquet" />,
     <ReceiptLongIcon key="receipt" />,
     <HistoryIcon key="history" />,
+    <PodiumIcon key="stats" />,
     <LogoutIcon key="logout" />,
   ];
 
@@ -178,7 +181,8 @@ export default function MiniDrawer() {
               { text: "Home", id: `home/${userId}` },
               { text: "My Portfolios", id: `myPortfolio/${userId}` },
               { text: "Instructions", id: `instructions/${userId}` },
-              { text: "Stats & History", id: `history/${userId}` },
+              { text: "History", id: `history/${userId}` },
+              { text: "Stats", id: `stats/${userId}` },
               { text: "LogOut", id: "logOut" },
             ].map((el, index) => (
               <Grid key={index}>

@@ -15,10 +15,6 @@ const Instructions = () => {
     queryFn: () => getPopona(),
   });
 
-  console.log(dataPopona);
-
-  // const { popona, teamNa } = useContext(HomeContext);
-
   if (isLoading) return <Loader />;
 
   if (dataPopona)
@@ -28,6 +24,11 @@ const Instructions = () => {
         justifyContent={"center"}
         alignContent={"center"}
         size={12}
+        style={{
+          minHeight: "700px",
+          height: "calc(100vh - 54px)",
+          overflow: "scroll",
+        }}
         className={classes.gridInstructions}
       >
         <Grid size={{ xs: 11, md: 8 }}>

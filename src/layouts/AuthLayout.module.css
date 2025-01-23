@@ -4,8 +4,8 @@
   background-repeat: no-repeat;
   background-position: center;
   width: 100%;
-  min-height: 1000px;
-  height: fit-content;
+  height: 100vh;
+  overflow: scroll;
   display: flex;
   justify-content: center;
 }
@@ -13,16 +13,33 @@
 .containerApp {
   background-image: url("../assets/img/home.jpeg");
   background-size: cover;
-  background-repeat: space;
+  background-repeat: no-repeat;
   background-position: left;
-  width: 100%;
-  min-height: 1100px;
-  height: fit-content;
+  height: 100vh;
+  overflow: scroll;
 }
 
-@media (width < 800px) {
+.containerHistory {
+  background-image: url("../assets/img/details-ball-sport.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow: scroll;
+}
+
+.containerStats {
+  background-image: url("../assets/img/stats-bg.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow: scroll;
+}
+
+/* @media (width < 800px) {
   .containerApp {
     min-height: 800px;
     height: 100vh;
   }
-}
+} */

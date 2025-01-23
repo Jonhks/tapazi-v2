@@ -9,7 +9,10 @@ import Home from "./views/home/Home";
 import PrivateRoute from "@/components/PrivateRoute/PrivateRoute";
 import MyPortfolio from "./views/myPortfolio/MyPortfolio";
 import Instructions from "./views/Instructions/Instructions";
-import History from "./views/History/History";
+import History from "@/views/History/History";
+import HistoryLayout from "./layouts/HistoryLayout";
+import StatsLayout from "./layouts/StatsLayout";
+import Stats from "./views/Stats/Stats";
 
 const Router = () => {
   return (
@@ -59,11 +62,23 @@ const Router = () => {
               </PrivateRoute>
             }
           />
+        </Route>
+        <Route element={<HistoryLayout />}>
           <Route
             path="/history/:userId"
             element={
               <PrivateRoute>
                 <History />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+        <Route element={<StatsLayout />}>
+          <Route
+            path="/stats/:userId"
+            element={
+              <PrivateRoute>
+                <Stats />
               </PrivateRoute>
             }
           />

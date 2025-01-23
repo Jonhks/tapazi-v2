@@ -60,6 +60,11 @@ const Home = () => {
             flexWrap={"wrap"}
             justifyContent={"center"}
             ml={!isMobile ? "25px" : 0}
+            style={{
+              minHeight: "700px",
+              height: "calc(100vh - 54px)",
+              overflow: "scroll",
+            }}
           >
             <Grid
               size={{ xs: 12, md: 5 }}
@@ -140,27 +145,27 @@ const Home = () => {
                 <p>Paul-Tapaszi</p>
               </div>
             </Grid>
-          </Grid>
-          <Grid
-            container
-            spacing={2}
-            mb={3}
-          >
             <Grid
-              size={12}
-              className={classes.containerBtn}
-            ></Grid>
-            <Zoom in={true}>
+              container
+              spacing={2}
+              mb={3}
+            >
               <Grid
-                size={11}
-                offset={0.5}
-              >
-                <Table
-                  participantScore={data?.data?.participant}
-                  othersParticipants={data?.data?.others}
-                />
-              </Grid>
-            </Zoom>
+                size={12}
+                className={classes.containerBtn}
+              ></Grid>
+              <Zoom in={true}>
+                <Grid
+                  size={11}
+                  offset={0.5}
+                >
+                  <Table
+                    participantScore={data?.data?.participant}
+                    othersParticipants={data?.data?.others}
+                  />
+                </Grid>
+              </Zoom>
+            </Grid>
           </Grid>
         </>
       )}

@@ -14,6 +14,7 @@ const AppLayout = () => {
     queryKey: ["scores", userId],
     queryFn: () => getScores(userId),
   });
+
   return (
     <div className={classes.containerApp}>
       {!isMobile && !isLoading && <Menu />}
