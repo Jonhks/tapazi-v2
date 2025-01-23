@@ -1,6 +1,6 @@
 export const messagemodalInstall = `
   <div
-      style="height: 30vh; padding: 8px; overflow: scroll; text-align: start; font-size: .8rem"
+      style="height: 30vh; padding: 8px; overflow: scroll !important; text-align: start; font-size: .8rem"
     >
       <p style="text-align: justify">
         For the best experience and convenience, we recommend installing The
