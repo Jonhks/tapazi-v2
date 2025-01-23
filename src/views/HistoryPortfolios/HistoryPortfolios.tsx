@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import classes from "./History.module.css";
+import classes from "./HistoryPortfolios.module.css";
 import { Zoom, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
