@@ -39,7 +39,7 @@ export default defineConfig({
       output: {
         manualChunks: {
           vendor: ["react", "react-dom"],
-          ui: ["@mui/material", "@mui/icons-material"],
+          // ui: ["@mui/material", "@mui/icons-material"],
         },
       },
     },
