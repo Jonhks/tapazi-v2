@@ -11,6 +11,7 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <PWABadge />
     <QueryClientProvider client={queryClient}>
       <Router />
       <ReactQueryDevtools />
@@ -26,6 +27,5 @@ createRoot(document.getElementById("root")!).render(
         draggable
       />
     </QueryClientProvider>
-    <PWABadge />
   </StrictMode>
 );
