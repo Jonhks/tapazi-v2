@@ -79,7 +79,7 @@ function ResponsiveAppBar() {
       html: messagemodalInstall,
       icon: "question",
       heightAuto: false,
-      scrollbarPadding: true,
+      scrollbarPadding: false,
       confirmButtonColor: "#238b94",
     });
   };
