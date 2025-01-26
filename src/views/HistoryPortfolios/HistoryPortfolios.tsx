@@ -8,15 +8,81 @@ import { PodiumIcon } from "@/assets/icons/icons";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getMostPickedTeams, getTournaments } from "@/api/HistoryAPI";
+import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 import Loader from "@/components/BallLoader/BallLoader";
 import TableHistory from "@/components/Table/TableHistory";
 import DescriptionIcon from "@mui/icons-material/Description";
+import TeamPerYearlogGraphic from "@/components/Graphics/TeamPerYearLogGraphic";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import { typeGraphs } from "@/utils/typeGraphs";
+
+// ColumnChart, LineChart, AreaChart, BarChart, BubbleChart, ComboChart,  PieChart, DonutChart, GeoChart, Histogram, Line, RadarChart, ScatterChart, SteppedAreaChart, Table
+
+const fakeData = [
+  {
+    name: "Uno",
+    id: "1",
+    team: "Uno",
+    timesPicked: 10,
+    percent: 36,
+    roundEliminated: 1,
+  },
+  {
+    name: "Dos",
+    id: "2",
+    team: "Dos",
+    timesPicked: 35,
+    percent: 21,
+    roundEliminated: 0,
+  },
+  {
+    name: "Tres",
+    id: "3",
+    team: "Tres",
+    timesPicked: 56,
+    percent: 5,
+    roundEliminated: 5,
+  },
+  {
+    name: "Cuatro",
+    id: "4",
+    team: "Cuatro",
+    timesPicked: 100,
+    percent: 46,
+    roundEliminated: 13,
+  },
+  {
+    name: "Cinco",
+    id: "5",
+    team: "Cinco",
+    timesPicked: 13,
+    percent: 13,
+    roundEliminated: 13,
+  },
+  {
+    name: "Seis",
+    id: "6",
+    team: "Seis",
+    timesPicked: 6,
+    percent: 12,
+    roundEliminated: 1,
+  },
+  {
+    name: "Siete",
+    id: "7",
+    team: "Siete",
+    timesPicked: 17,
+    percent: 76,
+    roundEliminated: 1,
+  },
+];
 
 const History = () => {
   const params = useParams();
   const userId = params.userId!;
+
+  const [graphType, setGraphType] = useState(typeGraphs[0]);
 
   const dataDropdowndata = [
     {
@@ -37,6 +103,17 @@ const History = () => {
     },
   ];
 
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const handleChangeGraph = (e) => {
+    const optionSelect = typeGraphs.filter(
+      (el: dataDropdowndataType) => el?.name === e.target.value
+    )[0];
+    setGraphType(optionSelect);
+  };
+
+  console.log(fakeData);
+
   type dataDropdowndataType = {
     name: string;
     id: string;
@@ -47,12 +124,12 @@ const History = () => {
     queryFn: () => getTournaments(),
   });
 
-  const { data: mostPickedTeams } = useQuery({
-    queryKey: ["mostPickedTeams", userId],
-    queryFn: () => getMostPickedTeams(),
-  });
+  // const { data: mostPickedTeams } = useQuery({
+  //   queryKey: ["mostPickedTeams", userId],
+  //   queryFn: () => getMostPickedTeams(),
+  // });
 
-  console.log(mostPickedTeams);
+  // console.log(mostPickedTeams);
 
   const [tournament, setTournament] = useState("");
   const [score, setScore] = useState("");
@@ -178,7 +255,6 @@ const History = () => {
                     />
                   </div>
                 </Grid>
-
                 <Grid size={12}>
                   <span>Data:</span>
                   <div className={classes.containerDrop}>
@@ -190,6 +266,20 @@ const History = () => {
                       value={selectedScore?.name}
                       handleChange={handleChange}
                       options={dataDropdowndata}
+                    />
+                  </div>
+                </Grid>
+                <Grid size={12}>
+                  <span>Type of graph:</span>
+                  <div className={classes.containerDrop}>
+                    <AutoGraphIcon />
+                    <DropDownHistory
+                      name={"Graph"}
+                      label={"Graph"}
+                      className={classes.DropDownHistory}
+                      value={graphType?.name}
+                      handleChange={handleChangeGraph}
+                      options={typeGraphs}
                     />
                   </div>
                 </Grid>
@@ -214,6 +304,11 @@ const History = () => {
                 arrHistory={[]}
                 score={score}
               />
+            </Grid>
+          </Zoom>
+          <Zoom in={true}>
+            <Grid size={10}>
+              <TeamPerYearlogGraphic graphType={graphType.name} />
             </Grid>
           </Zoom>
         </Grid>
