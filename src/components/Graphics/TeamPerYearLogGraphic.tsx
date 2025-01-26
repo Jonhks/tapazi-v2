@@ -16,8 +16,8 @@ function TeamPerYearlogGraphic({
   return (
     <Chart
       // Try different chart types by changing this property with one of: ColumnChart, LineChart, AreaChart, BarChart, BubbleChart, ComboChart,  PieChart, DonutChart, GeoChart, Histogram, Line, RadarChart, ScatterChart, SteppedAreaChart, Table
-      // chartType={graphType}
-      chartType="ColumnChart"
+      chartType={graphType}
+      // chartType="ColumnChart"
       data={[
         ["Year", "Sales", "Expenses", "Profit"],
         ["2013", 1000, 400, 300],
