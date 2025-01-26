@@ -8,7 +8,7 @@ import { PodiumIcon } from "@/assets/icons/icons";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getTournaments } from "@/api/HistoryAPI";
+import { getMostPickedTeams, getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 import Loader from "@/components/BallLoader/BallLoader";
 import TableHistory from "@/components/Table/TableHistory";
@@ -46,6 +46,13 @@ const History = () => {
     queryKey: ["tournaments", userId],
     queryFn: () => getTournaments(),
   });
+
+  const { data: mostPickedTeams } = useQuery({
+    queryKey: ["mostPickedTeams", userId],
+    queryFn: () => getMostPickedTeams(),
+  });
+
+  console.log(mostPickedTeams);
 
   const [tournament, setTournament] = useState("");
   const [score, setScore] = useState("");

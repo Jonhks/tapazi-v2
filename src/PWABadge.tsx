@@ -89,5 +89,3 @@ function registerPeriodicSync(
     if (resp?.status === 200) await r.update();
   }, period);
 }
-
-console.log("PWABadge.tsx");

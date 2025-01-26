@@ -62,3 +62,19 @@ export const getScoreHistory = () => {
   //     console.log(error);
   //   });
 };
+
+export const getMostPickedTeams = async () => {
+  try {
+    const url = `/teams-per-year-log?api-key=TESTAPIKEY`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

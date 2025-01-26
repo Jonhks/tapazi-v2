@@ -14,7 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Badge, Menu, MenuItem } from "@mui/material";
 import Swal from "sweetalert2";
 import InstallMobileIcon from "@mui/icons-material/InstallMobile";
-import { messagemodalInstall } from "@/utils/app";
+import { messagemodalInstallmobile } from "@/utils/app";
 const Icons = [
   <BallIcon key="ball" />,
   <BasquetIcon key="basquet" />,
@@ -76,7 +76,7 @@ function ResponsiveAppBar() {
     handleMobileMenuClose();
     Swal.fire({
       title: "How to Install The Portfolio Pool on Your Device?",
-      html: messagemodalInstall,
+      html: messagemodalInstallmobile,
       icon: "question",
       heightAuto: false,
       scrollbarPadding: false,
