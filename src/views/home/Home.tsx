@@ -17,7 +17,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { PayOut } from "@/types/index";
 
 const Home = () => {
-  const isMobile = useMediaQuery("(max-width:800px)");
+  const isMobile = useMediaQuery("(max-width:900px)");
 
   const params = useParams();
   const userId = params.userId!;
@@ -56,7 +56,6 @@ const Home = () => {
         <>
           <Grid
             container
-            spacing={1}
             flexWrap={"wrap"}
             justifyContent={"center"}
             ml={!isMobile ? "25px" : 0}
@@ -145,6 +144,7 @@ const Home = () => {
                 <p>Paul-Tapaszi</p>
               </div>
             </Grid>
+
             <Grid
               container
               spacing={2}

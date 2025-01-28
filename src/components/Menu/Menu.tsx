@@ -157,8 +157,8 @@ export default function MiniDrawer() {
     <BallIcon key="ball" />,
     <BasquetIcon key="basquet" />,
     <ReceiptLongIcon key="receipt" />,
-    <HistoryIcon key="history" />,
     <PodiumIcon key="stats" />,
+    <HistoryIcon key="history" />,
     <LogoutIcon key="logout" />,
   ];
 
@@ -233,8 +233,8 @@ export default function MiniDrawer() {
               { text: "Home", id: `home/${userId}` },
               { text: "My Portfolios", id: `myPortfolio/${userId}` },
               { text: "Instructions", id: `instructions/${userId}` },
-              { text: "History", id: `history/${userId}` },
               { text: "Stats", id: `stats/${userId}` },
+              { text: "History", id: `history/${userId}` },
               { text: "LogOut", id: "logOut" },
             ].map((el, index) => (
               <Grid key={index}>

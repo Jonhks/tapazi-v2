@@ -3,7 +3,7 @@ import classes from "./HistoryPortfolios.module.css";
 import { Zoom, Button } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
-import { PodiumIcon } from "@/assets/icons/icons";
+// import { PodiumIcon } from "@/assets/icons/icons";
 // import BallLoader from "../../UI/BallLoader/BallLoader";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
@@ -131,7 +131,7 @@ const History = () => {
 
   // console.log(mostPickedTeams);
 
-  const [tournament, setTournament] = useState("");
+  // const [tournament, setTournament] = useState("");
   const [score, setScore] = useState("");
   const [selectedScore, setSelectedScore] = useState({
     name: "Historical All Rounds",
@@ -145,7 +145,7 @@ const History = () => {
     if (tournaments) {
       const current = tournaments.filter((el: Tournament) => el?.current)[0];
 
-      setTournament(current?.name);
+      // setTournament(current?.name);
       setScore("Teams Picked Tables");
       setSelectedTournament(current);
       setTimeout(async () => {
@@ -166,13 +166,12 @@ const History = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleChange = (e) => {
-    console.log(e.target.name);
-
+    // console.log(e.target.name);
     if (e?.target?.name === "tournament") {
       const optionSelect = tournaments.filter(
         (el: Tournament) => el?.name === e?.target?.value
       )[0];
-      setTournament(e?.target?.value);
+      // setTournament(e?.target?.value);
       setSelectedTournament(optionSelect);
     } else if (e?.target?.name === "dataDropdowndata") {
       const optionSelect = dataDropdowndata.filter(
@@ -190,7 +189,7 @@ const History = () => {
       <Grid
         size={12}
         style={{
-          minHeight: "700px",
+          // minHeight: "700px",
           height: "calc(100vh - 56px)",
           overflow: "scroll",
         }}
@@ -201,11 +200,11 @@ const History = () => {
           display={"flex"}
           justifyContent={"center"}
           alignContent={"center"}
-          flexWrap={"nowrap"}
+          flexWrap={"wrap"}
           size={12}
         >
           <Grid
-            size={{ xs: 11, md: 8 }}
+            size={{ xs: 11, md: 10 }}
             m={1}
             className={`${classes.boxHistory} ${classes.active}`}
             id="first"
@@ -241,7 +240,7 @@ const History = () => {
               flexWrap={"nowrap"}
             >
               <Grid container>
-                <Grid size={12}>
+                {/* <Grid size={12}>
                   <span>Tournament:</span>
                   <div className={classes.containerDrop}>
                     <PodiumIcon />
@@ -254,7 +253,7 @@ const History = () => {
                       options={tournaments}
                     />
                   </div>
-                </Grid>
+                </Grid> */}
                 <Grid size={12}>
                   <span>Data:</span>
                   <div className={classes.containerDrop}>
@@ -275,7 +274,7 @@ const History = () => {
                     <AutoGraphIcon />
                     <DropDownHistory
                       name={"Graph"}
-                      label={"Graph"}
+                      label={"Chart"}
                       className={classes.DropDownHistory}
                       value={graphType?.name}
                       handleChange={handleChangeGraph}

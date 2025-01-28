@@ -19,8 +19,8 @@ const Icons = [
   <BallIcon key="ball" />,
   <BasquetIcon key="basquet" />,
   <ReceiptLongIcon key="receipt" />,
-  <HistoryIcon key="history" />,
   <PodiumIcon key="stats" />,
+  <HistoryIcon key="history" />,
   <MoreIcon key="more" />,
 ];
 
@@ -38,8 +38,8 @@ function ResponsiveAppBar() {
     { text: "Home", id: `home/${userId}` },
     { text: "My Portfolios", id: `myPortfolio/${userId}` },
     { text: "Instructions", id: `instructions/${userId}` },
-    { text: "History", id: `history/${userId}` },
     { text: "Stats", id: `stats/${userId}` },
+    { text: "History", id: `history/${userId}` },
     { text: "More", id: "more" },
   ];
 
