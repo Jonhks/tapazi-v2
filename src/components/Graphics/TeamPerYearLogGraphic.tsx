@@ -1,9 +1,12 @@
+import { TeamsPerYearLog } from "@/types/index";
 import { Chart, GoogleChartWrapperChartType } from "react-google-charts";
 
 function TeamPerYearlogGraphic({
   graphType,
+  teamsPerYearLog,
 }: {
   graphType: GoogleChartWrapperChartType;
+  teamsPerYearLog: TeamsPerYearLog;
 }) {
   // chart.draw(data, {
   //   width: 400,
@@ -13,24 +16,40 @@ function TeamPerYearlogGraphic({
   //   is3D: true,
   // });
 
+  const convertData = (
+    data: { year: number; tournament_id: number; teams: number }[]
+  ): (string | number)[][] => {
+    const header = ["Year", "Tournament ID", "Teams"];
+    const rows = data.map((item) => [
+      item.year.toString(),
+      item.tournament_id,
+      item.teams,
+    ]);
+    return [header, ...rows];
+  };
+
+  const convertedData = convertData(teamsPerYearLog);
+
+  console.log(teamsPerYearLog);
+
+  console.log(convertedData);
+
   return (
     <Chart
       // Try different chart types by changing this property with one of: ColumnChart, LineChart, AreaChart, BarChart, BubbleChart, ComboChart,  PieChart, DonutChart, GeoChart, Histogram, Line, RadarChart, ScatterChart, SteppedAreaChart, Table
+      // chartType={"SteppedAreaChart"}
       chartType={graphType}
-      // chartType="ColumnChart"
-      data={[
-        ["Year", "Sales", "Expenses", "Profit"],
-        ["2013", 1000, 400, 300],
-        ["2014", 1170, 460, 955],
-        ["2015", 660, 1120, 766],
-        ["2016", 1030, 540, 455],
-      ]}
+      data={convertedData}
       options={{
         title: "Average Weight by Age",
-        // colors: ["#000", "#ccc", "#fff"],
+        colors: ["#238b94", "#b45705", "#fff"],
         is3D: true,
-        vAxis: { title: "Age" },
-        hAxis: { title: "Weight" },
+        vAxis: { title: "Tournament" },
+        hAxis: { title: "Year" },
+        // chartArea: { backgroundColor: "#000" },
+        // backgroundColor: "rgb(37, 150, 190)",
+        // backgroundColor: "hsl(21, 93%, 18%)",
+        opacity: 0.5,
       }}
       legendToggle
     />

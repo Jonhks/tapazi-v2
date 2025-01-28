@@ -82,8 +82,6 @@ const Stats = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleChange = (e) => {
-    console.log(e.target.name);
-
     if (e?.target?.name === "tournament") {
       const optionSelect = tournaments.filter(
         (el: Tournament) => el?.name === e?.target?.value
@@ -102,116 +100,113 @@ const Stats = () => {
   if (isLoading) return <Loader />;
 
   return (
-    <>
+    <Grid
+      style={{
+        minHeight: "700px",
+        height: "calc(100vh - 56px)",
+        overflow: "scroll",
+      }}
+    >
       <Grid
-        size={12}
-        style={{
-          minHeight: "700px",
-          height: "calc(100vh - 56px)",
-          overflow: "scroll",
-        }}
+        container
+        size={2}
+        spacing={1}
+        display={"flex"}
+        justifyContent={"center"}
+        alignContent={"center"}
+        flexWrap={"nowrap"}
       >
         <Grid
-          container
-          spacing={1}
-          display={"flex"}
-          justifyContent={"center"}
-          alignContent={"center"}
-          flexWrap={"nowrap"}
-          size={12}
+          size={{ xs: 11, md: 10 }}
+          m={1}
+          className={`${classes.boxHistory} ${classes.active}`}
+          id="first"
         >
           <Grid
-            size={{ xs: 11, md: 8 }}
-            m={1}
-            className={`${classes.boxHistory} ${classes.active}`}
-            id="first"
+            size={12}
+            className={classes.containerHeadHistory}
           >
-            <Grid
-              size={12}
-              className={classes.containerHeadHistory}
-            >
-              <Grid size={{ xs: 6, sm: 6, md: 6 }}>
-                <p className={classes.titleBox}>
-                  <HistoryIcon /> Stats
-                </p>
-              </Grid>
-              <Grid size={{ xs: 6, sm: 4, md: 4 }}>
-                <Button
-                  variant="contained"
-                  // color="success"
-                  style={{
-                    width: "100%",
-                    textTransform: "capitalize",
-                    backgroundColor: "#238b94",
-                  }}
-                  className={classes.btnSubmit}
-                  // onClick={() => getScoreHistory()}
-                >
-                  Send
-                </Button>
-              </Grid>
+            <Grid size={{ xs: 6, sm: 6, md: 6 }}>
+              <p className={classes.titleBox}>
+                <HistoryIcon /> Stats
+              </p>
             </Grid>
-            <Grid
-              container
-              className={classes.subBoxHistory}
-              flexWrap={"nowrap"}
-            >
-              <Grid container>
-                <Grid size={12}>
-                  <span>Tournament:</span>
-                  <div className={classes.containerDrop}>
-                    <PodiumIcon />
-                    <DropDownHistory
-                      name={"tournament"}
-                      label={"Tournament"}
-                      className={classes.DropDownHistory}
-                      value={tournament}
-                      handleChange={handleChange}
-                      options={tournaments}
-                    />
-                  </div>
-                </Grid>
+            <Grid size={{ xs: 6, sm: 4, md: 4 }}>
+              <Button
+                variant="contained"
+                // color="success"
+                style={{
+                  width: "100%",
+                  textTransform: "capitalize",
+                  backgroundColor: "#238b94",
+                }}
+                className={classes.btnSubmit}
+                // onClick={() => getScoreHistory()}
+              >
+                Send
+              </Button>
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            className={classes.subBoxHistory}
+            flexWrap={"nowrap"}
+          >
+            <Grid container>
+              <Grid size={12}>
+                <span>Tournament:</span>
+                <div className={classes.containerDrop}>
+                  <PodiumIcon />
+                  <DropDownHistory
+                    name={"tournament"}
+                    label={"Tournament"}
+                    className={classes.DropDownHistory}
+                    value={tournament}
+                    handleChange={handleChange}
+                    options={tournaments}
+                  />
+                </div>
+              </Grid>
 
-                <Grid size={12}>
-                  <span>Data:</span>
-                  <div className={classes.containerDrop}>
-                    <DescriptionIcon />
-                    <DropDownHistory
-                      name={"dataDropdowndata"}
-                      label={"Data"}
-                      className={classes.DropDownHistory}
-                      value={selectedScore?.name}
-                      handleChange={handleChange}
-                      options={dataDropdowndata}
-                    />
-                  </div>
-                </Grid>
+              <Grid size={12}>
+                <span>Data:</span>
+                <div className={classes.containerDrop}>
+                  <DescriptionIcon />
+                  <DropDownHistory
+                    name={"dataDropdowndata"}
+                    label={"Data"}
+                    className={classes.DropDownHistory}
+                    value={selectedScore?.name}
+                    handleChange={handleChange}
+                    options={dataDropdowndata}
+                  />
+                </div>
               </Grid>
             </Grid>
           </Grid>
         </Grid>
-        <Grid
-          container
-          spacing={2}
-          display={"flex"}
-          justifyContent={"center"}
-          alignContent={"center"}
-        >
-          <Grid
-            size={12}
-            className={classes.containerBtn}
-          ></Grid>
-          <Zoom in={true}>
-            <Grid size={11}>
-              <TableHistory
-                arrHistory={[]}
-                score={score}
-              />
-            </Grid>
-          </Zoom>
-        </Grid>
       </Grid>
-    </>
+      <Grid
+        container
+        spacing={2}
+        display={"flex"}
+        justifyContent={"center"}
+        alignContent={"center"}
+      >
+        <Grid
+          size={12}
+          className={classes.containerBtn}
+        ></Grid>
+        <Zoom in={true}>
+          <Grid size={11}>
+            <TableHistory
+              arrHistory={[]}
+              score={score}
+            />
+          </Grid>
+        </Zoom>
+      </Grid>
+    </Grid>
   );
 };
 

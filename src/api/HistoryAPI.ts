@@ -63,7 +63,7 @@ export const getScoreHistory = () => {
   //   });
 };
 
-export const getMostPickedTeams = async () => {
+export const getTeamsPerYearLog = async () => {
   try {
     const url = `/teams-per-year-log?api-key=TESTAPIKEY`;
     const { data } = await api(url, {
@@ -71,7 +71,10 @@ export const getMostPickedTeams = async () => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    return data;
+
+    if (data.success) {
+      return data.data.teamsPerYearLog;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

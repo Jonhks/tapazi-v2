@@ -118,3 +118,16 @@ export const tournamentsSchema = z.array(tournamentSchema);
 
 export type Tournament = z.infer<typeof tournamentSchema>;
 export type Tournaments = z.infer<typeof tournamentsSchema>;
+
+// teamsPerYearLog
+
+export const teamPerYearLogSchema = z.object({
+  year: z.number(),
+  teams: z.number(),
+  tournament_id: z.number(),
+});
+
+export const teamsPerYearLogSchema = z.array(teamPerYearLogSchema);
+
+export type TeamPerYearLog = z.infer<typeof teamPerYearLogSchema>;
+export type TeamsPerYearLog = z.infer<typeof teamsPerYearLogSchema>;

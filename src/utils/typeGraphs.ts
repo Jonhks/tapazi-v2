@@ -35,6 +35,10 @@ export const typeGraphs: typeGraph[] = [
     id: "8",
   },
   {
+    name: "BubbleChart",
+    id: "9",
+  },
+  {
     name: "ScatterChart",
     id: "13",
   },
