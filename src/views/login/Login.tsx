@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+
 import Grid from "@mui/material/Grid2";
 import {
   Container,
@@ -24,6 +26,17 @@ const Login = () => {
     email: "",
     password: "",
   };
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
+    if (user.name && user.id) {
+      navigate(`/home/${user.id}`, {
+        replace: true,
+      });
+    }
+    console.log(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const {
     register,
