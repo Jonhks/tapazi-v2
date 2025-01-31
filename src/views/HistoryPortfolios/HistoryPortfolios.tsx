@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import classes from "./HistoryPortfolios.module.css";
-import { Zoom, Button } from "@mui/material";
+import { Zoom } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
 // import { PodiumIcon } from "@/assets/icons/icons";
@@ -16,65 +16,6 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import TeamPerYearlogGraphic from "@/components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import { typeGraphs } from "@/utils/typeGraphs";
-
-// const fakeData = [
-//   {
-//     name: "Uno",
-//     id: "1",
-//     team: "Uno",
-//     timesPicked: 10,
-//     percent: 36,
-//     roundEliminated: 1,
-//   },
-//   {
-//     name: "Dos",
-//     id: "2",
-//     team: "Dos",
-//     timesPicked: 35,
-//     percent: 21,
-//     roundEliminated: 0,
-//   },
-//   {
-//     name: "Tres",
-//     id: "3",
-//     team: "Tres",
-//     timesPicked: 56,
-//     percent: 5,
-//     roundEliminated: 5,
-//   },
-//   {
-//     name: "Cuatro",
-//     id: "4",
-//     team: "Cuatro",
-//     timesPicked: 100,
-//     percent: 46,
-//     roundEliminated: 13,
-//   },
-//   {
-//     name: "Cinco",
-//     id: "5",
-//     team: "Cinco",
-//     timesPicked: 13,
-//     percent: 13,
-//     roundEliminated: 13,
-//   },
-//   {
-//     name: "Seis",
-//     id: "6",
-//     team: "Seis",
-//     timesPicked: 6,
-//     percent: 12,
-//     roundEliminated: 1,
-//   },
-//   {
-//     name: "Siete",
-//     id: "7",
-//     team: "Siete",
-//     timesPicked: 17,
-//     percent: 76,
-//     roundEliminated: 1,
-//   },
-// ];
 
 const History = () => {
   const params = useParams();
@@ -218,21 +159,7 @@ const History = () => {
                   <HistoryIcon /> History
                 </p>
               </Grid>
-              <Grid size={{ xs: 6, sm: 4, md: 4 }}>
-                <Button
-                  variant="contained"
-                  // color="success"
-                  style={{
-                    width: "100%",
-                    textTransform: "capitalize",
-                    backgroundColor: "#238b94",
-                  }}
-                  className={classes.btnSubmit}
-                  // onClick={() => getScoreHistory()}
-                >
-                  Send
-                </Button>
-              </Grid>
+              <Grid size={{ xs: 6, sm: 4, md: 4 }}></Grid>
             </Grid>
             <Grid
               container
@@ -302,7 +229,7 @@ const History = () => {
               in={true}
               style={{ marginBottom: "20px" }}
             >
-              <Grid size={6}>
+              <Grid size={{ xs: 10, lg: 6 }}>
                 <TableHistoryTeamsPerYearLog
                   arrHistory={teamsPerYearLog}
                   score={score}
