@@ -58,7 +58,7 @@ function ResponsiveAppBar() {
       showCancelButton: true,
       confirmButtonColor: "#238b94",
       cancelButtonColor: "#c7630b",
-      confirmButtonText: "Yes, delete it!",
+      confirmButtonText: "Yes, I want to sign out!!!",
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("userTapaszi");

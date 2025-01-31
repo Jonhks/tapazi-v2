@@ -92,13 +92,13 @@ const History = () => {
       id: "2",
     },
     {
-      name: "Teams Picked",
+      name: "Teams Picked at Least Once per Year ",
       id: "3",
     },
-    {
-      name: "Teams Filtered by Portfolio Risk",
-      id: "4",
-    },
+    // {
+    //   name: "Teams Filtered by Portfolio Risk",
+    //   id: "4",
+    // },
   ];
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -181,6 +181,8 @@ const History = () => {
   };
 
   if (isLoading) return <Loader />;
+
+  console.log(graphType);
 
   return (
     <>
@@ -295,22 +297,32 @@ const History = () => {
             size={12}
             className={classes.containerBtn}
           ></Grid>
-          <Zoom in={true}>
-            <Grid size={11}>
-              <TableHistoryTeamsPerYearLog
-                arrHistory={[]}
-                score={score}
-              />
-            </Grid>
-          </Zoom>
-          <Zoom in={true}>
-            <Grid size={10}>
-              <TeamPerYearlogGraphic
-                teamsPerYearLog={teamsPerYearLog}
-                graphType={graphType.name}
-              />
-            </Grid>
-          </Zoom>
+          {selectedScore.id === "3" && graphType.name === "Table" && (
+            <Zoom
+              in={true}
+              style={{ marginBottom: "20px" }}
+            >
+              <Grid size={6}>
+                <TableHistoryTeamsPerYearLog
+                  arrHistory={teamsPerYearLog}
+                  score={score}
+                />
+              </Grid>
+            </Zoom>
+          )}
+          {selectedScore.id === "3" && graphType.name !== "Table" && (
+            <Zoom
+              in={true}
+              style={{ marginBottom: "20px" }}
+            >
+              <Grid size={10}>
+                <TeamPerYearlogGraphic
+                  teamsPerYearLog={teamsPerYearLog}
+                  graphType={graphType.name}
+                />
+              </Grid>
+            </Zoom>
+          )}
         </Grid>
       </Grid>
     </>

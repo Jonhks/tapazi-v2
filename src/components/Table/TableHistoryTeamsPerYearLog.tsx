@@ -1,7 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { useEffect, useState } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -25,6 +24,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: "white",
     border: "2px solid #eaad2b",
     fontWeight: "bold",
+    padding: 2,
   },
 }));
 
@@ -43,74 +43,16 @@ const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 export default function CustomizedTables({ arrHistory, score }) {
-  const [showEliminatedTeams, setShowEliminatedTeams] = useState(false);
+  console.log(arrHistory);
 
-  useEffect(() => {
-    const findEliminatedTeams = arrHistory?.filter((el) => el?.eliminatedTeams);
-    if (findEliminatedTeams) {
-      if (findEliminatedTeams[0]) {
-        setShowEliminatedTeams(true);
-      } else {
-        setShowEliminatedTeams(false);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [arrHistory]);
-
-  function createData(
-    portfolioName,
-    portfolioWeight,
-    team1Name,
-    team2Name,
-    team3Name,
-    team4Name,
-    team5Name,
-    team6Name,
-    team7Name,
-    team8Name,
-    wins,
-    score,
-    championshipPoints,
-    eliminatedTeams
-  ) {
+  function createData(year, teams) {
     return {
-      portfolioName,
-      portfolioWeight,
-      team1Name,
-      team2Name,
-      team3Name,
-      team4Name,
-      team5Name,
-      team6Name,
-      team7Name,
-      team8Name,
-      wins,
-      score,
-      championshipPoints,
-      eliminatedTeams,
+      year,
+      teams,
     };
   }
 
-  const rows = [
-    arrHistory?.map((row) =>
-      createData(
-        row?.portfolioName,
-        row?.portfolioWeight,
-        row?.team1Name,
-        row?.team2Name,
-        row?.team3Name,
-        row?.team4Name,
-        row?.team5Name,
-        row?.team6Name,
-        row?.team7Name,
-        row?.team8Name,
-        row?.wins,
-        row?.score,
-        row?.championshipPoints,
-        row?.eliminatedTeams
-      )
-    ),
-  ];
+  const rows = [arrHistory?.map((row) => createData(row?.year, row?.teams))];
 
   return (
     <TableContainer
@@ -124,23 +66,8 @@ export default function CustomizedTables({ arrHistory, score }) {
       >
         <TableHead>
           <TableRow className={classes?.tableRow}>
-            <StyledTableCell>Portfolio Name</StyledTableCell>
-            <StyledTableCell>Portfolio Weight</StyledTableCell>
-            <StyledTableCell>Team1</StyledTableCell>
-            <StyledTableCell>Team2</StyledTableCell>
-            <StyledTableCell>Team3</StyledTableCell>
-            <StyledTableCell>Team4</StyledTableCell>
-            <StyledTableCell>Team5</StyledTableCell>
-            <StyledTableCell>Team6</StyledTableCell>
-            <StyledTableCell>Team7</StyledTableCell>
-            <StyledTableCell>Team8</StyledTableCell>
-            <StyledTableCell>Wins</StyledTableCell>
-            <StyledTableCell>Score</StyledTableCell>
-            {showEliminatedTeams ? (
-              <StyledTableCell>Eliminated Teams</StyledTableCell>
-            ) : (
-              <StyledTableCell>Championship Game Points</StyledTableCell>
-            )}
+            <StyledTableCell>Year</StyledTableCell>
+            <StyledTableCell>Team</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -150,24 +77,9 @@ export default function CustomizedTables({ arrHistory, score }) {
                 component="th"
                 scope="row"
               >
-                {row?.portfolioName}
+                {row?.year}
               </StyledTableCell>
-              <StyledTableCell>{row?.portfolioWeight}</StyledTableCell>
-              <StyledTableCell>{row?.team1Name}</StyledTableCell>
-              <StyledTableCell>{row?.team2Name}</StyledTableCell>
-              <StyledTableCell>{row?.team3Name}</StyledTableCell>
-              <StyledTableCell>{row?.team4Name}</StyledTableCell>
-              <StyledTableCell>{row?.team5Name}</StyledTableCell>
-              <StyledTableCell>{row?.team6Name}</StyledTableCell>
-              <StyledTableCell>{row?.team7Name}</StyledTableCell>
-              <StyledTableCell>{row?.team8Name}</StyledTableCell>
-              <StyledTableCell>{row?.wins}</StyledTableCell>
-              <StyledTableCell>{row?.score}</StyledTableCell>
-              {showEliminatedTeams ? (
-                <StyledTableCell>{row.eliminatedTeams}</StyledTableCell>
-              ) : (
-                <StyledTableCell>{row?.championshipPoints}</StyledTableCell>
-              )}
+              <StyledTableCell>{row?.teams}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
