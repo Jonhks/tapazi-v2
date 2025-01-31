@@ -68,7 +68,7 @@ const Home = () => {
             <Grid
               size={11}
               display={"flex"}
-              flexWrap={"wrap"}
+              flexWrap={isMobile ? "wrap" : "nowrap"}
               justifyContent={"space-around"}
               flexDirection={"row"}
             >

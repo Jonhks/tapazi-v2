@@ -57,7 +57,7 @@
   background-color: #f69b4b !important;
 }
 
-@media (width < 700px) {
+@media (width < 900px) {
   .titleBox {
     font-size: 1rem;
     text-align: center;
