@@ -115,7 +115,7 @@ export default function CustomizedTables({ arrHistory, score }) {
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "transparent" }}
+      sx={{ backgroundColor: "#572d03" }}
     >
       <div className={classes?.firstTableRow}>{score}</div>
       <Table

@@ -128,6 +128,15 @@ export const teamPerYearLogSchema = z.object({
 });
 
 export const teamsPerYearLogSchema = z.array(teamPerYearLogSchema);
-
 export type TeamPerYearLog = z.infer<typeof teamPerYearLogSchema>;
 export type TeamsPerYearLog = z.infer<typeof teamsPerYearLogSchema>;
+
+export const teamPerfectPortfoliosSchema = z.object({
+  year: z.number(),
+  tournament_id: z.number(),
+  total_weight: z.number(),
+  total_points: z.number(),
+  tournament_name: z.string(),
+});
+
+export type TeamPerfectPortfolios = z.infer<typeof teamPerfectPortfoliosSchema>;

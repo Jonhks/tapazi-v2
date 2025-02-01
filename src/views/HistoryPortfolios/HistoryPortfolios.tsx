@@ -8,10 +8,17 @@ import HistoryIcon from "@mui/icons-material/History";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { getTeamsPerYearLog, getTournaments } from "@/api/HistoryAPI";
+import {
+  getTeamsHistoricAllRounds,
+  getTeamsPerfectPortfolios,
+  getTeamsPerYearLog,
+  getTournaments,
+} from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 import Loader from "@/components/BallLoader/BallLoader";
 import TableHistoryTeamsPerYearLog from "@/components/Table/TableHistoryTeamsPerYearLog";
+import TableHistoryPerfectPortfolios from "@/components/Table/TableHistoryPerfectPortfolios";
+import TableHistoryAllRounds from "@/components/Table/TableHistoryAllRounds";
 import DescriptionIcon from "@mui/icons-material/Description";
 import TeamPerYearlogGraphic from "@/components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
@@ -63,15 +70,27 @@ const History = () => {
     queryFn: () => getTournaments(),
   });
 
-  const { data: teamsPerYearLog } = useQuery({
-    queryKey: ["mostPickedTeams", userId],
-    queryFn: () => getTeamsPerYearLog(),
-  });
+  const { data: teamsPerYearLog, isLoading: loadingTeamsPerYearLog } = useQuery(
+    {
+      queryKey: ["teamsPerYearLog", userId],
+      queryFn: () => getTeamsPerYearLog(),
+    }
+  );
 
-  // console.log(teamsPerYearLog);
+  const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
+    useQuery({
+      queryKey: ["teamsPerfectPortfolios", userId],
+      queryFn: () => getTeamsPerfectPortfolios(),
+    });
+
+  const { data: teamsHistoricAllRounds, isLoading: loadingHistoryAllRounds } =
+    useQuery({
+      queryKey: ["teamsHistoricAllRounds", userId],
+      queryFn: () => getTeamsHistoricAllRounds(),
+    });
 
   // const [tournament, setTournament] = useState("");
-  const [score, setScore] = useState("");
+  // const [score, setScore] = useState("");
   const [selectedScore, setSelectedScore] = useState({
     name: "Historical All Rounds",
     id: "1",
@@ -83,9 +102,8 @@ const History = () => {
   useEffect(() => {
     if (tournaments) {
       const current = tournaments.filter((el: Tournament) => el?.current)[0];
-
       // setTournament(current?.name);
-      setScore("Teams Per Year Log");
+      // setScore("Teams Per Year Log");
       setSelectedTournament(current);
       setTimeout(async () => {
         if (selectedTournament?.id) {
@@ -116,21 +134,26 @@ const History = () => {
       const optionSelect = dataDropdowndata.filter(
         (el: dataDropdowndataType) => el?.name === e?.target?.value
       )[0];
-      setScore(e?.target?.value);
+      // setScore(e?.target?.value);
       setSelectedScore(optionSelect);
     }
   };
 
-  if (isLoading) return <Loader />;
+  if (
+    isLoading ||
+    loadingTeamsPerYearLog ||
+    loadingPerfectPortfolios ||
+    loadingHistoryAllRounds
+  )
+    return <Loader />;
 
-  console.log(graphType);
+  // console.log(graphType);
 
   return (
     <>
       <Grid
         size={12}
         style={{
-          // minHeight: "700px",
           height: "calc(100vh - 56px)",
           overflow: "scroll",
         }}
@@ -166,7 +189,10 @@ const History = () => {
               className={classes.subBoxHistory}
               flexWrap={"nowrap"}
             >
-              <Grid container>
+              <Grid
+                container
+                size={6}
+              >
                 {/* <Grid size={12}>
                   <span>Tournament:</span>
                   <div className={classes.containerDrop}>
@@ -195,20 +221,22 @@ const History = () => {
                     />
                   </div>
                 </Grid>
-                <Grid size={12}>
-                  <span>Chart:</span>
-                  <div className={classes.containerDrop}>
-                    <AutoGraphIcon />
-                    <DropDownHistory
-                      name={"Graph"}
-                      label={"Chart"}
-                      className={classes.DropDownHistory}
-                      value={graphType?.name}
-                      handleChange={handleChangeGraph}
-                      options={typeGraphs}
-                    />
-                  </div>
-                </Grid>
+                {selectedScore.id === "3" && (
+                  <Grid size={12}>
+                    <span>Chart:</span>
+                    <div className={classes.containerDrop}>
+                      <AutoGraphIcon />
+                      <DropDownHistory
+                        name={"Graph"}
+                        label={"Chart"}
+                        className={classes.DropDownHistory}
+                        value={graphType?.name}
+                        handleChange={handleChangeGraph}
+                        options={typeGraphs}
+                      />
+                    </div>
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -224,6 +252,34 @@ const History = () => {
             size={12}
             className={classes.containerBtn}
           ></Grid>
+
+          {selectedScore.id === "1" && (
+            <Zoom
+              in={true}
+              style={{ marginBottom: "20px" }}
+            >
+              <Grid size={{ xs: 10, lg: 10 }}>
+                <TableHistoryAllRounds
+                  arrHistory={teamsHistoricAllRounds}
+                  score={selectedScore.name}
+                />
+              </Grid>
+            </Zoom>
+          )}
+
+          {selectedScore.id === "2" && (
+            <Zoom
+              in={true}
+              style={{ marginBottom: "20px" }}
+            >
+              <Grid size={{ xs: 10, lg: 6 }}>
+                <TableHistoryPerfectPortfolios
+                  arrHistory={teamsPerfectPortfolios}
+                  score={selectedScore.name}
+                />
+              </Grid>
+            </Zoom>
+          )}
           {selectedScore.id === "3" && graphType.name === "Table" && (
             <Zoom
               in={true}
@@ -232,7 +288,7 @@ const History = () => {
               <Grid size={{ xs: 10, lg: 6 }}>
                 <TableHistoryTeamsPerYearLog
                   arrHistory={teamsPerYearLog}
-                  score={score}
+                  score={selectedScore.name}
                 />
               </Grid>
             </Zoom>

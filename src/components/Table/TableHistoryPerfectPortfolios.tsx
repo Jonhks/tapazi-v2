@@ -37,22 +37,29 @@ const StyledTableRow = styled(TableRow)(() => ({
     backgroundColor: "#e27d25",
     color: "white",
   },
-  "&:last-child td, &:last-child th": {
-    // border: 0,
-  },
+  "&:last-child td, &:last-child th": {},
 }));
 
 export default function CustomizedTables({ arrHistory, score }) {
-  console.log(arrHistory);
-
-  function createData(year, teams) {
+  function createData(year, tournament_name, total_weight, total_points) {
     return {
       year,
-      teams,
+      tournament_name,
+      total_weight,
+      total_points,
     };
   }
 
-  const rows = [arrHistory?.map((row) => createData(row?.year, row?.teams))];
+  const rows = [
+    arrHistory?.map((row) =>
+      createData(
+        row?.year,
+        row.tournament_name,
+        row?.total_weight,
+        row?.total_points
+      )
+    ),
+  ];
 
   return (
     <TableContainer
@@ -67,7 +74,9 @@ export default function CustomizedTables({ arrHistory, score }) {
         <TableHead>
           <TableRow className={classes?.tableRow}>
             <StyledTableCell>Year</StyledTableCell>
-            <StyledTableCell>Team</StyledTableCell>
+            <StyledTableCell>Tournament</StyledTableCell>
+            <StyledTableCell>Total weight</StyledTableCell>
+            <StyledTableCell>Total points</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -79,7 +88,9 @@ export default function CustomizedTables({ arrHistory, score }) {
               >
                 {row?.year}
               </StyledTableCell>
-              <StyledTableCell>{row?.teams}</StyledTableCell>
+              <StyledTableCell>{row?.tournament_name}</StyledTableCell>
+              <StyledTableCell>{row?.total_weight}</StyledTableCell>
+              <StyledTableCell>{row?.total_points}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

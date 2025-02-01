@@ -81,3 +81,39 @@ export const getTeamsPerYearLog = async () => {
     return;
   }
 };
+
+export const getTeamsPerfectPortfolios = async () => {
+  try {
+    const url = `/historical-perfect-portfolios-header?api-key=TESTAPIKEY`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (data.success) {
+      return data.data.historicalPerfectPortfoliosHeader;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getTeamsHistoricAllRounds = async () => {
+  try {
+    const url = `/historical-all-rounds?api-key=TESTAPIKEY`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (data.success) {
+      return data.data.historicalAllRounds;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
