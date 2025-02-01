@@ -41,10 +41,9 @@ const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 export default function CustomizedTables({ arrHistory, score }) {
-  function createData(year, tournament_name, total_weight, total_points) {
+  function createData(year, total_weight, total_points) {
     return {
       year,
-      tournament_name,
       total_weight,
       total_points,
     };
@@ -52,12 +51,7 @@ export default function CustomizedTables({ arrHistory, score }) {
 
   const rows = [
     arrHistory?.map((row) =>
-      createData(
-        row?.year,
-        row.tournament_name,
-        row?.total_weight,
-        row?.total_points
-      )
+      createData(row?.year, row?.total_weight, row?.total_points)
     ),
   ];
 
@@ -74,7 +68,6 @@ export default function CustomizedTables({ arrHistory, score }) {
         <TableHead>
           <TableRow className={classes?.tableRow}>
             <StyledTableCell>Year</StyledTableCell>
-            <StyledTableCell>Tournament</StyledTableCell>
             <StyledTableCell>Total weight</StyledTableCell>
             <StyledTableCell>Total points</StyledTableCell>
           </TableRow>
@@ -88,7 +81,6 @@ export default function CustomizedTables({ arrHistory, score }) {
               >
                 {row?.year}
               </StyledTableCell>
-              <StyledTableCell>{row?.tournament_name}</StyledTableCell>
               <StyledTableCell>{row?.total_weight}</StyledTableCell>
               <StyledTableCell>{row?.total_points}</StyledTableCell>
             </StyledTableRow>

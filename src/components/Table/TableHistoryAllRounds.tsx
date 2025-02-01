@@ -44,7 +44,6 @@ export default function CustomizedTables({ arrHistory, score }) {
   if (!arrHistory) return null;
   function createData(
     year,
-    tournament_name,
     total_wins,
     round5_score,
     round5_place,
@@ -69,12 +68,10 @@ export default function CustomizedTables({ arrHistory, score }) {
     perfect_score,
     hist_perform,
     final_score,
-    final_place,
-    consecutive
+    final_place
   ) {
     return {
       year,
-      tournament_name,
       total_wins,
       round5_score,
       round5_place,
@@ -100,7 +97,6 @@ export default function CustomizedTables({ arrHistory, score }) {
       hist_perform,
       final_score,
       final_place,
-      consecutive,
     };
   }
 
@@ -108,7 +104,6 @@ export default function CustomizedTables({ arrHistory, score }) {
     arrHistory?.map((row) =>
       createData(
         row.year,
-        row.tournament_name,
         row.total_wins,
         row.round5_score,
         row.round5_place,
@@ -133,8 +128,7 @@ export default function CustomizedTables({ arrHistory, score }) {
         row.perfect_score,
         row.hist_perform,
         row.final_score,
-        row.final_place,
-        row.consecutive
+        row.final_place
       )
     ),
   ];
@@ -144,12 +138,12 @@ export default function CustomizedTables({ arrHistory, score }) {
   };
 
   const getCapitalizedProperties = (obj: object) => {
-    return Object.keys(obj).map((key) => capitalizeFirstLetter(key));
+    return Object.keys(obj)
+      .filter((key) => key !== "tournament_name" && key !== "consecutive")
+      .map((key) => capitalizeFirstLetter(key));
   };
 
   const capitalizedProperties = getCapitalizedProperties(arrHistory[0]);
-
-  console.log(capitalizedProperties);
 
   return (
     <TableContainer
@@ -177,8 +171,6 @@ export default function CustomizedTables({ arrHistory, score }) {
               >
                 {row?.year}
               </StyledTableCell>
-              <StyledTableCell>{row?.tournament_name}</StyledTableCell>
-              <StyledTableCell>{row?.consecutive}</StyledTableCell>
               <StyledTableCell>{row?.portfolio_name}</StyledTableCell>
               <StyledTableCell>{row?.portfolio_weight}</StyledTableCell>
               <StyledTableCell>{row?.final_place}</StyledTableCell>
