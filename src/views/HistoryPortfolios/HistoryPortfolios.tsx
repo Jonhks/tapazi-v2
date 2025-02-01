@@ -191,7 +191,7 @@ const History = () => {
             >
               <Grid
                 container
-                size={6}
+                size={{ xs: 12, lg: 6 }}
               >
                 {/* <Grid size={12}>
                   <span>Tournament:</span>
