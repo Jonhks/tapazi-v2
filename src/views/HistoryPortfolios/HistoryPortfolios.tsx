@@ -23,6 +23,7 @@ import DescriptionIcon from "@mui/icons-material/Description";
 import TeamPerYearlogGraphic from "@/components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import { typeGraphs } from "@/utils/typeGraphs";
+import TeamPerfectPortfoliosGraphic from "@/components/Graphics/TeamPerfectPortfoliosGraphic";
 
 const History = () => {
   const params = useParams();
@@ -267,7 +268,7 @@ const History = () => {
             </Zoom>
           )}
 
-          {selectedScore.id === "2" && (
+          {selectedScore.id === "2" && graphType.name === "Table" && (
             <Zoom
               in={true}
               style={{ marginBottom: "20px" }}
@@ -280,6 +281,20 @@ const History = () => {
               </Grid>
             </Zoom>
           )}
+          {selectedScore.id === "2" && graphType.name !== "Table" && (
+            <Zoom
+              in={true}
+              style={{ marginBottom: "20px" }}
+            >
+              <Grid size={10}>
+                <TeamPerfectPortfoliosGraphic
+                  teamsPerYearLog={teamsPerfectPortfolios}
+                  graphType={graphType.name}
+                />
+              </Grid>
+            </Zoom>
+          )}
+
           {selectedScore.id === "3" && graphType.name === "Table" && (
             <Zoom
               in={true}

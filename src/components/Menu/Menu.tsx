@@ -268,7 +268,6 @@ export default function MiniDrawer() {
                       </ListItemIcon>
                       <ListItemText
                         primary={el?.text}
-                        onClick={() => navigate(el?.id)}
                         sx={{ opacity: open ? 1 : 0 }}
                       />
                     </ListItemButton>

@@ -11,16 +11,16 @@ function TeamPerYearlogGraphic({
   const convertData = (
     data: {
       year: number;
-      tournament_name: string;
+      // tournament_name: string;
       total_weight: number;
       total_points: number;
     }[]
   ): (string | number)[][] => {
-    const header = ["Year", "Tournament", "Total Weight", "Total Points"];
+    const header = ["Year", "Total Weight", "Total Points"];
     if (!data) return [];
     const rows = data.map((item) => [
       item.year.toString(),
-      item.tournament_name,
+      // item.tournament_name,
       item.total_weight,
       item.total_points,
     ]);
@@ -28,6 +28,7 @@ function TeamPerYearlogGraphic({
   };
 
   const convertedData = convertData(teamsPerYearLog);
+  console.log(convertedData);
 
   return (
     <Chart

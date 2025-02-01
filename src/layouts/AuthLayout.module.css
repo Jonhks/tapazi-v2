@@ -37,9 +37,8 @@
   overflow: scroll;
 }
 
-/* @media (width < 800px) {
-  .containerApp {
-    min-height: 800px;
-    height: 100vh;
+@media (width < 900px) {
+  .containerHistory {
+    background-position: right;
   }
-} */
+}
