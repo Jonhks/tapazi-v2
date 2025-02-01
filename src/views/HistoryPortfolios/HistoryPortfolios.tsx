@@ -221,7 +221,7 @@ const History = () => {
                     />
                   </div>
                 </Grid>
-                {selectedScore.id === "3" && (
+                {selectedScore.id !== "1" && (
                   <Grid size={12}>
                     <span>Chart:</span>
                     <div className={classes.containerDrop}>
