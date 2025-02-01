@@ -128,7 +128,7 @@ export default function MiniDrawer() {
       showCancelButton: true,
       confirmButtonColor: "#238b94",
       cancelButtonColor: "#c7630b",
-      confirmButtonText: "Yes, I want to sign out!!",
+      confirmButtonText: "Yes, I want to log out!!",
     }).then((result) => {
       if (result.isConfirmed) {
         localStorage.removeItem("userTapaszi");

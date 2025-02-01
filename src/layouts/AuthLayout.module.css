@@ -29,7 +29,7 @@
 }
 
 .containerStats {
-  background-image: url("../assets/img/stats-bg.jpg");
+  background-image: url("../assets/img/doing-sport-concept.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -40,5 +40,8 @@
 @media (width < 900px) {
   .containerHistory {
     background-position: right;
+  }
+  .containerStats {
+    background-position: left;
   }
 }

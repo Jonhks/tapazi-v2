@@ -20,21 +20,27 @@ const Stats = () => {
 
   const dataDropdowndata = [
     {
-      name: "Historical All Rounds",
+      name: "Score",
       id: "1",
+      option: "Score",
+      placeholder: "Current Score",
     },
     {
-      name: "Historical Perfect Portfolios",
+      name: "Teams",
       id: "2",
+      option: "Teams",
+      placeholder: "Teams Picked",
     },
     {
-      name: "Teams Picked",
+      name: "Portfolios",
       id: "3",
+      option: "Seed",
+      placeholder: "Picks by Seed's Distribution",
     },
-    {
-      name: "Teams Filtered by Portfolio Risk",
-      id: "4",
-    },
+    // {
+    //   name: "Teams Filtered by Portfolio Risk",
+    //   id: "4",
+    // },
   ];
 
   type dataDropdowndataType = {
@@ -50,8 +56,10 @@ const Stats = () => {
   const [tournament, setTournament] = useState("");
   const [score, setScore] = useState("");
   const [selectedScore, setSelectedScore] = useState({
-    name: "Historical All Rounds",
+    name: "Score",
     id: "1",
+    option: "Score",
+    placeholder: "Current Score",
   });
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   // const [pointsPerRound, setPointsPerRound] = useState([]);
@@ -94,6 +102,7 @@ const Stats = () => {
       )[0];
       setScore(e?.target?.value);
       setSelectedScore(optionSelect);
+      console.log(optionSelect);
     }
   };
 
@@ -167,14 +176,27 @@ const Stats = () => {
                   />
                 </div>
               </Grid>
-
               <Grid size={12}>
-                <span>Data:</span>
+                <span>Data</span>
                 <div className={classes.containerDrop}>
                   <DescriptionIcon />
                   <DropDownHistory
                     name={"dataDropdowndata"}
                     label={"Data"}
+                    className={classes.DropDownHistory}
+                    value={selectedScore?.name}
+                    handleChange={handleChange}
+                    options={dataDropdowndata}
+                  />
+                </div>
+              </Grid>
+              <Grid size={12}>
+                <span>{selectedScore.option}</span>
+                <div className={classes.containerDrop}>
+                  <DescriptionIcon />
+                  <DropDownHistory
+                    name={"subData"}
+                    label={selectedScore.placeholder}
                     className={classes.DropDownHistory}
                     value={selectedScore?.name}
                     handleChange={handleChange}
