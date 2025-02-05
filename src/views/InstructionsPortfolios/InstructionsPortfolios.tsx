@@ -68,7 +68,9 @@ const Instructions = () => {
                 The winner of the pool is the person that accumulates the most
                 points throughout the tournament with his/her 8-team portfolio.
               </p>
-              <p className={classes.graySection}>
+              <p
+                className={`${classes.graySection} ${classes.subBoxInstructionsBlack}`}
+              >
                 You can choose any 8 teams as part of your portfolio, regardless
                 of region and who they play. As an example, you may be convinced
                 that the winner of the 1st round game between Utah St. and TCU
@@ -82,7 +84,9 @@ const Instructions = () => {
                 You may choose up to 8 different portfolios, with each portfolio
                 costing $10 per entry.
               </p>
-              <p className={classes.blueSection}>
+              <p
+                className={`${classes.blueSection} ${classes.subBoxInstructionsBlack}`}
+              >
                 Scoring:
                 <br />
                 Play-in round win = 0.5 x seed
@@ -121,7 +125,9 @@ const Instructions = () => {
                 Game Winner option at the bottom of the drop-down as part of
                 your portfolio prior to the cutoff time.
               </p>
-              <p className={classes.greenSection}>
+              <p
+                className={`${classes.greenSection} ${classes.subBoxInstructionsBlack}`}
+              >
                 All portfolios MUST be received by 11pm CST on Thursday, March
                 20th. Once the portfolios have been submitted at that time, the
                 picks of each portfolio will be revealed, and the Statistics

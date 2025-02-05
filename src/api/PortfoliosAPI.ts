@@ -64,7 +64,6 @@ export const postNewPortfolio = async ({
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data);
 
     if (
       !data.success &&

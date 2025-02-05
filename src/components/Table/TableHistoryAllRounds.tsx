@@ -26,6 +26,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: "bold",
     padding: 2,
   },
+  "&.fixed": {
+    position: "sticky",
+    left: 0,
+    backgroundColor: "#572d03",
+    zIndex: 1,
+  },
+  "&.fixed + &.fixed": {
+    left: "60px", // Ajusta este valor según el ancho de la columna `year`
+  },
 }));
 
 const StyledTableRow = styled(TableRow)(() => ({
@@ -140,7 +149,7 @@ export default function CustomizedTables({ arrHistory, score }) {
   const getCapitalizedProperties = (obj: object) => {
     return Object.keys(obj)
       .filter((key) => key !== "tournament_name" && key !== "consecutive")
-      .map((key) => capitalizeFirstLetter(key));
+      .map((key) => capitalizeFirstLetter(key.replace(/_/g, " ")));
   };
 
   const capitalizedProperties = getCapitalizedProperties(arrHistory[0]);
@@ -148,9 +157,11 @@ export default function CustomizedTables({ arrHistory, score }) {
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "#572d03" }}
+      sx={{ backgroundColor: "#572d03", overflowX: "auto" }}
     >
-      <div className={classes?.firstTableRow}>{score}</div>
+      <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
+        {score}
+      </div>
       <Table
         sx={{ minWidth: 100, opacity: ".87" }}
         aria-label="customized table"
@@ -158,7 +169,12 @@ export default function CustomizedTables({ arrHistory, score }) {
         <TableHead>
           <TableRow className={classes?.tableRow}>
             {capitalizedProperties.map((property, i) => (
-              <StyledTableCell key={i}>{property}</StyledTableCell>
+              <StyledTableCell
+                key={i}
+                className={i === 0 || i === 1 ? "fixed" : ""}
+              >
+                {property}
+              </StyledTableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -168,10 +184,13 @@ export default function CustomizedTables({ arrHistory, score }) {
               <StyledTableCell
                 component="th"
                 scope="row"
+                className="fixed"
               >
                 {row?.year}
               </StyledTableCell>
-              <StyledTableCell>{row?.portfolio_name}</StyledTableCell>
+              <StyledTableCell className="fixed">
+                {row?.portfolio_name}
+              </StyledTableCell>
               <StyledTableCell>{row?.portfolio_weight}</StyledTableCell>
               <StyledTableCell>{row?.final_place}</StyledTableCell>
               <StyledTableCell>{row?.final_score}</StyledTableCell>

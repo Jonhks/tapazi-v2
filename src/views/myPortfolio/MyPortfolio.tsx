@@ -360,7 +360,7 @@ const MyPortfolio = () => {
               <div className={classes.headerPortfolio}>
                 <div>
                   <BasquetIcon />
-                  <h2>
+                  <h2 style={{ color: "white", fontSize: "2.4rem" }}>
                     Portfolio{portfolios?.length > 1 && "s"}:{" "}
                     {portfolios?.length > 0 && portfolios?.length}
                   </h2>

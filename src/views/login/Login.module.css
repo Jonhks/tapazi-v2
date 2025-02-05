@@ -155,3 +155,9 @@
   padding: 5px 10px;
   font-weight: bold;
 }
+
+@media (width < 900px) {
+  .titleTwo {
+    text-align: center;
+  }
+}

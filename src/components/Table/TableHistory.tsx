@@ -26,6 +26,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     border: "2px solid #eaad2b",
     fontWeight: "bold",
   },
+  "&.fixed": {
+    position: "sticky",
+    left: 0,
+    backgroundColor: "#572d03",
+    zIndex: 1,
+  },
+  "&.fixed + &.fixed": {
+    left: "100px", // Ajusta este valor según el ancho de la columna `portfolioName`
+  },
 }));
 
 const StyledTableRow = styled(TableRow)(() => ({
@@ -115,17 +124,21 @@ export default function CustomizedTables({ arrHistory, score }) {
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "#572d03" }}
+      sx={{ backgroundColor: "#572d03", overflowX: "auto" }}
     >
-      <div className={classes?.firstTableRow}>{score}</div>
+      <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
+        {score}
+      </div>
       <Table
         sx={{ minWidth: 100, opacity: ".87" }}
         aria-label="customized table"
       >
         <TableHead>
           <TableRow className={classes?.tableRow}>
-            <StyledTableCell>Portfolio Name</StyledTableCell>
-            <StyledTableCell>Portfolio Weight</StyledTableCell>
+            <StyledTableCell className="fixed">Portfolio Name</StyledTableCell>
+            <StyledTableCell className="fixed">
+              Portfolio Weight
+            </StyledTableCell>
             <StyledTableCell>Team1</StyledTableCell>
             <StyledTableCell>Team2</StyledTableCell>
             <StyledTableCell>Team3</StyledTableCell>
@@ -149,10 +162,13 @@ export default function CustomizedTables({ arrHistory, score }) {
               <StyledTableCell
                 component="th"
                 scope="row"
+                className="fixed"
               >
                 {row?.portfolioName}
               </StyledTableCell>
-              <StyledTableCell>{row?.portfolioWeight}</StyledTableCell>
+              <StyledTableCell className="fixed">
+                {row?.portfolioWeight}
+              </StyledTableCell>
               <StyledTableCell>{row?.team1Name}</StyledTableCell>
               <StyledTableCell>{row?.team2Name}</StyledTableCell>
               <StyledTableCell>{row?.team3Name}</StyledTableCell>

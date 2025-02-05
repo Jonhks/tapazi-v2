@@ -35,6 +35,10 @@
   color: white;
 }
 
+.subBoxInstructionsBlack {
+  color: black !important;
+}
+
 .yellowSection {
   background-color: rgb(240, 240, 180);
   color: black !important;
