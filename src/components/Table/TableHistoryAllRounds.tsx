@@ -53,59 +53,59 @@ export default function CustomizedTables({ arrHistory, score }) {
   if (!arrHistory) return null;
   function createData(
     year,
-    total_wins,
-    round5_score,
-    round5_place,
-    round5_eliminated_teams,
-    round4_score,
-    round4_place,
-    round4_eliminated_teams,
-    round3_score,
-    round3_place,
-    round3_eliminated_teams,
-    round2_score,
-    round2_place,
-    round2_eliminated_teams,
-    round1_score,
-    round1_place,
-    round1_eliminated_teams,
-    roi,
-    risk_adjusted,
-    portfolio_weight,
     portfolio_name,
-    perfect_weight,
-    perfect_score,
-    hist_perform,
+    portfolio_weight,
+    final_place,
     final_score,
-    final_place
+    round5_score,
+    round4_score,
+    round3_score,
+    round2_score,
+    round1_score,
+    total_wins,
+    perfect_score,
+    perfect_weight,
+    hist_perform,
+    roi,
+    risk_adjusted
+    // round5_place,
+    // round5_eliminated_teams,
+    // round4_place,
+    // round4_eliminated_teams,
+    // round3_place,
+    // round3_eliminated_teams,
+    // round2_place,
+    // round2_eliminated_teams,
+    // round1_place,
+    // round1_eliminated_teams,
   ) {
     return {
       year,
-      total_wins,
+      portfolio_name,
+      portfolio_weight,
+      final_place,
+      final_score,
       round5_score,
-      round5_place,
-      round5_eliminated_teams,
       round4_score,
-      round4_place,
-      round4_eliminated_teams,
       round3_score,
-      round3_place,
-      round3_eliminated_teams,
       round2_score,
-      round2_place,
-      round2_eliminated_teams,
       round1_score,
-      round1_place,
-      round1_eliminated_teams,
+      total_wins,
+      perfect_score,
+      perfect_weight,
+      hist_perform,
       roi,
       risk_adjusted,
-      portfolio_weight,
-      portfolio_name,
-      perfect_weight,
-      perfect_score,
-      hist_perform,
-      final_score,
-      final_place,
+      // round5_place,
+      // round5_eliminated_teams,
+      // round4_place,
+      // round4_eliminated_teams,
+      // round3_place,
+      // round3_eliminated_teams,
+      // round2_place,
+      // round2_eliminated_teams,
+      // round1_place,
+      // round1_eliminated_teams,
     };
   }
 
@@ -113,31 +113,31 @@ export default function CustomizedTables({ arrHistory, score }) {
     arrHistory?.map((row) =>
       createData(
         row.year,
-        row.total_wins,
-        row.round5_score,
-        row.round5_place,
-        row.round5_eliminated_teams,
-        row.round4_score,
-        row.round4_place,
-        row.round4_eliminated_teams,
-        row.round3_score,
-        row.round3_place,
-        row.round3_eliminated_teams,
-        row.round2_score,
-        row.round2_place,
-        row.round2_eliminated_teams,
-        row.round1_score,
-        row.round1_place,
-        row.round1_eliminated_teams,
-        row.roi,
-        row.risk_adjusted,
-        row.portfolio_weight,
         row.portfolio_name,
-        row.perfect_weight,
-        row.perfect_score,
-        row.hist_perform,
+        row.portfolio_weight,
+        row.final_place,
         row.final_score,
-        row.final_place
+        row.round5_score,
+        row.round4_score,
+        row.round3_score,
+        row.round2_score,
+        row.round1_score,
+        row.total_wins,
+        row.perfect_score,
+        row.perfect_weight,
+        row.hist_perform,
+        row.roi,
+        row.risk_adjusted
+        // round5_place,
+        // round5_eliminated_teams,
+        // round4_place,
+        // round4_eliminated_teams,
+        // round3_place,
+        // round3_eliminated_teams,
+        // round2_place,
+        // round2_eliminated_teams,
+        // round1_place,
+        // round1_eliminated_teams,
       )
     ),
   ];
@@ -148,7 +148,21 @@ export default function CustomizedTables({ arrHistory, score }) {
 
   const getCapitalizedProperties = (obj: object) => {
     return Object.keys(obj)
-      .filter((key) => key !== "tournament_name" && key !== "consecutive")
+      .filter(
+        (key) =>
+          key !== "tournament_name" &&
+          key !== "consecutive" &&
+          key !== "round5_place" &&
+          key !== "round5_eliminated_teams" &&
+          key !== "round4_place" &&
+          key !== "round4_eliminated_teams" &&
+          key !== "round3_place" &&
+          key !== "round3_eliminated_teams" &&
+          key !== "round2_place" &&
+          key !== "round2_eliminated_teams" &&
+          key !== "round1_place" &&
+          key !== "round1_eliminated_teams"
+      )
       .map((key) => capitalizeFirstLetter(key.replace(/_/g, " ")));
   };
 
@@ -194,27 +208,28 @@ export default function CustomizedTables({ arrHistory, score }) {
               <StyledTableCell>{row?.portfolio_weight}</StyledTableCell>
               <StyledTableCell>{row?.final_place}</StyledTableCell>
               <StyledTableCell>{row?.final_score}</StyledTableCell>
-              <StyledTableCell>{row?.total_wins}</StyledTableCell>
               <StyledTableCell>{row?.round5_score}</StyledTableCell>
-              <StyledTableCell>{row?.round5_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round5_place}</StyledTableCell>
               <StyledTableCell>{row?.round4_score}</StyledTableCell>
-              <StyledTableCell>{row?.round4_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round4_place}</StyledTableCell>
               <StyledTableCell>{row?.round3_score}</StyledTableCell>
-              <StyledTableCell>{row?.round3_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round3_place}</StyledTableCell>
               <StyledTableCell>{row?.round2_score}</StyledTableCell>
-              <StyledTableCell>{row?.round2_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round2_place}</StyledTableCell>
               <StyledTableCell>{row?.round1_score}</StyledTableCell>
-              <StyledTableCell>{row?.round1_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round1_place}</StyledTableCell>
+              <StyledTableCell>{row?.total_wins}</StyledTableCell>
               <StyledTableCell>{row?.perfect_score}</StyledTableCell>
               <StyledTableCell>{row?.perfect_weight}</StyledTableCell>
               <StyledTableCell>{row?.hist_perform}</StyledTableCell>
               <StyledTableCell>{row?.roi}</StyledTableCell>
               <StyledTableCell>{row?.risk_adjusted}</StyledTableCell>
+
+              {/* <StyledTableCell>{row?.round5_eliminated_teams}</StyledTableCell>
+              <StyledTableCell>{row?.round5_place}</StyledTableCell>
+              <StyledTableCell>{row?.round4_eliminated_teams}</StyledTableCell>
+              <StyledTableCell>{row?.round4_place}</StyledTableCell>
+              <StyledTableCell>{row?.round3_score}</StyledTableCell>
+              <StyledTableCell>{row?.round3_eliminated_teams}</StyledTableCell>
+              <StyledTableCell>{row?.round2_eliminated_teams}</StyledTableCell>
+              <StyledTableCell>{row?.round2_place}</StyledTableCell>
+              <StyledTableCell>{row?.round1_eliminated_teams}</StyledTableCell>
+              <StyledTableCell>{row?.round1_place}</StyledTableCell> */}
             </StyledTableRow>
           ))}
         </TableBody>

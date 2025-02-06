@@ -13,35 +13,12 @@ import { Tournament } from "@/types/index";
 import Loader from "@/components/BallLoader/BallLoader";
 import TableHistory from "@/components/Table/TableHistory";
 import DescriptionIcon from "@mui/icons-material/Description";
+import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
+import RadioButtonHistory from "@/components/Inputs/RadioButtonHistory";
 
 const Stats = () => {
   const params = useParams();
   const userId = params.userId!;
-
-  const dataDropdowndata = [
-    {
-      name: "Score",
-      id: "1",
-      option: "Score",
-      placeholder: "Current Score",
-    },
-    {
-      name: "Teams",
-      id: "2",
-      option: "Teams",
-      placeholder: "Teams Picked",
-    },
-    {
-      name: "Portfolios",
-      id: "3",
-      option: "Seed",
-      placeholder: "Picks by Seed's Distribution",
-    },
-    // {
-    //   name: "Teams Filtered by Portfolio Risk",
-    //   id: "4",
-    // },
-  ];
 
   type dataDropdowndataType = {
     name: string;
@@ -61,9 +38,12 @@ const Stats = () => {
     option: "Score",
     placeholder: "Current Score",
   });
+
+  const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[0]);
+
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   // const [pointsPerRound, setPointsPerRound] = useState([]);
-  // const [selectedOrderBy, setSelectedOrderBy] = useState(1);
+  const [selectedOrderBy, setSelectedOrderBy] = useState("1");
 
   useEffect(() => {
     if (tournaments) {
@@ -85,8 +65,6 @@ const Stats = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tournaments]);
 
-  // console.log(selectedScore);
-
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleChange = (e) => {
@@ -102,8 +80,15 @@ const Stats = () => {
       )[0];
       setScore(e?.target?.value);
       setSelectedScore(optionSelect);
-      console.log(optionSelect);
+      setSubDataSelected(subDataDropDown[+optionSelect.id - 1]);
     }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const handleChangeSubData = (e) => {
+    console.log(selectedScore);
+    console.log(e.target);
   };
 
   if (isLoading) return <Loader />;
@@ -161,7 +146,10 @@ const Stats = () => {
             className={classes.subBoxHistory}
             flexWrap={"nowrap"}
           >
-            <Grid container>
+            <Grid
+              container
+              size={6}
+            >
               <Grid size={12}>
                 <span>Tournament:</span>
                 <div className={classes.containerDrop}>
@@ -198,11 +186,29 @@ const Stats = () => {
                     name={"subData"}
                     label={selectedScore.placeholder}
                     className={classes.DropDownHistory}
-                    value={selectedScore?.name}
-                    handleChange={handleChange}
-                    options={dataDropdowndata}
+                    value={subDataSelected[0].name}
+                    handleChange={handleChangeSubData}
+                    options={subDataDropDown[Number(selectedScore.id) - 1]}
                   />
                 </div>
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              size={6}
+            >
+              <Grid
+                size={12}
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+              >
+                {selectedScore.id === "1" && (
+                  <RadioButtonHistory
+                    setSelectedOrderBy={setSelectedOrderBy}
+                    selectedOrderBy={selectedOrderBy}
+                  />
+                )}
               </Grid>
             </Grid>
           </Grid>

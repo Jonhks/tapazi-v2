@@ -352,10 +352,11 @@ const MyPortfolio = () => {
           justifyContent={"center"}
           alignContent={"center"}
         >
-          <Grid size={{ xs: 10, sm: 8, lg: 6 }}>
+          <Grid size={{ xs: 8, sm: 8, lg: 6 }}>
             <Box
               component="section"
               className={classes.boxPortfolio}
+              m={3}
             >
               <div className={classes.headerPortfolio}>
                 <div>

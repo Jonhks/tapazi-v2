@@ -72,13 +72,18 @@ export const getTeamsPerYearLog = async () => {
       },
     });
 
+    if (!data.success) {
+      throw new Error(data.error.description);
+      return data.error.description;
+    }
+
     if (data.success) {
       return data.data.teamsPerYearLog;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
-    return;
+    return error;
   }
 };
 

@@ -78,6 +78,8 @@ const History = () => {
     }
   );
 
+  // console.log(teamsPerYearLog);
+
   const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
     useQuery({
       queryKey: ["teamsPerfectPortfolios", userId],

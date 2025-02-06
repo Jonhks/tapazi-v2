@@ -22,6 +22,10 @@ const History = lazy(
   () => import("@/views/HistoryPortfolios/HistoryPortfolios")
 );
 
+// fondos
+import ImgStats from "@/assets/img/doing-sport-concept.jpg";
+import ImgHistory from "@/assets/img/details-ball-sport.jpg";
+
 const Router = () => {
   return (
     <BrowserRouter>
@@ -71,7 +75,7 @@ const Router = () => {
             }
           />
         </Route>
-        <Route element={<HistoryLayout />}>
+        <Route element={<HistoryLayout ImgHistory={ImgHistory} />}>
           <Route
             path="/history/:userId"
             element={
@@ -81,7 +85,7 @@ const Router = () => {
             }
           />
         </Route>
-        <Route element={<StatsLayout />}>
+        <Route element={<StatsLayout ImgStats={ImgStats} />}>
           <Route
             path="/stats/:userId"
             element={
