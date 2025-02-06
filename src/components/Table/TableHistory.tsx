@@ -33,7 +33,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     zIndex: 1,
   },
   "&.fixed + &.fixed": {
-    left: "100px", // Ajusta este valor según el ancho de la columna `portfolioName`
+    left: "120px", // Ajusta este valor según el ancho de la columna `portfolioName`
   },
 }));
 
@@ -124,7 +124,7 @@ export default function CustomizedTables({ arrHistory, score }) {
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "#572d03", overflowX: "auto" }}
+      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "50vh" }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
         {score}
@@ -133,7 +133,13 @@ export default function CustomizedTables({ arrHistory, score }) {
         sx={{ minWidth: 100, opacity: ".87" }}
         aria-label="customized table"
       >
-        <TableHead>
+        <TableHead
+          style={{
+            position: "sticky",
+            top: "0px",
+            zIndex: 2,
+          }}
+        >
           <TableRow className={classes?.tableRow}>
             <StyledTableCell className="fixed">Portfolio Name</StyledTableCell>
             <StyledTableCell className="fixed">

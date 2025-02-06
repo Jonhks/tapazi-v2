@@ -23,7 +23,6 @@
 
 .fixed {
   position: sticky;
-  top: 0;
   z-index: 2;
   background-color: #572d03;
   left: 0;

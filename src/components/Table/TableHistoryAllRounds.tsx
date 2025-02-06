@@ -33,7 +33,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     zIndex: 1,
   },
   "&.fixed + &.fixed": {
-    left: "60px", // Ajusta este valor según el ancho de la columna `year`
+    left: "50px", // Ajusta este valor según el ancho de la columna `year`
   },
 }));
 
@@ -68,16 +68,6 @@ export default function CustomizedTables({ arrHistory, score }) {
     hist_perform,
     roi,
     risk_adjusted
-    // round5_place,
-    // round5_eliminated_teams,
-    // round4_place,
-    // round4_eliminated_teams,
-    // round3_place,
-    // round3_eliminated_teams,
-    // round2_place,
-    // round2_eliminated_teams,
-    // round1_place,
-    // round1_eliminated_teams,
   ) {
     return {
       year,
@@ -96,16 +86,6 @@ export default function CustomizedTables({ arrHistory, score }) {
       hist_perform,
       roi,
       risk_adjusted,
-      // round5_place,
-      // round5_eliminated_teams,
-      // round4_place,
-      // round4_eliminated_teams,
-      // round3_place,
-      // round3_eliminated_teams,
-      // round2_place,
-      // round2_eliminated_teams,
-      // round1_place,
-      // round1_eliminated_teams,
     };
   }
 
@@ -128,16 +108,6 @@ export default function CustomizedTables({ arrHistory, score }) {
         row.hist_perform,
         row.roi,
         row.risk_adjusted
-        // round5_place,
-        // round5_eliminated_teams,
-        // round4_place,
-        // round4_eliminated_teams,
-        // round3_place,
-        // round3_eliminated_teams,
-        // round2_place,
-        // round2_eliminated_teams,
-        // round1_place,
-        // round1_eliminated_teams,
       )
     ),
   ];
@@ -171,7 +141,7 @@ export default function CustomizedTables({ arrHistory, score }) {
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "#572d03", overflowX: "auto" }}
+      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "60vh" }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
         {score}
@@ -180,7 +150,13 @@ export default function CustomizedTables({ arrHistory, score }) {
         sx={{ minWidth: 100, opacity: ".87" }}
         aria-label="customized table"
       >
-        <TableHead>
+        <TableHead
+          style={{
+            position: "sticky",
+            top: "0px",
+            zIndex: 2,
+          }}
+        >
           <TableRow className={classes?.tableRow}>
             {capitalizedProperties.map((property, i) => (
               <StyledTableCell
@@ -219,17 +195,6 @@ export default function CustomizedTables({ arrHistory, score }) {
               <StyledTableCell>{row?.hist_perform}</StyledTableCell>
               <StyledTableCell>{row?.roi}</StyledTableCell>
               <StyledTableCell>{row?.risk_adjusted}</StyledTableCell>
-
-              {/* <StyledTableCell>{row?.round5_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round5_place}</StyledTableCell>
-              <StyledTableCell>{row?.round4_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round4_place}</StyledTableCell>
-              <StyledTableCell>{row?.round3_score}</StyledTableCell>
-              <StyledTableCell>{row?.round3_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round2_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round2_place}</StyledTableCell>
-              <StyledTableCell>{row?.round1_eliminated_teams}</StyledTableCell>
-              <StyledTableCell>{row?.round1_place}</StyledTableCell> */}
             </StyledTableRow>
           ))}
         </TableBody>

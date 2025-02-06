@@ -140,3 +140,14 @@ export const teamPerfectPortfoliosSchema = z.object({
 });
 
 export type TeamPerfectPortfolios = z.infer<typeof teamPerfectPortfoliosSchema>;
+
+export const mostPickedTeamsSchema = z.object({
+  percentage_portfolios: z.number(),
+  team_name: z.string(),
+  times_picked: z.number(),
+  tournament_name: z.string(),
+  year: z.number(),
+});
+
+export const MostsPickedTeams = z.array(mostPickedTeamsSchema);
+export type MostPickedTeams = z.infer<typeof mostPickedTeamsSchema>;

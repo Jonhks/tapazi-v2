@@ -7,7 +7,7 @@ import { PodiumIcon } from "@/assets/icons/icons";
 // import BallLoader from "../../UI/BallLoader/BallLoader";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 import Loader from "@/components/BallLoader/BallLoader";
@@ -15,10 +15,13 @@ import TableHistory from "@/components/Table/TableHistory";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
 import RadioButtonHistory from "@/components/Inputs/RadioButtonHistory";
+import { getMostPickedTeams, getTeamsPicked } from "@/api/StatsAPI";
+import TableHistoryMostPickedTeams from "@/components/Table/TableHistoryMostPickedTeams";
 
 const Stats = () => {
   const params = useParams();
   const userId = params.userId!;
+  const queryClient = useQueryClient();
 
   type dataDropdowndataType = {
     name: string;
@@ -32,6 +35,7 @@ const Stats = () => {
 
   const [tournament, setTournament] = useState("");
   const [score, setScore] = useState("");
+  const [runTeamsPicked, setRunTeamsPicked] = useState(false);
   const [selectedScore, setSelectedScore] = useState({
     name: "Score",
     id: "1",
@@ -91,7 +95,35 @@ const Stats = () => {
     console.log(e.target);
   };
 
-  if (isLoading) return <Loader />;
+  const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
+    queryKey: ["teamsPicked", userId],
+    queryFn: () => getTeamsPicked(`${selectedTournament.id}`, selectedOrderBy),
+    enabled: runTeamsPicked,
+  });
+
+  const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
+    useQuery({
+      queryKey: ["mostPickedTeams", userId],
+      queryFn: () => getMostPickedTeams(selectedTournament.id),
+      // enabled: runTeamsPicked,
+    });
+
+  console.log(mostPickedTeams);
+
+  const checkWhatDataToRequest = () => {
+    if (
+      selectedScore.name === "Teams" &&
+      subDataSelected[0].name === "Teams Picked"
+    ) {
+      queryClient.invalidateQueries({
+        queryKey: ["teamsPicked", userId],
+      });
+      setRunTeamsPicked(true);
+    }
+  };
+
+  if (isLoading || isLoadingTeamsPicked || isLoadingMostPickedTeams)
+    return <Loader />;
 
   return (
     <Grid
@@ -128,14 +160,13 @@ const Stats = () => {
             <Grid size={{ xs: 6, sm: 4, md: 4 }}>
               <Button
                 variant="contained"
-                // color="success"
                 style={{
                   width: "100%",
                   textTransform: "capitalize",
                   backgroundColor: "#238b94",
                 }}
                 className={classes.btnSubmit}
-                // onClick={() => getScoreHistory()}
+                onClick={() => checkWhatDataToRequest()}
               >
                 Send
               </Button>
@@ -203,7 +234,7 @@ const Stats = () => {
                 justifyContent={"center"}
                 alignItems={"center"}
               >
-                {selectedScore.id === "1" && (
+                {selectedScore.id === "2" && (
                   <RadioButtonHistory
                     setSelectedOrderBy={setSelectedOrderBy}
                     selectedOrderBy={selectedOrderBy}
@@ -220,16 +251,23 @@ const Stats = () => {
         display={"flex"}
         justifyContent={"center"}
         alignContent={"center"}
+        mb={3}
       >
-        <Grid
-          size={12}
-          className={classes.containerBtn}
-        ></Grid>
+        {teamsPicked && (
+          <Zoom in={true}>
+            <Grid size={11}>
+              <TableHistory
+                arrHistory={teamsPicked}
+                score={score}
+              />
+            </Grid>
+          </Zoom>
+        )}
         <Zoom in={true}>
-          <Grid size={11}>
-            <TableHistory
-              arrHistory={[]}
-              score={score}
+          <Grid size={{ xs: 12, md: 6 }}>
+            <TableHistoryMostPickedTeams
+              arrHistory={mostPickedTeams}
+              score={"Top most frequently Picked Teams"}
             />
           </Grid>
         </Zoom>
