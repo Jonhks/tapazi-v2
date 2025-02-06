@@ -77,11 +77,11 @@ export default function CustomizedTables({
   const rows = [
     arrHistory?.map((row) =>
       createData(
-        row?.year,
-        row?.tournament_name,
+        row?.percentage_portfolios,
         row?.team_name,
         row?.times_picked,
-        row?.percentage_portfolios
+        row?.tournament_name,
+        row?.year
       )
     ),
   ];
