@@ -2,7 +2,7 @@ import api from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User } from "../types";
 
-export const getTeamsPicked = async (id: User["id"], order: User["id"]) => {
+export const getTeamsPicked = async (order: User["id"]) => {
   try {
     const url = `/score/history?api-key=TESTAPIKEY&tournament-id=${1}&round=${1}&order=${order}`;
     const { data } = await api(url, {
