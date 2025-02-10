@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import { useForm } from "react-hook-form";
@@ -25,21 +26,20 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSignUp, getStates } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
 import Loader from "@/components/BallLoader/BallLoader";
-import { useEffect, useState } from "react";
 
 const Login = () => {
   const navigate = useNavigate();
   const [select, setSelect] = useState("");
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
-    if (user.name && user.id) {
-      navigate(`/home/${user.id}`, {
-        replace: true,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
+  //   if (user.name && user.id) {
+  //     navigate(`/home/${user.id}`, {
+  //       replace: true,
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const { data: states, isLoading } = useQuery({
     queryKey: ["states"],

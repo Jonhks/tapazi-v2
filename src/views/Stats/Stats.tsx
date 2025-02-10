@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import classes from "./Stats.module.css";
-import { Zoom, Button } from "@mui/material";
+import { Zoom, Button, useMediaQuery } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
 import { PodiumIcon } from "@/assets/icons/icons";
@@ -15,13 +15,46 @@ import TableHistory from "@/components/Table/TableHistory";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
 import RadioButtonHistory from "@/components/Inputs/RadioButtonHistory";
-import { getMostPickedTeams, getTeamsPicked } from "@/api/StatsAPI";
+import {
+  getLeastPickedTeams,
+  getMostPickedTeams,
+  getTeamsNotPickedLog,
+  getTeamsPicked,
+  getTeamsPickedLog,
+} from "@/api/StatsAPI";
 import TableHistoryMostPickedTeams from "@/components/Table/TableHistoryMostPickedTeams";
+import TableTeamsPickedLog from "@/components/Table/TableTeamsPickedLog";
+import TableHistoryTeamsNotPicked from "@/components/Table/TableHistoryTeamsNotPicked";
+import SortIcon from "@mui/icons-material/Sort";
 
 const Stats = () => {
   const params = useParams();
   const userId = params.userId!;
   const queryClient = useQueryClient();
+  const isMobile = useMediaQuery("(max-width:900px)");
+
+  const optionsOrder = [
+    {
+      id: "1",
+      value: "Score (Desc)",
+      name: "Score (Desc)",
+    },
+    {
+      id: "2",
+      value: "Portfolio (Asc)",
+      name: "Portfolio (Asc)",
+    },
+    {
+      id: "3",
+      value: "Weight (Desc)",
+      name: "Weight (Desc)",
+    },
+    {
+      id: "4",
+      value: "Weight (Asc)",
+      name: "Weight (Asc)",
+    },
+  ];
 
   type dataDropdowndataType = {
     name: string;
@@ -34,8 +67,8 @@ const Stats = () => {
   });
 
   const [tournament, setTournament] = useState("");
-  const [score, setScore] = useState("");
-  const [runTeamsPicked, setRunTeamsPicked] = useState(false);
+  const [score, setScore] = useState("Score");
+  const [runMostTeamsPicked, setRunMostTeamsPicked] = useState(false);
   const [selectedScore, setSelectedScore] = useState({
     name: "Score",
     id: "1",
@@ -44,17 +77,21 @@ const Stats = () => {
   });
 
   const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[0]);
+  const [idSubDataSelected, setIdSubDataSelected] = useState(0);
 
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   // const [pointsPerRound, setPointsPerRound] = useState([]);
   const [selectedOrderBy, setSelectedOrderBy] = useState("1");
+  const [orderOptionSelected, setOrderOptionSelected] = useState(
+    optionsOrder[0]
+  );
 
   useEffect(() => {
     if (tournaments) {
       const current = tournaments.filter((el: Tournament) => el?.current)[0];
 
       setTournament(current?.name);
-      setScore("Teams Picked Tables");
+      // setScore("Score");
       setSelectedTournament(current);
       setTimeout(async () => {
         if (selectedTournament?.id) {
@@ -78,6 +115,7 @@ const Stats = () => {
       )[0];
       setTournament(e?.target?.value);
       setSelectedTournament(optionSelect);
+      setIdSubDataSelected(0);
     } else if (e?.target?.name === "dataDropdowndata") {
       const optionSelect = dataDropdowndata.filter(
         (el: dataDropdowndataType) => el?.name === e?.target?.value
@@ -85,30 +123,65 @@ const Stats = () => {
       setScore(e?.target?.value);
       setSelectedScore(optionSelect);
       setSubDataSelected(subDataDropDown[+optionSelect.id - 1]);
+      setIdSubDataSelected(0);
+      setRunMostTeamsPicked(true);
     }
+  };
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  const handleChangeOrder = (e) => {
+    const selected = optionsOrder.filter(
+      (opt) => opt.name === e.target.value
+    )[0];
+    setOrderOptionSelected(selected);
+    setSelectedOrderBy(selected.id);
   };
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleChangeSubData = (e) => {
-    console.log(selectedScore);
-    console.log(e.target);
+    const selected = subDataSelected.filter(
+      (data) => data.name === e.target.value
+    );
+    setIdSubDataSelected(+selected[0].id - 1);
   };
 
   const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
-    queryKey: ["teamsPicked", userId],
-    queryFn: () => getTeamsPicked(`${selectedTournament.id}`, selectedOrderBy),
-    enabled: runTeamsPicked,
+    queryKey: ["teamsPicked", selectedOrderBy, idSubDataSelected],
+    queryFn: () =>
+      getTeamsPicked(
+        `${selectedTournament.id}`,
+        `${idSubDataSelected}`,
+        selectedOrderBy
+      ),
   });
 
   const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
     useQuery({
       queryKey: ["mostPickedTeams", userId],
       queryFn: () => getMostPickedTeams(selectedTournament.id),
-      // enabled: runTeamsPicked,
+      enabled: runMostTeamsPicked,
     });
 
-  console.log(mostPickedTeams);
+  const { data: TeamsPickedLog, isLoading: isLoadinTeamsPickedLog } = useQuery({
+    queryKey: ["TeamsPickedLog", userId],
+    queryFn: () => getTeamsPickedLog(selectedTournament.id),
+    enabled: runMostTeamsPicked,
+  });
+
+  const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
+    useQuery({
+      queryKey: ["leastPickedTeams", userId],
+      queryFn: () => getLeastPickedTeams(selectedTournament.id),
+      enabled: runMostTeamsPicked,
+    });
+
+  const { data: teamsNotPickedLog, isLoading: isLoadinTeamsNotPickedLog } =
+    useQuery({
+      queryKey: ["teamsNotPickedLog", userId],
+      queryFn: () => getTeamsNotPickedLog(selectedTournament.id),
+      enabled: runMostTeamsPicked,
+    });
 
   const checkWhatDataToRequest = () => {
     if (
@@ -116,13 +189,19 @@ const Stats = () => {
       subDataSelected[0].name === "Teams Picked"
     ) {
       queryClient.invalidateQueries({
-        queryKey: ["teamsPicked", userId],
+        queryKey: ["teamsPicked", selectedOrderBy],
       });
-      setRunTeamsPicked(true);
     }
   };
 
-  if (isLoading || isLoadingTeamsPicked || isLoadingMostPickedTeams)
+  if (
+    isLoading ||
+    isLoadingTeamsPicked ||
+    isLoadingMostPickedTeams ||
+    isLoadinTeamsPickedLog ||
+    isLoadinLeastPickedTeams ||
+    isLoadinTeamsNotPickedLog
+  )
     return <Loader />;
 
   return (
@@ -175,11 +254,12 @@ const Stats = () => {
           <Grid
             container
             className={classes.subBoxHistory}
-            flexWrap={"nowrap"}
+            size={{ xs: 12, md: 12 }}
+            flexWrap={"wrap"}
           >
             <Grid
               container
-              size={6}
+              size={{ xs: 12, md: 6 }}
             >
               <Grid size={12}>
                 <span>Tournament:</span>
@@ -217,7 +297,7 @@ const Stats = () => {
                     name={"subData"}
                     label={selectedScore.placeholder}
                     className={classes.DropDownHistory}
-                    value={subDataSelected[0].name}
+                    value={subDataSelected[idSubDataSelected].name}
                     handleChange={handleChangeSubData}
                     options={subDataDropDown[Number(selectedScore.id) - 1]}
                   />
@@ -226,7 +306,7 @@ const Stats = () => {
             </Grid>
             <Grid
               container
-              size={6}
+              size={{ xs: 12, md: 6 }}
             >
               <Grid
                 size={12}
@@ -234,11 +314,27 @@ const Stats = () => {
                 justifyContent={"center"}
                 alignItems={"center"}
               >
-                {selectedScore.id === "2" && (
+                {selectedScore.id === "1" && !isMobile && (
                   <RadioButtonHistory
                     setSelectedOrderBy={setSelectedOrderBy}
                     selectedOrderBy={selectedOrderBy}
                   />
+                )}
+                {selectedScore.id === "1" && isMobile && (
+                  <div style={{ width: "100%" }}>
+                    <span>{"OrderBy"}</span>
+                    <div className={classes.containerDrop}>
+                      <SortIcon />
+                      <DropDownHistory
+                        name={"orderBy"}
+                        label={"OrderBy"}
+                        className={classes.DropDownHistory}
+                        value={orderOptionSelected.value}
+                        handleChange={handleChangeOrder}
+                        options={optionsOrder}
+                      />
+                    </div>
+                  </div>
                 )}
               </Grid>
             </Grid>
@@ -253,7 +349,7 @@ const Stats = () => {
         alignContent={"center"}
         mb={3}
       >
-        {teamsPicked && (
+        {teamsPicked && score === "Score" && (
           <Zoom in={true}>
             <Grid size={11}>
               <TableHistory
@@ -263,14 +359,59 @@ const Stats = () => {
             </Grid>
           </Zoom>
         )}
-        <Zoom in={true}>
-          <Grid size={{ xs: 12, md: 6 }}>
-            <TableHistoryMostPickedTeams
-              arrHistory={mostPickedTeams}
-              score={"Top most frequently Picked Teams"}
-            />
-          </Grid>
-        </Zoom>
+
+        {mostPickedTeams && TeamsPickedLog && score === "Teams" && (
+          <Zoom in={true}>
+            <Grid
+              container
+              size={{ xs: 11, md: 10 }}
+              spacing={1}
+            >
+              <Grid
+                size={{ xs: 12, md: 6 }}
+                container
+                spacing={2}
+                style={{ height: "fit-content" }}
+                justifyContent={"center"}
+              >
+                <Grid>
+                  <TableHistoryMostPickedTeams
+                    arrHistory={mostPickedTeams}
+                    score={"Top 10 Most Frequently Picked Teams"}
+                    least={false}
+                  />
+                </Grid>
+                <Grid>
+                  <TableHistoryMostPickedTeams
+                    arrHistory={leastPickedTeams}
+                    score={
+                      "Least Frequently Picked Teams Among Teams Pickedat Least Once"
+                    }
+                    least={true}
+                  />
+                </Grid>
+                <Grid>
+                  <TableHistoryTeamsNotPicked
+                    arrHistory={teamsNotPickedLog}
+                    score={"Teams Not Picked"}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                container
+                size={{ xs: 12, md: 6 }}
+                spacing={1}
+              >
+                <Grid>
+                  <TableTeamsPickedLog
+                    arrHistory={TeamsPickedLog}
+                    score={"Frequency of Teams Picked"}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Zoom>
+        )}
       </Grid>
     </Grid>
   );

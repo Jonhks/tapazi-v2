@@ -151,3 +151,22 @@ export const mostPickedTeamsSchema = z.object({
 
 export const MostsPickedTeams = z.array(mostPickedTeamsSchema);
 export type MostPickedTeams = z.infer<typeof mostPickedTeamsSchema>;
+
+export const teamsPickedLogSchema = z.object({
+  year: z.number(),
+  tournament_name: z.string(),
+  times_picked: z.number(),
+  team_name: z.string(),
+  round_eliminated: z.number(),
+  percentage_portfolios: z.number(),
+});
+
+export type TeamsPickedLog = z.infer<typeof teamsPickedLogSchema>;
+
+export const teamsNotPickedSchema = z.object({
+  team_name: z.string(),
+  tournament_name: z.string(),
+  year: z.number(),
+});
+
+export type TeamsNotPicked = z.infer<typeof teamsNotPickedSchema>;

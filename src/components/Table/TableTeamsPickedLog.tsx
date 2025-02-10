@@ -10,7 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import classes from "./Table.module.css";
-import { MostPickedTeams } from "@/types/index";
+import { TeamsPickedLog } from "@/types/index";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: "center",
@@ -54,36 +54,31 @@ const StyledTableRow = styled(TableRow)(() => ({
 export default function CustomizedTables({
   arrHistory,
   score,
-  least,
 }: {
-  arrHistory: MostPickedTeams[];
+  arrHistory: TeamsPickedLog[];
   score: string;
-  least?: boolean;
 }) {
   function createData(
-    percentage_portfolios,
     team_name,
     times_picked,
-    tournament_name
-    // year
+    percentage_portfolios,
+    round_eliminated
   ) {
     return {
-      percentage_portfolios,
       team_name,
       times_picked,
-      tournament_name,
-      // year,
+      percentage_portfolios,
+      round_eliminated,
     };
   }
 
   const rows = [
     arrHistory?.map((row) =>
       createData(
-        row?.percentage_portfolios,
         row?.team_name,
         row?.times_picked,
-        row?.tournament_name
-        // row?.year
+        row?.percentage_portfolios,
+        row?.round_eliminated
       )
     ),
   ];
@@ -91,11 +86,7 @@ export default function CustomizedTables({
   return (
     <TableContainer
       component={Paper}
-      sx={{
-        backgroundColor: "#572d03",
-        overflowX: "auto",
-        maxHeight: "40vh",
-      }}
+      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "95vh" }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
         {score}
@@ -112,14 +103,11 @@ export default function CustomizedTables({
           }}
         >
           <TableRow className={classes?.tableRow}>
-            {!least && (
-              <StyledTableCell className="fixed">
-                Tournamet name
-              </StyledTableCell>
-            )}
-            <StyledTableCell>Team name</StyledTableCell>
+            {/* <StyledTableCell className="fixed">Year</StyledTableCell> */}
+            <StyledTableCell className="fixed">Team</StyledTableCell>
             <StyledTableCell>Times picked</StyledTableCell>
-            <StyledTableCell>Percentage portfolios</StyledTableCell>
+            <StyledTableCell>% of portfolios</StyledTableCell>
+            <StyledTableCell>Round eliminated</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -132,14 +120,12 @@ export default function CustomizedTables({
               >
                 {row?.year}
               </StyledTableCell> */}
-              {!least && (
-                <StyledTableCell className="fixed">
-                  {row?.tournament_name}
-                </StyledTableCell>
-              )}
-              <StyledTableCell>{row?.team_name}</StyledTableCell>
+              <StyledTableCell className="fixed">
+                {row?.team_name}
+              </StyledTableCell>
               <StyledTableCell>{row?.times_picked}</StyledTableCell>
               <StyledTableCell>{row?.percentage_portfolios}%</StyledTableCell>
+              <StyledTableCell>{row?.round_eliminated}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

@@ -10,7 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import classes from "./Table.module.css";
-import { MostPickedTeams } from "@/types/index";
+import { TeamsNotPicked } from "@/types/index";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   textAlign: "center",
@@ -54,48 +54,28 @@ const StyledTableRow = styled(TableRow)(() => ({
 export default function CustomizedTables({
   arrHistory,
   score,
-  least,
 }: {
-  arrHistory: MostPickedTeams[];
+  arrHistory: TeamsNotPicked[];
   score: string;
-  least?: boolean;
 }) {
-  function createData(
-    percentage_portfolios,
-    team_name,
-    times_picked,
-    tournament_name
-    // year
-  ) {
+  function createData(team_name, tournament_name, year) {
     return {
-      percentage_portfolios,
       team_name,
-      times_picked,
       tournament_name,
-      // year,
+      year,
     };
   }
 
   const rows = [
     arrHistory?.map((row) =>
-      createData(
-        row?.percentage_portfolios,
-        row?.team_name,
-        row?.times_picked,
-        row?.tournament_name
-        // row?.year
-      )
+      createData(row?.team_name, row?.tournament_name, row?.year)
     ),
   ];
 
   return (
     <TableContainer
       component={Paper}
-      sx={{
-        backgroundColor: "#572d03",
-        overflowX: "auto",
-        maxHeight: "40vh",
-      }}
+      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "35vh" }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
         {score}
@@ -112,34 +92,17 @@ export default function CustomizedTables({
           }}
         >
           <TableRow className={classes?.tableRow}>
-            {!least && (
-              <StyledTableCell className="fixed">
-                Tournamet name
-              </StyledTableCell>
-            )}
-            <StyledTableCell>Team name</StyledTableCell>
-            <StyledTableCell>Times picked</StyledTableCell>
-            <StyledTableCell>Percentage portfolios</StyledTableCell>
+            <StyledTableCell>Year</StyledTableCell>
+            <StyledTableCell className="fixed">Team</StyledTableCell>
+            <StyledTableCell>Tournament</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {rows.flat()?.map((row, i) => (
             <StyledTableRow key={i}>
-              {/* <StyledTableCell
-                component="th"
-                scope="row"
-                className="fixed"
-              >
-                {row?.year}
-              </StyledTableCell> */}
-              {!least && (
-                <StyledTableCell className="fixed">
-                  {row?.tournament_name}
-                </StyledTableCell>
-              )}
+              <StyledTableCell className="fixed">{row?.year}</StyledTableCell>
               <StyledTableCell>{row?.team_name}</StyledTableCell>
-              <StyledTableCell>{row?.times_picked}</StyledTableCell>
-              <StyledTableCell>{row?.percentage_portfolios}%</StyledTableCell>
+              <StyledTableCell>{row?.tournament_name}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

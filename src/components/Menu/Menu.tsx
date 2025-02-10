@@ -280,7 +280,7 @@ export default function MiniDrawer() {
         </Drawer>
         <Box
           component="main"
-          sx={{ flexGrow: 1, p: 3 }}
+          sx={{ flexGrow: 1 }}
           className={classes.fondo}
         >
           <DrawerHeader />
