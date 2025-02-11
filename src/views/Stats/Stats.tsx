@@ -455,7 +455,7 @@ const Stats = () => {
               spacing={1}
             >
               <Grid
-                size={6}
+                size={{ xs: 12, md: 6 }}
                 flexWrap={"wrap"}
                 display={"flex"}
                 justifyContent={"space-around"}
@@ -474,7 +474,7 @@ const Stats = () => {
                 </Grid>
               </Grid>
               <Grid
-                size={6}
+                size={{ xs: 12, md: 6 }}
                 flexWrap={"wrap"}
                 display={"flex"}
                 justifyContent={"space-around"}
@@ -485,7 +485,10 @@ const Stats = () => {
                     data={seedPickTotal}
                   />
                 </Grid>
-                <Grid size={12}>
+                <Grid
+                  size={12}
+                  mt={1}
+                >
                   <StatsPortfoliosSelectionsGraphic
                     graphType={"ColumnChart"}
                     data={portfolioSeedSelections}
