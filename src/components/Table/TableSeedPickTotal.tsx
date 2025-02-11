@@ -1,6 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -17,7 +16,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: "#572d03",
     color: theme.palette.common.white,
     opacity: 0.9,
-    fontSize: 11,
+    fontSize: 10,
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 10,
@@ -25,6 +24,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     border: "2px solid #eaad2b",
     fontWeight: "bold",
     padding: "8px",
+  },
+  "&.fixed": {
+    position: "sticky",
+    left: 0,
+    backgroundColor: "#572d03",
+    zIndex: 1,
+  },
+  "&.fixed + &.fixed": {
+    left: "120px", // Ajusta este valor según el ancho de la columna `portfolioName`
   },
 }));
 
@@ -37,39 +45,72 @@ const StyledTableRow = styled(TableRow)(() => ({
     backgroundColor: "#e27d25",
     color: "white",
   },
-  "&:last-child td, &:last-child th": {},
+  "&:last-child td, &:last-child th": {
+    // border: 0,
+  },
 }));
 
+const numeration = [
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
+  "Ten",
+  "Eleven",
+  "Twelve",
+  "Thirteen",
+  "Fourteen",
+  "Fifteen",
+  "Sixteen",
+];
+
 export default function CustomizedTables({ arrHistory, score }) {
-  function createData(year, total_weight, total_points) {
+  function createData(seed, number, percentage) {
     return {
-      year,
-      total_weight,
-      total_points,
+      seed,
+      number,
+      percentage,
     };
   }
 
   const rows = [
-    arrHistory?.map((row) =>
-      createData(row?.year, row?.total_weight, row?.total_points)
-    ),
+    numeration?.map((row, i) => {
+      return createData(
+        row,
+        arrHistory[0][`teams_seed${i + 1}`],
+        arrHistory[0][`prcnt_teams_seed${i + 1}`]
+      );
+    }),
   ];
 
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "#572d03" }}
+      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "50vh" }}
     >
-      <div className={classes?.firstTableRow}>{score}</div>
+      <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
+        {score}
+      </div>
       <Table
         sx={{ minWidth: 100, opacity: ".87" }}
         aria-label="customized table"
       >
-        <TableHead>
+        <TableHead
+          style={{
+            position: "sticky",
+            top: "0px",
+            zIndex: 2,
+          }}
+        >
           <TableRow className={classes?.tableRow}>
-            <StyledTableCell>Year</StyledTableCell>
-            <StyledTableCell>Total weight</StyledTableCell>
-            <StyledTableCell>Total points</StyledTableCell>
+            <StyledTableCell>Seed</StyledTableCell>
+            <StyledTableCell>Number</StyledTableCell>
+            <StyledTableCell>Percentage</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -79,10 +120,10 @@ export default function CustomizedTables({ arrHistory, score }) {
                 component="th"
                 scope="row"
               >
-                {row?.year}
+                {row?.seed}
               </StyledTableCell>
-              <StyledTableCell>{row?.total_weight}</StyledTableCell>
-              <StyledTableCell>{row?.total_points}</StyledTableCell>
+              <StyledTableCell>{row?.number}</StyledTableCell>
+              <StyledTableCell>{row?.percentage}%</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

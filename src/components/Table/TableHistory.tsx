@@ -18,13 +18,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: "#572d03",
     color: theme.palette.common.white,
     opacity: 0.9,
-    fontSize: 12,
+    fontSize: 10,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 13,
+    fontSize: 11,
     color: "white",
     border: "2px solid #eaad2b",
     fontWeight: "bold",
+    padding: "8px",
   },
   "&.fixed": {
     position: "sticky",
@@ -33,7 +34,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     zIndex: 1,
   },
   "&.fixed + &.fixed": {
-    left: "120px", // Ajusta este valor según el ancho de la columna `portfolioName`
+    left: "80px", // Ajusta este valor según el ancho de la columna `portfolioName`
   },
 }));
 

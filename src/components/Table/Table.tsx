@@ -15,13 +15,14 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     backgroundColor: "#572d03",
     color: theme.palette.common.white,
     opacity: 0.9,
-    fontSize: 12,
+    fontSize: 10,
   },
   [`&.${tableCellClasses.body}`]: {
-    fontSize: 13,
+    fontSize: 10,
     color: "white",
     border: "2px solid #eaad2b",
     fontWeight: "bold",
+    padding: "8px",
   },
 }));
 

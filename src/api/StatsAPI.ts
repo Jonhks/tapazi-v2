@@ -119,3 +119,47 @@ export const getTeamsNotPickedLog = async (id: number) => {
     return;
   }
 };
+
+export const getSeedPickTotal = async (id: number) => {
+  try {
+    const url = `/seed-pick-totals?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return "Error";
+    }
+    if (data.success) {
+      return data.data.seedPickTotals;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getPortfolioSeedSelections = async (id: number) => {
+  try {
+    const url = `/portfolio-seed-selections?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return "Error";
+    }
+    if (data.success) {
+      return data.data.portfolioSeedSelections;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

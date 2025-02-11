@@ -27,6 +27,7 @@
 
 .subBox,
 .subBoxTwo {
+  font-size: 14px;
   border: 2px solid #e27d25;
   padding: 12px;
   width: 100%;
@@ -65,6 +66,6 @@
   }
   .subBox,
   .subBoxTwo {
-    font-size: 13px;
+    font-size: 12px;
   }
 }

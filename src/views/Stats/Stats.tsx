@@ -1,13 +1,20 @@
 import { useEffect, useState } from "react";
 import classes from "./Stats.module.css";
-import { Zoom, Button, useMediaQuery } from "@mui/material";
+import {
+  Zoom,
+  // Button,
+  useMediaQuery,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
 import { PodiumIcon } from "@/assets/icons/icons";
 // import BallLoader from "../../UI/BallLoader/BallLoader";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  useQuery,
+  //  useQueryClient
+} from "@tanstack/react-query";
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 import Loader from "@/components/BallLoader/BallLoader";
@@ -18,6 +25,8 @@ import RadioButtonHistory from "@/components/Inputs/RadioButtonHistory";
 import {
   getLeastPickedTeams,
   getMostPickedTeams,
+  getPortfolioSeedSelections,
+  getSeedPickTotal,
   getTeamsNotPickedLog,
   getTeamsPicked,
   getTeamsPickedLog,
@@ -25,12 +34,16 @@ import {
 import TableHistoryMostPickedTeams from "@/components/Table/TableHistoryMostPickedTeams";
 import TableTeamsPickedLog from "@/components/Table/TableTeamsPickedLog";
 import TableHistoryTeamsNotPicked from "@/components/Table/TableHistoryTeamsNotPicked";
+import TableSeedPickTotal from "@/components/Table/TableSeedPickTotal";
+import TablePortfolioSeedSelections from "@/components/Table/TablePortfolioSeedSelections";
 import SortIcon from "@mui/icons-material/Sort";
+import StatsGraphics from "@/components/Graphics/StatsGraphic";
+import StatsPortfoliosSelectionsGraphic from "@/components/Graphics/StatsPortfoliosSelectionsGraphic";
 
 const Stats = () => {
   const params = useParams();
   const userId = params.userId!;
-  const queryClient = useQueryClient();
+  // const queryClient = useQueryClient();
   const isMobile = useMediaQuery("(max-width:900px)");
 
   const optionsOrder = [
@@ -69,6 +82,7 @@ const Stats = () => {
   const [tournament, setTournament] = useState("");
   const [score, setScore] = useState("Score");
   const [runMostTeamsPicked, setRunMostTeamsPicked] = useState(false);
+  const [runSubDataPortfolios, setRunSubDataPortfolios] = useState(false);
   const [selectedScore, setSelectedScore] = useState({
     name: "Score",
     id: "1",
@@ -125,6 +139,9 @@ const Stats = () => {
       setSubDataSelected(subDataDropDown[+optionSelect.id - 1]);
       setIdSubDataSelected(0);
       setRunMostTeamsPicked(true);
+    }
+    if (e.target.value === "Portfolios") {
+      setRunSubDataPortfolios(true);
     }
   };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -183,16 +200,31 @@ const Stats = () => {
       enabled: runMostTeamsPicked,
     });
 
-  const checkWhatDataToRequest = () => {
-    if (
-      selectedScore.name === "Teams" &&
-      subDataSelected[0].name === "Teams Picked"
-    ) {
-      queryClient.invalidateQueries({
-        queryKey: ["teamsPicked", selectedOrderBy],
-      });
-    }
-  };
+  const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
+    queryKey: ["seedPickTotal", userId],
+    queryFn: () => getSeedPickTotal(selectedTournament.id),
+    enabled: runSubDataPortfolios,
+  });
+
+  const {
+    data: portfolioSeedSelections,
+    isLoading: isLoadinPortfolioSeedSelections,
+  } = useQuery({
+    queryKey: ["portfolioSeedSelections", userId],
+    queryFn: () => getPortfolioSeedSelections(selectedTournament.id),
+    enabled: runSubDataPortfolios,
+  });
+
+  // const checkWhatDataToRequest = () => {
+  //   if (
+  //     selectedScore.name === "Teams" &&
+  //     subDataSelected[0].name === "Teams Picked"
+  //   ) {
+  //     queryClient.invalidateQueries({
+  //       queryKey: ["teamsPicked", selectedOrderBy],
+  //     });
+  //   }
+  // };
 
   if (
     isLoading ||
@@ -200,7 +232,9 @@ const Stats = () => {
     isLoadingMostPickedTeams ||
     isLoadinTeamsPickedLog ||
     isLoadinLeastPickedTeams ||
-    isLoadinTeamsNotPickedLog
+    isLoadinTeamsNotPickedLog ||
+    isLoadinSeedPickTotal ||
+    isLoadinPortfolioSeedSelections
   )
     return <Loader />;
 
@@ -237,7 +271,7 @@ const Stats = () => {
               </p>
             </Grid>
             <Grid size={{ xs: 6, sm: 4, md: 4 }}>
-              <Button
+              {/* <Button
                 variant="contained"
                 style={{
                   width: "100%",
@@ -248,7 +282,7 @@ const Stats = () => {
                 onClick={() => checkWhatDataToRequest()}
               >
                 Send
-              </Button>
+              </Button> */}
             </Grid>
           </Grid>
           <Grid
@@ -406,6 +440,55 @@ const Stats = () => {
                   <TableTeamsPickedLog
                     arrHistory={TeamsPickedLog}
                     score={"Frequency of Teams Picked"}
+                  />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Zoom>
+        )}
+
+        {seedPickTotal && score === "Portfolios" && (
+          <Zoom in={true}>
+            <Grid
+              size={11}
+              container
+              spacing={1}
+            >
+              <Grid
+                size={6}
+                flexWrap={"wrap"}
+                display={"flex"}
+                justifyContent={"space-around"}
+              >
+                <Grid size={6}>
+                  <TableSeedPickTotal
+                    arrHistory={seedPickTotal}
+                    score={"Picks By Seed"}
+                  />
+                </Grid>
+                <Grid size={6}>
+                  <TablePortfolioSeedSelections
+                    arrHistory={portfolioSeedSelections}
+                    score={"Seed Picked in Portfolio \n (al leanst Once)"}
+                  />
+                </Grid>
+              </Grid>
+              <Grid
+                size={6}
+                flexWrap={"wrap"}
+                display={"flex"}
+                justifyContent={"space-around"}
+              >
+                <Grid size={12}>
+                  <StatsGraphics
+                    graphType={"ColumnChart"}
+                    data={seedPickTotal}
+                  />
+                </Grid>
+                <Grid size={12}>
+                  <StatsPortfoliosSelectionsGraphic
+                    graphType={"ColumnChart"}
+                    data={portfolioSeedSelections}
                   />
                 </Grid>
               </Grid>

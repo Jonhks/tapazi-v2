@@ -7,7 +7,7 @@
 }
 
 .tableRow th {
-  font-size: 0.8rem !important;
+  font-size: 0.65rem !important;
   font-weight: bold !important;
 }
 
@@ -15,10 +15,12 @@
   width: 100%;
   background-color: #572d03;
   color: #fff;
-  font-size: 1.7rem;
+  font-size: 1.6rem;
   opacity: 0.8;
   text-align: center;
   padding: 15px 5px 0px 5px;
+  max-height: 56px;
+  overflow: scroll;
 }
 
 .fixed {
