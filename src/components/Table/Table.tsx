@@ -138,7 +138,7 @@ export default function CustomizedTables({
         sx={{ minWidth: 100, opacity: ".87" }}
         aria-label="customized table"
       >
-        <TableHead sx={{ position: "sticky", top: 0 }}>
+        <TableHead sx={{ position: "sticky", top: 0, zIndex: 2 }}>
           <TableRow className={classes?.tableRow}>
             <StyledTableCell className="fixed">Portfolio Name</StyledTableCell>
             <StyledTableCell className="fixed">
