@@ -449,7 +449,10 @@ const Stats = () => {
                 display={"flex"}
                 justifyContent={"space-around"}
               >
-                <Grid size={{ xs: 12, md: 6 }}>
+                <Grid
+                  size={{ xs: 12, md: 6 }}
+                  mb={1}
+                >
                   <TableSeedPickTotal
                     arrHistory={seedPickTotal}
                     score={"Picks By Seed"}
