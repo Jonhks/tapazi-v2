@@ -458,7 +458,7 @@ const Stats = () => {
                 <Grid size={6}>
                   <TablePortfolioSeedSelections
                     arrHistory={portfolioSeedSelections}
-                    score={"Seed Picked in Portfolio \n (al leanst Once)"}
+                    score={"Seed Picked in Portfolio \n (at least once)"}
                   />
                 </Grid>
               </Grid>

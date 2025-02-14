@@ -34,10 +34,10 @@ export const subDataDropDown = [
       placeholder: "Champion",
     },
     {
-      name: "Championshio",
+      name: "Championship",
       id: "3",
-      option: "Championshio",
-      placeholder: "Championshio",
+      option: "Championship",
+      placeholder: "Championship",
     },
     {
       name: "Final Four",

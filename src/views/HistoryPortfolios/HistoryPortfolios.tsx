@@ -22,7 +22,6 @@ import TeamPerYearlogGraphic from "@/components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import { typeGraphs } from "@/utils/typeGraphs";
 import TeamPerfectPortfoliosGraphic from "@/components/Graphics/TeamPerfectPortfoliosGraphic";
-import { FixedSizeList as List } from "react-window";
 
 type dataDropdowndataType = {
   name: string;
@@ -110,8 +109,8 @@ const History = () => {
 
   const { data: teamsHistoricAllRounds, isLoading: loadingHistoryAllRounds } =
     useQuery({
-      queryKey: ["teamsHistoricAllRounds", userId],
-      queryFn: () => getTeamsHistoricAllRounds(),
+      queryKey: ["teamsHistoricAllRounds", orderHistorySelected],
+      queryFn: () => getTeamsHistoricAllRounds(orderHistorySelected.value),
     });
 
   const handleChange = useCallback(
@@ -141,6 +140,7 @@ const History = () => {
         (el) => el.name === e.target.value
       );
       setOrderHistorySelected(select || { name: "", id: "", value: "" });
+      console.log(select?.value);
     },
     [orderHistoricalData]
   );
@@ -152,26 +152,6 @@ const History = () => {
     loadingHistoryAllRounds
   )
     return <Loader />;
-
-  const Row = ({
-    index,
-    style,
-  }: {
-    index: number;
-    style: React.CSSProperties;
-  }) => {
-    const row = teamsHistoricAllRounds[index];
-    console.log(row);
-
-    return (
-      <div style={style}>
-        <TableHistoryAllRounds
-          arrHistory={[row]}
-          score={selectedScore.name}
-        />
-      </div>
-    );
-  };
 
   return (
     <>
@@ -231,20 +211,22 @@ const History = () => {
                     />
                   </div>
                 </Grid>
-                <Grid size={12}>
-                  <span>OrderBy:</span>
-                  <div className={classes.containerDrop}>
-                    <DescriptionIcon />
-                    <DropDownHistory
-                      name={"orderBy"}
-                      label={"Order By"}
-                      className={classes.DropDownHistory}
-                      value={orderHistorySelected.name}
-                      handleChange={handleChangeHistoryOrder}
-                      options={orderHistoricalData}
-                    />
-                  </div>
-                </Grid>
+                {selectedScore.id === "1" && (
+                  <Grid size={12}>
+                    <span>OrderBy:</span>
+                    <div className={classes.containerDrop}>
+                      <DescriptionIcon />
+                      <DropDownHistory
+                        name={"orderBy"}
+                        label={"Order By"}
+                        className={classes.DropDownHistory}
+                        value={orderHistorySelected.name}
+                        handleChange={handleChangeHistoryOrder}
+                        options={orderHistoricalData}
+                      />
+                    </div>
+                  </Grid>
+                )}
                 {selectedScore.id !== "1" && (
                   <Grid size={12}>
                     <span>Chart:</span>
@@ -283,14 +265,6 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={{ xs: 10, lg: 10 }}>
-                {/* <List
-                  height={800}
-                  itemCount={teamsHistoricAllRounds.length}
-                  itemSize={35}
-                  width="100%"
-                >
-                  {Row}
-                </List> */}
                 <TableHistoryAllRounds
                   arrHistory={teamsHistoricAllRounds}
                   score={selectedScore.name}

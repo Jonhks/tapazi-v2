@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-
+import { memo } from "react";
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -50,11 +50,9 @@ const StyledTableRow = styled(TableRow)(() => ({
   "&:last-child td, &:last-child th": {},
 }));
 
-export default function CustomizedTables({ arrHistory, score }) {
-  console.log(arrHistory);
-
+const TableHistoryAllRound = ({ arrHistory, score }) => {
   if (!arrHistory) return null;
-  function createData(
+  const createData = (
     year,
     portfolio_name,
     portfolio_weight,
@@ -71,7 +69,7 @@ export default function CustomizedTables({ arrHistory, score }) {
     hist_perform,
     roi,
     risk_adjusted
-  ) {
+  ) => {
     return {
       year,
       portfolio_name,
@@ -90,7 +88,7 @@ export default function CustomizedTables({ arrHistory, score }) {
       roi,
       risk_adjusted,
     };
-  }
+  };
 
   const rows = [
     arrHistory?.map((row) =>
@@ -204,4 +202,6 @@ export default function CustomizedTables({ arrHistory, score }) {
       </Table>
     </TableContainer>
   );
-}
+};
+
+export default memo(TableHistoryAllRound);

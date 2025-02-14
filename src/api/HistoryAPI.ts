@@ -105,9 +105,9 @@ export const getTeamsPerfectPortfolios = async () => {
   }
 };
 
-export const getTeamsHistoricAllRounds = async () => {
+export const getTeamsHistoricAllRounds = async (param: string) => {
   try {
-    const url = `historical-all-rounds?api-key=TESTAPIKEY&order-by=2024`;
+    const url = `historical-all-rounds?api-key=TESTAPIKEY&order-by=${param}`;
     const { data } = await api(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",

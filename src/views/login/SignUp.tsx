@@ -31,16 +31,6 @@ const Login = () => {
   const navigate = useNavigate();
   const [select, setSelect] = useState("");
 
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
-  //   if (user.name && user.id) {
-  //     navigate(`/home/${user.id}`, {
-  //       replace: true,
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
   const { data: states, isLoading } = useQuery({
     queryKey: ["states"],
     queryFn: getStates,
@@ -68,6 +58,9 @@ const Login = () => {
     mutationFn: getSignUp,
     onSuccess: () => {
       toast.success("User registered");
+      navigate(`/login`, {
+        replace: true,
+      });
     },
     onError: () => toast.error("An error has occurred"),
   });
