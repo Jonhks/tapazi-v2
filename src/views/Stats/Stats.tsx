@@ -441,7 +441,7 @@ const Stats = () => {
             <Grid
               size={11}
               container
-              spacing={1}
+              spacing={2}
             >
               <Grid
                 size={{ xs: 12, md: 6 }}
@@ -449,13 +449,13 @@ const Stats = () => {
                 display={"flex"}
                 justifyContent={"space-around"}
               >
-                <Grid size={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TableSeedPickTotal
                     arrHistory={seedPickTotal}
                     score={"Picks By Seed"}
                   />
                 </Grid>
-                <Grid size={6}>
+                <Grid size={{ xs: 12, md: 6 }}>
                   <TablePortfolioSeedSelections
                     arrHistory={portfolioSeedSelections}
                     score={"Seed Picked in Portfolio \n (at least once)"}

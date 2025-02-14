@@ -108,6 +108,7 @@ export default function CustomizedTables({ arrHistory, score }) {
           }}
         >
           <TableRow className={classes?.tableRow}>
+            <StyledTableCell>Seed</StyledTableCell>
             <StyledTableCell>Times</StyledTableCell>
             <StyledTableCell>% Portfolio</StyledTableCell>
           </TableRow>
@@ -115,6 +116,7 @@ export default function CustomizedTables({ arrHistory, score }) {
         <TableBody>
           {rows.flat()?.map((row, i) => (
             <StyledTableRow key={i}>
+              <StyledTableCell>{numeration[i]}</StyledTableCell>
               <StyledTableCell>{row?.number}</StyledTableCell>
               <StyledTableCell>{row?.percentage}%</StyledTableCell>
             </StyledTableRow>
