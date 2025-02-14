@@ -68,4 +68,7 @@
   .subBoxTwo {
     font-size: 12px;
   }
+  .boxHome {
+    min-height: max-content;
+  }
 }

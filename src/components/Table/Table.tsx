@@ -24,6 +24,15 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontWeight: "bold",
     padding: "8px",
   },
+  "&.fixed": {
+    position: "sticky",
+    left: 0,
+    backgroundColor: "#572d03",
+    zIndex: 1,
+  },
+  "&.fixed + &.fixed": {
+    left: "80px", // Ajusta este valor según el ancho de la columna `portfolioName`
+  },
 }));
 
 const StyledTableRow = styled(TableRow)(() => ({
@@ -131,8 +140,10 @@ export default function CustomizedTables({
       >
         <TableHead sx={{ position: "sticky", top: 0 }}>
           <TableRow className={classes?.tableRow}>
-            <StyledTableCell>Portfolio Name</StyledTableCell>
-            <StyledTableCell>Portfolio Weight</StyledTableCell>
+            <StyledTableCell className="fixed">Portfolio Name</StyledTableCell>
+            <StyledTableCell className="fixed">
+              Portfolio Weight
+            </StyledTableCell>
             <StyledTableCell>Team1</StyledTableCell>
             <StyledTableCell>Team2</StyledTableCell>
             <StyledTableCell>Team3</StyledTableCell>
@@ -151,10 +162,13 @@ export default function CustomizedTables({
               <StyledTableCell
                 component="th"
                 scope="row"
+                className="fixed"
               >
                 {row?.portfolioName}
               </StyledTableCell>
-              <StyledTableCell>{row?.portfolioWeight}</StyledTableCell>
+              <StyledTableCell className="fixed">
+                {row?.portfolioWeight}
+              </StyledTableCell>
               <StyledTableCell>{row?.team1Name}</StyledTableCell>
               <StyledTableCell>{row?.team2Name}</StyledTableCell>
               <StyledTableCell>{row?.team3Name}</StyledTableCell>

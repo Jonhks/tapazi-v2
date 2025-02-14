@@ -94,3 +94,26 @@ export const gatPayout = async (portfFoliosCount: number) => {
     return;
   }
 };
+
+export const getInstructions = async () => {
+  try {
+    const url = `/instructions?api-key=TESTAPIKEY&id=0`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return [{ payout: 0 }];
+    }
+
+    if (data.success) {
+      return data.data.instructions;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

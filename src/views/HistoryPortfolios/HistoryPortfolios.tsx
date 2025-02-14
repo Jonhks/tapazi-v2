@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import classes from "./HistoryPortfolios.module.css";
 import { Zoom } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
-// import { PodiumIcon } from "@/assets/icons/icons";
-// import BallLoader from "../../UI/BallLoader/BallLoader";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -12,9 +10,9 @@ import {
   getTeamsHistoricAllRounds,
   getTeamsPerfectPortfolios,
   getTeamsPerYearLog,
-  getTournaments,
+  // getTournaments,
 } from "@/api/HistoryAPI";
-import { Tournament } from "@/types/index";
+// import { Tournament } from "@/types/index";
 import Loader from "@/components/BallLoader/BallLoader";
 import TableHistoryTeamsPerYearLog from "@/components/Table/TableHistoryTeamsPerYearLog";
 import TableHistoryPerfectPortfolios from "@/components/Table/TableHistoryPerfectPortfolios";
@@ -24,52 +22,78 @@ import TeamPerYearlogGraphic from "@/components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import { typeGraphs } from "@/utils/typeGraphs";
 import TeamPerfectPortfoliosGraphic from "@/components/Graphics/TeamPerfectPortfoliosGraphic";
+import { FixedSizeList as List } from "react-window";
+
+type dataDropdowndataType = {
+  name: string;
+  id: string;
+};
 
 const History = () => {
   const params = useParams();
   const userId = params.userId!;
 
   const [graphType, setGraphType] = useState(typeGraphs[0]);
-
-  const dataDropdowndata = [
-    {
-      name: "Historical All Rounds",
-      id: "1",
-    },
-    {
-      name: "Historical Perfect Portfolios",
-      id: "2",
-    },
-    {
-      name: "Teams Picked at Least Once per Year ",
-      id: "3",
-    },
-    // {
-    //   name: "Teams Filtered by Portfolio Risk",
-    //   id: "4",
-    // },
-  ];
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const handleChangeGraph = (e) => {
-    const optionSelect = typeGraphs.filter(
-      (el: dataDropdowndataType) => el?.name === e.target.value
-    )[0];
-    setGraphType(optionSelect);
-  };
-
-  // console.log(fakeData);
-
-  type dataDropdowndataType = {
+  const [selectedScore, setSelectedScore] = useState<{
     name: string;
     id: string;
-  };
-
-  const { data: tournaments, isLoading } = useQuery({
-    queryKey: ["tournaments", userId],
-    queryFn: () => getTournaments(),
+  }>({
+    name: "Historical All Rounds",
+    id: "1",
   });
+
+  const [orderHistorySelected, setOrderHistorySelected] = useState({
+    name: "Year (Desc), Score (Desc)",
+    id: "1",
+    value: "year",
+  });
+
+  const dataDropdowndata = useMemo(
+    () => [
+      {
+        name: "Historical All Rounds",
+        id: "1",
+      },
+      {
+        name: "Historical Perfect Portfolios",
+        id: "2",
+      },
+      {
+        name: "Teams Picked at Least Once per Year ",
+        id: "3",
+      },
+    ],
+    []
+  );
+
+  const orderHistoricalData = useMemo(
+    () => [
+      {
+        name: "Year (Desc), Score (Desc)",
+        id: "1",
+        value: "year",
+      },
+      {
+        name: "Risk (Desc)",
+        id: "2",
+        value: "risk",
+      },
+    ],
+    []
+  );
+
+  const handleChangeGraph = useCallback(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    (e) => {
+      const optionSelect = typeGraphs.filter(
+        (el: dataDropdowndataType) => el?.name === e.target.value
+      )[0];
+      setGraphType(optionSelect);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [typeGraphs]
+  );
 
   const { data: teamsPerYearLog, isLoading: loadingTeamsPerYearLog } = useQuery(
     {
@@ -77,8 +101,6 @@ const History = () => {
       queryFn: () => getTeamsPerYearLog(),
     }
   );
-
-  // console.log(teamsPerYearLog);
 
   const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
     useQuery({
@@ -92,65 +114,64 @@ const History = () => {
       queryFn: () => getTeamsHistoricAllRounds(),
     });
 
-  // const [tournament, setTournament] = useState("");
-  // const [score, setScore] = useState("");
-  const [selectedScore, setSelectedScore] = useState({
-    name: "Historical All Rounds",
-    id: "1",
-  });
-  const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
-  // const [pointsPerRound, setPointsPerRound] = useState([]);
-  // const [selectedOrderBy, setSelectedOrderBy] = useState(1);
+  const handleChange = useCallback(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    (e) => {
+      if (e.target.name === "dataDropdowndata") {
+        const optionSelect = dataDropdowndata.find(
+          (el) => el.name === e.target.value
+        ) || { name: "", id: "" };
+        setSelectedScore(optionSelect);
+      }
+    },
+    [dataDropdowndata]
+  );
 
-  useEffect(() => {
-    if (tournaments) {
-      const current = tournaments.filter((el: Tournament) => el?.current)[0];
-      // setTournament(current?.name);
-      // setScore("Teams Per Year Log");
-      setSelectedTournament(current);
-      setTimeout(async () => {
-        if (selectedTournament?.id) {
-          // const responsePointsPerRound = await getScorePPR(
-          //   selectedTournament?.id
-          // );
-          // setPointsPerRound(responsePointsPerRound);
-          // getScoreHistory();
-        }
-      }, 1000);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tournaments]);
-
-  // console.log(selectedScore);
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const handleChange = (e) => {
-    // console.log(e.target.name);
-    if (e?.target?.name === "tournament") {
-      const optionSelect = tournaments.filter(
-        (el: Tournament) => el?.name === e?.target?.value
-      )[0];
-      // setTournament(e?.target?.value);
-      setSelectedTournament(optionSelect);
-    } else if (e?.target?.name === "dataDropdowndata") {
-      const optionSelect = dataDropdowndata.filter(
-        (el: dataDropdowndataType) => el?.name === e?.target?.value
-      )[0];
-      // setScore(e?.target?.value);
-      setSelectedScore(optionSelect);
-    }
-  };
+  interface OrderHistoryData {
+    name: string;
+    id: string;
+    value: string;
+  }
+  const handleChangeHistoryOrder = useCallback(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    (e) => {
+      const select: OrderHistoryData | undefined = orderHistoricalData.find(
+        (el) => el.name === e.target.value
+      );
+      setOrderHistorySelected(select || { name: "", id: "", value: "" });
+    },
+    [orderHistoricalData]
+  );
 
   if (
-    isLoading ||
+    // isLoading ||
     loadingTeamsPerYearLog ||
     loadingPerfectPortfolios ||
     loadingHistoryAllRounds
   )
     return <Loader />;
 
-  // console.log(graphType);
+  const Row = ({
+    index,
+    style,
+  }: {
+    index: number;
+    style: React.CSSProperties;
+  }) => {
+    const row = teamsHistoricAllRounds[index];
+    console.log(row);
+
+    return (
+      <div style={style}>
+        <TableHistoryAllRounds
+          arrHistory={[row]}
+          score={selectedScore.name}
+        />
+      </div>
+    );
+  };
 
   return (
     <>
@@ -196,20 +217,6 @@ const History = () => {
                 container
                 size={{ xs: 12, lg: 6 }}
               >
-                {/* <Grid size={12}>
-                  <span>Tournament:</span>
-                  <div className={classes.containerDrop}>
-                    <PodiumIcon />
-                    <DropDownHistory
-                      name={"tournament"}
-                      label={"Tournament"}
-                      className={classes.DropDownHistory}
-                      value={tournament}
-                      handleChange={handleChange}
-                      options={tournaments}
-                    />
-                  </div>
-                </Grid> */}
                 <Grid size={12}>
                   <span>Data:</span>
                   <div className={classes.containerDrop}>
@@ -221,6 +228,20 @@ const History = () => {
                       value={selectedScore?.name}
                       handleChange={handleChange}
                       options={dataDropdowndata}
+                    />
+                  </div>
+                </Grid>
+                <Grid size={12}>
+                  <span>OrderBy:</span>
+                  <div className={classes.containerDrop}>
+                    <DescriptionIcon />
+                    <DropDownHistory
+                      name={"orderBy"}
+                      label={"Order By"}
+                      className={classes.DropDownHistory}
+                      value={orderHistorySelected.name}
+                      handleChange={handleChangeHistoryOrder}
+                      options={orderHistoricalData}
                     />
                   </div>
                 </Grid>
@@ -262,6 +283,14 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={{ xs: 10, lg: 10 }}>
+                {/* <List
+                  height={800}
+                  itemCount={teamsHistoricAllRounds.length}
+                  itemSize={35}
+                  width="100%"
+                >
+                  {Row}
+                </List> */}
                 <TableHistoryAllRounds
                   arrHistory={teamsHistoricAllRounds}
                   score={selectedScore.name}
@@ -329,4 +358,4 @@ const History = () => {
   );
 };
 
-export default History;
+export default React.memo(History);

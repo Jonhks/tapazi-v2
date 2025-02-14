@@ -1,5 +1,4 @@
 .boxInstructions {
-  /* width: 100%; */
   background-color: black;
   height: auto;
   border-radius: 20px;
@@ -31,36 +30,20 @@
   overflow: scroll;
 }
 
-.subBoxInstructions p {
-  color: white;
-}
-
 .subBoxInstructionsBlack {
   color: black !important;
 }
 
-.yellowSection {
+.highlighted {
   background-color: rgb(240, 240, 180);
   color: black !important;
   border-radius: 10px;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-.graySection {
-  background-color: rgb(148, 147, 147);
-  color: black;
-  border-radius: 10px;
-}
-
-.blueSection {
-  background-color: rgb(84, 196, 244);
-  color: black;
-  border-radius: 10px;
-}
-
-.greenSection {
-  background-color: rgb(144, 215, 152);
-  color: black;
-  border-radius: 10px;
+.paragraph {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 @media (width < 900px) {

@@ -51,6 +51,8 @@ const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 export default function CustomizedTables({ arrHistory, score }) {
+  console.log(arrHistory);
+
   if (!arrHistory) return null;
   function createData(
     year,

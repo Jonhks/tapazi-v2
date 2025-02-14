@@ -215,17 +215,6 @@ const Stats = () => {
     enabled: runSubDataPortfolios,
   });
 
-  // const checkWhatDataToRequest = () => {
-  //   if (
-  //     selectedScore.name === "Teams" &&
-  //     subDataSelected[0].name === "Teams Picked"
-  //   ) {
-  //     queryClient.invalidateQueries({
-  //       queryKey: ["teamsPicked", selectedOrderBy],
-  //     });
-  //   }
-  // };
-
   if (
     isLoading ||
     isLoadingTeamsPicked ||

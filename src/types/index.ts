@@ -170,3 +170,11 @@ export const teamsNotPickedSchema = z.object({
 });
 
 export type TeamsNotPicked = z.infer<typeof teamsNotPickedSchema>;
+
+export const instructionsSchema = z.object({
+  description: z.string(),
+  name: z.string(),
+  highlighted: z.boolean(),
+});
+
+export type Instructions = z.infer<typeof instructionsSchema>;
