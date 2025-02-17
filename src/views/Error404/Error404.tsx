@@ -20,7 +20,13 @@ export default function Error() {
           container
           spacing={2}
         >
-          <Grid size={6}>
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
             <Typography
               variant="h1"
               style={{ color: "white" }}
@@ -47,7 +53,13 @@ export default function Error() {
               Back Home
             </Button>
           </Grid>
-          <Grid size={6}>
+          <Grid
+            size={{ xs: 12, md: 6 }}
+            display={"flex"}
+            flexDirection={"column"}
+            justifyContent={"center"}
+            alignItems={"center"}
+          >
             <img
               src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg"
               alt=""
