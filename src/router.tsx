@@ -22,6 +22,8 @@ const History = lazy(
   () => import("@/views/HistoryPortfolios/HistoryPortfolios")
 );
 
+const Error404 = lazy(() => import("@/views/Error404/Error404"));
+
 // fondos
 import ImgStats from "@/assets/img/doing-sport-concept.jpg";
 import ImgHistory from "@/assets/img/details-ball-sport.jpg";
@@ -93,6 +95,12 @@ const Router = () => {
                 <Stats />
               </PrivateRoute>
             }
+          />
+        </Route>
+        <Route element={<AuthLayout />}>
+          <Route
+            path="*"
+            element={<Error404 />}
           />
         </Route>
       </Routes>
