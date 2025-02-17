@@ -23,7 +23,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: "white",
     border: "2px solid #eaad2b",
     fontWeight: "bold",
-    padding: "8px",
+    padding: "7px",
   },
   "&.fixed": {
     position: "sticky",
@@ -108,7 +108,7 @@ export default function CustomizedTables({ arrHistory, score }) {
           }}
         >
           <TableRow className={classes?.tableRow}>
-            <StyledTableCell>Seed</StyledTableCell>
+            <StyledTableCell className="fixed">Seed</StyledTableCell>
             <StyledTableCell>Number</StyledTableCell>
             <StyledTableCell>Percentage</StyledTableCell>
           </TableRow>
@@ -119,6 +119,7 @@ export default function CustomizedTables({ arrHistory, score }) {
               <StyledTableCell
                 component="th"
                 scope="row"
+                className="fixed"
               >
                 {row?.seed}
               </StyledTableCell>

@@ -23,7 +23,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     color: "white",
     border: "2px solid #eaad2b",
     fontWeight: "bold",
-    padding: "8px",
+    padding: "7px",
   },
   "&.fixed": {
     position: "sticky",
@@ -32,7 +32,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     zIndex: 1,
   },
   "&.fixed + &.fixed": {
-    left: "120px", // Ajusta este valor según el ancho de la columna `portfolioName`
+    left: "60px", // Ajusta este valor según el ancho de la columna `portfolioName`
   },
 }));
 
@@ -108,7 +108,7 @@ export default function CustomizedTables({ arrHistory, score }) {
           }}
         >
           <TableRow className={classes?.tableRow}>
-            <StyledTableCell>Seed</StyledTableCell>
+            <StyledTableCell className="fixed">Seed</StyledTableCell>
             <StyledTableCell>Times</StyledTableCell>
             <StyledTableCell>% Portfolio</StyledTableCell>
           </TableRow>
@@ -116,7 +116,9 @@ export default function CustomizedTables({ arrHistory, score }) {
         <TableBody>
           {rows.flat()?.map((row, i) => (
             <StyledTableRow key={i}>
-              <StyledTableCell>{numeration[i]}</StyledTableCell>
+              <StyledTableCell className="fixed">
+                {numeration[i]}
+              </StyledTableCell>
               <StyledTableCell>{row?.number}</StyledTableCell>
               <StyledTableCell>{row?.percentage}%</StyledTableCell>
             </StyledTableRow>

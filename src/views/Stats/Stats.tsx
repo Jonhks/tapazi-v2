@@ -39,6 +39,8 @@ import TablePortfolioSeedSelections from "@/components/Table/TablePortfolioSeedS
 import SortIcon from "@mui/icons-material/Sort";
 import StatsGraphics from "@/components/Graphics/StatsGraphic";
 import StatsPortfoliosSelectionsGraphic from "@/components/Graphics/StatsPortfoliosSelectionsGraphic";
+import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "@/components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
+import StatsPortfoliosSelectionsGraphicPercentLeast from "@/components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
 
 const Stats = () => {
   const params = useParams();
@@ -475,6 +477,7 @@ const Stats = () => {
                   <StatsGraphics
                     graphType={"ColumnChart"}
                     data={seedPickTotal}
+                    title={"Number of Picks by Seed"}
                   />
                 </Grid>
                 <Grid
@@ -483,7 +486,28 @@ const Stats = () => {
                 >
                   <StatsPortfoliosSelectionsGraphic
                     graphType={"ColumnChart"}
+                    data={seedPickTotal}
+                    title={"Percentage of Picks by Seed"}
+                  />
+                </Grid>
+                <Grid
+                  size={12}
+                  mt={1}
+                >
+                  <StatsPortfoliosSelectionsGraphicTeamsleastOnce
+                    graphType={"ColumnChart"}
                     data={portfolioSeedSelections}
+                    title={"Teams Seed Picked at Least Once"}
+                  />
+                </Grid>
+                <Grid
+                  size={12}
+                  mt={1}
+                >
+                  <StatsPortfoliosSelectionsGraphicPercentLeast
+                    graphType={"ColumnChart"}
+                    data={portfolioSeedSelections}
+                    title={"Percentage Seed Picked at Least Once)"}
                   />
                 </Grid>
               </Grid>

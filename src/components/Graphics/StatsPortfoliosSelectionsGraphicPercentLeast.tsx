@@ -12,42 +12,42 @@ function TeamPerYearlogGraphic({
   data;
   title: string;
 }) {
+  console.log(data);
+
   const convertDataForGoogleChart = (
     data: {
-      // year: number;
-      // tournament_name: string;
-      teams_seed1: number;
-      teams_seed2: number;
-      teams_seed3: number;
-      teams_seed4: number;
-      teams_seed5: number;
-      teams_seed6: number;
-      teams_seed7: number;
-      teams_seed8: number;
-      teams_seed9: number;
-      teams_seed10: number;
-      teams_seed11: number;
-      teams_seed12: number;
-      teams_seed13: number;
-      teams_seed14: number;
-      teams_seed15: number;
-      teams_seed16: number;
-      prcnt_teams_seed1: number;
-      prcnt_teams_seed2: number;
-      prcnt_teams_seed3: number;
-      prcnt_teams_seed4: number;
-      prcnt_teams_seed5: number;
-      prcnt_teams_seed6: number;
-      prcnt_teams_seed7: number;
-      prcnt_teams_seed8: number;
-      prcnt_teams_seed9: number;
-      prcnt_teams_seed10: number;
-      prcnt_teams_seed11: number;
-      prcnt_teams_seed12: number;
-      prcnt_teams_seed13: number;
-      prcnt_teams_seed14: number;
-      prcnt_teams_seed15: number;
-      prcnt_teams_seed16: number;
+      seed1: number;
+      seed2: number;
+      seed3: number;
+      seed4: number;
+      seed5: number;
+      seed6: number;
+      seed7: number;
+      seed8: number;
+      seed9: number;
+      seed10: number;
+      seed11: number;
+      seed12: number;
+      seed13: number;
+      seed14: number;
+      seed15: number;
+      seed16: number;
+      prcnt_seed1: number;
+      prcnt_seed2: number;
+      prcnt_seed3: number;
+      prcnt_seed4: number;
+      prcnt_seed5: number;
+      prcnt_seed6: number;
+      prcnt_seed7: number;
+      prcnt_seed8: number;
+      prcnt_seed9: number;
+      prcnt_seed10: number;
+      prcnt_seed11: number;
+      prcnt_seed12: number;
+      prcnt_seed13: number;
+      prcnt_seed14: number;
+      prcnt_seed15: number;
+      prcnt_seed16: number;
       // total: number;
       // total_prcnt: number;
       // entries: number;
@@ -80,22 +80,22 @@ function TeamPerYearlogGraphic({
     const rows = data.map((item) => [
       // item.year,
       // item.tournament_name,
-      item.teams_seed1,
-      item.teams_seed2,
-      item.teams_seed3,
-      item.teams_seed4,
-      item.teams_seed5,
-      item.teams_seed6,
-      item.teams_seed7,
-      item.teams_seed8,
-      item.teams_seed9,
-      item.teams_seed10,
-      item.teams_seed11,
-      item.teams_seed12,
-      item.teams_seed13,
-      item.teams_seed14,
-      item.teams_seed15,
-      item.teams_seed16,
+      item.prcnt_seed1,
+      item.prcnt_seed2,
+      item.prcnt_seed3,
+      item.prcnt_seed4,
+      item.prcnt_seed5,
+      item.prcnt_seed6,
+      item.prcnt_seed7,
+      item.prcnt_seed8,
+      item.prcnt_seed9,
+      item.prcnt_seed10,
+      item.prcnt_seed11,
+      item.prcnt_seed12,
+      item.prcnt_seed13,
+      item.prcnt_seed14,
+      item.prcnt_seed15,
+      item.prcnt_seed16,
       // item.total,
       // item.total_prcnt,
       // item.entries,
@@ -132,7 +132,7 @@ function TeamPerYearlogGraphic({
           "#FF33FF", // Fucsia
         ],
         is3D: true,
-        vAxis: { title: "Times" },
+        vAxis: { title: "Percent" },
         hAxis: { title: "Seed" },
         chartArea: { width: "60%" },
         // backgroundColor: "rgb(37, 150, 190)",

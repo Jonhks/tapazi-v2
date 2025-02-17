@@ -14,24 +14,22 @@ function TeamPerYearlogGraphic({
 }) {
   const convertDataForGoogleChart = (
     data: {
-      // year: number;
-      // tournament_name: string;
-      teams_seed1: number;
-      teams_seed2: number;
-      teams_seed3: number;
-      teams_seed4: number;
-      teams_seed5: number;
-      teams_seed6: number;
-      teams_seed7: number;
-      teams_seed8: number;
-      teams_seed9: number;
-      teams_seed10: number;
-      teams_seed11: number;
-      teams_seed12: number;
-      teams_seed13: number;
-      teams_seed14: number;
-      teams_seed15: number;
-      teams_seed16: number;
+      seed1: number;
+      seed2: number;
+      seed3: number;
+      seed4: number;
+      seed5: number;
+      seed6: number;
+      seed7: number;
+      seed8: number;
+      seed9: number;
+      seed10: number;
+      seed11: number;
+      seed12: number;
+      seed13: number;
+      seed14: number;
+      seed15: number;
+      seed16: number;
       prcnt_teams_seed1: number;
       prcnt_teams_seed2: number;
       prcnt_teams_seed3: number;
@@ -80,22 +78,22 @@ function TeamPerYearlogGraphic({
     const rows = data.map((item) => [
       // item.year,
       // item.tournament_name,
-      item.teams_seed1,
-      item.teams_seed2,
-      item.teams_seed3,
-      item.teams_seed4,
-      item.teams_seed5,
-      item.teams_seed6,
-      item.teams_seed7,
-      item.teams_seed8,
-      item.teams_seed9,
-      item.teams_seed10,
-      item.teams_seed11,
-      item.teams_seed12,
-      item.teams_seed13,
-      item.teams_seed14,
-      item.teams_seed15,
-      item.teams_seed16,
+      item.seed1,
+      item.seed2,
+      item.seed3,
+      item.seed4,
+      item.seed5,
+      item.seed6,
+      item.seed7,
+      item.seed8,
+      item.seed9,
+      item.seed10,
+      item.seed11,
+      item.seed12,
+      item.seed13,
+      item.seed14,
+      item.seed15,
+      item.seed16,
       // item.total,
       // item.total_prcnt,
       // item.entries,

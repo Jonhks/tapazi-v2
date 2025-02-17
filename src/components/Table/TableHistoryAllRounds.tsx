@@ -25,7 +25,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     border: "2px solid #eaad2b",
     fontWeight: "bold",
     padding: 2,
-    padding: "8px",
+    padding: "7px",
   },
   "&.fixed": {
     position: "sticky",

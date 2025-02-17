@@ -28,7 +28,6 @@ function TeamPerYearlogGraphic({
   };
 
   const convertedData = convertData(teamsPerYearLog);
-  console.log(convertedData);
 
   return (
     <Chart
