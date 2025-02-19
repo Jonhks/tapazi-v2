@@ -52,7 +52,7 @@ export const postNewPortfolio = async ({
   portfolios: Portfolios;
   userId: User["id"];
 }) => {
-  if (portfolios?.length >= 8) return;
+  if (portfolios?.length > 8) return;
   const urlLogin = `/portfolios/register?api-key=TESTAPIKEY&participant-id=${userId}`;
   const postPortfolio = {
     championshipPoints: Number(port?.championshipPoints),

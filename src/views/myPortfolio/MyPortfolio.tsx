@@ -466,7 +466,7 @@ const MyPortfolio = () => {
                             <p>
                               <Input
                                 required
-                                type="text"
+                                type="number"
                                 autoFocus={focused}
                                 value={
                                   port?.championshipPoints >= 1
