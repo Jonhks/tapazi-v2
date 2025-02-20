@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+// import { useEffect } from "react";
 
 import Grid from "@mui/material/Grid2";
 import {
@@ -28,15 +28,15 @@ const Login = () => {
     password: "",
   };
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
-    if (user.name && user.id) {
-      navigate(`/home/${user.id}`, {
-        replace: true,
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // useEffect(() => {
+  //   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
+  //   if (user.name && user.id) {
+  //     navigate(`/home/${user.id}`, {
+  //       replace: true,
+  //     });
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
   const {
     register,
