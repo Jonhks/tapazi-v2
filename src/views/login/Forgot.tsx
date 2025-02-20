@@ -97,6 +97,10 @@ const Forgot = () => {
                       {...register("email", {
                         required: "The email is required",
                       })}
+                      inputProps={{
+                        style: { textTransform: "lowercase" },
+                        autoCapitalize: "none",
+                      }}
                     />
                     <Grid
                       size={12}

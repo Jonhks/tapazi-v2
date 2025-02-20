@@ -265,10 +265,12 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={{ xs: 10, lg: 10 }}>
-                <TableHistoryAllRounds
-                  arrHistory={teamsHistoricAllRounds}
-                  score={selectedScore.name}
-                />
+                {typeof teamsHistoricAllRounds !== "string" && (
+                  <TableHistoryAllRounds
+                    arrHistory={teamsHistoricAllRounds}
+                    score={selectedScore.name}
+                  />
+                )}
               </Grid>
             </Zoom>
           )}
@@ -279,10 +281,12 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={{ xs: 10, lg: 6 }}>
-                <TableHistoryPerfectPortfolios
-                  arrHistory={teamsPerfectPortfolios}
-                  score={selectedScore.name}
-                />
+                {typeof getTeamsPerfectPortfolios !== "string" && (
+                  <TableHistoryPerfectPortfolios
+                    arrHistory={teamsPerfectPortfolios}
+                    score={selectedScore.name}
+                  />
+                )}
               </Grid>
             </Zoom>
           )}
@@ -292,10 +296,12 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={10}>
-                <TeamPerfectPortfoliosGraphic
-                  teamsPerYearLog={teamsPerfectPortfolios}
-                  graphType={graphType.name}
-                />
+                {typeof teamsPerfectPortfolios !== "string" && (
+                  <TeamPerfectPortfoliosGraphic
+                    teamsPerYearLog={teamsPerfectPortfolios}
+                    graphType={graphType.name}
+                  />
+                )}
               </Grid>
             </Zoom>
           )}
@@ -306,10 +312,12 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={{ xs: 10, lg: 6 }}>
-                <TableHistoryTeamsPerYearLog
-                  arrHistory={teamsPerYearLog}
-                  score={selectedScore.name}
-                />
+                {typeof teamsPerYearLog !== "string" && (
+                  <TableHistoryTeamsPerYearLog
+                    arrHistory={teamsPerYearLog}
+                    score={selectedScore.name}
+                  />
+                )}
               </Grid>
             </Zoom>
           )}
@@ -319,10 +327,12 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={10}>
-                <TeamPerYearlogGraphic
-                  teamsPerYearLog={teamsPerYearLog}
-                  graphType={graphType.name}
-                />
+                {typeof teamsPerYearLog !== "string" && (
+                  <TeamPerYearlogGraphic
+                    teamsPerYearLog={teamsPerYearLog}
+                    graphType={graphType.name}
+                  />
+                )}
               </Grid>
             </Zoom>
           )}

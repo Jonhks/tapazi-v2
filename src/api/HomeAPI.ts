@@ -36,6 +36,29 @@ export const getPopona = async () => {
   }
 };
 
+export const getHOINFO = async () => {
+  try {
+    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOINFO`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return [{ value: 0 }];
+    }
+
+    if (data.success) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
 export const getParticipants = async () => {
   try {
     const url = `/participants/count?api-key=TESTAPIKEY`;

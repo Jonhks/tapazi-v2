@@ -29,6 +29,10 @@ export const getScorePPR = async (id: Tournament["id"]) => {
           "Content-Type": "application/json;charset=utf-8",
         },
       });
+      if (!data.success) {
+        return data.error.description || "Error";
+      }
+
       if (data.success) {
         return data.data.pointsPerRound;
       }
@@ -73,7 +77,6 @@ export const getTeamsPerYearLog = async () => {
     });
 
     if (!data.success) {
-      throw new Error(data.error.description);
       return data.error.description;
     }
 
@@ -95,6 +98,11 @@ export const getTeamsPerfectPortfolios = async () => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+
+    if (!data.success) {
+      return data.error.description || "Error";
+    }
+
     if (data.success) {
       return data.data.historicalPerfectPortfoliosHeader;
     }
@@ -113,6 +121,10 @@ export const getTeamsHistoricAllRounds = async (param: string) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+    if (!data.success) {
+      return data.error.description || "Error";
+    }
+
     if (data.success) {
       return data.data.historicalAllRounds;
     }

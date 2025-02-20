@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
   gatPayout,
+  getHOINFO,
   getParticipants,
   getPopona,
   getPortfoliosCount,
@@ -33,6 +34,11 @@ const Home = () => {
     queryFn: () => getPopona(),
   });
 
+  const { data: dataHOINFO } = useQuery({
+    queryKey: ["HOINFO", userId],
+    queryFn: () => getHOINFO(),
+  });
+
   const { data: participants } = useQuery({
     queryKey: ["participants", userId],
     queryFn: () => getParticipants(),
@@ -47,6 +53,19 @@ const Home = () => {
     queryKey: ["payout", userId],
     queryFn: () => gatPayout(portfoliosHome.count),
   });
+
+  console.log(dataHOINFO);
+
+  const renderDescription = (dataHOINFO: string) => {
+    return dataHOINFO.split("\n").map((line, index) => (
+      <p
+        key={index}
+        style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
+      >
+        {line}
+      </p>
+    ));
+  };
 
   return (
     <>
@@ -85,22 +104,7 @@ const Home = () => {
                   {DataPopona?.value?.toUpperCase()} IS HERE!!!
                 </p>
                 <div className={classes.subBox}>
-                  <p>
-                    This is limited to 150 e-mail addresses. There are about 30
-                    open spots, so please take time to sign up early. I ask that
-                    you limit sending this to 1 additional person if you know of
-                    someone who would like to join, as I don’t want to shut
-                    prior participants out.
-                  </p>
-
-                  <p>Please use the menu to the left and select:</p>
-                  <p>My Portfolios to make your portfolio entries.</p>
-                  <p>Rules are in the Instructions window.</p>
-
-                  <p>
-                    Stats and History will update for the current year once the
-                    deadline for entries has passed.
-                  </p>
+                  {renderDescription(dataHOINFO.value)}
                 </div>
               </Grid>
               <Grid
