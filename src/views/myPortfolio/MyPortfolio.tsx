@@ -113,14 +113,12 @@ const MyPortfolio = () => {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const newValue = event.target.value;
-    console.log(newValue);
     const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
     if (!regex.test(newValue)) {
       setChampionshipPoints("");
       return;
     }
     setChampionshipPoints(event.target.value);
-
     const newData = portfolios.map((el) => {
       if (el?.newPortfolio) {
         return {
@@ -190,6 +188,8 @@ const MyPortfolio = () => {
         // @ts-expect-error
         teamsId,
       });
+      setChampionshipPoints("");
+      setFocused(false);
       setError(false);
       setEditing(false);
     } else if (
@@ -223,7 +223,6 @@ const MyPortfolio = () => {
         })
         .then(async (result) => {
           if (result.isConfirmed) {
-            console.log(port);
             const sendData = {
               port,
               portfolios,
@@ -259,9 +258,14 @@ const MyPortfolio = () => {
     },
     [portfolios, mutate, userId]
   );
+  console.log(value);
 
   const removeportfolioFunction = useCallback(
     (portId: number) => {
+      const index = portfolios.findIndex(
+        (portfolio) => portfolio.id === portId
+      );
+      setValue(index);
       const swalWithBootstrapButtons = Swal.mixin({});
       swalWithBootstrapButtons
         .fire({
@@ -289,6 +293,11 @@ const MyPortfolio = () => {
                 text: "Your file has been deleted.",
                 icon: "success",
               });
+              if (index > 0) {
+                setValue(index - 1);
+              } else {
+                setValue(index);
+              }
             } catch {
               swalWithBootstrapButtons.fire({
                 title: "Error!",
@@ -305,6 +314,7 @@ const MyPortfolio = () => {
               text: "Don't worry, you can still continue editing your portfolio :)",
               icon: "error",
             });
+            setValue(index);
           }
         });
     },
@@ -497,7 +507,10 @@ const MyPortfolio = () => {
                               readOnly={!!port?.id}
                               placeholder="Championship Points"
                               className={classes.championshipPoints}
-                              inputProps={{ maxLength: 3 }}
+                              inputProps={{
+                                maxLength: 3,
+                                inputmode: "numeric",
+                              }}
                               startAdornment={
                                 <InputAdornment position="start">
                                   <EmojiEventsOutlinedIcon color="inherit" />

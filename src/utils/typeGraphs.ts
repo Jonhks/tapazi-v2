@@ -15,36 +15,8 @@ export const typeGraphs: typeGraph[] = [
     id: "2",
   },
   {
-    name: "AreaChart",
-    id: "3",
-  },
-  {
-    name: "BarChart",
-    id: "4",
-  },
-  {
-    name: "ComboChart",
-    id: "6",
-  },
-  {
-    name: "PieChart",
-    id: "7",
-  },
-  {
-    name: "DonutChart",
-    id: "8",
-  },
-  {
-    name: "BubbleChart",
-    id: "9",
-  },
-  {
     name: "ScatterChart",
     id: "13",
-  },
-  {
-    name: "SteppedAreaChart",
-    id: "14",
   },
   {
     name: "Table",
