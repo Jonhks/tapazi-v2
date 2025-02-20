@@ -229,8 +229,6 @@ const Stats = () => {
   )
     return <Loader />;
 
-  console.log(seedPickTotal, "seedPickTotal");
-
   return (
     <Grid
       style={{

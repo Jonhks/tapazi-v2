@@ -104,7 +104,7 @@ const Home = () => {
                   {DataPopona?.value?.toUpperCase()} IS HERE!!!
                 </p>
                 <div className={classes.subBox}>
-                  {renderDescription(dataHOINFO.value)}
+                  {dataHOINFO && renderDescription(dataHOINFO.value)}
                 </div>
               </Grid>
               <Grid
