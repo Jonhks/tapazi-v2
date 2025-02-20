@@ -54,8 +54,6 @@ const Home = () => {
     queryFn: () => gatPayout(portfoliosHome.count),
   });
 
-  console.log(dataHOINFO);
-
   const renderDescription = (dataHOINFO: string) => {
     return dataHOINFO.split("\n").map((line, index) => (
       <p
