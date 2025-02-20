@@ -4,6 +4,7 @@ import { User, UserForgot, UserLogin } from "types";
 
 export const getSignUp = async (user: User) => {
   user.name = user.name.toUpperCase();
+  user.surname = user.surname.toUpperCase();
   try {
     const url = "/participants/register?api-key=TESTAPIKEY";
     const { data } = await api.post(url, user, {

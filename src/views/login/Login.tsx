@@ -106,6 +106,10 @@ const Login = () => {
                       id="input-with-icon-adornment-1"
                       placeholder="E-mail or Username"
                       color={"warning"}
+                      inputProps={{
+                        style: { textTransform: "lowercase" },
+                        autoCapitalize: "none",
+                      }}
                       startAdornment={
                         <InputAdornment position="start">
                           <MailOutlineIcon color="inherit" />

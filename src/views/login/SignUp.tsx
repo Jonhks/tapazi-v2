@@ -110,6 +110,10 @@ const Login = () => {
                     sx={{ width: "80%", m: 2 }}
                     color={"warning"}
                     placeholder="First Name"
+                    inputProps={{
+                      style: { textTransform: "lowercase" },
+                      autoCapitalize: "none",
+                    }}
                     startAdornment={
                       <InputAdornment position="start">
                         <PersonIcon color="inherit" />
@@ -125,6 +129,10 @@ const Login = () => {
                     type={"text"}
                     sx={{ width: "80%", m: 2 }}
                     placeholder="Last Name"
+                    inputProps={{
+                      style: { textTransform: "lowercase" },
+                      autoCapitalize: "none",
+                    }}
                     startAdornment={
                       <InputAdornment position="start">
                         <PersonIcon color="inherit" />
@@ -140,6 +148,10 @@ const Login = () => {
                     sx={{ width: "80%", m: 2 }}
                     color={"warning"}
                     placeholder="E-mail"
+                    inputProps={{
+                      style: { textTransform: "lowercase" },
+                      autoCapitalize: "none",
+                    }}
                     startAdornment={
                       <InputAdornment position="start">
                         <MailOutlineIcon color="inherit" />
@@ -201,6 +213,10 @@ const Login = () => {
                     {...register("username", {
                       required: "The username is required",
                     })}
+                    inputProps={{
+                      style: { textTransform: "lowercase" },
+                      autoCapitalize: "none",
+                    }}
                   />
                   <Input
                     required
