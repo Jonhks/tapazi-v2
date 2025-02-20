@@ -3,7 +3,7 @@
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable no-unsafe-optional-chaining */
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, memo } from "react";
 import { Box, Tabs, Tab, Button, Input, InputAdornment } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolio.module.css";
@@ -34,6 +34,7 @@ const MyPortfolio = () => {
   const [editing, setEditing] = useState(false);
   const [duplicates, setDuplicates] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [championshipPoints, setChampionshipPoints] = useState("");
 
   const { data: portfoliosObtained, isLoading } = useQuery({
     queryKey: ["portfolios", userId],
@@ -43,6 +44,8 @@ const MyPortfolio = () => {
   const { data: teams } = useQuery({
     queryKey: ["teams", userId],
     queryFn: () => getTeams(),
+    cacheTime: 30 * 60 * 1000, // 30 minutes
+    refetchOnWindowFocus: false,
   });
 
   const { mutate } = useMutation({
@@ -76,10 +79,6 @@ const MyPortfolio = () => {
     index: number;
   }
 
-  interface Team {
-    name: string;
-  }
-
   function CustomTabPanel(props: CustomTabPanelProps) {
     const { children, value, index, ...other } = props;
     return (
@@ -106,13 +105,22 @@ const MyPortfolio = () => {
     };
   }
 
-  const handleChange = (event, newValue) => {
+  const handleChange = useCallback((event, newValue) => {
     setValue(newValue);
-  };
+  }, []);
 
   const handleChangeInput = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    const newValue = event.target.value;
+    console.log(newValue);
+    const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
+    if (!regex.test(newValue)) {
+      setChampionshipPoints("");
+      return;
+    }
+    setChampionshipPoints(event.target.value);
+
     const newData = portfolios.map((el) => {
       if (el?.newPortfolio) {
         return {
@@ -127,28 +135,31 @@ const MyPortfolio = () => {
     setFocused(true);
   };
 
-  const handleChangeSelect = (port: boolean, index: string | number) => {
-    setFocused(false);
-    const newData = [...portfolios];
-    const portFolioEditable = [
-      ...newData?.filter((port) => port?.newPortfolio),
-    ];
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    if (portFolioEditable[0]?.teams?.includes(port)) {
-      setDuplicates(true);
-      port = false;
-      toast.error("You cannot enter duplicate fields!!");
-      setTimeout(() => setDuplicates(false), 3000);
-    }
-    if (portFolioEditable[0]) {
-      const newPort = portFolioEditable[0]?.teams;
-      newPort[+index] = port;
-      setPortfolios(newData);
-    }
-  };
+  const handleChangeSelect = useCallback(
+    (port: boolean, index: string | number) => {
+      setFocused(false);
+      const newData = [...portfolios];
+      const portFolioEditable = [
+        ...newData?.filter((port) => port?.newPortfolio),
+      ];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      if (portFolioEditable[0]?.teams?.includes(port)) {
+        setDuplicates(true);
+        port = false;
+        toast.error("You cannot enter duplicate fields!!");
+        setTimeout(() => setDuplicates(false), 3000);
+      }
+      if (portFolioEditable[0]) {
+        const newPort = portFolioEditable[0]?.teams;
+        newPort[+index] = port;
+        setPortfolios(newData);
+      }
+    },
+    [portfolios]
+  );
 
-  const addportFolio = () => {
+  const addportFolio = useCallback(() => {
     setValue(portfolios?.length);
     setEditing(true);
     const newData = [...portfolios];
@@ -158,14 +169,15 @@ const MyPortfolio = () => {
       championshipPoints: 0,
     });
     setPortfolios(newData);
-  };
+  }, [portfolios]);
 
-  const savePortfolio = () => {
+  const savePortfolio = useCallback(() => {
     const newData = [...portfolios];
     const portFolioEditable = [
       ...newData?.filter((port) => port?.newPortfolio),
     ][0];
     const portfoliExist = portFolioEditable?.teams?.some((el) => el === false);
+
     if (portFolioEditable?.championshipPoints >= 1 && !portfoliExist) {
       const teamsId = portFolioEditable?.teams?.map((el) => {
         if (typeof el === "object") {
@@ -192,107 +204,114 @@ const MyPortfolio = () => {
       setTimeout(() => setError(false), 1000);
       toast.error("All fields are mandatory!!");
     }
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [portfolios]);
 
-  const sendPortfolio = (port: { championshipPoints: number; teamsId: [] }) => {
-    const swalWithBootstrapButtons = Swal.mixin({});
-    swalWithBootstrapButtons
-      .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        confirmButtonColor: "#238b94",
-        showCancelButton: true,
-        confirmButtonText: "Yes, send it to!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          console.log(port);
-          const sendData = {
-            port,
-            portfolios,
-            userId,
-          };
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
-          mutate(sendData);
-          try {
+  const sendPortfolio = useCallback(
+    (port: { championshipPoints: number; teamsId: [] }) => {
+      const swalWithBootstrapButtons = Swal.mixin({});
+      swalWithBootstrapButtons
+        .fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          confirmButtonColor: "#238b94",
+          showCancelButton: true,
+          confirmButtonText: "Yes, send it to!",
+          cancelButtonText: "No, cancel!",
+          reverseButtons: true,
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            console.log(port);
+            const sendData = {
+              port,
+              portfolios,
+              userId,
+            };
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-expect-error
+            mutate(sendData);
+            try {
+              swalWithBootstrapButtons.fire({
+                title: "Saved!",
+                text: "your portfolio has been saved.",
+                icon: "success",
+              });
+            } catch {
+              swalWithBootstrapButtons.fire({
+                title: "Saved!",
+                text: "an error has occurred.",
+                icon: "error",
+              });
+            }
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
             swalWithBootstrapButtons.fire({
-              title: "Saved!",
-              text: "your portfolio has been saved.",
-              icon: "success",
-            });
-          } catch {
-            swalWithBootstrapButtons.fire({
-              title: "Saved!",
-              text: "an error has occurred.",
+              title: "Cancelled",
+              text: "Don't worry, you can still continue editing your portfolio :)",
               icon: "error",
             });
           }
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelled",
-            text: "Don't worry, you can still continue editing your portfolio :)",
-            icon: "error",
-          });
-        }
-      });
-  };
+        });
+    },
+    [portfolios, mutate, userId]
+  );
 
-  const removeportfolioFunction = (portId: number) => {
-    const swalWithBootstrapButtons = Swal.mixin({});
-    swalWithBootstrapButtons
-      .fire({
-        title: `Are you sure to delete the portfolio ${portId}`,
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#238b94",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          setPortfolios(portfolios?.filter((el) => el?.id !== portId));
-          const sendData = {
-            portId,
-            portfolios,
-            userId,
-          };
-          await removeportfolioMutate(sendData);
-          try {
+  const removeportfolioFunction = useCallback(
+    (portId: number) => {
+      const swalWithBootstrapButtons = Swal.mixin({});
+      swalWithBootstrapButtons
+        .fire({
+          title: `Are you sure to delete the portfolio ${portId}`,
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#238b94",
+          confirmButtonText: "Yes, delete it!",
+          cancelButtonText: "No, cancel!",
+          reverseButtons: true,
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            setPortfolios(portfolios?.filter((el) => el?.id !== portId));
+            const sendData = {
+              portId,
+              portfolios,
+              userId,
+            };
+            await removeportfolioMutate(sendData);
+            try {
+              swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+              });
+            } catch {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: "an error has occurred.",
+                icon: "error",
+              });
+            }
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
             swalWithBootstrapButtons.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
-          } catch {
-            swalWithBootstrapButtons.fire({
-              title: "Error!",
-              text: "an error has occurred.",
+              title: "Cancelled",
+              text: "Don't worry, you can still continue editing your portfolio :)",
               icon: "error",
             });
           }
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelled",
-            text: "Don't worry, you can still continue editing your portfolio :)",
-            icon: "error",
-          });
-        }
-      });
-  };
+        });
+    },
+    [portfolios, removeportfolioMutate, userId]
+  );
 
-  const cancelPortfolio = () => {
+  const cancelPortfolio = useCallback(() => {
     const swalWithBootstrapButtons = Swal.mixin({});
     swalWithBootstrapButtons
       .fire({
@@ -332,6 +351,34 @@ const MyPortfolio = () => {
           });
         }
       });
+  }, [portfoliosObtained, value]);
+
+  const renderTeams = (indexPortfolio) => {
+    return portfolios[indexPortfolio]?.teams.map((team, indexTeam) => (
+      <div
+        key={indexTeam}
+        className={classes.containerDropdown}
+      >
+        <BallIcon />
+        <Dropdown
+          disabled={!!portfolios[indexPortfolio]?.id}
+          indexPortfolio={indexPortfolio}
+          indexTeam={indexTeam}
+          name={`${team}`}
+          label={`Selection ${indexTeam + 1}`}
+          value={
+            typeof team === "object" &&
+            portfolios[indexPortfolio]?.teams[indexTeam]?.name
+          }
+          options={
+            !!portfolios[indexPortfolio]?.id
+              ? portfolios[indexPortfolio]?.teams
+              : teams
+          }
+          handleChange={handleChangeSelect}
+        />
+      </div>
+    ));
   };
 
   if (isLoading) return <Loader />;
@@ -341,7 +388,7 @@ const MyPortfolio = () => {
       <Grid
         size={12}
         sx={{
-          minHeight: "700px",
+          minHeight: "650px",
           height: "calc(100vh - 56px)",
           overflow: "scroll",
         }}
@@ -408,40 +455,13 @@ const MyPortfolio = () => {
                         ))}
                       </Tabs>
                     </Box>
-
                     {portfolios?.map((port, indexPortfolio) => (
                       <CustomTabPanel
+                        index={indexPortfolio}
                         key={indexPortfolio}
                         value={value}
-                        index={indexPortfolio}
                       >
-                        {port.teams?.map(
-                          (team: Team | boolean, indexTeam: number) => (
-                            <div
-                              key={indexTeam}
-                              className={classes.containerDropdown}
-                            >
-                              <BallIcon />
-                              <Dropdown
-                                disabled={!!port?.id}
-                                indexPortfolio={indexPortfolio}
-                                indexTeam={indexTeam}
-                                name={`${team}`}
-                                // readOnly={!!port?.id}
-                                label={`Selection ${indexTeam + 1}`}
-                                value={
-                                  typeof team === "object" &&
-                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                  // @ts-ignore
-                                  portfolios[indexPortfolio]?.teams[indexTeam]
-                                    ?.name
-                                }
-                                options={!!port?.id ? port?.teams : teams}
-                                handleChange={handleChangeSelect}
-                              />
-                            </div>
-                          )
-                        )}
+                        {renderTeams(indexPortfolio)}
                         <Grid
                           container
                           display={"flex"}
@@ -461,33 +481,31 @@ const MyPortfolio = () => {
                               </p>
                             </div>
                           )}
-
-                          <span>
-                            <p>
-                              <Input
-                                required
-                                type="number"
-                                autoFocus={focused}
-                                value={
-                                  port?.championshipPoints >= 1
-                                    ? port?.championshipPoints
-                                    : ""
-                                }
-                                sx={{ width: "80%", m: 1 }}
-                                id="input-with-icon-adornment"
-                                name="championshipPoints"
-                                readOnly={!!port?.id}
-                                placeholder="Championship Points"
-                                className={classes.championshipPoints}
-                                startAdornment={
-                                  <InputAdornment position="start">
-                                    <EmojiEventsOutlinedIcon color="inherit" />
-                                  </InputAdornment>
-                                }
-                                onChange={(e) => handleChangeInput(e)}
-                              />
-                            </p>
-                          </span>
+                          <Grid
+                            display={"flex"}
+                            justifyContent={"center"}
+                            alignItems={"center"}
+                          >
+                            <Input
+                              required
+                              type="text"
+                              autoFocus={focused}
+                              value={championshipPoints}
+                              sx={{ width: "80%", m: 1 }}
+                              id="input-with-icon-adornment"
+                              name="championshipPoints"
+                              readOnly={!!port?.id}
+                              placeholder="Championship Points"
+                              className={classes.championshipPoints}
+                              inputProps={{ maxLength: 3 }}
+                              startAdornment={
+                                <InputAdornment position="start">
+                                  <EmojiEventsOutlinedIcon color="inherit" />
+                                </InputAdornment>
+                              }
+                              onChange={handleChangeInput}
+                            />
+                          </Grid>
                         </Grid>
                         <Grid
                           container
@@ -549,4 +567,4 @@ const MyPortfolio = () => {
     );
 };
 
-export default MyPortfolio;
+export default memo(MyPortfolio);

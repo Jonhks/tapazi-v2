@@ -16,12 +16,12 @@ export default defineConfig({
         background_color: "black",
         icons: [
           {
-            src: "tapasziLogoBlack.png",
+            src: "tapasziLogoTrans.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "tapasziLogoBlack.png",
+            src: "tapasziLogoTrans.png",
             sizes: "512x512",
             type: "image/png",
           },

@@ -19,6 +19,7 @@ import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 import { useMutation } from "@tanstack/react-query";
 import { getLogin } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
+// import { userExist } from "@/hooks/AuthUser";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -54,6 +55,7 @@ const Login = () => {
         navigate(`/home/${data.data.id}`, {
           replace: true,
         });
+        localStorage.removeItem("datoProv");
       }
     },
     onError: (err) => toast.error(err.message),

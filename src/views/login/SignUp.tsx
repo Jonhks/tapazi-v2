@@ -56,11 +56,16 @@ const Login = () => {
 
   const { mutate } = useMutation({
     mutationFn: getSignUp,
-    onSuccess: () => {
-      toast.success("User registered");
-      navigate(`/login`, {
-        replace: true,
-      });
+    onSuccess: (resp) => {
+      if (resp === "User Registered Successfully") {
+        toast.success(resp);
+        navigate(`/login`, {
+          replace: true,
+        });
+      } else {
+        toast.error(resp || "An error has occurred");
+        return;
+      }
     },
     onError: () => toast.error("An error has occurred"),
   });

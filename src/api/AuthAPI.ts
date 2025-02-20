@@ -3,6 +3,7 @@ import { isAxiosError } from "axios";
 import { User, UserForgot, UserLogin } from "types";
 
 export const getSignUp = async (user: User) => {
+  user.name = user.name.toUpperCase();
   try {
     const url = "/participants/register?api-key=TESTAPIKEY";
     const { data } = await api.post(url, user, {
@@ -10,7 +11,14 @@ export const getSignUp = async (user: User) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    return data;
+
+    if (!data.success) {
+      return data.error.description;
+    }
+
+    if (data.success) {
+      return "User Registered Successfully";
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -30,7 +38,14 @@ export const getLogin = async (user: UserLogin) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    return data;
+
+    if (!data.success) {
+      return data.error.description;
+    }
+
+    if (data.success) {
+      return data;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

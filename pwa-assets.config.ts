@@ -8,5 +8,5 @@ export default defineConfig({
     preset: "2023",
   },
   preset,
-  images: ["public/tapasziLogoBlack.png"],
+  images: ["public/tapasziLogoTrans.webp"],
 });
