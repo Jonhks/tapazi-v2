@@ -520,7 +520,7 @@ const Stats = () => {
                   mt={1}
                 >
                   {portfolioSeedSelections &&
-                    portfolioSeedSelections !== "string" && (
+                    typeof portfolioSeedSelections !== "string" && (
                       <StatsPortfoliosSelectionsGraphicTeamsleastOnce
                         graphType={"ColumnChart"}
                         data={portfolioSeedSelections}
@@ -533,7 +533,7 @@ const Stats = () => {
                   mt={1}
                 >
                   {portfolioSeedSelections &&
-                    portfolioSeedSelections !== "string" && (
+                    typeof portfolioSeedSelections !== "string" && (
                       <StatsPortfoliosSelectionsGraphicPercentLeast
                         graphType={"ColumnChart"}
                         data={portfolioSeedSelections}
