@@ -166,7 +166,12 @@ const Stats = () => {
   };
 
   const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
-    queryKey: ["teamsPicked", selectedOrderBy, idSubDataSelected],
+    queryKey: [
+      "teamsPicked",
+      selectedOrderBy,
+      idSubDataSelected,
+      selectedTournament.id,
+    ],
     queryFn: () =>
       getTeamsPicked(
         `${selectedTournament.id}`,
@@ -387,32 +392,31 @@ const Stats = () => {
             </Zoom>
           )}
 
-        {mostPickedTeams &&
-          typeof mostPickedTeams !== "string" &&
-          TeamsPickedLog &&
-          typeof TeamsPickedLog !== "string" &&
-          score === "Teams" && (
-            <Zoom in={true}>
+        {score === "Teams" && (
+          <Zoom in={true}>
+            <Grid
+              container
+              size={{ xs: 11, md: 10 }}
+              spacing={1}
+            >
               <Grid
+                size={{ xs: 12, md: 6 }}
                 container
-                size={{ xs: 11, md: 10 }}
-                spacing={1}
+                spacing={2}
+                style={{ height: "fit-content" }}
+                justifyContent={"center"}
               >
-                <Grid
-                  size={{ xs: 12, md: 6 }}
-                  container
-                  spacing={2}
-                  style={{ height: "fit-content" }}
-                  justifyContent={"center"}
-                >
-                  <Grid>
+                <Grid>
+                  {mostPickedTeams && typeof mostPickedTeams !== "string" && (
                     <TableHistoryMostPickedTeams
                       arrHistory={mostPickedTeams}
                       score={"Top 10 Most Frequently Picked Teams"}
                       least={false}
                     />
-                  </Grid>
-                  <Grid>
+                  )}
+                </Grid>
+                <Grid>
+                  {leastPickedTeams && typeof leastPickedTeams !== "string" && (
                     <TableHistoryMostPickedTeams
                       arrHistory={leastPickedTeams}
                       score={
@@ -420,114 +424,127 @@ const Stats = () => {
                       }
                       least={true}
                     />
-                  </Grid>
-
-                  {teamsNotPickedLog &&
-                    typeof teamsNotPickedLog !== "string" && (
-                      <Grid>
-                        <TableHistoryTeamsNotPicked
-                          arrHistory={teamsNotPickedLog}
-                          score={"Teams Not Picked"}
-                        />
-                      </Grid>
-                    )}
+                  )}
                 </Grid>
-                <Grid
-                  container
-                  size={{ xs: 12, md: 6 }}
-                  spacing={1}
-                >
+
+                {teamsNotPickedLog && typeof teamsNotPickedLog !== "string" && (
                   <Grid>
+                    <TableHistoryTeamsNotPicked
+                      arrHistory={teamsNotPickedLog}
+                      score={"Teams Not Picked"}
+                    />
+                  </Grid>
+                )}
+              </Grid>
+              <Grid
+                container
+                size={{ xs: 12, md: 6 }}
+                spacing={1}
+              >
+                <Grid>
+                  {TeamsPickedLog && typeof TeamsPickedLog !== "string" && (
                     <TableTeamsPickedLog
                       arrHistory={TeamsPickedLog}
                       score={"Frequency of Teams Picked"}
                     />
-                  </Grid>
+                  )}
                 </Grid>
               </Grid>
-            </Zoom>
-          )}
+            </Grid>
+          </Zoom>
+        )}
 
-        {seedPickTotal &&
-          typeof seedPickTotal !== "string" &&
-          portfolioSeedSelections &&
-          typeof portfolioSeedSelections !== "string" &&
-          score === "Portfolios" && (
-            <Zoom in={true}>
+        {score === "Portfolios" && (
+          <Zoom in={true}>
+            <Grid
+              size={11}
+              container
+              spacing={2}
+            >
               <Grid
-                size={11}
-                container
-                spacing={2}
+                size={{ xs: 12, md: 6 }}
+                flexWrap={"wrap"}
+                display={"flex"}
+                justifyContent={"space-around"}
               >
                 <Grid
                   size={{ xs: 12, md: 6 }}
-                  flexWrap={"wrap"}
-                  display={"flex"}
-                  justifyContent={"space-around"}
+                  mb={1}
                 >
-                  <Grid
-                    size={{ xs: 12, md: 6 }}
-                    mb={1}
-                  >
+                  {seedPickTotal && typeof seedPickTotal !== "string" && (
                     <TableSeedPickTotal
                       arrHistory={seedPickTotal}
                       score={"Picks By Seed"}
                     />
-                  </Grid>
-                  <Grid size={{ xs: 12, md: 6 }}>
-                    <TablePortfolioSeedSelections
-                      arrHistory={portfolioSeedSelections}
-                      score={"Seed Picked in Portfolio \n (at least once)"}
-                    />
-                  </Grid>
+                  )}
                 </Grid>
-                <Grid
-                  size={{ xs: 12, md: 6 }}
-                  flexWrap={"wrap"}
-                  display={"flex"}
-                  justifyContent={"space-around"}
-                >
-                  <Grid size={12}>
+                <Grid size={{ xs: 12, md: 6 }}>
+                  {portfolioSeedSelections &&
+                    typeof portfolioSeedSelections !== "string" && (
+                      <TablePortfolioSeedSelections
+                        arrHistory={portfolioSeedSelections}
+                        score={"Seed Picked in Portfolio \n (at least once)"}
+                      />
+                    )}
+                </Grid>
+              </Grid>
+              <Grid
+                size={{ xs: 12, md: 6 }}
+                flexWrap={"wrap"}
+                display={"flex"}
+                justifyContent={"space-around"}
+              >
+                <Grid size={12}>
+                  {seedPickTotal && typeof seedPickTotal !== "string" && (
                     <StatsGraphics
                       graphType={"ColumnChart"}
                       data={seedPickTotal}
                       title={"Number of Picks by Seed"}
                     />
-                  </Grid>
-                  <Grid
-                    size={12}
-                    mt={1}
-                  >
+                  )}
+                </Grid>
+                <Grid
+                  size={12}
+                  mt={1}
+                >
+                  {seedPickTotal && typeof seedPickTotal !== "string" && (
                     <StatsPortfoliosSelectionsGraphic
                       graphType={"ColumnChart"}
                       data={seedPickTotal}
                       title={"Percentage of Picks by Seed"}
                     />
-                  </Grid>
-                  <Grid
-                    size={12}
-                    mt={1}
-                  >
-                    <StatsPortfoliosSelectionsGraphicTeamsleastOnce
-                      graphType={"ColumnChart"}
-                      data={portfolioSeedSelections}
-                      title={"Teams Seed Picked at Least Once"}
-                    />
-                  </Grid>
-                  <Grid
-                    size={12}
-                    mt={1}
-                  >
-                    <StatsPortfoliosSelectionsGraphicPercentLeast
-                      graphType={"ColumnChart"}
-                      data={portfolioSeedSelections}
-                      title={"Percentage Seed Picked at Least Once)"}
-                    />
-                  </Grid>
+                  )}
+                </Grid>
+                <Grid
+                  size={12}
+                  mt={1}
+                >
+                  {portfolioSeedSelections &&
+                    portfolioSeedSelections !== "string" && (
+                      <StatsPortfoliosSelectionsGraphicTeamsleastOnce
+                        graphType={"ColumnChart"}
+                        data={portfolioSeedSelections}
+                        title={"Teams Seed Picked at Least Once"}
+                      />
+                    )}
+                </Grid>
+                <Grid
+                  size={12}
+                  mt={1}
+                >
+                  {portfolioSeedSelections &&
+                    portfolioSeedSelections !== "string" && (
+                      <StatsPortfoliosSelectionsGraphicPercentLeast
+                        graphType={"ColumnChart"}
+                        data={portfolioSeedSelections}
+                        title={"Percentage Seed Picked at Least Once)"}
+                      />
+                    )}
                 </Grid>
               </Grid>
-            </Zoom>
-          )}
+            </Grid>
+          </Zoom>
+        )}
       </Grid>
     </Grid>
   );
