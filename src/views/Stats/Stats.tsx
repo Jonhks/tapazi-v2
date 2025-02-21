@@ -420,7 +420,7 @@ const Stats = () => {
                     <TableHistoryMostPickedTeams
                       arrHistory={leastPickedTeams}
                       score={
-                        "Least Frequently Picked Teams Among Teams Pickedat Least Once"
+                        "Least Frequently Picked Teams Among Teams Picked at Least Once"
                       }
                       least={true}
                     />
