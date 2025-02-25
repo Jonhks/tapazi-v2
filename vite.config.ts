@@ -9,15 +9,51 @@ export default defineConfig({
     react(),
     VitePWA({
       manifest: {
-        name: "Portfolio App",
-        short_name: "Portfolio",
+        name: "Portfolio Pool App",
+        short_name: "Portfolio Pool",
         description: "New App for Portfolios",
-        theme_color: "black",
-        background_color: "black",
+        theme_color: "#000000",
+        background_color: "#000000",
+        display: "standalone",
         icons: [
           {
             src: "tapasziLogoBlack.png",
+            sizes: "48x48",
+            type: "image/png",
+          },
+          {
+            src: "tapasziLogoBlack.png",
+            sizes: "72x72",
+            type: "image/png",
+          },
+          {
+            src: "tapasziLogoBlack.png",
+            sizes: "96x96",
+            type: "image/png",
+          },
+          {
+            src: "tapasziLogoBlack.png",
+            sizes: "128x128",
+            type: "image/png",
+          },
+          {
+            src: "tapasziLogoBlack.png",
+            sizes: "144x144",
+            type: "image/png",
+          },
+          {
+            src: "tapasziLogoBlack.png",
+            sizes: "152x152",
+            type: "image/png",
+          },
+          {
+            src: "tapasziLogoBlack.png",
             sizes: "192x192",
+            type: "image/png",
+          },
+          {
+            src: "tapasziLogoBlack.png",
+            sizes: "384x384",
             type: "image/png",
           },
           {

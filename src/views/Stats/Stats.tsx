@@ -106,6 +106,7 @@ const Stats = () => {
   useEffect(() => {
     if (tournaments) {
       const current = tournaments.filter((el: Tournament) => el?.current)[0];
+      console.log(current);
 
       setTournament(current?.name);
       // setScore("Score");
@@ -298,7 +299,7 @@ const Stats = () => {
                     className={classes.DropDownHistory}
                     value={tournament}
                     handleChange={handleChange}
-                    options={tournaments}
+                    options={tournaments.filter((el: Tournament) => el.current)}
                   />
                 </div>
               </Grid>
