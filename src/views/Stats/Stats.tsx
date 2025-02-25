@@ -8,7 +8,6 @@ import {
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
 import { PodiumIcon } from "@/assets/icons/icons";
-// import BallLoader from "../../UI/BallLoader/BallLoader";
 import DropDownHistory from "@/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import {
@@ -90,10 +89,12 @@ const Stats = () => {
     id: "1",
     option: "Score",
     placeholder: "Current Score",
+    round: "8",
   });
 
   const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[0]);
   const [idSubDataSelected, setIdSubDataSelected] = useState(0);
+  const [round, setRound] = useState(8);
 
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   // const [pointsPerRound, setPointsPerRound] = useState([]);
@@ -137,6 +138,8 @@ const Stats = () => {
         (el: dataDropdowndataType) => el?.name === e?.target?.value
       )[0];
       setScore(e?.target?.value);
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
       setSelectedScore(optionSelect);
       setSubDataSelected(subDataDropDown[+optionSelect.id - 1]);
       setIdSubDataSelected(0);
@@ -162,22 +165,16 @@ const Stats = () => {
     const selected = subDataSelected.filter(
       (data) => data.name === e.target.value
     );
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setRound(+selected[0].round);
     setIdSubDataSelected(+selected[0].id - 1);
   };
 
   const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
-    queryKey: [
-      "teamsPicked",
-      selectedOrderBy,
-      idSubDataSelected,
-      selectedTournament.id,
-    ],
+    queryKey: ["teamsPicked", selectedOrderBy, round, selectedTournament.id],
     queryFn: () =>
-      getTeamsPicked(
-        `${selectedTournament.id}`,
-        `${idSubDataSelected}`,
-        selectedOrderBy
-      ),
+      getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
   });
 
   const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
