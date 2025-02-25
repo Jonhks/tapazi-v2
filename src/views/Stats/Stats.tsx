@@ -264,20 +264,7 @@ const Stats = () => {
                 <HistoryIcon /> Stats
               </p>
             </Grid>
-            <Grid size={{ xs: 6, sm: 4, md: 4 }}>
-              {/* <Button
-                variant="contained"
-                style={{
-                  width: "100%",
-                  textTransform: "capitalize",
-                  backgroundColor: "#238b94",
-                }}
-                className={classes.btnSubmit}
-                onClick={() => checkWhatDataToRequest()}
-              >
-                Send
-              </Button> */}
-            </Grid>
+            <Grid size={{ xs: 6, sm: 4, md: 4 }}></Grid>
           </Grid>
           <Grid
             container
