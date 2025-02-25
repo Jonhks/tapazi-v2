@@ -9,7 +9,7 @@ export default defineConfig({
     react(),
     VitePWA({
       manifest: {
-        name: "Portfolio Pool App",
+        name: "Portfolio Pool",
         short_name: "Portfolio Pool",
         description: "New App for Portfolios",
         theme_color: "#000000",
