@@ -17,47 +17,47 @@ export default defineConfig({
         display: "standalone",
         icons: [
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "48x48",
             type: "image/png",
           },
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "72x72",
             type: "image/png",
           },
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "96x96",
             type: "image/png",
           },
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "128x128",
             type: "image/png",
           },
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "144x144",
             type: "image/png",
           },
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "152x152",
             type: "image/png",
           },
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "192x192",
             type: "image/png",
           },
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "384x384",
             type: "image/png",
           },
           {
-            src: "tapasziLogoTrans.webp",
+            src: "tapasziLogoBlack.png",
             sizes: "512x512",
             type: "image/png",
           },
