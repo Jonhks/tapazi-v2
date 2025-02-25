@@ -142,3 +142,49 @@ export const removeportfolio = async ({
     return;
   }
 };
+
+export const getDATTOU = async () => {
+  try {
+    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=DATTOU`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.value;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getHOUTOU = async () => {
+  try {
+    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOUTOU`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.value;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

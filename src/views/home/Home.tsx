@@ -52,6 +52,7 @@ const Home = () => {
   const { data: payout } = useQuery({
     queryKey: ["payout", userId],
     queryFn: () => gatPayout(portfoliosHome.count),
+    retry: false,
   });
 
   const renderDescription = (dataHOINFO: string) => {

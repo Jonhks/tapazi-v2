@@ -67,6 +67,11 @@ export const getParticipants = async () => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+
+    if (!data.success) {
+      return "Error";
+    }
+
     if (data.success) {
       return data.data;
     }
@@ -85,6 +90,11 @@ export const getPortfoliosCount = async () => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+
+    if (!data.success) {
+      return "Error";
+    }
+
     if (data.success) {
       return data.data;
     }

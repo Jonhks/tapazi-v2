@@ -14,6 +14,8 @@ import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
+  getDATTOU,
+  getHOUTOU,
   getPortfolios,
   getTeams,
   postNewPortfolio,
@@ -22,6 +24,7 @@ import {
 import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
+import { isDateTimeReached } from "@/utils/getDaysLeft";
 
 const MyPortfolio = () => {
   const params = useParams();
@@ -35,19 +38,36 @@ const MyPortfolio = () => {
   const [duplicates, setDuplicates] = useState(false);
   const [focused, setFocused] = useState(false);
   const [championshipPoints, setChampionshipPoints] = useState("");
-// console.log(portfolios[value].championshipPoints);
+  const [validTournament, setValidTournament] = useState(true);
+  // console.log(portfolios[value].championshipPoints);
 
-
-useEffect(() => {
-  if(portfolios){
-    setChampionshipPoints(portfolios[value]?.championshipPoints)
-  }
-},[portfolios, value])
+  useEffect(() => {
+    if (portfolios) {
+      setChampionshipPoints(portfolios[value]?.championshipPoints);
+    }
+  }, [portfolios, value]);
 
   const { data: portfoliosObtained, isLoading } = useQuery({
     queryKey: ["portfolios", userId],
     queryFn: () => getPortfolios(userId),
   });
+
+  const { data: dataDATTOU } = useQuery({
+    queryKey: ["dattou", userId],
+    queryFn: () => getDATTOU(userId),
+  });
+
+  const { data: dataHOUTOU } = useQuery({
+    queryKey: ["houtou", userId],
+    queryFn: () => getHOUTOU(userId),
+  });
+
+  useEffect(() => {
+    if (dataDATTOU && dataHOUTOU) {
+      const isValid = isDateTimeReached(dataDATTOU, dataHOUTOU);
+      setValidTournament(isValid);
+    }
+  }, [dataDATTOU, dataHOUTOU, portfolios]);
 
   const { data: teams } = useQuery({
     queryKey: ["teams", userId],
@@ -178,6 +198,10 @@ useEffect(() => {
   }, [portfolios]);
 
   const savePortfolio = useCallback(() => {
+    if (!validTournament) {
+      toast.error("The tournament has already started!!");
+      return;
+    }
     const newData = [...portfolios];
     const portFolioEditable = [
       ...newData?.filter((port) => port?.newPortfolio),
@@ -266,7 +290,6 @@ useEffect(() => {
     },
     [portfolios, mutate, userId]
   );
-  console.log(value);
 
   const removeportfolioFunction = useCallback(
     (portId: number) => {
@@ -435,7 +458,7 @@ useEffect(() => {
               <Box>
                 <Grid size={12}>
                   <Box sx={{ width: "100%" }}>
-                    {portfolios?.length < 8 && (
+                    {portfolios?.length < 8 && validTournament && (
                       <div className={classes.addPortFolio}>
                         <Button
                           variant="contained"
@@ -517,7 +540,7 @@ useEffect(() => {
                               className={classes.championshipPoints}
                               inputProps={{
                                 maxLength: 3,
-                                inputmode: "numeric",
+                                inputMode: "numeric",
                               }}
                               startAdornment={
                                 <InputAdornment position="start">
@@ -535,21 +558,23 @@ useEffect(() => {
                         >
                           {!!port?.id ? (
                             <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                              <Button
-                                variant="contained"
-                                color="warning"
-                                className={classes.btnRemove}
-                                onClick={() => {
-                                  if (value >= 1) {
-                                    setValue(0);
-                                  }
-                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                  // @ts-expect-error
-                                  removeportfolioFunction(port?.id);
-                                }}
-                              >
-                                Remove
-                              </Button>
+                              {validTournament && (
+                                <Button
+                                  variant="contained"
+                                  color="warning"
+                                  className={classes.btnRemove}
+                                  onClick={() => {
+                                    if (value >= 1) {
+                                      setValue(0);
+                                    }
+                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                    // @ts-expect-error
+                                    removeportfolioFunction(port?.id);
+                                  }}
+                                >
+                                  Remove
+                                </Button>
+                              )}
                             </Grid>
                           ) : (
                             <>
