@@ -35,6 +35,14 @@ const MyPortfolio = () => {
   const [duplicates, setDuplicates] = useState(false);
   const [focused, setFocused] = useState(false);
   const [championshipPoints, setChampionshipPoints] = useState("");
+// console.log(portfolios[value].championshipPoints);
+
+
+useEffect(() => {
+  if(portfolios){
+    setChampionshipPoints(portfolios[value]?.championshipPoints)
+  }
+},[portfolios, value])
 
   const { data: portfoliosObtained, isLoading } = useQuery({
     queryKey: ["portfolios", userId],
