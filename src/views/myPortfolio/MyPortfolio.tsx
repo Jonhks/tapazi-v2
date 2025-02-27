@@ -198,7 +198,6 @@ const MyPortfolio = () => {
               item.winnerOfTeamHasTeam.includes(teamId)
           );
           if (exists) {
-            console.log(winnerOfTeam);
             toast.error("No puedes tener winnerOfTeam");
             setWinnerSelected(true);
             return true;
@@ -215,9 +214,7 @@ const MyPortfolio = () => {
     if (portfolios) {
       if (portfolios[value]) {
         const arrIds = portfolios[value].teams.map((port) => port.id);
-        const resp = checkCombination(comparing, arrIds);
-        console.log(resp);
-        // console.log(portfolios[value].teams);
+        checkCombination(comparing, arrIds);
       }
     }
   }, [comparing, portfolios, value]);
@@ -586,7 +583,7 @@ const MyPortfolio = () => {
                           {winnerSelected && (
                             <div>
                               <p className={classes.error}>
-                                No puedes tener winnerOfTeam"
+                                No puedes tener winnerOfTeam!
                               </p>
                             </div>
                           )}
