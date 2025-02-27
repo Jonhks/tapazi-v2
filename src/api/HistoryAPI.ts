@@ -134,3 +134,49 @@ export const getTeamsHistoricAllRounds = async (param: string) => {
     return;
   }
 };
+
+export const getHistoricalPerfectPortfoliosHistory = async (year: number) => {
+  try {
+    const url = `historical-perfect-portfolios-history?api-key=TESTAPIKEY&year=${year}`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return data.error.description || "Error";
+    }
+
+    if (data.success) {
+      return data.data.historicalPerfectPortfoliosHistory;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getTeamsPickedLogHistory = async (year: number) => {
+  try {
+    const url = `teams-picked-log-history?api-key=TESTAPIKEY&year=${year}`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return data.error.description || "Error";
+    }
+
+    if (data.success) {
+      return data.data.teamsPickedLogHistory;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

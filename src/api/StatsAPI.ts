@@ -12,7 +12,7 @@ export const getTeamsPicked = async (
   }
 
   try {
-    const url = `/score/history?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`;
+    const url = `/score/stats?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`;
     const { data } = await api(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",

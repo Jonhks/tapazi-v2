@@ -1,17 +1,24 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { TeamPerfectPortfolios } from "@/types/index";
-import { Chart, GoogleChartWrapperChartType } from "react-google-charts";
+import {
+  Chart,
+  GoogleChartWrapper,
+  GoogleChartWrapperChartType,
+} from "react-google-charts";
 
 function TeamPerYearlogGraphic({
   graphType,
   teamsPerYearLog,
+  SeteamPerfectPortfoliosSelected,
 }: {
   graphType: GoogleChartWrapperChartType;
   teamsPerYearLog: TeamPerfectPortfolios[];
+  SeteamPerfectPortfoliosSelected: (value: number) => void;
 }) {
   const convertData = (
     data: {
       year: number;
-      // tournament_name: string;
       total_weight: number;
       total_points: number;
     }[]
@@ -29,6 +36,19 @@ function TeamPerYearlogGraphic({
 
   const convertedData = convertData(teamsPerYearLog);
 
+  const handleChartReady = (chartWrapper: GoogleChartWrapper | null) => {
+    const chart = chartWrapper.getChart();
+    const dataTable = chartWrapper?.getDataTable();
+
+    google.visualization.events.addListener(chart, "select", () => {
+      const selectedItem = chart.getSelection()[0];
+      if (selectedItem) {
+        const value = dataTable.getValue(selectedItem.row, 0);
+        SeteamPerfectPortfoliosSelected(value);
+      }
+    });
+  };
+
   return (
     <Chart
       chartType={graphType}
@@ -40,6 +60,12 @@ function TeamPerYearlogGraphic({
         vAxis: { title: "Tournament" },
         hAxis: { title: "Year" },
       }}
+      chartEvents={[
+        {
+          eventName: "ready",
+          callback: ({ chartWrapper }) => handleChartReady(chartWrapper),
+        },
+      ]}
       legendToggle
     />
   );

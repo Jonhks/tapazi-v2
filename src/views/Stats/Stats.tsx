@@ -106,8 +106,6 @@ const Stats = () => {
   useEffect(() => {
     if (tournaments) {
       const current = tournaments.filter((el: Tournament) => el?.current)[0];
-      console.log(current);
-
       setTournament(current?.name);
       // setScore("Score");
       setSelectedTournament(current);

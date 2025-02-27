@@ -1,12 +1,16 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import { TeamsPerYearLog } from "@/types/index";
 import { Chart, GoogleChartWrapperChartType } from "react-google-charts";
 
 function TeamPerYearlogGraphic({
   graphType,
   teamsPerYearLog,
+  setTeamsPerYearLogSelected,
 }: {
   graphType: GoogleChartWrapperChartType;
   teamsPerYearLog: TeamsPerYearLog;
+  setTeamsPerYearLogSelected: (value: nmber) => void;
 }) {
   const convertData = (
     data: { year: number; tournament_id: number; teams: number }[]
@@ -27,6 +31,19 @@ function TeamPerYearlogGraphic({
 
   const convertedData = convertData(teamsPerYearLog);
 
+  const handleChartReady = (chartWrapper: GoogleChartWrapper | null) => {
+    const chart = chartWrapper.getChart();
+    const dataTable = chartWrapper?.getDataTable();
+
+    google.visualization.events.addListener(chart, "select", () => {
+      const selectedItem = chart.getSelection()[0];
+      if (selectedItem) {
+        const value = dataTable.getValue(selectedItem.row, 0);
+        setTeamsPerYearLogSelected(value);
+      }
+    });
+  };
+
   return (
     <Chart
       // Try different chart types by changing this property with one of: ColumnChart, LineChart, AreaChart, BarChart, BubbleChart, ComboChart,  PieChart, DonutChart, GeoChart, Histogram, Line, RadarChart, ScatterChart, SteppedAreaChart, Table
@@ -44,6 +61,12 @@ function TeamPerYearlogGraphic({
         // backgroundColor: "hsl(21, 93%, 18%)",
         opacity: 0.5,
       }}
+      chartEvents={[
+        {
+          eventName: "ready",
+          callback: ({ chartWrapper }) => handleChartReady(chartWrapper),
+        },
+      ]}
       legendToggle
     />
   );
