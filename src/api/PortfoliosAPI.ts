@@ -220,7 +220,6 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data);
 
     if (!data.success) {
       return "Error";

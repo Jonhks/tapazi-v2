@@ -18,8 +18,8 @@ import {
   getHOUTOU,
   getPortfolios,
   getTeams,
-  // getWinnerOfTeam,
-  // getWinnerOfTeamHasTeam,
+  getWinnerOfTeam,
+  getWinnerOfTeamHasTeam,
   postNewPortfolio,
   removeportfolio,
 } from "@/api/PortfoliosAPI";
@@ -41,7 +41,8 @@ const MyPortfolio = () => {
   const [focused, setFocused] = useState(false);
   const [championshipPoints, setChampionshipPoints] = useState("");
   const [validTournament, setValidTournament] = useState(true);
-  // console.log(portfolios[value].championshipPoints);
+  const [comparing, setComparing] = useState([]);
+  const [winnerSelected, setWinnerSelected] = useState(false);
 
   useEffect(() => {
     if (portfolios) {
@@ -64,15 +65,26 @@ const MyPortfolio = () => {
     queryFn: () => getHOUTOU(userId),
   });
 
-  // const { data: winnerOfTeam } = useQuery({
-  //   queryKey: ["winnerOfTeam", userId],
-  //   queryFn: () => getWinnerOfTeam(),
-  // });
+  const { data: winnerOfTeam } = useQuery({
+    queryKey: ["winnerOfTeam", userId],
+    queryFn: () => getWinnerOfTeam(),
+  });
 
-  // const { data: WinnerOfTeamHasTeam } = useQuery({
-  //   queryKey: ["WinnerOfTeamHasTeam", userId],
-  //   queryFn: () => getWinnerOfTeamHasTeam(141),
-  // });
+  useEffect(() => {
+    if (winnerOfTeam) {
+      Promise.all(winnerOfTeam.map((el) => getWinnerOfTeamHasTeam(el.id))).then(
+        (resp) => {
+          const formattedData = winnerOfTeam.map((winner, index) => {
+            return {
+              winnerOfTeam: winner.id,
+              winnerOfTeamHasTeam: resp[index].map((team) => team.teamId),
+            };
+          });
+          setComparing(formattedData);
+        }
+      );
+    }
+  }, [winnerOfTeam]);
 
   useEffect(() => {
     if (dataDATTOU && dataHOUTOU) {
@@ -172,6 +184,43 @@ const MyPortfolio = () => {
     setPortfolios(newData);
     setFocused(true);
   };
+
+  const checkCombination = (arr, arrIds) => {
+    // Verificar cada par de números en arrIds
+    for (let i = 0; i < arrIds.length; i++) {
+      for (let j = 0; j < arrIds.length; j++) {
+        if (i !== j) {
+          const winnerOfTeam = arrIds[i];
+          const teamId = arrIds[j];
+          const exists = arr.some(
+            (item) =>
+              item.winnerOfTeam === winnerOfTeam &&
+              item.winnerOfTeamHasTeam.includes(teamId)
+          );
+          if (exists) {
+            console.log(winnerOfTeam);
+            toast.error("No puedes tener winnerOfTeam");
+            setWinnerSelected(true);
+            return true;
+          } else {
+            setWinnerSelected(false);
+          }
+        }
+      }
+    }
+    return false;
+  };
+
+  useEffect(() => {
+    if (portfolios) {
+      if (portfolios[value]) {
+        const arrIds = portfolios[value].teams.map((port) => port.id);
+        const resp = checkCombination(comparing, arrIds);
+        console.log(resp);
+        // console.log(portfolios[value].teams);
+      }
+    }
+  }, [comparing, portfolios, value]);
 
   const handleChangeSelect = useCallback(
     (port: boolean, index: string | number) => {
@@ -534,6 +583,13 @@ const MyPortfolio = () => {
                               </p>
                             </div>
                           )}
+                          {winnerSelected && (
+                            <div>
+                              <p className={classes.error}>
+                                No puedes tener winnerOfTeam"
+                              </p>
+                            </div>
+                          )}
                           <Grid
                             display={"flex"}
                             justifyContent={"center"}
@@ -596,6 +652,7 @@ const MyPortfolio = () => {
                                   color="success"
                                   className={classes.btnSubmit}
                                   onClick={() => savePortfolio()}
+                                  disabled={winnerSelected}
                                 >
                                   Submit
                                 </Button>
