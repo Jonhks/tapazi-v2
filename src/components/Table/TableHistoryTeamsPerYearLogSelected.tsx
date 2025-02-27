@@ -45,7 +45,7 @@ export default function CustomizedTables({
   score,
   teamsPerYearLogSelected,
 }) {
-  console.log(arrHistory);
+  if (typeof arrHistory === "string") return;
 
   function createData(year, name) {
     return {
