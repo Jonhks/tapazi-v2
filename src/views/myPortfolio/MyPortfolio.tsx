@@ -18,6 +18,8 @@ import {
   getHOUTOU,
   getPortfolios,
   getTeams,
+  // getWinnerOfTeam,
+  // getWinnerOfTeamHasTeam,
   postNewPortfolio,
   removeportfolio,
 } from "@/api/PortfoliosAPI";
@@ -61,6 +63,16 @@ const MyPortfolio = () => {
     queryKey: ["houtou", userId],
     queryFn: () => getHOUTOU(userId),
   });
+
+  // const { data: winnerOfTeam } = useQuery({
+  //   queryKey: ["winnerOfTeam", userId],
+  //   queryFn: () => getWinnerOfTeam(),
+  // });
+
+  // const { data: WinnerOfTeamHasTeam } = useQuery({
+  //   queryKey: ["WinnerOfTeamHasTeam", userId],
+  //   queryFn: () => getWinnerOfTeamHasTeam(141),
+  // });
 
   useEffect(() => {
     if (dataDATTOU && dataHOUTOU) {

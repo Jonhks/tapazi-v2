@@ -188,3 +188,50 @@ export const getHOUTOU = async () => {
     return;
   }
 };
+
+export const getWinnerOfTeam = async () => {
+  try {
+    const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.winnerOfTeam;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getWinnerOfTeamHasTeam = async (id: string) => {
+  try {
+    const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    console.log(data);
+
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.winnerOfTeamHasTeam;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
