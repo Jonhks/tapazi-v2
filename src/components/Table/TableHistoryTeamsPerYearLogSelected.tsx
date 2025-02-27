@@ -65,9 +65,6 @@ export default function CustomizedTables({
         {score}
         <p>{teamsPerYearLogSelected}</p>
       </div>
-      <div className={classes?.firstTableRow}>
-        <p>{teamsPerYearLogSelected}</p>
-      </div>
       <Table
         sx={{ minWidth: 100, opacity: ".87" }}
         aria-label="customized table"
