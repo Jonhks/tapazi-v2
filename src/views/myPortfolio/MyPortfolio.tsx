@@ -198,7 +198,9 @@ const MyPortfolio = () => {
               item.winnerOfTeamHasTeam.includes(teamId)
           );
           if (exists) {
-            toast.error("No puedes tener winnerOfTeam");
+            toast.error(
+              "You cannot select a team that also belongs to the selection of a winner of team!!"
+            );
             setWinnerSelected(true);
             return true;
           } else {
@@ -583,7 +585,8 @@ const MyPortfolio = () => {
                           {winnerSelected && (
                             <div>
                               <p className={classes.error}>
-                                No puedes tener winnerOfTeam!
+                                You cannot select a team that also belongs to
+                                the selection of a winner of team!!!
                               </p>
                             </div>
                           )}

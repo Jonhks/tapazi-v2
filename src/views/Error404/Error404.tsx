@@ -21,7 +21,7 @@ export default function Error() {
           spacing={2}
         >
           <Grid
-            size={{ xs: 12, md: 6 }}
+            size={{ xs: 12, md: 12 }}
             display={"flex"}
             flexDirection={"column"}
             justifyContent={"center"}
@@ -53,7 +53,7 @@ export default function Error() {
               Back Home
             </Button>
           </Grid>
-          <Grid
+          {/* <Grid
             size={{ xs: 12, md: 6 }}
             display={"flex"}
             flexDirection={"column"}
@@ -66,7 +66,7 @@ export default function Error() {
               width={500}
               height={250}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Box>
