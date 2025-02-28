@@ -186,7 +186,6 @@ const MyPortfolio = () => {
   };
 
   const checkCombination = (arr, arrIds) => {
-    // Verificar cada par de números en arrIds
     for (let i = 0; i < arrIds.length; i++) {
       for (let j = 0; j < arrIds.length; j++) {
         if (i !== j) {
