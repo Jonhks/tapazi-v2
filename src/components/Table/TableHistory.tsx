@@ -52,8 +52,6 @@ const StyledTableRow = styled(TableRow)(() => ({
 }));
 
 export default function CustomizedTables({ arrHistory, score }) {
-  console.log(arrHistory);
-
   const [showEliminatedTeams, setShowEliminatedTeams] = useState(false);
 
   useEffect(() => {
