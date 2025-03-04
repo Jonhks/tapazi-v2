@@ -18,7 +18,6 @@ export const getTeamsPicked = async (
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data);
 
     if (!data.success) {
       return "Error";
