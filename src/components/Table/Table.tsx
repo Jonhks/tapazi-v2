@@ -31,7 +31,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     zIndex: 1,
   },
   "&.fixed + &.fixed": {
-    left: "80px", // Ajusta este valor según el ancho de la columna `portfolioName`
+    left: "75px", // Ajusta este valor según el ancho de la columna `portfolioName`
   },
 }));
 
