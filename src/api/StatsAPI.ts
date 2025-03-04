@@ -18,12 +18,13 @@ export const getTeamsPicked = async (
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+    console.log(data);
 
     if (!data.success) {
       return "Error";
     }
     if (data.success) {
-      return data.data.history;
+      return data.data.stats;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
