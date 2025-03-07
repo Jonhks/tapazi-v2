@@ -32,6 +32,8 @@ export const getLogin = async (user: UserLogin) => {
     user: user.email,
     password: user.password,
   };
+  console.log(formData);
+
   try {
     const url = "/participants/login?api-key=TESTAPIKEY";
     const { data } = await api.post(url, formData, {
@@ -39,11 +41,11 @@ export const getLogin = async (user: UserLogin) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+    console.log(data);
 
     if (!data.success) {
       return data.error.description;
     }
-
     if (data.success) {
       return data;
     }

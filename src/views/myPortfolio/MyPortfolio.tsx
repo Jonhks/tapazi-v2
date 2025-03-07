@@ -251,7 +251,7 @@ const MyPortfolio = () => {
     newData.push({
       newPortfolio: true,
       teams: [false, false, false, false, false, false, false, false],
-      championshipPoints: 0,
+      championshipPoints: "",
     });
     setPortfolios(newData);
   }, [portfolios]);
