@@ -90,9 +90,9 @@ const Login = () => {
         <Container maxWidth="sm">
           <Box className={classes.box}>
             <div className={classes.head}>
-              <p className={classes.title}>Sign up to</p>
-              <p className={classes.titleTwo}>The Portfolio Pool</p>
-              <p className={classes.subtitle}>Create your account</p>
+              <p className={classes.title}>SIGN UP TO THE</p>
+              <p className={classes.titleTwo}>Portfolio Pool</p>
+              <p className={classes.subtitle}>CREATE YOUR ACCOUNT</p>
             </div>
             <div className={classes.containerForm}>
               <Grid
@@ -103,11 +103,19 @@ const Login = () => {
                 <form
                   onSubmit={handleSubmit(handleRegister)}
                   noValidate
+                  style={{ textAlign: "center" }}
                 >
                   <Input
                     required
                     type={"text"}
-                    sx={{ width: "80%", m: 2 }}
+                    sx={{
+                      width: "80%",
+                      m: 2,
+                      border: "1px solid white",
+                      padding: "5px",
+                      borderRadius: "4px",
+                      paddingLeft: "5px",
+                    }}
                     color={"warning"}
                     placeholder="First Name"
                     inputProps={{
@@ -127,7 +135,14 @@ const Login = () => {
                     required
                     color={"warning"}
                     type={"text"}
-                    sx={{ width: "80%", m: 2 }}
+                    sx={{
+                      width: "80%",
+                      m: 2,
+                      border: "1px solid white",
+                      padding: "5px",
+                      borderRadius: "4px",
+                      paddingLeft: "5px",
+                    }}
                     placeholder="Last Name"
                     inputProps={{
                       style: { textTransform: "lowercase" },
@@ -145,7 +160,14 @@ const Login = () => {
                   <Input
                     required
                     type={"e-mail"}
-                    sx={{ width: "80%", m: 2 }}
+                    sx={{
+                      width: "80%",
+                      m: 2,
+                      border: "1px solid white",
+                      padding: "5px",
+                      borderRadius: "4px",
+                      paddingLeft: "5px",
+                    }}
                     color={"warning"}
                     placeholder="E-mail"
                     inputProps={{
@@ -167,17 +189,35 @@ const Login = () => {
                   />
                   <FormControl
                     variant="standard"
-                    sx={{ m: 1, minWidth: "80%" }}
+                    sx={{
+                      m: 1,
+                      minWidth: "78%",
+                      border: "1px solid white",
+                      padding: "0px",
+                      borderRadius: "4px",
+                      paddingLeft: "5px",
+                    }}
                   >
-                    <InputLabel className={classes.selectClass}>
-                      <FlagIcon color="inherit" />
-                      State
+                    <InputLabel
+                      className={classes.selectClass}
+                      style={{ top: "-7px", opacity: "0.6" }}
+                    >
+                      <FlagIcon
+                        color="inherit"
+                        style={{
+                          paddingRight: "7px",
+                          paddingLeft: "2px",
+                          opacity: "1",
+                        }}
+                      />{" "}
+                      state
                     </InputLabel>
                     <Select
                       labelId="demo-simple-select-standard-label"
                       id="demo-simple-select-standard"
                       color={"warning"}
                       label="State"
+                      style={{ marginTop: "14px" }}
                       className={classes.selectClass}
                       value={select}
                       {...register("stateId", {
@@ -202,7 +242,14 @@ const Login = () => {
                   <Input
                     required
                     type={"e-mail"}
-                    sx={{ width: "80%", m: 2 }}
+                    sx={{
+                      width: "80%",
+                      m: 2,
+                      border: "1px solid white",
+                      padding: "5px",
+                      borderRadius: "4px",
+                      paddingLeft: "5px",
+                    }}
                     placeholder="Username"
                     color={"warning"}
                     startAdornment={
@@ -221,7 +268,14 @@ const Login = () => {
                   <Input
                     required
                     type={"password"}
-                    sx={{ width: "80%", m: 2 }}
+                    sx={{
+                      width: "80%",
+                      m: 2,
+                      border: "1px solid white",
+                      padding: "5px",
+                      borderRadius: "4px",
+                      paddingLeft: "5px",
+                    }}
                     placeholder="Password"
                     color={"warning"}
                     startAdornment={
@@ -236,7 +290,14 @@ const Login = () => {
                   <Input
                     required
                     type={"password"}
-                    sx={{ width: "80%", m: 2 }}
+                    sx={{
+                      width: "80%",
+                      m: 2,
+                      border: "1px solid white",
+                      padding: "5px",
+                      borderRadius: "4px",
+                      paddingLeft: "5px",
+                    }}
                     placeholder="Code"
                     color={"warning"}
                     startAdornment={

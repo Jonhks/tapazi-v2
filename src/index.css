@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+body {
+  font-family: "Raleway", sans-serif;
+}
+
 .css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
   background-color: #238b94 !important;
   color: white !important;

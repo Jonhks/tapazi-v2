@@ -7,17 +7,14 @@
 }
 
 .box {
-  min-height: 75vh;
+  /* min-height: 75vh; */
   height: auto;
   box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.36);
   -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.36);
   -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.36);
   border-radius: 40px;
-  background: #000000;
-  background: linear-gradient(90deg, #000000 0%, #7f7f7f 80%);
-  background: -webkit-linear-gradient(90deg, #000000 0%, #7f7f7f 80%);
-  background: -moz-linear-gradient(90deg, #000000 0%, #7f7f7f 80%);
-  opacity: 0.8;
+  background-color: #000;
+  opacity: 65%;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -33,13 +30,19 @@
   align-items: center;
 }
 
-.title,
-.subtitle,
+.title {
+  font-size: 18px;
+  color: white;
+  font-weight: bold;
+  margin: 32px 0 0 0;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
+}
+
 .titleTwo {
   font-size: 30px;
   color: white;
   font-weight: bold;
-  margin: 16px;
+  margin: 0 16px 0 16px;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
 }
 
@@ -48,7 +51,11 @@
 }
 
 .subtitle {
-  font-size: 16px;
+  font-size: 14px;
+  color: white;
+  margin: 16px;
+  text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
+  font-weight: 400;
 }
 
 .containerForm {
@@ -76,19 +83,18 @@
 }
 
 .containerCheckBox {
-  width: 80%;
+  width: 90%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   border: none !important;
 }
 
 .containerCheckBox > span {
-  font-size: 14px;
-  color: white;
-  font-weight: bold;
+  font-size: 18px;
+  color: #70a8b2;
+  font-weight: 400;
   margin: 16px;
-  color: rgb(0, 174, 255);
   font-style: italic;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
 }
@@ -102,16 +108,19 @@
 }
 
 .containerBtnLogin > button {
-  background-color: #238b94;
-  width: 80%;
-  height: 4vh;
+  background-color: #d250e0;
+  width: 50%;
+  height: 5vh;
+  font-weight: 400;
+  font-size: 28px;
+  border-radius: 14px;
   box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.36);
   -webkit-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.36);
   -moz-box-shadow: 10px 10px 5px 0px rgba(0, 0, 0, 0.36);
 }
 
 .containerBtnLogin > button:hover {
-  background-color: #3be1f0;
+  background-color: #d564e1;
 }
 
 .containerSignUp {
@@ -123,7 +132,7 @@
   align-items: center;
   font-size: 18px;
   color: white;
-  font-weight: bold;
+  font-weight: 400;
   margin: 16px;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
 }
@@ -133,7 +142,7 @@
   color: white;
   font-weight: bold;
   margin: 16px;
-  color: rgb(0, 174, 255);
+  color: #70a8b2;
   font-style: italic;
   text-shadow: 0px 1px 2px rgba(0, 0, 0, 0.9);
 }

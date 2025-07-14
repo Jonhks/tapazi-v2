@@ -19,7 +19,6 @@ import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 import { useMutation } from "@tanstack/react-query";
 import { getLogin } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
-// import { userExist } from "@/hooks/AuthUser";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -27,16 +26,6 @@ const Login = () => {
     email: "",
     password: "",
   };
-
-  // useEffect(() => {
-  //   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
-  //   if (user.name && user.id) {
-  //     navigate(`/home/${user.id}`, {
-  //       replace: true,
-  //     });
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
 
   const {
     register,
@@ -97,18 +86,27 @@ const Login = () => {
                 >
                   <form
                     onSubmit={handleSubmit(handleRegister)}
+                    style={{ textAlign: "center" }}
                     noValidate
                   >
                     <Input
                       required
                       type={"e-mail"}
-                      sx={{ width: "80%", m: 2 }}
+                      sx={{
+                        width: "80%",
+                        m: 2,
+                        border: "1px solid white",
+                        padding: "5px",
+                        borderRadius: "4px",
+                        paddingLeft: "5px",
+                      }}
                       id="input-with-icon-adornment-1"
                       placeholder="E-mail or Username"
                       color={"warning"}
                       inputProps={{
-                        style: { textTransform: "lowercase" },
+                        style: { textTransform: "lowercase", fontSize: "24px" },
                         autoCapitalize: "none",
+                        color: "white",
                       }}
                       startAdornment={
                         <InputAdornment position="start">
@@ -122,10 +120,22 @@ const Login = () => {
                     <Input
                       required
                       type={"password"}
-                      sx={{ width: "80%", m: 2 }}
+                      sx={{
+                        width: "80%",
+                        m: 2,
+                        border: "1px solid white",
+                        padding: "5px",
+                        borderRadius: "4px",
+                        paddingLeft: "5px",
+                      }}
                       id="input-with-icon-adornment"
                       placeholder="Password"
                       color={"warning"}
+                      inputProps={{
+                        style: { fontSize: "24px" },
+                        autoCapitalize: "none",
+                        color: "white",
+                      }}
                       startAdornment={
                         <InputAdornment position="start">
                           <HttpsIcon color="inherit" />
