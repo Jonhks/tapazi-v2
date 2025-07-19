@@ -41,7 +41,7 @@ const Login = () => {
       } else {
         toast.success("User successfully logged in");
         localStorage.setItem("userTapaszi", JSON.stringify(data?.data));
-        navigate(`/home/${data.data.id}`, {
+        navigate(`/sports/${data.data.id}`, {
           replace: true,
         });
         localStorage.removeItem("datoProv");

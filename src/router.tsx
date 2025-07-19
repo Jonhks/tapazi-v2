@@ -2,12 +2,14 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy } from "react";
 
 const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
+const SportsLayout = lazy(() => import("./layouts/SportsLayout"));
 const Splash = lazy(() => import("./components/Splash/Splash"));
 const Login = lazy(() => import("./views/login/Login"));
 const Signup = lazy(() => import("@/views/login/SignUp"));
 const Forgot = lazy(() => import("./views/login/Forgot"));
 const AppLayout = lazy(() => import("@/layouts/AppLayout"));
 const Home = lazy(() => import("./views/home/Home"));
+const Sports = lazy(() => import("./views/Sports/Sports"));
 const PrivateRoute = lazy(
   () => import("@/components/PrivateRoute/PrivateRoute")
 );
@@ -27,6 +29,10 @@ const Error404 = lazy(() => import("@/views/Error404/Error404"));
 // fondos
 import ImgStats from "@/assets/img/doing-sport-concept.jpg";
 import ImgHistory from "@/assets/img/details-ball-sport.jpg";
+import WIP from "./views/WIP/WIP";
+
+const ImgSports =
+  "https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/login/log_in_girl_back.png";
 
 const Router = () => {
   return (
@@ -50,6 +56,16 @@ const Router = () => {
             element={<Forgot />}
           />
         </Route>
+        <Route element={<SportsLayout ImgSports={ImgSports} />}>
+          <Route
+            path="/sports/:userId"
+            element={<Sports />}
+          />
+        </Route>
+        <Route
+          path="/wip/:userId"
+          element={<WIP />}
+        />
 
         <Route element={<AppLayout />}>
           <Route
