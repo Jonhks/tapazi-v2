@@ -27,7 +27,6 @@
 
 @media (max-width: 800px) {
   .imgCard {
-    /* background-size: contain; */
     height: 20vh;
     font-size: 24px;
   }

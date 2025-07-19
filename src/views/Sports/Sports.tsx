@@ -14,7 +14,7 @@ export default function Sports() {
       container
       sx={{ height: "100vh" }}
     >
-      {/* Lado izquierdo */}
+      {/* Lado izquierdo  */}
       <Grid
         size={{ xs: 12, md: 6 }}
         sx={{
@@ -36,13 +36,14 @@ export default function Sports() {
               "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/ncaa_male_on.png')",
             justifyContent: "right",
             alignItems: "center",
+            textAlign: "center",
           }}
           className={classes.imgCard}
           onClick={() => {
             navigate(`/home/${params.userId}`);
           }}
         >
-          NCAA MALE
+          <p>NCAA MALE</p>
         </Box>
         <Box
           sx={{
@@ -56,7 +57,7 @@ export default function Sports() {
             navigate(`/wip/${params.userId}`);
           }}
         >
-          NCAA FEMALE
+          <p style={{ paddingLeft: 15 }}>NCAA FEMALE</p>
         </Box>
       </Grid>
 
