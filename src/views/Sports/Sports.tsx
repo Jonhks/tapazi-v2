@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./Sports.module.css";
 import { useNavigate, useParams } from "react-router-dom";
@@ -6,8 +6,6 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function Sports() {
   const navigate = useNavigate();
   const params = useParams();
-
-  console.log("params", params);
 
   return (
     <Grid
@@ -30,35 +28,39 @@ export default function Sports() {
           padding: 4,
         }}
       >
-        <Box
-          sx={{
-            backgroundImage:
-              "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/ncaa_male_on.png')",
-            justifyContent: "right",
-            alignItems: "center",
-            textAlign: "center",
-          }}
-          className={classes.imgCard}
-          onClick={() => {
-            navigate(`/home/${params.userId}`);
-          }}
-        >
-          <p>NCAA MALE</p>
-        </Box>
-        <Box
-          sx={{
-            backgroundImage:
-              "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/ncaa_female_on.png')",
-            justifyContent: "left",
-            alignItems: "center",
-          }}
-          className={classes.imgCard}
-          onClick={() => {
-            navigate(`/wip/${params.userId}`);
-          }}
-        >
-          <p style={{ paddingLeft: 15 }}>NCAA FEMALE</p>
-        </Box>
+        <Tooltip title="NCAA MALE">
+          <Box
+            sx={{
+              backgroundImage:
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/ncaa_male_on.png')",
+              justifyContent: "right",
+              alignItems: "center",
+              textAlign: "center",
+            }}
+            className={classes.imgCard}
+            onClick={() => {
+              navigate(`/home/${params.userId}`);
+            }}
+          >
+            <p>NCAA MALE</p>
+          </Box>
+        </Tooltip>
+        <Tooltip title="NCAA FEMALE">
+          <Box
+            sx={{
+              backgroundImage:
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/ncaa_female_on.png')",
+              justifyContent: "left",
+              alignItems: "center",
+            }}
+            className={classes.imgCard}
+            onClick={() => {
+              navigate(`/wip/${params.userId}`);
+            }}
+          >
+            <p style={{ paddingLeft: 15 }}>NCAA FEMALE</p>
+          </Box>
+        </Tooltip>
       </Grid>
 
       {/* Lado derecho */}
@@ -78,42 +80,46 @@ export default function Sports() {
           padding: 4,
         }}
       >
-        <Box
-          sx={{
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundImage:
-              "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/epl_on.png')",
-          }}
-          className={classes.imgCard}
-          onClick={() => {
-            navigate(`/wip/${params.userId}`);
-          }}
-        >
-          <p>EPL</p>
-        </Box>
-        <Box
-          sx={{
-            backgroundImage:
-              "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/worldcup_on.png')",
-            justifyContent: "right",
-          }}
-          className={classes.imgCard}
-          onClick={() => {
-            navigate(`/wip/${params.userId}`);
-          }}
-        >
-          <p
-            style={{
-              height: "90%",
-              display: "flex",
-              alignItems: "end",
-              justifyContent: "end",
+        <Tooltip title="English Premier League">
+          <Box
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundImage:
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/epl_on.png')",
+            }}
+            className={classes.imgCard}
+            onClick={() => {
+              window.location.href = `http://localhost:5174/${params.userId}`;
             }}
           >
-            WORLDCUP
-          </p>
-        </Box>
+            <p>EPL</p>
+          </Box>
+        </Tooltip>
+        <Tooltip title="WORLDCUP">
+          <Box
+            sx={{
+              backgroundImage:
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/worldcup_on.png')",
+              justifyContent: "right",
+            }}
+            className={classes.imgCard}
+            onClick={() => {
+              navigate(`/wip/${params.userId}`);
+            }}
+          >
+            <p
+              style={{
+                height: "90%",
+                display: "flex",
+                alignItems: "end",
+                justifyContent: "end",
+              }}
+            >
+              WORLDCUP
+            </p>
+          </Box>
+        </Tooltip>
       </Grid>
     </Grid>
   );
