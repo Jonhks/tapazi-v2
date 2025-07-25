@@ -17,7 +17,7 @@ export default function Sports() {
         size={{ xs: 12, md: 6 }}
         sx={{
           backgroundImage:
-            "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/fondo_basket.jpg')",
+            "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/fondo_basket.jpg?quality=80&format=webp')",
           backgroundPosition: "right bottom",
           backgroundSize: "cover",
           display: "flex",
@@ -32,7 +32,7 @@ export default function Sports() {
           <Box
             sx={{
               backgroundImage:
-                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/ncaa_male_on.png')",
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/ncaa_male_on.png?quality=80&format=webp')",
               justifyContent: "right",
               alignItems: "center",
               textAlign: "center",
@@ -49,7 +49,7 @@ export default function Sports() {
           <Box
             sx={{
               backgroundImage:
-                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/ncaa_female_on.png')",
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/ncaa_female_on.png?quality=80&format=webp')",
               justifyContent: "left",
               alignItems: "center",
             }}
@@ -69,7 +69,7 @@ export default function Sports() {
         size={{ xs: 12, md: 6 }}
         sx={{
           backgroundImage:
-            "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/fondo_football.jpg')",
+            "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/fondo_football.jpg?quality=80&format=webp')",
           backgroundPosition: "left top",
           backgroundSize: "cover",
           display: "flex",
@@ -86,7 +86,7 @@ export default function Sports() {
               justifyContent: "center",
               alignItems: "center",
               backgroundImage:
-                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/epl_on.png')",
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/epl_on.png?quality=80&format=webp')",
             }}
             className={classes.imgCard}
             onClick={() => {
@@ -100,7 +100,7 @@ export default function Sports() {
           <Box
             sx={{
               backgroundImage:
-                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/epl/sport_selection/worldcup_on.png')",
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/worldcup_on.png?quality=80&format=webp')",
               justifyContent: "right",
             }}
             className={classes.imgCard}
