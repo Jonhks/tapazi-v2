@@ -2,8 +2,6 @@ import { useParams } from "react-router-dom";
 
 const WIP = () => {
   const params = useParams();
-  // const userId = params.userId;
-  console.log(params);
 
   const img =
     params.sport === "nacca-female"

@@ -90,7 +90,11 @@ export default function Sports() {
             }}
             className={classes.imgCard}
             onClick={() => {
-              window.location.href = `http://localhost:5174/${params.userId}`;
+              const userData = JSON.parse(
+                localStorage.getItem("userTapaszi") || "{}"
+              );
+              const encodedData = btoa(JSON.stringify(userData));
+              window.location.href = `http://localhost:5174/${params.userId}?data=${encodedData}`;
             }}
           >
             <p>EPL</p>
