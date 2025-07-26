@@ -55,7 +55,7 @@ export default function Sports() {
             }}
             className={classes.imgCard}
             onClick={() => {
-              navigate(`/wip/${params.userId}`);
+              navigate(`/wip/${params.userId}/nacca-female`);
             }}
           >
             <p style={{ paddingLeft: 15 }}>NCAA FEMALE</p>
@@ -105,7 +105,7 @@ export default function Sports() {
             }}
             className={classes.imgCard}
             onClick={() => {
-              navigate(`/wip/${params.userId}`);
+              navigate(`/wip/${params.userId}/worldcup`);
             }}
           >
             <p

@@ -63,7 +63,7 @@ const Router = () => {
           />
         </Route>
         <Route
-          path="/wip/:userId"
+          path="/wip/:userId/:sport"
           element={<WIP />}
         />
 
