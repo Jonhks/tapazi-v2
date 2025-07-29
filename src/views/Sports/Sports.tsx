@@ -12,7 +12,6 @@ export default function Sports() {
       container
       sx={{ height: "100vh" }}
     >
-      {/* Lado izquierdo  */}
       <Grid
         size={{ xs: 12, md: 6 }}
         sx={{
@@ -63,7 +62,6 @@ export default function Sports() {
         </Tooltip>
       </Grid>
 
-      {/* Lado derecho */}
       <Grid
         // item
         size={{ xs: 12, md: 6 }}
