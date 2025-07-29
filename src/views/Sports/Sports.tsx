@@ -92,7 +92,8 @@ export default function Sports() {
                 localStorage.getItem("userTapaszi") || "{}"
               );
               const encodedData = btoa(JSON.stringify(userData));
-              window.location.href = `https://tapaszi-epl.vercel.app/${params.userId}?data=${encodedData}`;
+              // window.location.href = `https://tapaszi-epl.vercel.app/${params.userId}?data=${encodedData}`;
+              navigate(`/epl/home/${params.userId}?data=${encodedData}`);
             }}
           >
             <p>EPL</p>
