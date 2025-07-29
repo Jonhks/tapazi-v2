@@ -16,15 +16,50 @@ export default defineConfig({
         background_color: "#000000",
         display: "standalone",
         icons: [
+          // {
+          //   src: "balones-negros.webp",
+          //   sizes: "192x192",
+          //   type: "image/webp",
+          //   purpose: "maskable",
+          // },
+          // {
+          //   src: "balones-negros.webp",
+          //   sizes: "512x512",
+          //   type: "image/webp",
+          //   purpose: "maskable",
+          // },
+          // Ícono estándar para iOS y navegadores
           {
             src: "balones-negros.webp",
             sizes: "192x192",
             type: "image/webp",
+            purpose: "any",
           },
           {
             src: "balones-negros.webp",
             sizes: "512x512",
             type: "image/webp",
+            purpose: "any",
+          },
+          // Ícono maskable para Android (debe tener padding del 20%)
+          {
+            src: "balones-negros.webp",
+            sizes: "192x192",
+            type: "image/webp",
+            purpose: "maskable",
+          },
+          {
+            src: "balones-negros.webp",
+            sizes: "512x512",
+            type: "image/webp",
+            purpose: "maskable",
+          },
+          // Ícono para Apple Touch (recomendado en PNG)
+          {
+            src: "balones-negros.webp",
+            sizes: "180x180",
+            type: "image/png",
+            purpose: "any",
           },
         ],
       },
