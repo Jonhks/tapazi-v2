@@ -3,7 +3,6 @@ import Grid from "@mui/material/Grid2";
 
 import {
   Container,
-  // Grid,
   Slide,
   Box,
   Button,
