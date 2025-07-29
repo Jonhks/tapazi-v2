@@ -17,12 +17,12 @@ export default defineConfig({
         display: "standalone",
         icons: [
           {
-            src: "balones.webp",
+            src: "balones-negros.webp",
             sizes: "192x192",
             type: "image/webp",
           },
           {
-            src: "balones.webp",
+            src: "balones-negros.webp",
             sizes: "512x512",
             type: "image/webp",
           },
