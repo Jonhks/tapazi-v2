@@ -62,6 +62,8 @@ const MyPortfolioEPL = () => {
   const [comparing, setComparing] = useState([]);
   const [winnerSelected, setWinnerSelected] = useState(false);
 
+  const [selectedTeams, setSelectedTeams] = useState(Array(8).fill(""));
+
   useEffect(() => {
     if (portfolios) {
       setChampionshipPoints(portfolios[value]?.championshipPoints);
@@ -149,59 +151,59 @@ const MyPortfolioEPL = () => {
     index: number;
   }
 
-  function CustomTabPanel(props: CustomTabPanelProps) {
-    const { children, value, index, ...other } = props;
-    return (
-      <div
-        role="tabpanel"
-        hidden={value !== index}
-        id={`simple-tabpanel-${index}`}
-        aria-labelledby={`simple-tab-${index}`}
-        {...other}
-      >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            <div>{children}</div>
-          </Box>
-        )}
-      </div>
-    );
-  }
+  // function CustomTabPanel(props: CustomTabPanelProps) {
+  //   const { children, value, index, ...other } = props;
+  //   return (
+  //     <div
+  //       role="tabpanel"
+  //       hidden={value !== index}
+  //       id={`simple-tabpanel-${index}`}
+  //       aria-labelledby={`simple-tab-${index}`}
+  //       {...other}
+  //     >
+  //       {value === index && (
+  //         <Box sx={{ p: 3 }}>
+  //           <div>{children}</div>
+  //         </Box>
+  //       )}
+  //     </div>
+  //   );
+  // }
 
-  function a11yProps(index: number) {
-    return {
-      id: `simple-tab-${index}`,
-      "aria-controls": `simple-tabpanel-${index}`,
-    };
-  }
+  // function a11yProps(index: number) {
+  //   return {
+  //     id: `simple-tab-${index}`,
+  //     "aria-controls": `simple-tabpanel-${index}`,
+  //   };
+  // }
 
-  const handleChange = useCallback((event, newValue) => {
-    setValue(newValue);
-  }, []);
+  // const handleChange = useCallback((event, newValue) => {
+  //   setValue(newValue);
+  // }, []);
 
-  const handleChangeInput = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const newValue = event.target.value;
-    const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
-    if (!regex.test(newValue)) {
-      setChampionshipPoints("");
-      return;
-    }
-    setChampionshipPoints(event.target.value);
-    const newData = portfolios.map((el) => {
-      if (el?.newPortfolio) {
-        return {
-          ...el,
-          championshipPoints: +e?.target?.value,
-        };
-      } else {
-        return el;
-      }
-    });
-    setPortfolios(newData);
-    setFocused(true);
-  };
+  // const handleChangeInput = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   const newValue = event.target.value;
+  //   const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
+  //   if (!regex.test(newValue)) {
+  //     setChampionshipPoints("");
+  //     return;
+  //   }
+  //   setChampionshipPoints(event.target.value);
+  //   const newData = portfolios.map((el) => {
+  //     if (el?.newPortfolio) {
+  //       return {
+  //         ...el,
+  //         championshipPoints: +e?.target?.value,
+  //       };
+  //     } else {
+  //       return el;
+  //     }
+  //   });
+  //   setPortfolios(newData);
+  //   setFocused(true);
+  // };
 
   const checkCombination = (arr, arrIds) => {
     for (let i = 0; i < arrIds.length; i++) {
@@ -240,29 +242,11 @@ const MyPortfolioEPL = () => {
 
   const handleChangeSelect = useCallback(
     (team: string, index: number) => {
-      console.log("port", team);
-      console.log("index", index);
-
-      // setFocused(false);
-      // const newData = [...portfolios];
-      // const portFolioEditable = [
-      //   ...newData?.filter((port) => port?.newPortfolio),
-      // ];
-      // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // // @ts-expect-error
-      // if (portFolioEditable[0]?.teams?.includes(port)) {
-      //   setDuplicates(true);
-      //   port = false;
-      //   toast.error("You cannot enter duplicate fields!!");
-      //   setTimeout(() => setDuplicates(false), 3000);
-      // }
-      // if (portFolioEditable[0]) {
-      //   const newPort = portFolioEditable[0]?.teams;
-      //   newPort[+index] = port;
-      //   setPortfolios(newData);
-      // }
+      const newSelectedTeams = [...selectedTeams];
+      newSelectedTeams[index] = team;
+      setSelectedTeams(newSelectedTeams);
     },
-    [portfolios]
+    [selectedTeams]
   );
 
   // const addportFolio = useCallback(() => {
@@ -277,202 +261,202 @@ const MyPortfolioEPL = () => {
   //   setPortfolios(newData);
   // }, [portfolios]);
 
-  const savePortfolio = useCallback(() => {
-    if (!validTournament) {
-      toast.error("The tournament has already started!!");
-      return;
-    }
-    const newData = [...portfolios];
-    const portFolioEditable = [
-      ...newData?.filter((port) => port?.newPortfolio),
-    ][0];
-    const portfoliExist = portFolioEditable?.teams?.some((el) => el === false);
+  // const savePortfolio = useCallback(() => {
+  //   if (!validTournament) {
+  //     toast.error("The tournament has already started!!");
+  //     return;
+  //   }
+  //   const newData = [...portfolios];
+  //   const portFolioEditable = [
+  //     ...newData?.filter((port) => port?.newPortfolio),
+  //   ][0];
+  //   const portfoliExist = portFolioEditable?.teams?.some((el) => el === false);
 
-    if (portFolioEditable?.championshipPoints >= 1 && !portfoliExist) {
-      const teamsId = portFolioEditable?.teams?.map((el) => {
-        if (typeof el === "object") {
-          return { id: el.id };
-        }
-      });
-      sendPortfolio({
-        championshipPoints: portFolioEditable?.championshipPoints,
-        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        // @ts-expect-error
-        teamsId,
-      });
-      setChampionshipPoints("");
-      setFocused(false);
-      setError(false);
-      setEditing(false);
-    } else if (
-      portFolioEditable?.championshipPoints >= 1 &&
-      portFolioEditable?.teams?.some((el) => el === false)
-    ) {
-      setError(true);
-      setTimeout(() => setError(false), 1000);
-      toast.error("You must select all Teams!");
-    } else {
-      setError(true);
-      setTimeout(() => setError(false), 1000);
-      toast.error("All fields are mandatory!!");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [portfolios]);
+  //   if (portFolioEditable?.championshipPoints >= 1 && !portfoliExist) {
+  //     const teamsId = portFolioEditable?.teams?.map((el) => {
+  //       if (typeof el === "object") {
+  //         return { id: el.id };
+  //       }
+  //     });
+  //     sendPortfolio({
+  //       championshipPoints: portFolioEditable?.championshipPoints,
+  //       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //       // @ts-expect-error
+  //       teamsId,
+  //     });
+  //     setChampionshipPoints("");
+  //     setFocused(false);
+  //     setError(false);
+  //     setEditing(false);
+  //   } else if (
+  //     portFolioEditable?.championshipPoints >= 1 &&
+  //     portFolioEditable?.teams?.some((el) => el === false)
+  //   ) {
+  //     setError(true);
+  //     setTimeout(() => setError(false), 1000);
+  //     toast.error("You must select all Teams!");
+  //   } else {
+  //     setError(true);
+  //     setTimeout(() => setError(false), 1000);
+  //     toast.error("All fields are mandatory!!");
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [portfolios]);
 
-  const sendPortfolio = useCallback(
-    (port: { championshipPoints: number; teamsId: [] }) => {
-      const swalWithBootstrapButtons = Swal.mixin({});
-      swalWithBootstrapButtons
-        .fire({
-          title: "Are you sure?",
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          confirmButtonColor: "#238b94",
-          showCancelButton: true,
-          confirmButtonText: "Yes, send it to!",
-          cancelButtonText: "No, cancel!",
-          reverseButtons: true,
-        })
-        .then(async (result) => {
-          if (result.isConfirmed) {
-            const sendData = {
-              port,
-              portfolios,
-              userId,
-            };
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
-            mutate(sendData);
-            try {
-              swalWithBootstrapButtons.fire({
-                title: "Saved!",
-                text: "your portfolio has been saved.",
-                icon: "success",
-              });
-            } catch {
-              swalWithBootstrapButtons.fire({
-                title: "Saved!",
-                text: "an error has occurred.",
-                icon: "error",
-              });
-            }
-          } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            swalWithBootstrapButtons.fire({
-              title: "Cancelled",
-              text: "Don't worry, you can still continue editing your portfolio :)",
-              icon: "error",
-            });
-          }
-        });
-    },
-    [portfolios, mutate, userId]
-  );
+  // const sendPortfolio = useCallback(
+  //   (port: { championshipPoints: number; teamsId: [] }) => {
+  //     const swalWithBootstrapButtons = Swal.mixin({});
+  //     swalWithBootstrapButtons
+  //       .fire({
+  //         title: "Are you sure?",
+  //         text: "You won't be able to revert this!",
+  //         icon: "warning",
+  //         confirmButtonColor: "#238b94",
+  //         showCancelButton: true,
+  //         confirmButtonText: "Yes, send it to!",
+  //         cancelButtonText: "No, cancel!",
+  //         reverseButtons: true,
+  //       })
+  //       .then(async (result) => {
+  //         if (result.isConfirmed) {
+  //           const sendData = {
+  //             port,
+  //             portfolios,
+  //             userId,
+  //           };
+  //           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //           // @ts-expect-error
+  //           mutate(sendData);
+  //           try {
+  //             swalWithBootstrapButtons.fire({
+  //               title: "Saved!",
+  //               text: "your portfolio has been saved.",
+  //               icon: "success",
+  //             });
+  //           } catch {
+  //             swalWithBootstrapButtons.fire({
+  //               title: "Saved!",
+  //               text: "an error has occurred.",
+  //               icon: "error",
+  //             });
+  //           }
+  //         } else if (
+  //           /* Read more about handling dismissals below */
+  //           result.dismiss === Swal.DismissReason.cancel
+  //         ) {
+  //           swalWithBootstrapButtons.fire({
+  //             title: "Cancelled",
+  //             text: "Don't worry, you can still continue editing your portfolio :)",
+  //             icon: "error",
+  //           });
+  //         }
+  //       });
+  //   },
+  //   [portfolios, mutate, userId]
+  // );
 
-  const removeportfolioFunction = useCallback(
-    (portId: number) => {
-      const index = portfolios.findIndex(
-        (portfolio) => portfolio.id === portId
-      );
-      setValue(index);
-      const swalWithBootstrapButtons = Swal.mixin({});
-      swalWithBootstrapButtons
-        .fire({
-          title: `Are you sure to delete the portfolio ${portId}`,
-          text: "You won't be able to revert this!",
-          icon: "warning",
-          showCancelButton: true,
-          confirmButtonColor: "#238b94",
-          confirmButtonText: "Yes, delete it!",
-          cancelButtonText: "No, cancel!",
-          reverseButtons: true,
-        })
-        .then(async (result) => {
-          if (result.isConfirmed) {
-            setPortfolios(portfolios?.filter((el) => el?.id !== portId));
-            const sendData = {
-              portId,
-              portfolios,
-              userId,
-            };
-            await removeportfolioMutate(sendData);
-            try {
-              swalWithBootstrapButtons.fire({
-                title: "Deleted!",
-                text: "Your file has been deleted.",
-                icon: "success",
-              });
-              if (index > 0) {
-                setValue(index - 1);
-              } else {
-                setValue(index);
-              }
-            } catch {
-              swalWithBootstrapButtons.fire({
-                title: "Error!",
-                text: "an error has occurred.",
-                icon: "error",
-              });
-            }
-          } else if (
-            /* Read more about handling dismissals below */
-            result.dismiss === Swal.DismissReason.cancel
-          ) {
-            swalWithBootstrapButtons.fire({
-              title: "Cancelled",
-              text: "Don't worry, you can still continue editing your portfolio :)",
-              icon: "error",
-            });
-            setValue(index);
-          }
-        });
-    },
-    [portfolios, removeportfolioMutate, userId]
-  );
+  // const removeportfolioFunction = useCallback(
+  //   (portId: number) => {
+  //     const index = portfolios.findIndex(
+  //       (portfolio) => portfolio.id === portId
+  //     );
+  //     setValue(index);
+  //     const swalWithBootstrapButtons = Swal.mixin({});
+  //     swalWithBootstrapButtons
+  //       .fire({
+  //         title: `Are you sure to delete the portfolio ${portId}`,
+  //         text: "You won't be able to revert this!",
+  //         icon: "warning",
+  //         showCancelButton: true,
+  //         confirmButtonColor: "#238b94",
+  //         confirmButtonText: "Yes, delete it!",
+  //         cancelButtonText: "No, cancel!",
+  //         reverseButtons: true,
+  //       })
+  //       .then(async (result) => {
+  //         if (result.isConfirmed) {
+  //           setPortfolios(portfolios?.filter((el) => el?.id !== portId));
+  //           const sendData = {
+  //             portId,
+  //             portfolios,
+  //             userId,
+  //           };
+  //           await removeportfolioMutate(sendData);
+  //           try {
+  //             swalWithBootstrapButtons.fire({
+  //               title: "Deleted!",
+  //               text: "Your file has been deleted.",
+  //               icon: "success",
+  //             });
+  //             if (index > 0) {
+  //               setValue(index - 1);
+  //             } else {
+  //               setValue(index);
+  //             }
+  //           } catch {
+  //             swalWithBootstrapButtons.fire({
+  //               title: "Error!",
+  //               text: "an error has occurred.",
+  //               icon: "error",
+  //             });
+  //           }
+  //         } else if (
+  //           /* Read more about handling dismissals below */
+  //           result.dismiss === Swal.DismissReason.cancel
+  //         ) {
+  //           swalWithBootstrapButtons.fire({
+  //             title: "Cancelled",
+  //             text: "Don't worry, you can still continue editing your portfolio :)",
+  //             icon: "error",
+  //           });
+  //           setValue(index);
+  //         }
+  //       });
+  //   },
+  //   [portfolios, removeportfolioMutate, userId]
+  // );
 
-  const cancelPortfolio = useCallback(() => {
-    const swalWithBootstrapButtons = Swal.mixin({});
-    swalWithBootstrapButtons
-      .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          if (value >= 1) {
-            setValue(0);
-          }
-          setPortfolios(portfoliosObtained);
-          setEditing(false);
-          try {
-            swalWithBootstrapButtons.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
-          } catch {
-            swalWithBootstrapButtons.fire({
-              title: "Error!",
-              text: "an error has occurred.",
-              icon: "error",
-            });
-          }
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelled",
-            text: "Don't worry, you can still continue editing your portfolio :)",
-            icon: "error",
-          });
-        }
-      });
-  }, [portfoliosObtained, value]);
+  // const cancelPortfolio = useCallback(() => {
+  //   const swalWithBootstrapButtons = Swal.mixin({});
+  //   swalWithBootstrapButtons
+  //     .fire({
+  //       title: "Are you sure?",
+  //       text: "You won't be able to revert this!",
+  //       icon: "warning",
+  //       showCancelButton: true,
+  //       confirmButtonText: "Yes, delete it!",
+  //       cancelButtonText: "No, cancel!",
+  //       reverseButtons: true,
+  //     })
+  //     .then(async (result) => {
+  //       if (result.isConfirmed) {
+  //         if (value >= 1) {
+  //           setValue(0);
+  //         }
+  //         setPortfolios(portfoliosObtained);
+  //         setEditing(false);
+  //         try {
+  //           swalWithBootstrapButtons.fire({
+  //             title: "Deleted!",
+  //             text: "Your file has been deleted.",
+  //             icon: "success",
+  //           });
+  //         } catch {
+  //           swalWithBootstrapButtons.fire({
+  //             title: "Error!",
+  //             text: "an error has occurred.",
+  //             icon: "error",
+  //           });
+  //         }
+  //       } else if (result.dismiss === Swal.DismissReason.cancel) {
+  //         swalWithBootstrapButtons.fire({
+  //           title: "Cancelled",
+  //           text: "Don't worry, you can still continue editing your portfolio :)",
+  //           icon: "error",
+  //         });
+  //       }
+  //     });
+  // }, [portfoliosObtained, value]);
 
   const options = [
     { value: "sunderland", label: "SUNDERLAND", icon: <SportsSoccerIcon /> },
@@ -493,7 +477,73 @@ const MyPortfolioEPL = () => {
       icon: <SportsSoccerIcon />,
     },
   ];
-  const [selected, setSelected] = useState("");
+
+  // const renderTeams = () => {
+  //   return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => (
+  //     <FormControl
+  //       key={idx}
+  //       fullWidth
+  //       sx={{
+  //         backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+  //         "& .MuiInputLabel-root": {
+  //           color: "white",
+  //           fontWeight: "bold",
+  //           fontSize: "18px",
+  //         },
+  //       }}
+  //     >
+  //       <InputLabel
+  //         id={`select-label-${idx}`}
+  //         shrink={selected !== ""} // El label solo se muestra si no hay selección
+  //         sx={{
+  //           color: "white",
+  //           fontWeight: "bold",
+  //           fontSize: "18px",
+  //           transition: "opacity 0.2s",
+  //           opacity: selected ? 0 : 1, // Oculta visualmente el label si hay selección
+  //         }}
+  //       >
+  //         Team
+  //       </InputLabel>
+  //       <Select
+  //         labelId={`select-label-${idx}`}
+  //         value={selected}
+  //         label="Team"
+  //         // onChange={(e) => setSelected(e.target.value)}
+  //         onChange={(e) => handleChangeSelect(e.target.value, idx)}
+  //         sx={{
+  //           "& .MuiSelect-icon": {
+  //             color: "white",
+  //           },
+  //         }}
+  //       >
+  //         {options.map((opt) => (
+  //           <MenuItem
+  //             key={opt.value}
+  //             value={opt.value}
+  //           >
+  //             <div
+  //               style={{
+  //                 display: "flex",
+  //                 flexDirection: "row",
+  //                 justifyContent: "center",
+  //                 alignItems: "center",
+  //                 color: "white",
+  //                 fontWeight: "bold",
+  //                 fontSize: "18px",
+  //               }}
+  //             >
+  //               <ListItemIcon style={{ color: "white" }}>
+  //                 {opt.icon}
+  //               </ListItemIcon>
+  //               <ListItemText>{opt.label}</ListItemText>
+  //             </div>
+  //           </MenuItem>
+  //         ))}
+  //       </Select>
+  //     </FormControl>
+  //   ));
+  // };
 
   const renderTeams = () => {
     return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => (
@@ -511,22 +561,21 @@ const MyPortfolioEPL = () => {
       >
         <InputLabel
           id={`select-label-${idx}`}
-          shrink={selected !== ""} // El label solo se muestra si no hay selección
+          shrink={selectedTeams[idx] !== ""}
           sx={{
             color: "white",
             fontWeight: "bold",
             fontSize: "18px",
             transition: "opacity 0.2s",
-            opacity: selected ? 0 : 1, // Oculta visualmente el label si hay selección
+            opacity: selectedTeams[idx] ? 0 : 1,
           }}
         >
           Team
         </InputLabel>
         <Select
           labelId={`select-label-${idx}`}
-          value={selected}
+          value={selectedTeams[idx]}
           label="Team"
-          // onChange={(e) => setSelected(e.target.value)}
           onChange={(e) => handleChangeSelect(e.target.value, idx)}
           sx={{
             "& .MuiSelect-icon": {
@@ -628,7 +677,49 @@ const MyPortfolioEPL = () => {
                 size={12}
                 style={{ marginTop: "30px" }}
               >
-                {renderTeams()}
+                <div
+                  style={{
+                    width: "80%",
+                    margin: "0 auto",
+                    textAlign: "right",
+                  }}
+                >
+                  {renderTeams()}
+                  <Input
+                    required
+                    type="text"
+                    autoFocus={focused}
+                    value={championshipPoints}
+                    sx={{
+                      width: "50%",
+                      mt: 3,
+                      color: "white",
+                      "&:before": {
+                        borderBottom: "2px solid white", // borde cuando NO está enfocado
+                      },
+                      "&:after": {
+                        borderBottom: "2px solid #05fa87", // borde cuando está enfocado
+                      },
+                      "& input": {
+                        color: "white",
+                      },
+                    }}
+                    id="input-with-icon-adornment"
+                    name="championshipPoints"
+                    placeholder="Championship Points"
+                    className={classes.championshipPoints}
+                    inputProps={{
+                      maxLength: 3,
+                      inputMode: "numeric",
+                    }}
+                    startAdornment={
+                      <InputAdornment position="start">
+                        <EmojiEventsOutlinedIcon color="inherit" />
+                      </InputAdornment>
+                    }
+                    // onChange={handleChangeInput}
+                  />
+                </div>
               </Grid>
             </Box>
           </Grid>
