@@ -1,0 +1,21 @@
+.appbar,
+.appbar > button {
+  background-color: #380f51 !important;
+  color: white !important;
+  opacity: 0.8 !important;
+}
+
+.Mydrawer > div {
+  background-color: #380f51 !important;
+  height: auto !important;
+  color: white !important;
+  opacity: 0.8 !important;
+}
+
+.titleDrawer {
+  font-size: 20px;
+  text-align: center;
+  padding: 16px 0 0 0;
+  color: #4bf589;
+  font-weight: bold !important;
+}

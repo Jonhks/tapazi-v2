@@ -1,6 +1,5 @@
 .container {
-  /* background-image: url("../assets/img/basketballBG.jpeg"); */
-  background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_girl_back.png?quality=40&format=webp");
+  background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_girl_back.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -12,10 +11,10 @@
 }
 
 .containerApp {
-  background-image: url("../assets/img/home.jpeg");
+  background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/sports/epl/home/back_home_epl.png");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: left;
+  background-position: center;
   height: 100vh;
   overflow: scroll;
 }
@@ -30,13 +29,12 @@
 }
 
 .containerStats {
-  background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_girl_back.png?quality=40&format=webp");
+  background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_girl_back.png?quality=20&format=webp");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
   overflow: scroll;
-  /* background-color: red; */
 }
 
 @media (width < 900px) {

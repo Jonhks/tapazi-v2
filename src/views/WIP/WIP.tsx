@@ -1,14 +1,14 @@
 import { useParams } from "react-router-dom";
 
-const WIP = () => {
+interface WIPProps {
+  NCAAFemaleImg: string;
+  NCAAMaleImg: string;
+}
+
+const WIP = ({ NCAAFemaleImg, NCAAMaleImg }: WIPProps) => {
   const params = useParams();
 
-  const img =
-    params.sport === "nacca-female"
-      ? "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_rose.png?quality=80&format=webp"
-      : "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_orange.png?quality=80&format=webp";
-
-  // cometarios innecesarios
+  const img = params.sport === "nacca-female" ? NCAAFemaleImg : NCAAMaleImg;
 
   return (
     <div>
@@ -16,7 +16,11 @@ const WIP = () => {
         src={img}
         alt="WIP"
         width={"100%"}
-        style={{ height: "100vh", objectFit: "cover" }}
+        style={{
+          height: "100vh",
+          objectFit: "contain",
+          backgroundColor: "black",
+        }}
       />
     </div>
   );
