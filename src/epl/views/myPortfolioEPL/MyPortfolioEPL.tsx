@@ -4,7 +4,20 @@
 /* eslint-disable no-unsafe-optional-chaining */
 
 import React, { useCallback, useEffect, useState, memo } from "react";
-import { Box, Tabs, Tab, Button, Input, InputAdornment } from "@mui/material";
+import {
+  Box,
+  Tabs,
+  Tab,
+  Button,
+  Input,
+  InputAdornment,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  ListItemIcon,
+  ListItemText,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioEPL.module.css";
 import { BallIcon } from "@/assets/icons/icons";
@@ -14,6 +27,9 @@ import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Divider from "@mui/material/Divider";
+
+import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
+import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
 
 import {
   getDATTOU,
@@ -223,25 +239,28 @@ const MyPortfolioEPL = () => {
   }, [comparing, portfolios, value]);
 
   const handleChangeSelect = useCallback(
-    (port: boolean, index: string | number) => {
-      setFocused(false);
-      const newData = [...portfolios];
-      const portFolioEditable = [
-        ...newData?.filter((port) => port?.newPortfolio),
-      ];
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      if (portFolioEditable[0]?.teams?.includes(port)) {
-        setDuplicates(true);
-        port = false;
-        toast.error("You cannot enter duplicate fields!!");
-        setTimeout(() => setDuplicates(false), 3000);
-      }
-      if (portFolioEditable[0]) {
-        const newPort = portFolioEditable[0]?.teams;
-        newPort[+index] = port;
-        setPortfolios(newData);
-      }
+    (team: string, index: number) => {
+      console.log("port", team);
+      console.log("index", index);
+
+      // setFocused(false);
+      // const newData = [...portfolios];
+      // const portFolioEditable = [
+      //   ...newData?.filter((port) => port?.newPortfolio),
+      // ];
+      // // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // // @ts-expect-error
+      // if (portFolioEditable[0]?.teams?.includes(port)) {
+      //   setDuplicates(true);
+      //   port = false;
+      //   toast.error("You cannot enter duplicate fields!!");
+      //   setTimeout(() => setDuplicates(false), 3000);
+      // }
+      // if (portFolioEditable[0]) {
+      //   const newPort = portFolioEditable[0]?.teams;
+      //   newPort[+index] = port;
+      //   setPortfolios(newData);
+      // }
     },
     [portfolios]
   );
@@ -455,31 +474,91 @@ const MyPortfolioEPL = () => {
       });
   }, [portfoliosObtained, value]);
 
-  const renderTeams = (indexPortfolio) => {
-    return portfolios[indexPortfolio]?.teams.map((team, indexTeam) => (
-      <div
-        key={indexTeam}
-        className={classes.containerDropdown}
+  const options = [
+    { value: "sunderland", label: "SUNDERLAND", icon: <SportsSoccerIcon /> },
+    { value: "tottenham", label: "TOTTENHAM", icon: <SportsBasketballIcon /> },
+    {
+      value: "manchester-city",
+      label: "MANCHESTER CITY",
+      icon: <SportsSoccerIcon />,
+    },
+    {
+      value: "west-ham-united",
+      label: "WEST HAM UNITED",
+      icon: <SportsBasketballIcon />,
+    },
+    {
+      value: "aston-villa",
+      label: "ASTON VILLA",
+      icon: <SportsSoccerIcon />,
+    },
+  ];
+  const [selected, setSelected] = useState("");
+
+  const renderTeams = () => {
+    return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => (
+      <FormControl
+        key={idx}
+        fullWidth
+        sx={{
+          backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+          "& .MuiInputLabel-root": {
+            color: "white",
+            fontWeight: "bold",
+            fontSize: "18px",
+          },
+        }}
       >
-        <BallIcon />
-        <Dropdown
-          disabled={!!portfolios[indexPortfolio]?.id}
-          indexPortfolio={indexPortfolio}
-          indexTeam={indexTeam}
-          name={`${team}`}
-          label={`Selection ${indexTeam + 1}`}
-          value={
-            typeof team === "object" &&
-            portfolios[indexPortfolio]?.teams[indexTeam]?.name
-          }
-          options={
-            !!portfolios[indexPortfolio]?.id
-              ? portfolios[indexPortfolio]?.teams
-              : teams
-          }
-          handleChange={handleChangeSelect}
-        />
-      </div>
+        <InputLabel
+          id={`select-label-${idx}`}
+          shrink={selected !== ""} // El label solo se muestra si no hay selección
+          sx={{
+            color: "white",
+            fontWeight: "bold",
+            fontSize: "18px",
+            transition: "opacity 0.2s",
+            opacity: selected ? 0 : 1, // Oculta visualmente el label si hay selección
+          }}
+        >
+          Team
+        </InputLabel>
+        <Select
+          labelId={`select-label-${idx}`}
+          value={selected}
+          label="Team"
+          // onChange={(e) => setSelected(e.target.value)}
+          onChange={(e) => handleChangeSelect(e.target.value, idx)}
+          sx={{
+            "& .MuiSelect-icon": {
+              color: "white",
+            },
+          }}
+        >
+          {options.map((opt) => (
+            <MenuItem
+              key={opt.value}
+              value={opt.value}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "18px",
+                }}
+              >
+                <ListItemIcon style={{ color: "white" }}>
+                  {opt.icon}
+                </ListItemIcon>
+                <ListItemText>{opt.label}</ListItemText>
+              </div>
+            </MenuItem>
+          ))}
+        </Select>
+      </FormControl>
     ));
   };
 
@@ -545,173 +624,12 @@ const MyPortfolioEPL = () => {
                   }}
                 />
               </div>
-              <Box>
-                <Grid size={12}>
-                  <Box
-                    sx={{
-                      width: "100%",
-                      display: "flex",
-                      justifyContent: "center",
-                    }}
-                  >
-                    {/* {portfolios?.length < 8 && validTournament && (
-                      <div className={classes.addPortFolio}>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          disabled={editing}
-                          onClick={() => addportFolio()}
-                        >
-                          Add Portfolio
-                        </Button>
-                      </div>
-                    )} */}
-                    {/* <Box
-                      sx={{
-                        borderBottom: 1,
-                        borderColor: "divider",
-                      }}
-                    > */}
-                    {/* <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        variant="scrollable"
-                        scrollButtons="auto"
-                        aria-label="scrollable auto tabs example"
-                        indicatorColor="primary"
-                      >
-                        {portfolios?.map((port, i) => (
-                          <Tab
-                            key={i}
-                            label={port?.name || `New (Portfolio ${i + 1})`}
-                            {...a11yProps(i + 1)}
-                            className={`${classes.tabComponent} ${
-                              i === value && classes.activeTab
-                            }`}
-                          />
-                        ))}
-                      </Tabs> */}
-                    {/* </Box> */}
-                    {portfolios?.map((port, indexPortfolio) => (
-                      <p key={indexPortfolio}>sadlkmask</p>
-                      // <CustomTabPanel
-                      //   index={indexPortfolio}
-                      //   key={indexPortfolio}
-                      //   value={value}
-                      // >
-                      //   {renderTeams(indexPortfolio)}
-                      //   <Grid
-                      //     container
-                      //     display={"flex"}
-                      //     justifyContent={"end"}
-                      //   >
-                      //     {error && (
-                      //       <div>
-                      //         <p className={classes.error}>
-                      //           All fields are mandatory!!
-                      //         </p>
-                      //       </div>
-                      //     )}
-                      //     {duplicates && (
-                      //       <div>
-                      //         <p className={classes.error}>
-                      //           You cannot enter duplicate fields!!
-                      //         </p>
-                      //       </div>
-                      //     )}
-                      //     {winnerSelected && (
-                      //       <div>
-                      //         <p className={classes.error}>
-                      //           You cannot select a team that also belongs to
-                      //           the selection of a winner of team!!!
-                      //         </p>
-                      //       </div>
-                      //     )}
-                      //     <Grid
-                      //       display={"flex"}
-                      //       justifyContent={"center"}
-                      //       alignItems={"center"}
-                      //     >
-                      //       <Input
-                      //         required
-                      //         type="text"
-                      //         autoFocus={focused}
-                      //         value={championshipPoints}
-                      //         sx={{ width: "80%", m: 1 }}
-                      //         id="input-with-icon-adornment"
-                      //         name="championshipPoints"
-                      //         readOnly={!!port?.id}
-                      //         placeholder="Championship Points"
-                      //         className={classes.championshipPoints}
-                      //         inputProps={{
-                      //           maxLength: 3,
-                      //           inputMode: "numeric",
-                      //         }}
-                      //         startAdornment={
-                      //           <InputAdornment position="start">
-                      //             <EmojiEventsOutlinedIcon color="inherit" />
-                      //           </InputAdornment>
-                      //         }
-                      //         onChange={handleChangeInput}
-                      //       />
-                      //     </Grid>
-                      //   </Grid>
-                      //   <Grid
-                      //     container
-                      //     m={2}
-                      //     justifyContent={"end"}
-                      //   >
-                      //     {!!port?.id ? (
-                      //       <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                      //         {validTournament && (
-                      //           <Button
-                      //             variant="contained"
-                      //             color="warning"
-                      //             className={classes.btnRemove}
-                      //             onClick={() => {
-                      //               if (value >= 1) {
-                      //                 setValue(0);
-                      //               }
-                      //               // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                      //               // @ts-expect-error
-                      //               removeportfolioFunction(port?.id);
-                      //             }}
-                      //           >
-                      //             Remove
-                      //           </Button>
-                      //         )}
-                      //       </Grid>
-                      //     ) : (
-                      //       <>
-                      //         <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                      //           <Button
-                      //             variant="contained"
-                      //             color="success"
-                      //             className={classes.btnSubmit}
-                      //             onClick={() => savePortfolio()}
-                      //             disabled={winnerSelected}
-                      //           >
-                      //             Submit
-                      //           </Button>
-                      //         </Grid>
-                      //         <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                      //           <Button
-                      //             variant="contained"
-                      //             color="error"
-                      //             className={classes.btnCancel}
-                      //             onClick={() => cancelPortfolio()}
-                      //           >
-                      //             Cancel
-                      //           </Button>
-                      //         </Grid>
-                      //       </>
-                      //     )}
-                      //   </Grid>
-                      // </CustomTabPanel>
-                    ))}
-                  </Box>
-                </Grid>
-              </Box>
+              <Grid
+                size={12}
+                style={{ marginTop: "30px" }}
+              >
+                {renderTeams()}
+              </Grid>
             </Box>
           </Grid>
         </Grid>
