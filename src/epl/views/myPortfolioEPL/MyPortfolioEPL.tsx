@@ -6,9 +6,9 @@
 import React, { useCallback, useEffect, useState, memo } from "react";
 import {
   Box,
-  Tabs,
-  Tab,
-  Button,
+  // Tabs,
+  // Tab,
+  // Button,
   Input,
   InputAdornment,
   FormControl,
@@ -20,9 +20,9 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioEPL.module.css";
-import { BallIcon } from "@/assets/icons/icons";
-import Dropdown from "@/components/Inputs/Dropdown";
-import Loader from "@/epl/components/EPLBallLoader/EPLBallLoader";
+// import { BallIcon } from "@/assets/icons/icons";
+// import Dropdown from "@/components/Inputs/Dropdown";
+// import Loader from "@/epl/components/EPLBallLoader/EPLBallLoader";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -37,13 +37,13 @@ import {
   getPortfolios,
   getTeams,
   getWinnerOfTeam,
-  getWinnerOfTeamHasTeam,
+  // getWinnerOfTeamHasTeam,
   postNewPortfolio,
   removeportfolio,
 } from "@/api/PortfoliosAPI";
 import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import { isDateTimeReached } from "@/utils/getDaysLeft";
 
 const MyPortfolioEPL = () => {
@@ -91,19 +91,19 @@ const MyPortfolioEPL = () => {
   });
 
   useEffect(() => {
-    if (winnerOfTeam) {
-      Promise.all(winnerOfTeam.map((el) => getWinnerOfTeamHasTeam(el.id))).then(
-        (resp) => {
-          const formattedData = winnerOfTeam.map((winner, index) => {
-            return {
-              winnerOfTeam: winner.id,
-              winnerOfTeamHasTeam: resp[index].map((team) => team.teamId),
-            };
-          });
-          setComparing(formattedData);
-        }
-      );
-    }
+    // if (winnerOfTeam) {
+    //   Promise.all(
+    //     winnerOfTeam?.map((el) => getWinnerOfTeamHasTeam(el?.id))
+    //   ).then((resp) => {
+    //     const formattedData = winnerOfTeam?.map((winner, index) => {
+    //       return {
+    //         winnerOfTeam: winner?.id,
+    //         winnerOfTeamHasTeam: resp[index]?.map((team) => team?.teamId),
+    //       };
+    //     });
+    //     setComparing(formattedData);
+    //   });
+    // }
   }, [winnerOfTeam]);
 
   useEffect(() => {
@@ -181,29 +181,29 @@ const MyPortfolioEPL = () => {
   //   setValue(newValue);
   // }, []);
 
-  // const handleChangeInput = (
-  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  // ) => {
-  //   const newValue = event.target.value;
-  //   const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
-  //   if (!regex.test(newValue)) {
-  //     setChampionshipPoints("");
-  //     return;
-  //   }
-  //   setChampionshipPoints(event.target.value);
-  //   const newData = portfolios.map((el) => {
-  //     if (el?.newPortfolio) {
-  //       return {
-  //         ...el,
-  //         championshipPoints: +e?.target?.value,
-  //       };
-  //     } else {
-  //       return el;
-  //     }
-  //   });
-  //   setPortfolios(newData);
-  //   setFocused(true);
-  // };
+  const handleChangeInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const newValue = event.target.value;
+    const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
+    if (!regex.test(newValue)) {
+      setChampionshipPoints("");
+      return;
+    }
+    setChampionshipPoints(event.target.value);
+    const newData = portfolios.map((el) => {
+      if (el?.newPortfolio) {
+        return {
+          ...el,
+          championshipPoints: +e?.target?.value,
+        };
+      } else {
+        return el;
+      }
+    });
+    setPortfolios(newData);
+    setFocused(true);
+  };
 
   const checkCombination = (arr, arrIds) => {
     for (let i = 0; i < arrIds.length; i++) {
@@ -602,7 +602,9 @@ const MyPortfolioEPL = () => {
                 <ListItemIcon style={{ color: "white" }}>
                   {opt.icon}
                 </ListItemIcon>
-                <ListItemText>{opt.label}</ListItemText>
+                <ListItemText style={{ textAlign: "left", fontWeight: "bold" }}>
+                  {opt.label}
+                </ListItemText>
               </div>
             </MenuItem>
           ))}
@@ -611,121 +613,121 @@ const MyPortfolioEPL = () => {
     ));
   };
 
-  if (isLoading) return <Loader />;
+  // if (isLoading) return <Loader />;
 
-  if ((portfolios, portfoliosObtained))
-    return (
+  // if ((portfolios, portfoliosObtained))
+  return (
+    <Grid
+      size={12}
+      sx={{
+        minHeight: "650px",
+        height: "calc(100vh - 56px)",
+        overflow: "scroll",
+      }}
+    >
       <Grid
-        size={12}
-        sx={{
-          minHeight: "650px",
-          height: "calc(100vh - 56px)",
-          overflow: "scroll",
-        }}
+        container
+        spacing={2}
+        justifyContent={"center"}
+        alignContent={"center"}
       >
-        <Grid
-          container
-          spacing={2}
-          justifyContent={"center"}
-          alignContent={"center"}
-        >
-          <Grid size={{ xs: 12, sm: 8, lg: 6 }}>
-            <Box
-              component="section"
-              className={classes.boxPortfolio}
-              m={3}
-            >
-              <div className={classes.headerPortfolio}>
-                <div style={{ color: "white" }}>
-                  <EmojiEventsOutlinedIcon
-                    color="inherit"
-                    style={{ fontSize: "2.6rem" }}
-                  />
+        <Grid size={{ xs: 12, sm: 8, lg: 6 }}>
+          <Box
+            component="section"
+            className={classes.boxPortfolio}
+            m={3}
+          >
+            <div className={classes.headerPortfolio}>
+              <div style={{ color: "white" }}>
+                <EmojiEventsOutlinedIcon
+                  color="inherit"
+                  style={{ fontSize: "2.6rem" }}
+                />
 
-                  <h2 style={{ color: "#05fa87", fontSize: "40px" }}>
-                    Portfolio{portfolios?.length > 1 && "s"}
-                    {" Name"}
-                    {/* {portfolios?.length > 0 && portfolios?.length} */}
-                  </h2>
-                </div>
+                <h2 style={{ color: "#05fa87", fontSize: "40px" }}>
+                  Portfolio{portfolios?.length > 1 && "s"}
+                  {" Name"}
+                  {/* {portfolios?.length > 0 && portfolios?.length} */}
+                </h2>
               </div>
-              <div
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <h2
                 style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
+                  color: "white",
+                  fontSize: "24px",
+                  textAlign: "center",
                 }}
               >
-                <h2
-                  style={{
+                Tournament
+              </h2>
+              <Divider
+                style={{
+                  backgroundColor: "white",
+                  width: "60%",
+                }}
+              />
+            </div>
+            <Grid
+              size={12}
+              style={{ marginTop: "30px" }}
+            >
+              <div
+                style={{
+                  width: "80%",
+                  margin: "0 auto",
+                  textAlign: "right",
+                }}
+              >
+                {renderTeams()}
+                <Input
+                  required
+                  type="text"
+                  autoFocus={focused}
+                  value={championshipPoints}
+                  sx={{
+                    width: "50%",
+                    mt: 3,
                     color: "white",
-                    fontSize: "24px",
-                    textAlign: "center",
+                    "&:before": {
+                      borderBottom: "2px solid white", // borde cuando NO está enfocado
+                    },
+                    "&:after": {
+                      borderBottom: "2px solid #05fa87", // borde cuando está enfocado
+                    },
+                    "& input": {
+                      color: "white",
+                    },
                   }}
-                >
-                  Tournament
-                </h2>
-                <Divider
-                  style={{
-                    backgroundColor: "white",
-                    width: "60%",
+                  id="input-with-icon-adornment"
+                  name="championshipPoints"
+                  placeholder="Championship Points"
+                  className={classes.championshipPoints}
+                  inputProps={{
+                    maxLength: 3,
+                    inputMode: "numeric",
                   }}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <EmojiEventsOutlinedIcon color="inherit" />
+                    </InputAdornment>
+                  }
+                  onChange={handleChangeInput}
                 />
               </div>
-              <Grid
-                size={12}
-                style={{ marginTop: "30px" }}
-              >
-                <div
-                  style={{
-                    width: "80%",
-                    margin: "0 auto",
-                    textAlign: "right",
-                  }}
-                >
-                  {renderTeams()}
-                  <Input
-                    required
-                    type="text"
-                    autoFocus={focused}
-                    value={championshipPoints}
-                    sx={{
-                      width: "50%",
-                      mt: 3,
-                      color: "white",
-                      "&:before": {
-                        borderBottom: "2px solid white", // borde cuando NO está enfocado
-                      },
-                      "&:after": {
-                        borderBottom: "2px solid #05fa87", // borde cuando está enfocado
-                      },
-                      "& input": {
-                        color: "white",
-                      },
-                    }}
-                    id="input-with-icon-adornment"
-                    name="championshipPoints"
-                    placeholder="Championship Points"
-                    className={classes.championshipPoints}
-                    inputProps={{
-                      maxLength: 3,
-                      inputMode: "numeric",
-                    }}
-                    startAdornment={
-                      <InputAdornment position="start">
-                        <EmojiEventsOutlinedIcon color="inherit" />
-                      </InputAdornment>
-                    }
-                    // onChange={handleChangeInput}
-                  />
-                </div>
-              </Grid>
-            </Box>
-          </Grid>
+            </Grid>
+          </Box>
         </Grid>
       </Grid>
-    );
+    </Grid>
+  );
 };
 
 export default memo(MyPortfolioEPL);
