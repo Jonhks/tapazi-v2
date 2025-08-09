@@ -104,7 +104,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer() {
+export default function MenuEPL() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);

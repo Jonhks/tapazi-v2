@@ -25,7 +25,7 @@ const Icons = [
   <MoreIcon key="more" />,
 ];
 
-function ResponsiveAppBar() {
+function MenuMobileEpl() {
   const params = useParams();
   const userId = params.userId!;
   const navigate = useNavigate();
@@ -198,4 +198,4 @@ function ResponsiveAppBar() {
     </Box>
   );
 }
-export default ResponsiveAppBar;
+export default MenuMobileEpl;
