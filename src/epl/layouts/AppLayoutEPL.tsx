@@ -1,7 +1,7 @@
 import { Outlet, useParams } from "react-router-dom";
 import classes from "./AuthLayout.module.css";
-import MenuEPL from "@/epl/components/MenuEPL/MenuEPL";
-import MenuMobileEPL from "@/epl/components/MenuEPL/MenuMobileEPL";
+import MenuEPL from "../components/MenuEPL/MenuEPL";
+import MenuMobileEPL from "../components/MenuEPL/MenuMobileEPL";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { getScores } from "@/api/HomeAPI";
 import { useQuery } from "@tanstack/react-query";
