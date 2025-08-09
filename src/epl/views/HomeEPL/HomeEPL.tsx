@@ -2,8 +2,8 @@ import { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { Zoom } from "@mui/material";
 import classes from "./HomeEPL.module.css";
-import Table from "@/epl/components/Table/Table";
-import BallLoader from "@/epl/components/EPLBallLoader/EPLBallLoader";
+import Table from "../../components/Table/Table";
+import BallLoader from "../../components/EPLBallLoader/EPLBallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {

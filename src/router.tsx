@@ -39,9 +39,9 @@ const NCAAMaleImg =
   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_orange.png?quality=80&format=webp";
 
 // ? --------------------------  EPL Router -------------------------- ? //
-const AppLayoutEPL = lazy(() => import("@/epl/layouts/AppLayoutEPL"));
+const AppLayoutEPL = lazy(() => import("./epl/layouts/AppLayoutEPL"));
 
-const HomeEPL = lazy(() => import("@/epl/views/HomeEPL/HomeEPL"));
+const HomeEPL = lazy(() => import("./epl/views/HomeEPL/HomeEPL"));
 
 // ? --------------------------  URL Parameter Handler -------------------------- ? //
 
