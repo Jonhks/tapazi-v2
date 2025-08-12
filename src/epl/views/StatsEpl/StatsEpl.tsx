@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import classes from "./Stats.module.css";
+import classes from "./StatsEpl.module.css";
 import {
   Zoom,
   // Button,
@@ -41,7 +41,7 @@ import StatsPortfoliosSelectionsGraphic from "@/components/Graphics/StatsPortfol
 import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "@/components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
 import StatsPortfoliosSelectionsGraphicPercentLeast from "@/components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
 
-const Stats = () => {
+const StatsEPL = () => {
   const params = useParams();
   const userId = params.userId!;
   // const queryClient = useQueryClient();
@@ -257,12 +257,15 @@ const Stats = () => {
             size={12}
             className={classes.containerHeadHistory}
           >
-            <Grid size={{ xs: 6, sm: 6, md: 6 }}>
+            {/* <Grid size={{ xs: 6, sm: 6, md: 6 }}>
               <p className={classes.titleBox}>
                 <HistoryIcon /> Stats
               </p>
-            </Grid>
+            </Grid> */}
             <Grid size={{ xs: 6, sm: 4, md: 4 }}></Grid>
+          </Grid>
+          <Grid size={{ xs: 6, sm: 6, md: 6 }}>
+            <p className={classes.titleBox}>Stats</p>
           </Grid>
           <Grid
             container
@@ -284,7 +287,9 @@ const Stats = () => {
                     className={classes.DropDownHistory}
                     value={tournament}
                     handleChange={handleChange}
-                    options={tournaments.filter((el: Tournament) => el.current)}
+                    options={tournaments?.filter(
+                      (el: Tournament) => el.current
+                    )}
                   />
                 </div>
               </Grid>
@@ -533,4 +538,4 @@ const Stats = () => {
   );
 };
 
-export default Stats;
+export default StatsEPL;

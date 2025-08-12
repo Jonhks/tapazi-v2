@@ -40,8 +40,12 @@ const NCAAMaleImg =
 
 // ? --------------------------  EPL Router -------------------------- ? //
 const AppLayoutEPL = lazy(() => import("./epl/layouts/AppLayoutEPL"));
-
+const StatsLayoutEpl = lazy(() => import("./epl/layouts/StatsLayoutEpl"));
 const HomeEPL = lazy(() => import("./epl/views/HomeEPL/HomeEPL"));
+const InstructionsEPL = lazy(
+  () => import("./epl/views/InstructionsEpl/InstructionsEpl")
+);
+const StatsEpl = lazy(() => import("./epl/views/StatsEpl/StatsEpl"));
 
 // ? --------------------------  URL Parameter Handler -------------------------- ? //
 
@@ -183,6 +187,24 @@ const Router = () => {
             element={
               <PrivateRoute>
                 <MyPortfolioEPL />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/epl/instructions/:userId"
+            element={
+              <PrivateRoute>
+                <InstructionsEPL />
+              </PrivateRoute>
+            }
+          />
+        </Route>
+        <Route element={<StatsLayoutEpl />}>
+          <Route
+            path="/epl/stats/:userId"
+            element={
+              <PrivateRoute>
+                <StatsEpl />
               </PrivateRoute>
             }
           />

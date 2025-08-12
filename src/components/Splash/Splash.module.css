@@ -24,7 +24,7 @@
 .ball {
   position: absolute;
   bottom: 10px; /* Posición inicial */
-  left: 50%;
+  left: 60%;
   width: 100px;
   height: 100px;
   background: url("./basketball.png") no-repeat;
@@ -33,11 +33,34 @@
   /*animation: bounce 2s infinite;*/
   animation: bounce 1s infinite linear, spin 10s infinite linear;
 }
+.ballEpl {
+  position: absolute;
+  bottom: 20px; /* Posición inicial */
+  left: 40%;
+  width: 100px;
+  height: 100px;
+  background: url("./ball-epl.png") no-repeat;
+  background-size: cover;
+  border-radius: 50%;
+  /*animation: bounce 2s infinite;*/
+  animation: bounceEpl 1s infinite linear, spin 10s infinite linear;
+}
 
 .shadow {
   position: absolute;
   bottom: 10px; /* Posición inicial */
-  left: 50%;
+  left: 40%;
+  width: 60px;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  transition: all 0.2s ease-in-out;
+}
+.shadowEpl {
+  position: absolute;
+  bottom: 10px; /* Posición inicial */
+  left: 60%;
   width: 60px;
   height: 20px;
   background-color: rgba(0, 0, 0, 0.3);
@@ -55,6 +78,18 @@
   }
   100% {
     transform: translate(-50%, -550%);
+  }
+}
+
+@keyframes bounceEpl {
+  0% {
+    transform: translate(-50%, -550%);
+  }
+  50% {
+    transform: translate(-50%, 0%);
+  }
+  100% {
+    transform: translate(-50%, -450%);
   }
 }
 

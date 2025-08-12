@@ -17,6 +17,7 @@ import {
   MenuItem,
   ListItemIcon,
   ListItemText,
+  Button,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioEPL.module.css";
@@ -53,9 +54,9 @@ const MyPortfolioEPL = () => {
 
   const [value, setValue] = React.useState(0);
   const [portfolios, setPortfolios] = useState<Portfolios>([]);
-  const [error, setError] = useState(false);
-  const [editing, setEditing] = useState(false);
-  const [duplicates, setDuplicates] = useState(false);
+  // const [error, setError] = useState(false);
+  // const [editing, setEditing] = useState(false);
+  // const [duplicates, setDuplicates] = useState(false);
   const [focused, setFocused] = useState(false);
   const [championshipPoints, setChampionshipPoints] = useState("");
   const [validTournament, setValidTournament] = useState(true);
@@ -145,11 +146,11 @@ const MyPortfolioEPL = () => {
     setPortfolios(portfoliosObtained);
   }, [portfoliosObtained]);
 
-  interface CustomTabPanelProps {
-    children: React.ReactNode;
-    value: number;
-    index: number;
-  }
+  // interface CustomTabPanelProps {
+  //   children: React.ReactNode;
+  //   value: number;
+  //   index: number;
+  // }
 
   // function CustomTabPanel(props: CustomTabPanelProps) {
   //   const { children, value, index, ...other } = props;
@@ -249,17 +250,20 @@ const MyPortfolioEPL = () => {
     [selectedTeams]
   );
 
-  // const addportFolio = useCallback(() => {
-  //   setValue(portfolios?.length);
-  //   setEditing(true);
-  //   const newData = [...portfolios];
-  //   newData.push({
-  //     newPortfolio: true,
-  //     teams: [false, false, false, false, false, false, false, false],
-  //     championshipPoints: "",
-  //   });
-  //   setPortfolios(newData);
-  // }, [portfolios]);
+  const addportFolio = useCallback(() => {
+    // console.log("adjnannlj");
+    toast.success("Portfolio added successfully!");
+
+    // setValue(portfolios?.length);
+    // setEditing(true);
+    // const newData = [...portfolios];
+    // newData.push({
+    //   newPortfolio: true,
+    //   teams: [false, false, false, false, false, false, false, false],
+    //   championshipPoints: "",
+    // });
+    // setPortfolios(newData);
+  }, [portfolios]);
 
   // const savePortfolio = useCallback(() => {
   //   if (!validTournament) {
@@ -355,66 +359,68 @@ const MyPortfolioEPL = () => {
   //   [portfolios, mutate, userId]
   // );
 
-  // const removeportfolioFunction = useCallback(
-  //   (portId: number) => {
-  //     const index = portfolios.findIndex(
-  //       (portfolio) => portfolio.id === portId
-  //     );
-  //     setValue(index);
-  //     const swalWithBootstrapButtons = Swal.mixin({});
-  //     swalWithBootstrapButtons
-  //       .fire({
-  //         title: `Are you sure to delete the portfolio ${portId}`,
-  //         text: "You won't be able to revert this!",
-  //         icon: "warning",
-  //         showCancelButton: true,
-  //         confirmButtonColor: "#238b94",
-  //         confirmButtonText: "Yes, delete it!",
-  //         cancelButtonText: "No, cancel!",
-  //         reverseButtons: true,
-  //       })
-  //       .then(async (result) => {
-  //         if (result.isConfirmed) {
-  //           setPortfolios(portfolios?.filter((el) => el?.id !== portId));
-  //           const sendData = {
-  //             portId,
-  //             portfolios,
-  //             userId,
-  //           };
-  //           await removeportfolioMutate(sendData);
-  //           try {
-  //             swalWithBootstrapButtons.fire({
-  //               title: "Deleted!",
-  //               text: "Your file has been deleted.",
-  //               icon: "success",
-  //             });
-  //             if (index > 0) {
-  //               setValue(index - 1);
-  //             } else {
-  //               setValue(index);
-  //             }
-  //           } catch {
-  //             swalWithBootstrapButtons.fire({
-  //               title: "Error!",
-  //               text: "an error has occurred.",
-  //               icon: "error",
-  //             });
-  //           }
-  //         } else if (
-  //           /* Read more about handling dismissals below */
-  //           result.dismiss === Swal.DismissReason.cancel
-  //         ) {
-  //           swalWithBootstrapButtons.fire({
-  //             title: "Cancelled",
-  //             text: "Don't worry, you can still continue editing your portfolio :)",
-  //             icon: "error",
-  //           });
-  //           setValue(index);
-  //         }
-  //       });
-  //   },
-  //   [portfolios, removeportfolioMutate, userId]
-  // );
+  const removeportfolioFunction = useCallback(
+    (portId: number) => {
+      toast.error("Portfolio deleted successfully!");
+
+      //   const index = portfolios.findIndex(
+      //     (portfolio) => portfolio.id === portId
+      //   );
+      //   setValue(index);
+      //   const swalWithBootstrapButtons = Swal.mixin({});
+      //   swalWithBootstrapButtons
+      //     .fire({
+      //       title: `Are you sure to delete the portfolio ${portId}`,
+      //       text: "You won't be able to revert this!",
+      //       icon: "warning",
+      //       showCancelButton: true,
+      //       confirmButtonColor: "#238b94",
+      //       confirmButtonText: "Yes, delete it!",
+      //       cancelButtonText: "No, cancel!",
+      //       reverseButtons: true,
+      //     })
+      //     .then(async (result) => {
+      //       if (result.isConfirmed) {
+      //         setPortfolios(portfolios?.filter((el) => el?.id !== portId));
+      //         const sendData = {
+      //           portId,
+      //           portfolios,
+      //           userId,
+      //         };
+      //         await removeportfolioMutate(sendData);
+      //         try {
+      //           swalWithBootstrapButtons.fire({
+      //             title: "Deleted!",
+      //             text: "Your file has been deleted.",
+      //             icon: "success",
+      //           });
+      //           if (index > 0) {
+      //             setValue(index - 1);
+      //           } else {
+      //             setValue(index);
+      //           }
+      //         } catch {
+      //           swalWithBootstrapButtons.fire({
+      //             title: "Error!",
+      //             text: "an error has occurred.",
+      //             icon: "error",
+      //           });
+      //         }
+      //       } else if (
+      //         /* Read more about handling dismissals below */
+      //         result.dismiss === Swal.DismissReason.cancel
+      //       ) {
+      //         swalWithBootstrapButtons.fire({
+      //           title: "Cancelled",
+      //           text: "Don't worry, you can still continue editing your portfolio :)",
+      //           icon: "error",
+      //         });
+      //         setValue(index);
+      //       }
+      //     });
+    },
+    [portfolios, removeportfolioMutate, userId]
+  );
 
   // const cancelPortfolio = useCallback(() => {
   //   const swalWithBootstrapButtons = Swal.mixin({});
@@ -721,6 +727,43 @@ const MyPortfolioEPL = () => {
                   }
                   onChange={handleChangeInput}
                 />
+              </div>
+            </Grid>
+            <Grid
+              item
+              xs={12}
+              mt={3}
+              mb={2}
+            >
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#05fa87",
+                    width: "30%",
+                    color: "black",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    margin: 10,
+                  }}
+                  onClick={addportFolio}
+                >
+                  SUBMIT
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  style={{
+                    width: "30%",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    margin: 10,
+                  }}
+                  onClick={() => removeportfolioFunction(1)}
+                >
+                  Cancel
+                </Button>
               </div>
             </Grid>
           </Box>

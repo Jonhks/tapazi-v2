@@ -29,10 +29,10 @@
 }
 
 .containerStats {
-  background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_girl_back.png?quality=20&format=webp");
+  background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/sports/epl/stats/back_stats.png?quality=20&format=webp");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: right;
   height: 100vh;
   overflow: scroll;
 }
@@ -40,8 +40,5 @@
 @media (width < 900px) {
   .containerHistory {
     background-position: right;
-  }
-  .containerStats {
-    background-position: left;
   }
 }
