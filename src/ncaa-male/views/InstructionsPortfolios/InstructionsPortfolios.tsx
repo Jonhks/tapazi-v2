@@ -4,7 +4,7 @@ import classes from "./InstructionsPortfolios.module.css";
 import { useQuery } from "@tanstack/react-query";
 import { getInstructions } from "@/api/HomeAPI";
 import { useParams } from "react-router-dom";
-import Loader from "@/components/BallLoader/BallLoader";
+import Loader from "../../components/BallLoader/BallLoader";
 import type { Instructions } from "@/types/index";
 
 const Instructions = () => {

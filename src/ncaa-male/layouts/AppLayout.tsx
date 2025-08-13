@@ -1,7 +1,7 @@
 import { Outlet, useParams } from "react-router-dom";
 import classes from "./AuthLayout.module.css";
-import Menu from "@/components/Menu/Menu";
-import MenuMobile from "@/components/Menu/MenuMobile";
+import Menu from "../components/Menu/Menu";
+import MenuMobile from "../components/Menu/MenuMobile";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { getScores } from "@/api/HomeAPI";
 import { useQuery } from "@tanstack/react-query";

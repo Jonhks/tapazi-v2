@@ -2,8 +2,8 @@ import { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { Zoom } from "@mui/material";
 import classes from "./Home.module.css";
-import Table from "@/components/Table/Table";
-import BallLoader from "@/components/BallLoader/BallLoader";
+import Table from "../../components/Table/Table";
+import BallLoader from "../../components/BallLoader/BallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {

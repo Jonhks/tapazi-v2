@@ -3,7 +3,7 @@ import classes from "./HistoryPortfolios.module.css";
 import { Zoom } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
-import DropDownHistory from "@/components/Inputs/DropdDownHistory";
+import DropDownHistory from "ncaa-male/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -15,18 +15,18 @@ import {
   // getTournaments,
 } from "@/api/HistoryAPI";
 // import { Tournament } from "@/types/index";
-import Loader from "@/components/BallLoader/BallLoader";
-import TableHistoryTeamsPerYearLog from "@/components/Table/TableHistoryTeamsPerYearLog";
-import TableHistoryTeamsPerYearLogSelected from "@/components/Table/TableHistoryTeamsPerYearLogSelected";
-import TableHistoryPerfectPortfolios from "@/components/Table/TableHistoryPerfectPortfolios";
-import TableHistoryPerfectPortfoliosSelected from "@/components/Table/TableHistoryPerfectPortfoliosSelected";
-import TableHistoryAllRounds from "@/components/Table/TableHistoryAllRounds";
+import Loader from "ncaa-male/components/BallLoader/BallLoader";
+import TableHistoryTeamsPerYearLog from "ncaa-male/components/Table/TableHistoryTeamsPerYearLog";
+import TableHistoryTeamsPerYearLogSelected from "ncaa-male/components/Table/TableHistoryTeamsPerYearLogSelected";
+import TableHistoryPerfectPortfolios from "ncaa-male/components/Table/TableHistoryPerfectPortfolios";
+import TableHistoryPerfectPortfoliosSelected from "ncaa-male/components/Table/TableHistoryPerfectPortfoliosSelected";
+import TableHistoryAllRounds from "ncaa-male/components/Table/TableHistoryAllRounds";
 import DescriptionIcon from "@mui/icons-material/Description";
-import TeamPerYearlogGraphic from "@/components/Graphics/TeamPerYearLogGraphic";
+import TeamPerYearlogGraphic from "ncaa-male/components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import { typeGraphs } from "@/utils/typeGraphs";
-import TeamPerfectPortfoliosGraphic from "@/components/Graphics/TeamPerfectPortfoliosGraphic";
-import NotRecordFounds from "@/components/NotRecordsFound/NotRecordFounds";
+import TeamPerfectPortfoliosGraphic from "ncaa-male/components/Graphics/TeamPerfectPortfoliosGraphic";
+import NotRecordFounds from "ncaa-male/components/NotRecordsFound/NotRecordFounds";
 
 type dataDropdowndataType = {
   name: string;

@@ -8,7 +8,7 @@ import {
 import Grid from "@mui/material/Grid2";
 // import HistoryIcon from "@mui/icons-material/History";
 import { PodiumIcon } from "@/assets/icons/icons";
-import DropDownHistory from "@/components/Inputs/DropdDownHistory";
+import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import {
   useQuery,
@@ -16,11 +16,11 @@ import {
 } from "@tanstack/react-query";
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
-import Loader from "@/components/BallLoader/BallLoader";
-import TableHistory from "@/components/Table/TableHistory";
+import Loader from "../../components/EPLBallLoader/EPLBallLoader";
+import TableHistory from "../../components/Table/TableHistory";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
-import RadioButtonHistory from "@/components/Inputs/RadioButtonHistory";
+import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
 import {
   getLeastPickedTeams,
   getMostPickedTeams,
@@ -30,16 +30,16 @@ import {
   getTeamsPicked,
   getTeamsPickedLog,
 } from "@/api/StatsAPI";
-import TableHistoryMostPickedTeams from "@/components/Table/TableHistoryMostPickedTeams";
-import TableTeamsPickedLog from "@/components/Table/TableTeamsPickedLog";
-import TableHistoryTeamsNotPicked from "@/components/Table/TableHistoryTeamsNotPicked";
-import TableSeedPickTotal from "@/components/Table/TableSeedPickTotal";
-import TablePortfolioSeedSelections from "@/components/Table/TablePortfolioSeedSelections";
+import TableHistoryMostPickedTeams from "../../components/Table/TableHistoryMostPickedTeams";
+import TableTeamsPickedLog from "../../components/Table/TableTeamsPickedLog";
+import TableHistoryTeamsNotPicked from "../../components/Table/TableHistoryTeamsNotPicked";
+import TableSeedPickTotal from "../../components/Table/TableSeedPickTotal";
+import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
 import SortIcon from "@mui/icons-material/Sort";
-import StatsGraphics from "@/components/Graphics/StatsGraphic";
-import StatsPortfoliosSelectionsGraphic from "@/components/Graphics/StatsPortfoliosSelectionsGraphic";
-import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "@/components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
-import StatsPortfoliosSelectionsGraphicPercentLeast from "@/components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
+import StatsGraphics from "../../components/Graphics/StatsGraphic";
+import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
+import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
+import StatsPortfoliosSelectionsGraphicPercentLeast from "../../components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
 
 const StatsEPL = () => {
   const params = useParams();

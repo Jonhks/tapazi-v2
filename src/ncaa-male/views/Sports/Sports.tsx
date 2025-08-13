@@ -3,8 +3,8 @@ import Grid from "@mui/material/Grid2";
 import classes from "./Sports.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
-import BallLoader from "@/components/BallLoader/BallLoader";
-import EPLBallLoader from "../../epl/components/EPLBallLoader/EPLBallLoader";
+import BallLoader from "../../components/BallLoader/BallLoader";
+import EPLBallLoader from "../../../epl/components/EPLBallLoader/EPLBallLoader";
 
 export default function Sports() {
   const navigate = useNavigate();

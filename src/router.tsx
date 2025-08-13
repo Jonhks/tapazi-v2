@@ -1,33 +1,36 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy } from "react";
 // ? --------------------------  Portfolio -------------------------- ? //
-const AuthLayout = lazy(() => import("./layouts/AuthLayout"));
-const SportsLayout = lazy(() => import("./layouts/SportsLayout"));
-const Splash = lazy(() => import("./components/Splash/Splash"));
-const Login = lazy(() => import("./views/login/Login"));
-const Signup = lazy(() => import("./views/login/SignUp"));
-const Forgot = lazy(() => import("./views/login/Forgot"));
-const AppLayout = lazy(() => import("./layouts/AppLayout"));
-const Home = lazy(() => import("./views/home/Home"));
-const Sports = lazy(() => import("./views/Sports/Sports"));
+const AuthLayout = lazy(() => import("./ncaa-male/layouts/AuthLayout"));
+const SportsLayout = lazy(() => import("./ncaa-male/layouts/SportsLayout"));
+const Splash = lazy(() => import("./ncaa-male/components/Splash/Splash"));
+const Login = lazy(() => import("./ncaa-male/views/login/Login"));
+const Signup = lazy(() => import("./ncaa-male/views/login/SignUp"));
+const Forgot = lazy(() => import("./ncaa-male/views/login/Forgot"));
+const AppLayout = lazy(() => import("./ncaa-male/layouts/AppLayout"));
+const Home = lazy(() => import("./ncaa-male/views/home/Home"));
+const Sports = lazy(() => import("./ncaa-male/views/Sports/Sports"));
 const PrivateRoute = lazy(
-  () => import("./components/PrivateRoute/PrivateRoute")
+  () => import("./ncaa-male/components/PrivateRoute/PrivateRoute")
 );
-const MyPortfolio = lazy(() => import("./views/myPortfolio/MyPortfolio"));
-const HistoryLayout = lazy(() => import("./layouts/HistoryLayout"));
-const StatsLayout = lazy(() => import("./layouts/StatsLayout"));
-const Stats = lazy(() => import("./views/Stats/Stats"));
+const MyPortfolio = lazy(
+  () => import("./ncaa-male/views/myPortfolio/MyPortfolio")
+);
+const HistoryLayout = lazy(() => import("./ncaa-male/layouts/HistoryLayout"));
+const StatsLayout = lazy(() => import("./ncaa-male/layouts/StatsLayout"));
+const Stats = lazy(() => import("./ncaa-male/views/Stats/Stats"));
 const Instructions = lazy(
-  () => import("./views/InstructionsPortfolios/InstructionsPortfolios")
+  () =>
+    import("./ncaa-male/views/InstructionsPortfolios/InstructionsPortfolios")
 );
 const History = lazy(
-  () => import("./views/HistoryPortfolios/HistoryPortfolios")
+  () => import("./ncaa-male/views/HistoryPortfolios/HistoryPortfolios")
 );
-const Error404 = lazy(() => import("./views/Error404/Error404"));
+const Error404 = lazy(() => import("./ncaa-male/views/Error404/Error404"));
 // fondos
 import ImgStats from "@/assets/img/doing-sport-concept.jpg";
 import ImgHistory from "@/assets/img/details-ball-sport.jpg";
-import WIP from "./views/WIP/WIP";
+import WIP from "./ncaa-male/views/WIP/WIP";
 import MyPortfolioEPL from "./epl/views/myPortfolioEPL/MyPortfolioEPL";
 const ImgSports =
   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_girl_back.png?quality=40&format=webp";

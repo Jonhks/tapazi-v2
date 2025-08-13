@@ -8,8 +8,8 @@ import { Box, Tabs, Tab, Button, Input, InputAdornment } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolio.module.css";
 import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
-import Dropdown from "@/components/Inputs/Dropdown";
-import Loader from "@/components/BallLoader/BallLoader";
+import Dropdown from "../../components/Inputs/Dropdown";
+import Loader from "../../components/BallLoader/BallLoader";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -70,21 +70,21 @@ const MyPortfolio = () => {
     queryFn: () => getWinnerOfTeam(),
   });
 
-  useEffect(() => {
-    if (winnerOfTeam) {
-      Promise.all(winnerOfTeam.map((el) => getWinnerOfTeamHasTeam(el.id))).then(
-        (resp) => {
-          const formattedData = winnerOfTeam.map((winner, index) => {
-            return {
-              winnerOfTeam: winner.id,
-              winnerOfTeamHasTeam: resp[index].map((team) => team.teamId),
-            };
-          });
-          setComparing(formattedData);
-        }
-      );
-    }
-  }, [winnerOfTeam]);
+  // useEffect(() => {
+  // if (winnerOfTeam) {
+  //   Promise.all(
+  //     winnerOfTeam?.map((el) => getWinnerOfTeamHasTeam(el.id))
+  //   ).then((resp) => {
+  //     const formattedData = winnerOfTeam.map((winner, index) => {
+  //       return {
+  //         winnerOfTeam: winner.id,
+  //         winnerOfTeamHasTeam: resp[index].map((team) => team.teamId),
+  //       };
+  //     });
+  //     setComparing(formattedData);
+  //   });
+  // }
+  // }, [winnerOfTeam]);
 
   useEffect(() => {
     if (dataDATTOU && dataHOUTOU) {

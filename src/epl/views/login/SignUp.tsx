@@ -25,7 +25,7 @@ import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSignUp, getStates } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
-import Loader from "@/components/BallLoader/BallLoader";
+import Loader from "ncaa-male/components/BallLoader/BallLoader";
 
 const Login = () => {
   const navigate = useNavigate();

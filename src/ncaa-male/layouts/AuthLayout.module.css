@@ -12,7 +12,7 @@
 }
 
 .containerApp {
-  background-image: url("../assets/img/home.jpeg");
+  background-image: url("../../assets/img/home.jpeg");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: left;
