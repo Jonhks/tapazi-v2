@@ -24,7 +24,7 @@
 .ball {
   position: absolute;
   bottom: 10px; /* Posición inicial */
-  left: 60%;
+  left: 40%;
   width: 100px;
   height: 100px;
   background: url("./basketball.png") no-repeat;
@@ -36,7 +36,7 @@
 .ballEpl {
   position: absolute;
   bottom: 20px; /* Posición inicial */
-  left: 40%;
+  left: 60%;
   width: 100px;
   height: 100px;
   background: url("./ball-epl.png") no-repeat;
