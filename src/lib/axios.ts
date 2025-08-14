@@ -7,7 +7,8 @@ const api = axios.create({
 
 const newApi = axios.create({
   // baseURL: import.meta.env.VITE_NEWAPI_URL,
-  baseURL: "https://portfolio-pool.ercom-b.dev:443/",
+  baseURL: "http://78.13.6.44:7003",
+  // baseURL: "http://localhost:5173/epl/myPortfolio/2/2",
 });
 
 // api.interceptors.request.use((config) => {
