@@ -45,10 +45,12 @@ import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
 // import Swal from "sweetalert2";
 import { isDateTimeReached } from "@/utils/getDaysLeft";
+import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 
 const MyPortfolioEPL = () => {
   const params = useParams();
   const userId = params.userId!;
+  const sportId = params.sportId!;
   const queryClient = useQueryClient();
 
   const [value, setValue] = React.useState(0);
@@ -58,19 +60,12 @@ const MyPortfolioEPL = () => {
   // const [duplicates, setDuplicates] = useState(false);
   const [focused, setFocused] = useState(false);
   const [championshipPoints, setChampionshipPoints] = useState("");
-  const [validTournament, setValidTournament] = useState(true);
+  const [validTournament, setValidTournament] = useState(false);
   const [comparing, setComparing] = useState([]);
   const [winnerSelected, setWinnerSelected] = useState(false);
 
   const [selectedTeams, setSelectedTeams] = useState(Array(8).fill(""));
-  const [teamSelected, setTeamSelected] = useState({
-    id: 0,
-    name: "",
-    description: "",
-    key: "",
-    seed: 0,
-    crest_url: "",
-  });
+  const [teamSelected, setTeamSelected] = useState([]);
 
   useEffect(() => {
     if (portfolios) {
@@ -241,15 +236,17 @@ const MyPortfolioEPL = () => {
   //   return false;
   // };
 
-  useEffect(() => {
-    if (portfolios) {
-      if (portfolios[value]) {
-        const arrIds = portfolios[value].teams.map((port) => port.id);
-        checkCombination(comparing, arrIds);
-      }
-    }
-  }, [comparing, portfolios, value]);
+  // useEffect(() => {
+  //   if (portfolios) {
+  //     if (portfolios[value]) {
+  //       const arrIds = portfolios[value].teams.map((port) => port.id);
+  //       checkCombination(comparing, arrIds);
+  //     }
+  //   }
+  // }, [comparing, portfolios, value]);
 
+  // console.log(portfolios);
+  // ? Ya funciona, solo guarda los estados locales para los inputs. Guarda el nombre
   const handleChangeSelect = useCallback(
     (team: string, index: number) => {
       const newSelectedTeams = [...selectedTeams];
@@ -258,22 +255,99 @@ const MyPortfolioEPL = () => {
     },
     [selectedTeams]
   );
-  console.log(selectedTeams);
+
+  // const sendPortfolio = useCallback(() => {
+  //   console.log(portfolios);
+  //   //     const swalWithBootstrapButtons = Swal.mixin({});
+  //   //     swalWithBootstrapButtons
+  //   //       .fire({
+  //   //         title: "Are you sure?",
+  //   //         text: "You won't be able to revert this!",
+  //   //         icon: "warning",
+  //   //         confirmButtonColor: "#238b94",
+  //   //         showCancelButton: true,
+  //   //         confirmButtonText: "Yes, send it to!",
+  //   //         cancelButtonText: "No, cancel!",
+  //   //         reverseButtons: true,
+  //   //       })
+  //   //       .then(async (result) => {
+  //   //         if (result.isConfirmed) {
+  //   //           const sendData = {
+  //   //             port,
+  //   //             portfolios,
+  //   //             userId,
+  //   //           };
+  //   //           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //   //           // @ts-expect-error
+  //   //           mutate(sendData);
+  //   //           try {
+  //   //             swalWithBootstrapButtons.fire({
+  //   //               title: "Saved!",
+  //   //               text: "your portfolio has been saved.",
+  //   //               icon: "success",
+  //   //             });
+  //   //           } catch {
+  //   //             swalWithBootstrapButtons.fire({
+  //   //               title: "Saved!",
+  //   //               text: "an error has occurred.",
+  //   //               icon: "error",
+  //   //             });
+  //   //           }
+  //   //         } else if (
+  //   //           /* Read more about handling dismissals below */
+  //   //           result.dismiss === Swal.DismissReason.cancel
+  //   //         ) {
+  //   //           swalWithBootstrapButtons.fire({
+  //   //             title: "Cancelled",
+  //   //             text: "Don't worry, you can still continue editing your portfolio :)",
+  //   //             icon: "error",
+  //   //           });
+  //   //         }
+  //   //       });
+  // }, [
+  //   portfolios,
+  //   //  mutate,
+  //   // userId,
+  // ]);
+  console.log(validTournament);
 
   const addportFolio = useCallback(() => {
-    // console.log("adjnannlj");
-    toast.success("Portfolio added successfully!");
+    const allFilled = selectedTeams.every((team) => team !== "");
 
-    // setValue(portfolios?.length);
-    // setEditing(true);
-    // const newData = [...portfolios];
-    // newData.push({
-    //   newPortfolio: true,
-    //   teams: [false, false, false, false, false, false, false, false],
-    //   championshipPoints: "",
-    // });
-    // setPortfolios(newData);
-  }, [portfolios]);
+    // ? Verifica que los portfolios vayan llenos
+    if (!allFilled) {
+      toast.error("You must select all teams!");
+      setValidTournament(true);
+
+      setTimeout(() => {
+        setValidTournament(false);
+      }, 2000);
+      return;
+    }
+    const newPortfolio = {
+      tournament_id: 2,
+      participantid: userId,
+      championshipPoints: 0,
+      teams: selectedTeams.map((team) => {
+        if (team === "") return false;
+        const found = teamsEPL?.find((opt) => opt.name === team);
+        return found ? { id: found.id } : false;
+      }),
+    };
+    // Solo guarda un portfolio, actualizándolo
+    setPortfolios([newPortfolio]);
+
+    // const allFilled = newPortfolio.teams.every((team) => team !== false);
+    // if (allFilled) {
+    //   console.log("All teams are filled");
+    // } else {
+    //   console.log("Some teams are not filled");
+    // }
+
+    console.log([newPortfolio]);
+  }, [selectedTeams, teamsEPL, userId, championshipPoints]);
+
+  // console.log(portfolios);
 
   // const savePortfolio = useCallback(() => {
   //   if (!validTournament) {
@@ -316,58 +390,6 @@ const MyPortfolioEPL = () => {
   //   }
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [portfolios]);
-
-  // const sendPortfolio = useCallback(
-  //   (port: { championshipPoints: number; teamsId: [] }) => {
-  //     const swalWithBootstrapButtons = Swal.mixin({});
-  //     swalWithBootstrapButtons
-  //       .fire({
-  //         title: "Are you sure?",
-  //         text: "You won't be able to revert this!",
-  //         icon: "warning",
-  //         confirmButtonColor: "#238b94",
-  //         showCancelButton: true,
-  //         confirmButtonText: "Yes, send it to!",
-  //         cancelButtonText: "No, cancel!",
-  //         reverseButtons: true,
-  //       })
-  //       .then(async (result) => {
-  //         if (result.isConfirmed) {
-  //           const sendData = {
-  //             port,
-  //             portfolios,
-  //             userId,
-  //           };
-  //           // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //           // @ts-expect-error
-  //           mutate(sendData);
-  //           try {
-  //             swalWithBootstrapButtons.fire({
-  //               title: "Saved!",
-  //               text: "your portfolio has been saved.",
-  //               icon: "success",
-  //             });
-  //           } catch {
-  //             swalWithBootstrapButtons.fire({
-  //               title: "Saved!",
-  //               text: "an error has occurred.",
-  //               icon: "error",
-  //             });
-  //           }
-  //         } else if (
-  //           /* Read more about handling dismissals below */
-  //           result.dismiss === Swal.DismissReason.cancel
-  //         ) {
-  //           swalWithBootstrapButtons.fire({
-  //             title: "Cancelled",
-  //             text: "Don't worry, you can still continue editing your portfolio :)",
-  //             icon: "error",
-  //           });
-  //         }
-  //       });
-  //   },
-  //   [portfolios, mutate, userId]
-  // );
 
   const removeportfolioFunction = useCallback(
     (portId: number) => {
@@ -726,11 +748,11 @@ const MyPortfolioEPL = () => {
                 }}
               >
                 {renderTeams()}
-                <Input
+                {/* <Input
                   required
                   type="text"
                   autoFocus={focused}
-                  value={championshipPoints}
+                  value={championshipPoints ?? ""}
                   sx={{
                     width: "50%",
                     mt: 3,
@@ -759,7 +781,7 @@ const MyPortfolioEPL = () => {
                     </InputAdornment>
                   }
                   onChange={handleChangeInput}
-                />
+                /> */}
               </div>
             </Grid>
             <Grid
@@ -768,6 +790,12 @@ const MyPortfolioEPL = () => {
               mt={3}
               mb={2}
             >
+              {validTournament && (
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <ErrorMessage>You must select all teams</ErrorMessage>
+                </div>
+              )}
+
               <div style={{ display: "flex", justifyContent: "center" }}>
                 <Button
                   variant="contained"
