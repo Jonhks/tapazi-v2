@@ -36,12 +36,13 @@ const Login = () => {
   const { mutate } = useMutation({
     mutationFn: getLogin,
     onSuccess: (data) => {
-      if (!data.success) {
+      console.log(data);
+      if (!data) {
         toast.error(data.error.description);
       } else {
         toast.success("User successfully logged in");
-        localStorage.setItem("userTapaszi", JSON.stringify(data?.data));
-        navigate(`/sports/${data.data.id}`, {
+        localStorage.setItem("userTapaszi", JSON.stringify(data));
+        navigate(`/sports/${data.id}`, {
           replace: true,
         });
         localStorage.removeItem("datoProv");

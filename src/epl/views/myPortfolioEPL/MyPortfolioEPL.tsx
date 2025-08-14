@@ -309,7 +309,7 @@ const MyPortfolioEPL = () => {
   //   //  mutate,
   //   // userId,
   // ]);
-  console.log(validTournament);
+  // console.log(validTournament);
 
   const addportFolio = useCallback(() => {
     const allFilled = selectedTeams.every((team) => team !== "");
@@ -589,7 +589,7 @@ const MyPortfolioEPL = () => {
   // console.log(selectedTeams);
 
   const renderTeams = () => {
-    return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => {
+    return [0, 1, 2, 3, 4].map((idx) => {
       // Opciones disponibles para este select (excluye las ya seleccionadas en otros selects)
       const availableOptions = teamsEPL?.filter(
         (opt) =>

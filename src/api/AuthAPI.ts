@@ -33,7 +33,7 @@ export const getLogin = async (user: UserLogin) => {
     user: user.email,
     password: user.password,
   };
-  console.log(formData);
+  // console.log(formData);
 
   try {
     const url = "/participants/login";
@@ -42,13 +42,13 @@ export const getLogin = async (user: UserLogin) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data);
 
-    if (!data.success) {
-      return data.error.description;
+    if (!data.participant) {
+      return "error";
     }
-    if (data.success) {
-      return data;
+    if (data.participant) {
+      // console.log(data.participant);
+      return data.participant;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)

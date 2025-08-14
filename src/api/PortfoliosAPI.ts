@@ -25,6 +25,8 @@ export const getPortfolios = async (id: User["id"]) => {
 };
 
 export const getTeams = async (sport: User["id"]) => {
+  console.log("qwekqwnejqwejqnejwql", sport);
+
   try {
     const url = `/sports/${sport}/teams`;
     const { data } = await newApi.get(url, {
@@ -32,6 +34,7 @@ export const getTeams = async (sport: User["id"]) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+    console.log(data);
 
     if (data.teams) {
       return data.teams;
