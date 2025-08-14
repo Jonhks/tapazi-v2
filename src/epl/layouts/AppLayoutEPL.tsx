@@ -1,4 +1,4 @@
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import classes from "./AuthLayout.module.css";
 import MenuEPL from "../components/MenuEPL/MenuEPL";
 import MenuMobileEPL from "../components/MenuEPL/MenuMobileEPL";
@@ -7,7 +7,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 // import { useQuery } from "@tanstack/react-query";
 
 const AppLayoutEPL = () => {
-  const params = useParams();
+  // const params = useParams();
   // const userId = params.userId!;
   const isMobile = useMediaQuery("(max-width:800px)");
   // const { isLoading } = useQuery({
