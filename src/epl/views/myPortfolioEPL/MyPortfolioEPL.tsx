@@ -33,14 +33,13 @@ import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
 
 import {
-  getDATTOU,
-  getHOUTOU,
-  getPortfolios,
+  // getDATTOU,
+  // getHOUTOU,
+  // getPortfolios,
   getTeams,
-  getWinnerOfTeam,
-  // getWinnerOfTeamHasTeam,
-  postNewPortfolio,
-  removeportfolio,
+  // getWinnerOfTeam,
+  // postNewPortfolio,
+  // removeportfolio,
 } from "@/api/PortfoliosAPI";
 import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
@@ -64,6 +63,14 @@ const MyPortfolioEPL = () => {
   const [winnerSelected, setWinnerSelected] = useState(false);
 
   const [selectedTeams, setSelectedTeams] = useState(Array(8).fill(""));
+  const [teamSelected, setTeamSelected] = useState({
+    id: 0,
+    name: "",
+    description: "",
+    key: "",
+    seed: 0,
+    crest_url: "",
+  });
 
   useEffect(() => {
     if (portfolios) {
@@ -71,80 +78,82 @@ const MyPortfolioEPL = () => {
     }
   }, [portfolios, value]);
 
-  const { data: portfoliosObtained, isLoading } = useQuery({
-    queryKey: ["portfolios", userId],
-    queryFn: () => getPortfolios(userId),
-  });
+  // const { data: portfoliosObtained, isLoading } = useQuery({
+  //   queryKey: ["portfolios", userId],
+  //   queryFn: () => getPortfolios(userId),
+  // });
 
-  const { data: dataDATTOU } = useQuery({
-    queryKey: ["dattou", userId],
-    queryFn: () => getDATTOU(userId),
-  });
+  // const { data: dataDATTOU } = useQuery({
+  //   queryKey: ["dattou", userId],
+  //   queryFn: () => getDATTOU(userId),
+  // });
 
-  const { data: dataHOUTOU } = useQuery({
-    queryKey: ["houtou", userId],
-    queryFn: () => getHOUTOU(userId),
-  });
+  // const { data: dataHOUTOU } = useQuery({
+  //   queryKey: ["houtou", userId],
+  //   queryFn: () => getHOUTOU(userId),
+  // });
 
-  const { data: winnerOfTeam } = useQuery({
-    queryKey: ["winnerOfTeam", userId],
-    queryFn: () => getWinnerOfTeam(),
-  });
+  // const { data: winnerOfTeam } = useQuery({
+  //   queryKey: ["winnerOfTeam", userId],
+  //   queryFn: () => getWinnerOfTeam(),
+  // });
 
-  useEffect(() => {
-    // if (winnerOfTeam) {
-    //   Promise.all(
-    //     winnerOfTeam?.map((el) => getWinnerOfTeamHasTeam(el?.id))
-    //   ).then((resp) => {
-    //     const formattedData = winnerOfTeam?.map((winner, index) => {
-    //       return {
-    //         winnerOfTeam: winner?.id,
-    //         winnerOfTeamHasTeam: resp[index]?.map((team) => team?.teamId),
-    //       };
-    //     });
-    //     setComparing(formattedData);
-    //   });
-    // }
-  }, [winnerOfTeam]);
+  // useEffect(() => {
+  // if (winnerOfTeam) {
+  //   Promise.all(
+  //     winnerOfTeam?.map((el) => getWinnerOfTeamHasTeam(el?.id))
+  //   ).then((resp) => {
+  //     const formattedData = winnerOfTeam?.map((winner, index) => {
+  //       return {
+  //         winnerOfTeam: winner?.id,
+  //         winnerOfTeamHasTeam: resp[index]?.map((team) => team?.teamId),
+  //       };
+  //     });
+  //     setComparing(formattedData);
+  //   });
+  // }
+  // }, [winnerOfTeam]);
 
-  useEffect(() => {
-    if (dataDATTOU && dataHOUTOU) {
-      const isValid = isDateTimeReached(dataDATTOU, dataHOUTOU);
-      setValidTournament(isValid);
-    }
-  }, [dataDATTOU, dataHOUTOU, portfolios]);
+  // useEffect(() => {
+  //   if (dataDATTOU && dataHOUTOU) {
+  //     const isValid = isDateTimeReached(dataDATTOU, dataHOUTOU);
+  //     setValidTournament(isValid);
+  //   }
+  // }, [dataDATTOU, dataHOUTOU, portfolios]);
 
-  const { data: teams } = useQuery({
-    queryKey: ["teams", userId],
-    queryFn: () => getTeams(),
+  const { data: teamsEPL } = useQuery({
+    queryKey: ["teamsEpl", userId],
+    queryFn: () => getTeams(2),
     cacheTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
   });
 
-  const { mutate } = useMutation({
-    mutationFn: postNewPortfolio,
-    onSuccess: (resp) => {
-      toast.success(resp);
-      queryClient.invalidateQueries(["portfolios", userId]);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  // console.log(teamsEPL);
 
-  const { mutate: removeportfolioMutate } = useMutation({
-    mutationFn: removeportfolio,
-    onSuccess: (resp) => {
-      toast.success(resp);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  // const { mutate } = useMutation({
+  //   mutationFn: postNewPortfolio,
+  //   onSuccess: (resp) => {
+  //     toast.success(resp);
+  //     queryClient.invalidateQueries(["portfolios", userId]);
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //   },
+  // });
 
-  useEffect(() => {
-    setPortfolios(portfoliosObtained);
-  }, [portfoliosObtained]);
+  // const { mutate: removeportfolioMutate } = useMutation({
+  //   mutationFn: removeportfolio,
+  //   onSuccess: (resp) => {
+  //     toast.success(resp);
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //   },
+  // });
+
+  // useEffect(() => {
+  //   setPortfolios(portfoliosObtained);
+  // }, [portfoliosObtained]);
 
   // interface CustomTabPanelProps {
   //   children: React.ReactNode;
@@ -206,31 +215,31 @@ const MyPortfolioEPL = () => {
     setFocused(true);
   };
 
-  const checkCombination = (arr, arrIds) => {
-    for (let i = 0; i < arrIds.length; i++) {
-      for (let j = 0; j < arrIds.length; j++) {
-        if (i !== j) {
-          const winnerOfTeam = arrIds[i];
-          const teamId = arrIds[j];
-          const exists = arr.some(
-            (item) =>
-              item.winnerOfTeam === winnerOfTeam &&
-              item.winnerOfTeamHasTeam.includes(teamId)
-          );
-          if (exists) {
-            toast.error(
-              "You cannot select a team that also belongs to the selection of a winner of team!!"
-            );
-            setWinnerSelected(true);
-            return true;
-          } else {
-            setWinnerSelected(false);
-          }
-        }
-      }
-    }
-    return false;
-  };
+  // const checkCombination = (arr, arrIds) => {
+  //   for (let i = 0; i < arrIds.length; i++) {
+  //     for (let j = 0; j < arrIds.length; j++) {
+  //       if (i !== j) {
+  //         const winnerOfTeam = arrIds[i];
+  //         const teamId = arrIds[j];
+  //         const exists = arr.some(
+  //           (item) =>
+  //             item.winnerOfTeam === winnerOfTeam &&
+  //             item.winnerOfTeamHasTeam.includes(teamId)
+  //         );
+  //         if (exists) {
+  //           toast.error(
+  //             "You cannot select a team that also belongs to the selection of a winner of team!!"
+  //           );
+  //           setWinnerSelected(true);
+  //           return true;
+  //         } else {
+  //           setWinnerSelected(false);
+  //         }
+  //       }
+  //     }
+  //   }
+  //   return false;
+  // };
 
   useEffect(() => {
     if (portfolios) {
@@ -249,6 +258,7 @@ const MyPortfolioEPL = () => {
     },
     [selectedTeams]
   );
+  console.log(selectedTeams);
 
   const addportFolio = useCallback(() => {
     // console.log("adjnannlj");
@@ -419,7 +429,11 @@ const MyPortfolioEPL = () => {
       //       }
       //     });
     },
-    [portfolios, removeportfolioMutate, userId]
+    [
+      portfolios,
+      // removeportfolioMutate,
+      userId,
+    ]
   );
 
   // const cancelPortfolio = useCallback(() => {
@@ -464,25 +478,25 @@ const MyPortfolioEPL = () => {
   //     });
   // }, [portfoliosObtained, value]);
 
-  const options = [
-    { value: "sunderland", label: "SUNDERLAND", icon: <SportsSoccerIcon /> },
-    { value: "tottenham", label: "TOTTENHAM", icon: <SportsBasketballIcon /> },
-    {
-      value: "manchester-city",
-      label: "MANCHESTER CITY",
-      icon: <SportsSoccerIcon />,
-    },
-    {
-      value: "west-ham-united",
-      label: "WEST HAM UNITED",
-      icon: <SportsBasketballIcon />,
-    },
-    {
-      value: "aston-villa",
-      label: "ASTON VILLA",
-      icon: <SportsSoccerIcon />,
-    },
-  ];
+  // const options = [
+  //   { value: "sunderland", label: "SUNDERLAND", icon: <SportsSoccerIcon /> },
+  //   { value: "tottenham", label: "TOTTENHAM", icon: <SportsBasketballIcon /> },
+  //   {
+  //     value: "manchester-city",
+  //     label: "MANCHESTER CITY",
+  //     icon: <SportsSoccerIcon />,
+  //   },
+  //   {
+  //     value: "west-ham-united",
+  //     label: "WEST HAM UNITED",
+  //     icon: <SportsBasketballIcon />,
+  //   },
+  //   {
+  //     value: "aston-villa",
+  //     label: "ASTON VILLA",
+  //     icon: <SportsSoccerIcon />,
+  //   },
+  // ];
 
   // const renderTeams = () => {
   //   return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => (
@@ -550,73 +564,92 @@ const MyPortfolioEPL = () => {
   //     </FormControl>
   //   ));
   // };
+  // console.log(selectedTeams);
 
   const renderTeams = () => {
-    return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => (
-      <FormControl
-        key={idx}
-        fullWidth
-        sx={{
-          backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
-          "& .MuiInputLabel-root": {
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "18px",
-          },
-        }}
-      >
-        <InputLabel
-          id={`select-label-${idx}`}
-          shrink={selectedTeams[idx] !== ""}
+    return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => {
+      // Opciones disponibles para este select (excluye las ya seleccionadas en otros selects)
+      const availableOptions = teamsEPL?.filter(
+        (opt) =>
+          !selectedTeams.includes(opt.name) || selectedTeams[idx] === opt.name
+      );
+      return (
+        <FormControl
+          key={idx}
+          fullWidth
           sx={{
-            color: "white",
-            fontWeight: "bold",
-            fontSize: "18px",
-            transition: "opacity 0.2s",
-            opacity: selectedTeams[idx] ? 0 : 1,
-          }}
-        >
-          Team
-        </InputLabel>
-        <Select
-          labelId={`select-label-${idx}`}
-          value={selectedTeams[idx]}
-          label="Team"
-          onChange={(e) => handleChangeSelect(e.target.value, idx)}
-          sx={{
-            "& .MuiSelect-icon": {
+            backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+            "& .MuiInputLabel-root": {
               color: "white",
+              fontWeight: "bold",
+              fontSize: "18px",
             },
           }}
         >
-          {options.map((opt) => (
-            <MenuItem
-              key={opt.value}
-              value={opt.value}
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  color: "white",
-                  fontWeight: "bold",
-                  fontSize: "18px",
-                }}
+          <InputLabel
+            id={`select-label-${idx}`}
+            shrink={selectedTeams[idx] !== ""}
+            sx={{
+              color: "white",
+              fontWeight: "bold",
+              fontSize: "18px",
+              transition: "opacity 0.2s",
+              opacity: selectedTeams[idx] ? 0 : 1,
+            }}
+          >
+            Team
+          </InputLabel>
+          <Select
+            labelId={`select-label-${idx}`}
+            value={selectedTeams[idx]}
+            label="Team"
+            onChange={(e) => handleChangeSelect(e.target.value, idx)}
+            sx={{
+              "& .MuiSelect-icon": {
+                color: "white",
+              },
+            }}
+          >
+            {availableOptions?.map((opt) => (
+              <MenuItem
+                key={opt.id}
+                value={opt.name}
               >
-                <ListItemIcon style={{ color: "white" }}>
-                  {opt.icon}
-                </ListItemIcon>
-                <ListItemText style={{ textAlign: "left", fontWeight: "bold" }}>
-                  {opt.label}
-                </ListItemText>
-              </div>
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-    ));
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "18px",
+                  }}
+                >
+                  <ListItemIcon style={{ color: "white" }}>
+                    <img
+                      src={opt.crest_url}
+                      alt={opt.name}
+                      style={{
+                        width: 28,
+                        height: 28,
+                        objectFit: "contain",
+                        marginRight: 8,
+                      }}
+                    />
+                  </ListItemIcon>
+                  <ListItemText
+                    style={{ textAlign: "left", fontWeight: "bold" }}
+                  >
+                    {opt.name}
+                  </ListItemText>
+                </div>
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      );
+    });
   };
 
   // if (isLoading) return <Loader />;
@@ -730,7 +763,7 @@ const MyPortfolioEPL = () => {
               </div>
             </Grid>
             <Grid
-              item
+              // item
               xs={12}
               mt={3}
               mb={2}

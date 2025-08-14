@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import { api, newApi } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { CreatePortfolio, PortfolioComplete, Portfolios, User } from "../types";
 
@@ -24,17 +24,18 @@ export const getPortfolios = async (id: User["id"]) => {
   }
 };
 
-export const getTeams = async () => {
+export const getTeams = async (sport: User["id"]) => {
   try {
-    const url = `/teams?api-key=TESTAPIKEY&show-all=false`;
-    const { data } = await api(url, {
+    const url = `/sports/${sport}/teams`;
+    const { data } = await newApi.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+    console.log(data);
 
-    if (data.success) {
-      return data.data.teams;
+    if (data.teams) {
+      return data.teams;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)

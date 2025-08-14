@@ -1,4 +1,4 @@
-import api from "@/lib/axios";
+import { api, newApi } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User, UserForgot, UserLogin } from "types";
 
@@ -7,7 +7,8 @@ export const getSignUp = async (user: User) => {
   user.surname = user.surname.toUpperCase();
   try {
     const url = "/participants/register?api-key=TESTAPIKEY";
-    const { data } = await api.post(url, user, {
+    // const url = "/participants/login";
+    const { data } = await newApi.post(url, user, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -35,8 +36,8 @@ export const getLogin = async (user: UserLogin) => {
   console.log(formData);
 
   try {
-    const url = "/participants/login?api-key=TESTAPIKEY";
-    const { data } = await api.post(url, formData, {
+    const url = "/participants/login";
+    const { data } = await newApi.post(url, formData, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -75,8 +76,8 @@ export const postForgot = async (user: UserForgot) => {
     user: user.email,
   };
   try {
-    const url = "/participants/forgot?api-key=TESTAPIKEY";
-    const { data } = await api.post(url, formData);
+    const url = "/participants/forgot";
+    const { data } = await newApi.post(url, formData);
     if (data.success) {
       return data.data.states;
     }

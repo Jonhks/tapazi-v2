@@ -110,6 +110,7 @@ export default function MenuEPL() {
   const [open, setOpen] = useState(false);
   const params = useParams();
   const userId = params.userId!;
+  const sportId = params.sportId || "1"; // Default to 1 if sportId is not provided
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -232,10 +233,16 @@ export default function MenuEPL() {
           )}
           <List>
             {[
-              { text: "Home", id: `epl/home/${userId}` },
-              { text: "My Portfolio", id: `epl/myPortfolio/${userId}` },
-              { text: "Instructions", id: `epl/instructions/${userId}` },
-              { text: "Stats", id: `epl/stats/${userId}` },
+              { text: "Home", id: `epl/home/${userId}/${sportId}` },
+              {
+                text: "My Portfolio",
+                id: `epl/myPortfolio/${userId}/${sportId}`,
+              },
+              {
+                text: "Instructions",
+                id: `epl/instructions/${userId}/${sportId}`,
+              },
+              { text: "Stats", id: `epl/stats/${userId}/${sportId}` },
               { text: "LogOut", id: "logOut" },
             ].map((el, index) => (
               <Grid key={index}>

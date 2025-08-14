@@ -5,6 +5,11 @@ const api = axios.create({
   baseURL: "https://ercom-b.dev:8443/com.tapaszi.ws/rest",
 });
 
+const newApi = axios.create({
+  // baseURL: import.meta.env.VITE_NEWAPI_URL,
+  baseURL: "http://78.13.6.44:7003",
+});
+
 // api.interceptors.request.use((config) => {
 //   const token = localStorage.getItem("AuthTokenUpTask");
 //   if (token) {
@@ -13,4 +18,4 @@ const api = axios.create({
 //   return config;
 // });
 
-export default api;
+export { api, newApi };

@@ -66,7 +66,7 @@ export default function Sports() {
                 }}
                 className={classes.imgCard}
                 onClick={() => {
-                  navigate(`/wip/${params.userId}/nacca-female`);
+                  navigate(`/wip/${params.userId}/3`);
                 }}
               >
                 <p style={{ paddingLeft: 15 }}>NCAA FEMALE</p>
@@ -104,7 +104,7 @@ export default function Sports() {
                     localStorage.getItem("userTapaszi") || "{}"
                   );
                   const encodedData = btoa(JSON.stringify(userData));
-                  navigate(`/epl/home/${params.userId}?data=${encodedData}`);
+                  navigate(`/epl/home/${params.userId}/2?data=${encodedData}`);
                 }}
               >
                 <p>EPL</p>
@@ -119,7 +119,7 @@ export default function Sports() {
                 }}
                 className={classes.imgCard}
                 onClick={() => {
-                  navigate(`/wip/${params.userId}/worldcup`);
+                  navigate(`/wip/${params.userId}/4`);
                 }}
               >
                 <p

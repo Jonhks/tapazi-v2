@@ -3,23 +3,29 @@ import classes from "./AuthLayout.module.css";
 import MenuEPL from "../components/MenuEPL/MenuEPL";
 import MenuMobileEPL from "../components/MenuEPL/MenuMobileEPL";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { getScores } from "@/api/HomeAPI";
-import { useQuery } from "@tanstack/react-query";
+// import { getScores } from "@/api/HomeAPI";
+// import { useQuery } from "@tanstack/react-query";
 
 const AppLayoutEPL = () => {
   const params = useParams();
-  const userId = params.userId!;
+  // const userId = params.userId!;
   const isMobile = useMediaQuery("(max-width:800px)");
-  const { isLoading } = useQuery({
-    queryKey: ["scores", userId],
-    queryFn: () => getScores(userId),
-  });
+  // const { isLoading } = useQuery({
+  //   queryKey: ["scores", userId],
+  //   queryFn: () => getScores(userId),
+  // });
 
   return (
     <div className={classes.containerApp}>
-      {!isMobile && !isLoading && <MenuEPL />}
+      {!isMobile && (
+        // !isLoading &&
+        <MenuEPL />
+      )}
       <Outlet />
-      {isMobile && !isLoading && <MenuMobileEPL />}
+      {isMobile && (
+        //  !isLoading &&
+        <MenuMobileEPL />
+      )}
     </div>
   );
 };

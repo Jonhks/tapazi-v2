@@ -29,6 +29,7 @@ function MenuMobileEpl() {
   const params = useParams();
   const userId = params.userId!;
   const navigate = useNavigate();
+  const sportId = params.sportId || "1"; // Default to 1 if sportId is not provided
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
@@ -36,10 +37,16 @@ function MenuMobileEpl() {
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const pages = [
-    { text: "Home", id: `epl/home/${userId}` },
-    { text: "My Portfolio", id: `epl/myPortfolio/${userId}` },
-    { text: "Instructions", id: `epl/instructions/${userId}` },
-    { text: "Stats", id: `epl/stats/${userId}` },
+    { text: "Home", id: `epl/home/${userId}/sportId=${sportId}` },
+    {
+      text: "My Portfolio",
+      id: `epl/myPortfolio/${userId}/sportId=${sportId}`,
+    },
+    {
+      text: "Instructions",
+      id: `epl/instructions/${userId}/sportId=${sportId}`,
+    },
+    { text: "Stats", id: `epl/stats/${userId}/sportId=${sportId}` },
     { text: "LogOut", id: "logOut" },
     { text: "More", id: "epl/more" },
   ];

@@ -176,7 +176,7 @@ const Router = () => {
         {/* EPL Routes */}
         <Route element={<AppLayoutEPL />}>
           <Route
-            path="/epl/home/:userId"
+            path="/epl/home/:userId/:sportId"
             element={
               <PrivateRoute>
                 <HomeEPL />
@@ -186,7 +186,7 @@ const Router = () => {
         </Route>
         <Route element={<AppLayoutEPL />}>
           <Route
-            path="/epl/myPortfolio/:userId"
+            path="/epl/myPortfolio/:userId/:sportId"
             element={
               <PrivateRoute>
                 <MyPortfolioEPL />
@@ -194,7 +194,7 @@ const Router = () => {
             }
           />
           <Route
-            path="/epl/instructions/:userId"
+            path="/epl/instructions/:userId/:sportId"
             element={
               <PrivateRoute>
                 <InstructionsEPL />
@@ -204,7 +204,7 @@ const Router = () => {
         </Route>
         <Route element={<StatsLayoutEpl />}>
           <Route
-            path="/epl/stats/:userId"
+            path="/epl/stats/:userId/:sportId"
             element={
               <PrivateRoute>
                 <StatsEpl />
