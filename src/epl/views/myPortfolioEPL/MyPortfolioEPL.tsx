@@ -321,7 +321,7 @@ const MyPortfolioEPL = () => {
 
       setTimeout(() => {
         setValidTournament(false);
-      }, 2000);
+      }, 2500);
       return;
     }
     const newPortfolio = {
