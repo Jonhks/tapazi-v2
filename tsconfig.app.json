@@ -7,9 +7,17 @@
     "skipLibCheck": true,
     "baseUrl": "src",
     "paths": {
+      // Portfolio paths
       "@/components/*": ["components/*"],
       "@/views/*": ["views/*"],
       "@/layouts/*": ["layouts/*"],
+
+      // EPL paths
+      "@/epl/components/*": ["epl/components/*"],
+      "@/epl/views/*": ["epl/views/*"],
+      "@/epl/layouts/*": ["epl/layouts/*"],
+
+      // Global paths
       "@/assets/*": ["assets/*"],
       "@/api/*": ["api/*"],
       "@/lib/*": ["lib/*"],

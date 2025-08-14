@@ -9,26 +9,17 @@ export default defineConfig({
     react(),
     VitePWA({
       manifest: {
-        name: "Portfolio Pool",
-        short_name: "Portfolio Pool",
-        description: "New App for Portfolios",
+        name: "Sports Pool App",
+        short_name: "Sports Pool",
+        description: "Portfolio Pool + EPL Combined App",
+        start_url: "/",
+        scope: "/",
+        id: "sports-pool-combined",
+        lang: "en",
         theme_color: "#000000",
         background_color: "#000000",
         display: "standalone",
         icons: [
-          // {
-          //   src: "balones-negros.webp",
-          //   sizes: "192x192",
-          //   type: "image/webp",
-          //   purpose: "maskable",
-          // },
-          // {
-          //   src: "balones-negros.webp",
-          //   sizes: "512x512",
-          //   type: "image/webp",
-          //   purpose: "maskable",
-          // },
-          // Ícono estándar para iOS y navegadores
           {
             src: "balones-negros.webp",
             sizes: "192x192",
@@ -80,6 +71,7 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
+      "@/epl": fileURLToPath(new URL("./src/epl", import.meta.url)),
     },
   },
   build: {
