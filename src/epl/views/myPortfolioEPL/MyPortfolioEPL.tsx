@@ -38,7 +38,7 @@ import {
   // getPortfolios,
   getTeams,
   // getWinnerOfTeam,
-  // postNewPortfolio,
+  postNewPortfolio,
   // removeportfolio,
 } from "@/api/PortfoliosAPI";
 import { Portfolios } from "@/types/index";
@@ -125,16 +125,16 @@ const MyPortfolioEPL = () => {
 
   // console.log(teamsEPL);
 
-  // const { mutate } = useMutation({
-  //   mutationFn: postNewPortfolio,
-  //   onSuccess: (resp) => {
-  //     toast.success(resp);
-  //     queryClient.invalidateQueries(["portfolios", userId]);
-  //   },
-  //   onError: (error) => {
-  //     toast.error(error.message);
-  //   },
-  // });
+  const { mutate: postNewPortfolioMutate } = useMutation({
+    mutationFn: postNewPortfolio,
+    onSuccess: (resp) => {
+      toast.success(resp);
+      queryClient.invalidateQueries(["portfolios", userId]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   // const { mutate: removeportfolioMutate } = useMutation({
   //   mutationFn: removeportfolio,
@@ -186,29 +186,29 @@ const MyPortfolioEPL = () => {
   //   setValue(newValue);
   // }, []);
 
-  const handleChangeInput = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const newValue = event.target.value;
-    const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
-    if (!regex.test(newValue)) {
-      setChampionshipPoints("");
-      return;
-    }
-    setChampionshipPoints(event.target.value);
-    const newData = portfolios.map((el) => {
-      if (el?.newPortfolio) {
-        return {
-          ...el,
-          championshipPoints: +e?.target?.value,
-        };
-      } else {
-        return el;
-      }
-    });
-    setPortfolios(newData);
-    setFocused(true);
-  };
+  // const handleChangeInput = (
+  //   e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  // ) => {
+  //   const newValue = event.target.value;
+  //   const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
+  //   if (!regex.test(newValue)) {
+  //     setChampionshipPoints("");
+  //     return;
+  //   }
+  //   setChampionshipPoints(event.target.value);
+  //   const newData = portfolios.map((el) => {
+  //     if (el?.newPortfolio) {
+  //       return {
+  //         ...el,
+  //         championshipPoints: +e?.target?.value,
+  //       };
+  //     } else {
+  //       return el;
+  //     }
+  //   });
+  //   setPortfolios(newData);
+  //   setFocused(true);
+  // };
 
   // const checkCombination = (arr, arrIds) => {
   //   for (let i = 0; i < arrIds.length; i++) {
@@ -325,8 +325,8 @@ const MyPortfolioEPL = () => {
       return;
     }
     const newPortfolio = {
-      tournament_id: 2,
-      participantid: userId,
+      tournament_id: "2",
+      participant_id: userId,
       championshipPoints: 0,
       teams: selectedTeams.map((team) => {
         if (team === "") return false;
@@ -343,9 +343,12 @@ const MyPortfolioEPL = () => {
     // } else {
     //   console.log("Some teams are not filled");
     // }
-
-    console.log([newPortfolio]);
-  }, [selectedTeams, teamsEPL, userId, championshipPoints]);
+    postNewPortfolioMutate({
+      port: newPortfolio,
+      userId: userId,
+    });
+    // console.log([newPortfolio]);
+  }, [selectedTeams, teamsEPL, userId, postNewPortfolioMutate]);
 
   // console.log(portfolios);
 
@@ -589,7 +592,7 @@ const MyPortfolioEPL = () => {
   // console.log(selectedTeams);
 
   const renderTeams = () => {
-    return [0, 1, 2, 3, 4].map((idx) => {
+    return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => {
       // Opciones disponibles para este select (excluye las ya seleccionadas en otros selects)
       const availableOptions = teamsEPL?.filter(
         (opt) =>

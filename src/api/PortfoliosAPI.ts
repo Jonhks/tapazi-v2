@@ -25,8 +25,6 @@ export const getPortfolios = async (id: User["id"]) => {
 };
 
 export const getTeams = async (sport: User["id"]) => {
-  console.log("qwekqwnejqwejqnejwql", sport);
-
   try {
     const url = `/sports/${sport}/teams`;
     const { data } = await newApi.get(url, {
@@ -34,7 +32,7 @@ export const getTeams = async (sport: User["id"]) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data);
+    // console.log(data);
 
     if (data.teams) {
       return data.teams;
@@ -48,35 +46,33 @@ export const getTeams = async (sport: User["id"]) => {
 
 export const postNewPortfolio = async ({
   port,
-  portfolios,
-  userId,
-}: {
+}: // portfolios,
+// userId,
+{
   port: CreatePortfolio;
-  portfolios: Portfolios;
-  userId: User["id"];
+  // portfolios: Portfolios;
+  // userId: User["id"];
 }) => {
-  if (portfolios?.length > 8) return;
-  const urlLogin = `/portfolios/register?api-key=TESTAPIKEY&participant-id=${userId}`;
-  const postPortfolio = {
-    championshipPoints: Number(port?.championshipPoints),
-    teams: port?.teamsId,
-  };
+  // if (portfolios?.length > 8) return;
+  // console.log(port, userId);
+
+  const urlLogin = `/portfolios`;
   try {
-    const { data } = await api.post(urlLogin, postPortfolio, {
+    const { data } = await newApi.post(urlLogin, port, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-
+    console.log(data);
     if (
-      !data.success &&
+      !data.message &&
       data?.error?.description ===
         "Can't register portfolio, tournament already started."
     ) {
       return "Can't register portfolio, tournament already started.";
     }
 
-    if (data.success) {
+    if (data.message === "success") {
       return "Successfully created portfolio";
     }
   } catch (error) {
