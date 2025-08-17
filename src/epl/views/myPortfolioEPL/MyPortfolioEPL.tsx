@@ -31,7 +31,7 @@ import Divider from "@mui/material/Divider";
 
 // import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 // import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
-
+import { getPortfolios } from "@/api/epl/PortfoliosEplAPI";
 import {
   // getDATTOU,
   // getHOUTOU,
@@ -73,10 +73,31 @@ const MyPortfolioEPL = () => {
     }
   }, [portfolios, value]);
 
-  // const { data: portfoliosObtained, isLoading } = useQuery({
-  //   queryKey: ["portfolios", userId],
-  //   queryFn: () => getPortfolios(userId),
-  // });
+  const { data: portfoliosObtained, isLoadingPortfoliosObtained } = useQuery({
+    queryKey: ["portfoliosEpl", userId],
+    queryFn: () => getPortfolios(userId),
+  });
+
+  useEffect(() => {
+    if (portfoliosObtained && portfoliosObtained.length > 0) {
+      // Rellena los inputs con los datos del primer portfolio
+      setSelectedTeams(
+        portfoliosObtained[0].teams.map((team) =>
+          typeof team === "object" && team !== null ? team.name ?? "" : ""
+        )
+      );
+      setChampionshipPoints(
+        portfoliosObtained[0].championshipPoints?.toString() ?? ""
+      );
+      setPortfolios(portfoliosObtained);
+    } else {
+      // Si no hay datos, limpia los inputs para permitir ingreso manual
+      setSelectedTeams(Array(8).fill(""));
+      setChampionshipPoints("");
+      setPortfolios([]);
+    }
+  }, [portfoliosObtained]);
+  console.log(portfoliosObtained);
 
   // const { data: dataDATTOU } = useQuery({
   //   queryKey: ["dattou", userId],
@@ -677,7 +698,7 @@ const MyPortfolioEPL = () => {
     });
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isLoadingPortfoliosObtained) return <Loader />;
 
   // if ((portfolios, portfoliosObtained))
   return (
