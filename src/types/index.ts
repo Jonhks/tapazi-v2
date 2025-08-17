@@ -1,3 +1,4 @@
+import { count } from "console";
 import { z } from "zod";
 
 export const userSchema = z.object({
@@ -7,7 +8,8 @@ export const userSchema = z.object({
   email: z.string().email(),
   username: z.string(),
   password: z.string(),
-  stateId: z.string(),
+  state_id: z.string(),
+  country_id: z.string(),
   code: z.string(),
 });
 
