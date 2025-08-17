@@ -20,22 +20,35 @@ import FlagIcon from "@mui/icons-material/Flag";
 import PersonIcon from "@mui/icons-material/Person";
 import SecurityIcon from "@mui/icons-material/Security";
 import classes from "./Login.module.css";
-import { State, User } from "types";
+import { State } from "types";
+
+// Define Country type if not imported
+type Country = {
+  id: string | number;
+  name: string;
+};
+
+type User = {
+  id: string;
+  name: string;
+  surname: string;
+  email: string;
+  username: string;
+  password: string;
+  state_id: string;
+  country_id: string;
+  code: string;
+};
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { getSignUp, getStates } from "@/api/AuthAPI";
+import { getSignUp, getStates, getCountries } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
 import Loader from "../../components/BallLoader/BallLoader";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [select, setSelect] = useState("");
-
-  const { data: states, isLoading } = useQuery({
-    queryKey: ["states"],
-    queryFn: getStates,
-    retry: false,
-  });
+  // const [countrySelect, setCountrySelect] = useState("");
+  // const [stateSelect, setStateSelect] = useState("");
 
   const initialValues: User = {
     id: "",
@@ -44,7 +57,8 @@ const Login = () => {
     email: "",
     username: "",
     password: "",
-    stateId: "",
+    state_id: "",
+    country_id: "",
     code: "",
   };
 
@@ -52,7 +66,20 @@ const Login = () => {
     register,
     handleSubmit,
     formState: { errors },
+    watch,
   } = useForm<User>({ defaultValues: initialValues });
+
+  const { data: states, isLoading } = useQuery({
+    queryKey: ["states", watch("country_id")],
+    queryFn: () => getStates(watch("country_id")),
+    enabled: !!watch("country_id"),
+    retry: false,
+  });
+  const { data: countries, isLoading: isLoadingCountries } = useQuery({
+    queryKey: ["countries"],
+    queryFn: getCountries,
+    retry: false,
+  });
 
   const { mutate } = useMutation({
     mutationFn: getSignUp,
@@ -74,7 +101,7 @@ const Login = () => {
     mutate(formData);
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading && isLoadingCountries) return <Loader />;
 
   return (
     <Slide
@@ -210,6 +237,57 @@ const Login = () => {
                           opacity: "1",
                         }}
                       />{" "}
+                      country
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard-country"
+                      color={"warning"}
+                      label="country"
+                      style={{ marginTop: "14px" }}
+                      className={classes.selectClass}
+                      defaultValue={""}
+                      {...register("country_id", {
+                        required: "The country_id is required",
+                      })}
+                    >
+                      {countries &&
+                        countries?.map((country: Country) => {
+                          return (
+                            <MenuItem
+                              key={country?.id.toString()}
+                              value={country?.id}
+                              style={{ fontSize: ".7rem" }}
+                            >
+                              {country?.name}
+                            </MenuItem>
+                          );
+                        })}
+                    </Select>
+                  </FormControl>
+                  <FormControl
+                    variant="standard"
+                    sx={{
+                      m: 1,
+                      minWidth: "78%",
+                      border: "1px solid white",
+                      padding: "0px",
+                      borderRadius: "4px",
+                      paddingLeft: "5px",
+                    }}
+                  >
+                    <InputLabel
+                      className={classes.selectClass}
+                      style={{ top: "-7px", opacity: "0.6" }}
+                    >
+                      <FlagIcon
+                        color="inherit"
+                        style={{
+                          paddingRight: "7px",
+                          paddingLeft: "2px",
+                          opacity: "1",
+                        }}
+                      />{" "}
                       state
                     </InputLabel>
                     <Select
@@ -219,11 +297,11 @@ const Login = () => {
                       label="State"
                       style={{ marginTop: "14px" }}
                       className={classes.selectClass}
-                      value={select}
-                      {...register("stateId", {
-                        required: "The stateId is required",
+                      defaultValue={""}
+                      {...register("state_id", {
+                        required: "The state_id is required",
                       })}
-                      onChange={(e) => setSelect(e.target.value)}
+                      // onChange={(e) => setStateSelect(e.target.value)}
                     >
                       {states &&
                         states?.map((state: State) => {

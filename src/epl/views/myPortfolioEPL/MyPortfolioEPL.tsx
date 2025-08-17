@@ -9,8 +9,8 @@ import {
   // Tabs,
   // Tab,
   // Button,
-  Input,
-  InputAdornment,
+  // Input,
+  // InputAdornment,
   FormControl,
   InputLabel,
   Select,
@@ -23,14 +23,14 @@ import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioEPL.module.css";
 // import { BallIcon } from "@/assets/icons/icons";
 // import Dropdown from "@/components/Inputs/Dropdown";
-// import Loader from "@/epl/components/EPLBallLoader/EPLBallLoader";
+import Loader from "@/epl/components/EPLBallLoader/EPLBallLoader";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Divider from "@mui/material/Divider";
 
-import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
-import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
+// import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
+// import SportsBasketballIcon from "@mui/icons-material/SportsBasketball";
 
 import {
   // getDATTOU,
@@ -44,13 +44,13 @@ import {
 import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
 // import Swal from "sweetalert2";
-import { isDateTimeReached } from "@/utils/getDaysLeft";
+// import { isDateTimeReached } from "@/utils/getDaysLeft";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
 
 const MyPortfolioEPL = () => {
   const params = useParams();
   const userId = params.userId!;
-  const sportId = params.sportId!;
+  // const sportId = params.sportId!;
   const queryClient = useQueryClient();
 
   const [value, setValue] = React.useState(0);
@@ -58,14 +58,14 @@ const MyPortfolioEPL = () => {
   // const [error, setError] = useState(false);
   // const [editing, setEditing] = useState(false);
   // const [duplicates, setDuplicates] = useState(false);
-  const [focused, setFocused] = useState(false);
+  // const [focused, setFocused] = useState(false);
   const [championshipPoints, setChampionshipPoints] = useState("");
   const [validTournament, setValidTournament] = useState(false);
-  const [comparing, setComparing] = useState([]);
-  const [winnerSelected, setWinnerSelected] = useState(false);
+  // const [comparing, setComparing] = useState([]);
+  // const [winnerSelected, setWinnerSelected] = useState(false);
 
   const [selectedTeams, setSelectedTeams] = useState(Array(8).fill(""));
-  const [teamSelected, setTeamSelected] = useState([]);
+  // const [teamSelected, setTeamSelected] = useState([]);
 
   useEffect(() => {
     if (portfolios) {
@@ -116,7 +116,7 @@ const MyPortfolioEPL = () => {
   //   }
   // }, [dataDATTOU, dataHOUTOU, portfolios]);
 
-  const { data: teamsEPL } = useQuery({
+  const { data: teamsEPL, isLoading } = useQuery({
     queryKey: ["teamsEpl", userId],
     queryFn: () => getTeams(2),
     cacheTime: 30 * 60 * 1000, // 30 minutes
@@ -394,72 +394,72 @@ const MyPortfolioEPL = () => {
   //   // eslint-disable-next-line react-hooks/exhaustive-deps
   // }, [portfolios]);
 
-  const removeportfolioFunction = useCallback(
-    (portId: number) => {
-      toast.error("Portfolio deleted successfully!");
+  // const removeportfolioFunction = useCallback(
+  //   (portId: number) => {
+  //     toast.error("Portfolio deleted successfully!");
 
-      //   const index = portfolios.findIndex(
-      //     (portfolio) => portfolio.id === portId
-      //   );
-      //   setValue(index);
-      //   const swalWithBootstrapButtons = Swal.mixin({});
-      //   swalWithBootstrapButtons
-      //     .fire({
-      //       title: `Are you sure to delete the portfolio ${portId}`,
-      //       text: "You won't be able to revert this!",
-      //       icon: "warning",
-      //       showCancelButton: true,
-      //       confirmButtonColor: "#238b94",
-      //       confirmButtonText: "Yes, delete it!",
-      //       cancelButtonText: "No, cancel!",
-      //       reverseButtons: true,
-      //     })
-      //     .then(async (result) => {
-      //       if (result.isConfirmed) {
-      //         setPortfolios(portfolios?.filter((el) => el?.id !== portId));
-      //         const sendData = {
-      //           portId,
-      //           portfolios,
-      //           userId,
-      //         };
-      //         await removeportfolioMutate(sendData);
-      //         try {
-      //           swalWithBootstrapButtons.fire({
-      //             title: "Deleted!",
-      //             text: "Your file has been deleted.",
-      //             icon: "success",
-      //           });
-      //           if (index > 0) {
-      //             setValue(index - 1);
-      //           } else {
-      //             setValue(index);
-      //           }
-      //         } catch {
-      //           swalWithBootstrapButtons.fire({
-      //             title: "Error!",
-      //             text: "an error has occurred.",
-      //             icon: "error",
-      //           });
-      //         }
-      //       } else if (
-      //         /* Read more about handling dismissals below */
-      //         result.dismiss === Swal.DismissReason.cancel
-      //       ) {
-      //         swalWithBootstrapButtons.fire({
-      //           title: "Cancelled",
-      //           text: "Don't worry, you can still continue editing your portfolio :)",
-      //           icon: "error",
-      //         });
-      //         setValue(index);
-      //       }
-      //     });
-    },
-    [
-      portfolios,
-      // removeportfolioMutate,
-      userId,
-    ]
-  );
+  //     //   const index = portfolios.findIndex(
+  //     //     (portfolio) => portfolio.id === portId
+  //     //   );
+  //     //   setValue(index);
+  //     //   const swalWithBootstrapButtons = Swal.mixin({});
+  //     //   swalWithBootstrapButtons
+  //     //     .fire({
+  //     //       title: `Are you sure to delete the portfolio ${portId}`,
+  //     //       text: "You won't be able to revert this!",
+  //     //       icon: "warning",
+  //     //       showCancelButton: true,
+  //     //       confirmButtonColor: "#238b94",
+  //     //       confirmButtonText: "Yes, delete it!",
+  //     //       cancelButtonText: "No, cancel!",
+  //     //       reverseButtons: true,
+  //     //     })
+  //     //     .then(async (result) => {
+  //     //       if (result.isConfirmed) {
+  //     //         setPortfolios(portfolios?.filter((el) => el?.id !== portId));
+  //     //         const sendData = {
+  //     //           portId,
+  //     //           portfolios,
+  //     //           userId,
+  //     //         };
+  //     //         await removeportfolioMutate(sendData);
+  //     //         try {
+  //     //           swalWithBootstrapButtons.fire({
+  //     //             title: "Deleted!",
+  //     //             text: "Your file has been deleted.",
+  //     //             icon: "success",
+  //     //           });
+  //     //           if (index > 0) {
+  //     //             setValue(index - 1);
+  //     //           } else {
+  //     //             setValue(index);
+  //     //           }
+  //     //         } catch {
+  //     //           swalWithBootstrapButtons.fire({
+  //     //             title: "Error!",
+  //     //             text: "an error has occurred.",
+  //     //             icon: "error",
+  //     //           });
+  //     //         }
+  //     //       } else if (
+  //     //         /* Read more about handling dismissals below */
+  //     //         result.dismiss === Swal.DismissReason.cancel
+  //     //       ) {
+  //     //         swalWithBootstrapButtons.fire({
+  //     //           title: "Cancelled",
+  //     //           text: "Don't worry, you can still continue editing your portfolio :)",
+  //     //           icon: "error",
+  //     //         });
+  //     //         setValue(index);
+  //     //       }
+  //     //     });
+  //   },
+  //   [
+  //     portfolios,
+  //     // removeportfolioMutate,
+  //     userId,
+  //   ]
+  // );
 
   // const cancelPortfolio = useCallback(() => {
   //   const swalWithBootstrapButtons = Swal.mixin({});
@@ -677,7 +677,7 @@ const MyPortfolioEPL = () => {
     });
   };
 
-  // if (isLoading) return <Loader />;
+  if (isLoading) return <Loader />;
 
   // if ((portfolios, portfoliosObtained))
   return (
