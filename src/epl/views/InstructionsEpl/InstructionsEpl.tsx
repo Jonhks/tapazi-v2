@@ -1,60 +1,22 @@
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./InstructionsEpl.module.css";
-// import { useQuery } from "@tanstack/react-query";
-// import { getInstructions } from "@/api/HomeAPI";
-// import { useParams } from "react-router-dom";
-// import Loader from "@/components/BallLoader/BallLoader";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import type { Instructions } from "@/types/index";
+import { getInstructionsEpl } from "@/api/epl/InstructionsEplApi";
 
 const InstructionsEpl = () => {
-  // const params = useParams();
-  // const userId = params.userId!;
+  const params = useParams();
+  const userId = params.userId!;
 
-  // const { data: instructionsData, isLoading } = useQuery({
-  //   queryKey: ["instructions", userId],
-  //   queryFn: () => getInstructions(),
-  // });
+  const { data: instructionsData, isLoading } = useQuery({
+    queryKey: ["instructions", userId],
+    queryFn: () => getInstructionsEpl("3"),
+  });
 
-  // if (isLoading) return <Loader />;
-
-  const instructionsData = [
-    {
-      name: "Instruction 1",
-      description: "Lorem ipsum dolor sit amet consectetur",
-      highlighted: true,
-    },
-    {
-      name: "Instruction 2",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-      highlighted: false,
-    },
-    {
-      name: "Instruction 3",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-      highlighted: true,
-    },
-    {
-      name: "Instruction 4",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-      highlighted: false,
-    },
-    {
-      name: "Instruction 5",
-      description:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
-      highlighted: true,
-    },
-  ];
-
-  const renderDescription = (description: string) => {
-    return description
-      .split("\n")
-      .map((line, index) => <p key={index}>{line}</p>);
-  };
+  if (isLoading) return <Loader />;
 
   if (instructionsData)
     return (
@@ -76,7 +38,7 @@ const InstructionsEpl = () => {
             className={classes.boxInstructions}
           >
             <p className={classes.titleInstructions}>
-              {instructionsData[0].description}
+              {instructionsData[0].description || "Sin información disponible"}
             </p>
             <Grid
               size={12}
@@ -91,7 +53,11 @@ const InstructionsEpl = () => {
                       : classes.paragraph
                   }
                 >
-                  {i !== 0 && renderDescription(paragrpah.description)}
+                  {i !== 0 && (
+                    <p>
+                      {paragrpah.description || "Sin información disponible"}
+                    </p>
+                  )}
                 </div>
               ))}
             </Grid>

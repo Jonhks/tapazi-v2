@@ -126,8 +126,10 @@ export default function MenuEPL() {
       text: "You want to log out",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#238b94",
+      confirmButtonColor: "#3ED076",
       cancelButtonColor: "#c7630b",
+      color: "white",
+      background: "#200930", // Cambia el color de fondo
       confirmButtonText: "Yes, I want to log out!!",
     }).then((result) => {
       if (result.isConfirmed) {

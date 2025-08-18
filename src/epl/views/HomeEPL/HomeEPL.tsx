@@ -6,15 +6,16 @@ import Table from "../../components/Table/Table";
 import BallLoader from "../../components/EPLBallLoader/EPLBallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import {
-  gatPayout,
-  getHOINFO,
-  getParticipants,
-  getPopona,
-  getPortfoliosCount,
-  getScores,
-} from "@/api/HomeAPI";
+// import {
+//   gatPayout,
+//   getHOINFO,
+//   getParticipants,
+//   getPopona,
+//   getPortfoliosCount,
+//   getScores,
+// } from "@/api/HomeAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { getParticipantsEpl, getPayoutEpl } from "@/api/epl/HomeEplApi";
 import { PayOut } from "@/types/index";
 
 const HomeEPL = () => {
@@ -24,53 +25,54 @@ const HomeEPL = () => {
   const userId = params.userId!;
 
   const [selected, setSelected] = useState("first");
-  const { data, isLoading } = useQuery({
-    queryKey: ["scores", userId],
-    queryFn: () => getScores(userId),
+
+  // const { data, isLoading } = useQuery({
+  //   queryKey: ["scores", userId],
+  //   queryFn: () => getScores(userId),
+  // });
+
+  // const { data: DataPopona } = useQuery({
+  //   queryKey: ["popona", userId],
+  //   queryFn: () => getPopona(),
+  // });
+
+  // const { data: dataHOINFO } = useQuery({
+  //   queryKey: ["HOINFO", userId],
+  //   queryFn: () => getHOINFO(),
+  // });
+
+  const { data: participantsEpl } = useQuery({
+    queryKey: ["participantsEpl", userId],
+    queryFn: () => getParticipantsEpl("2"),
   });
 
-  const { data: DataPopona } = useQuery({
-    queryKey: ["popona", userId],
-    queryFn: () => getPopona(),
-  });
-
-  const { data: dataHOINFO } = useQuery({
-    queryKey: ["HOINFO", userId],
-    queryFn: () => getHOINFO(),
-  });
-
-  const { data: participants } = useQuery({
-    queryKey: ["participants", userId],
-    queryFn: () => getParticipants(),
-  });
-
-  const { data: portfoliosHome } = useQuery({
-    queryKey: ["portfoliosHome", userId],
-    queryFn: () => getPortfoliosCount(),
-  });
+  // const { data: portfoliosHome } = useQuery({
+  //   queryKey: ["portfoliosHome", userId],
+  //   queryFn: () => getPortfoliosCount(),
+  // });
 
   const { data: payout } = useQuery({
-    queryKey: ["payout", userId],
-    queryFn: () => gatPayout(portfoliosHome.count),
+    queryKey: ["payoutEpl", userId],
+    queryFn: () => getPayoutEpl("2", 99),
     retry: true,
   });
 
-  const renderDescription = (dataHOINFO: string) => {
-    return dataHOINFO.split("\n").map((line, index) => (
-      <p
-        key={index}
-        style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
-      >
-        {line}
-      </p>
-    ));
-  };
+  // const renderDescription = (dataHOINFO: string) => {
+  //   return dataHOINFO.split("\n").map((line, index) => (
+  //     <p
+  //       key={index}
+  //       style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
+  //     >
+  //       {line}
+  //     </p>
+  //   ));
+  // };
+
+  // if (isLoading) return <BallLoader />;
 
   return (
     <>
-      {isLoading ? (
-        <BallLoader />
-      ) : (
+      {
         <>
           <Grid
             container
@@ -100,10 +102,11 @@ const HomeEPL = () => {
                 onClick={() => setSelected("first")}
               >
                 <p className={classes.titleBox}>
-                  {DataPopona?.value?.toUpperCase()} IS HERE!!!
+                  {/* {DataPopona?.value?.toUpperCase()} */}
+                  IS HERE!!!
                 </p>
                 <div className={classes.subBox}>
-                  {dataHOINFO && renderDescription(dataHOINFO.value)}
+                  {/* {dataHOINFO && renderDescription(dataHOINFO.value)} */}
                 </div>
               </Grid>
               <Grid
@@ -117,10 +120,16 @@ const HomeEPL = () => {
               >
                 <p className={classes.titleBox}>Payouts</p>
                 <div className={classes.subBoxTwo}>
-                  <p>Total Contestants: {participants?.count}</p>
-                  <p>Total Entries: {portfoliosHome?.count}</p>
+                  <p>
+                    Total Contestants:
+                    {participantsEpl}
+                  </p>
+                  <p>
+                    Total Entries:
+                    {/* {portfoliosHome?.count} */}
+                  </p>
                   <br />
-                  {payout?.payout?.map((pay: PayOut, i: number) => (
+                  {payout?.map((pay: PayOut, i: number) => (
                     <p key={i}>
                       Place {pay?.place}: <span>{pay?.percentage}%</span>
                     </p>
@@ -169,16 +178,16 @@ const HomeEPL = () => {
                   size={11}
                   offset={0.5}
                 >
-                  <Table
+                  {/* <Table
                     participantScore={data?.data?.participant}
                     othersParticipants={data?.data?.others}
-                  />
+                  /> */}
                 </Grid>
               </Zoom>
             </Grid>
           </Grid>
         </>
-      )}
+      }
     </>
   );
 };
