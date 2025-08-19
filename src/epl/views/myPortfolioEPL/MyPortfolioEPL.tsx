@@ -763,7 +763,7 @@ const MyPortfolioEPL = () => {
 
                 <h2 style={{ color: "#05fa87", fontSize: "40px" }}>
                   Portfolio{portfolios?.length > 1 && "s"}
-                  <p style={{ fontSize: "14px" }}>{portfolios[0].name}</p>
+                  <p style={{ fontSize: "14px" }}>{portfolios[0]?.name}</p>
                   {/* {portfolios?.length > 0 && portfolios?.length} */}
                 </h2>
               </div>
