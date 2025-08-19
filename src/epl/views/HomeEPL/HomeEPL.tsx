@@ -15,7 +15,12 @@ import { useParams } from "react-router-dom";
 //   getScores,
 // } from "@/api/HomeAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { getParticipantsEpl, getPayoutEpl } from "@/api/epl/HomeEplApi";
+import {
+  getParticipantsEpl,
+  getPayoutEpl,
+  getPoponaEpl,
+  getHOINFOEpl,
+} from "@/api/epl/HomeEplApi";
 import { PayOut } from "@/types/index";
 
 const HomeEPL = () => {
@@ -31,19 +36,19 @@ const HomeEPL = () => {
   //   queryFn: () => getScores(userId),
   // });
 
-  // const { data: DataPopona } = useQuery({
-  //   queryKey: ["popona", userId],
-  //   queryFn: () => getPopona(),
-  // });
+  const { data: DataPoponaEpl } = useQuery({
+    queryKey: ["poponaEpl", userId],
+    queryFn: () => getPoponaEpl(),
+  });
 
-  // const { data: dataHOINFO } = useQuery({
-  //   queryKey: ["HOINFO", userId],
-  //   queryFn: () => getHOINFO(),
-  // });
+  const { data: dataHOINFOEpl } = useQuery({
+    queryKey: ["HOINFOEpl", userId],
+    queryFn: () => getHOINFOEpl(),
+  });
 
   const { data: participantsEpl } = useQuery({
     queryKey: ["participantsEpl", userId],
-    queryFn: () => getParticipantsEpl("2"),
+    queryFn: () => getParticipantsEpl("3"),
   });
 
   // const { data: portfoliosHome } = useQuery({
@@ -53,9 +58,11 @@ const HomeEPL = () => {
 
   const { data: payout } = useQuery({
     queryKey: ["payoutEpl", userId],
-    queryFn: () => getPayoutEpl("2", 99),
+    queryFn: () => getPayoutEpl("3", 99),
     retry: true,
   });
+
+  // console.log(participantsEpl);
 
   // const renderDescription = (dataHOINFO: string) => {
   //   return dataHOINFO.split("\n").map((line, index) => (
@@ -102,11 +109,11 @@ const HomeEPL = () => {
                 onClick={() => setSelected("first")}
               >
                 <p className={classes.titleBox}>
-                  {/* {DataPopona?.value?.toUpperCase()} */}
+                  {DataPoponaEpl?.toUpperCase()}
                   IS HERE!!!
                 </p>
                 <div className={classes.subBox}>
-                  {/* {dataHOINFO && renderDescription(dataHOINFO.value)} */}
+                  {dataHOINFOEpl?.toUpperCase()}
                 </div>
               </Grid>
               <Grid

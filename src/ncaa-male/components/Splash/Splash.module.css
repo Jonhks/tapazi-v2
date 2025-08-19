@@ -23,7 +23,7 @@
 
 .ball {
   position: absolute;
-  bottom: 10px; /* Posición inicial */
+  bottom: 20px; /* Posición inicial */
   left: 40%;
   width: 100px;
   height: 100px;
@@ -89,7 +89,7 @@
     transform: translate(-50%, 0%);
   }
   100% {
-    transform: translate(-50%, -450%);
+    transform: translate(-50%, -550%);
   }
 }
 

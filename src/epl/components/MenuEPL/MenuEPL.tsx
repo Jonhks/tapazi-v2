@@ -139,6 +139,9 @@ export default function MenuEPL() {
           title: "Logged out!",
           text: "You have logged out.",
           icon: "success",
+          background: "#200930", // Cambia el color de fondo
+          confirmButtonColor: "#3ED076",
+          color: "white", // Cambia el color del texto
         });
       }
     });

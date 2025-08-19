@@ -53,3 +53,51 @@ export const getParticipantsEpl = async (tournamentId: User["id"]) => {
     return;
   }
 };
+
+export const getPoponaEpl = async () => {
+  try {
+    const url = `/tournaments/3/parameters?key=POPONA`;
+    const { data } = await newApi(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log("getPoponaEpl", data);
+
+    if (!data.value) {
+      return "Error popona";
+    }
+
+    if (data.value) {
+      return data.value;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getHOINFOEpl = async () => {
+  try {
+    const url = `/tournaments/3/parameters?key=HOINFO`;
+    const { data } = await newApi(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log("Hinfo", data);
+
+    if (!data.value) {
+      return "Error Hinfo";
+    }
+
+    if (data.value) {
+      return data.value;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

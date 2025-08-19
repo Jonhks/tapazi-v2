@@ -64,7 +64,7 @@ const MyPortfolioEPL = () => {
   // const [comparing, setComparing] = useState([]);
   // const [winnerSelected, setWinnerSelected] = useState(false);
 
-  const [selectedTeams, setSelectedTeams] = useState(Array(8).fill(""));
+  const [selectedTeams, setSelectedTeams] = useState(Array(5).fill(""));
   // const [teamSelected, setTeamSelected] = useState([]);
 
   useEffect(() => {
@@ -92,7 +92,7 @@ const MyPortfolioEPL = () => {
       setPortfolios(portfoliosObtained);
     } else {
       // Si no hay datos, limpia los inputs para permitir ingreso manual
-      setSelectedTeams(Array(8).fill(""));
+      setSelectedTeams(Array(5).fill(""));
       setChampionshipPoints("");
       setPortfolios([]);
     }
@@ -613,7 +613,7 @@ const MyPortfolioEPL = () => {
   // console.log(selectedTeams);
 
   const renderTeams = () => {
-    return [0, 1, 2, 3, 4, 5, 6, 7].map((idx) => {
+    return [0, 1, 2, 3, 4].map((idx) => {
       // Opciones disponibles para este select (excluye las ya seleccionadas en otros selects)
       const availableOptions = teamsEPL?.filter(
         (opt) =>

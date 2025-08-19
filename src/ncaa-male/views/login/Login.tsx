@@ -36,7 +36,7 @@ const Login = () => {
   const { mutate } = useMutation({
     mutationFn: getLogin,
     onSuccess: (data) => {
-      console.log(data);
+      // console.log(data);
       if (!data) {
         toast.error(data.error.description);
       } else {
