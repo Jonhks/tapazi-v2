@@ -46,6 +46,7 @@ import { toast } from "react-toastify";
 // import Swal from "sweetalert2";
 // import { isDateTimeReached } from "@/utils/getDaysLeft";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import { sign } from "crypto";
 
 const MyPortfolioEPL = () => {
   const params = useParams();
@@ -78,26 +79,76 @@ const MyPortfolioEPL = () => {
     queryFn: () => getPortfolios(userId),
   });
 
+  const { data: teamsEPL, isLoading } = useQuery({
+    queryKey: ["teamsEpl", userId],
+    queryFn: () => getTeams(2),
+    cacheTime: 30 * 60 * 1000, // 30 minutes
+    refetchOnWindowFocus: false,
+  });
+
+  // console.log(teamsEPL);
+
+  const { mutate: postNewPortfolioMutate } = useMutation({
+    mutationFn: postNewPortfolio,
+    onSuccess: (resp) => {
+      toast.success(resp);
+      queryClient.invalidateQueries(["portfolios", userId]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   useEffect(() => {
-    if (portfoliosObtained && portfoliosObtained.length > 0) {
-      // Rellena los inputs con los datos del primer portfolio
+    // console.log("portfoliosObtained:", portfoliosObtained);
+    // console.log("teamsEPL:", teamsEPL);
+    if (
+      portfoliosObtained &&
+      portfoliosObtained.length > 0 &&
+      teamsEPL &&
+      portfoliosObtained[0].teams
+    ) {
       setSelectedTeams(
-        portfoliosObtained[0].teams.map((team) =>
-          typeof team === "object" && team !== null ? team.name ?? "" : ""
-        )
+        portfoliosObtained[0].teams.map((team) => {
+          if (typeof team === "object" && team !== null && team.id) {
+            const found = teamsEPL.find((opt) => opt.id === team.id);
+            return found ? found.name : "";
+          }
+          return "";
+        })
       );
       setChampionshipPoints(
         portfoliosObtained[0].championshipPoints?.toString() ?? ""
       );
       setPortfolios(portfoliosObtained);
     } else {
-      // Si no hay datos, limpia los inputs para permitir ingreso manual
       setSelectedTeams(Array(5).fill(""));
       setChampionshipPoints("");
       setPortfolios([]);
     }
-  }, [portfoliosObtained]);
-  console.log(portfoliosObtained);
+  }, [portfoliosObtained, teamsEPL]);
+
+  // useEffect(() => {
+  //   if (portfoliosObtained && portfoliosObtained.length > 0) {
+  //     // Rellena los inputs con los datos del primer portfolio
+  //     setSelectedTeams(
+  //       portfoliosObtained[0].teams.map((team) =>
+  //         typeof team === "object" && team !== null ? team.name ?? "" : ""
+  //       )
+  //     );
+  //     setChampionshipPoints(
+  //       portfoliosObtained[0].championshipPoints?.toString() ?? ""
+  //     );
+  //     setPortfolios(portfoliosObtained);
+  //   } else {
+  //     // Si no hay datos, limpia los inputs para permitir ingreso manual
+  //     setSelectedTeams(Array(5).fill(""));
+  //     setChampionshipPoints("");
+  //     setPortfolios([]);
+  //   }
+  // }, [portfoliosObtained]);
+
+  // console.log(portfolios);
 
   // const { data: dataDATTOU } = useQuery({
   //   queryKey: ["dattou", userId],
@@ -136,26 +187,6 @@ const MyPortfolioEPL = () => {
   //     setValidTournament(isValid);
   //   }
   // }, [dataDATTOU, dataHOUTOU, portfolios]);
-
-  const { data: teamsEPL, isLoading } = useQuery({
-    queryKey: ["teamsEpl", userId],
-    queryFn: () => getTeams(2),
-    cacheTime: 30 * 60 * 1000, // 30 minutes
-    refetchOnWindowFocus: false,
-  });
-
-  // console.log(teamsEPL);
-
-  const { mutate: postNewPortfolioMutate } = useMutation({
-    mutationFn: postNewPortfolio,
-    onSuccess: (resp) => {
-      toast.success(resp);
-      queryClient.invalidateQueries(["portfolios", userId]);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
 
   // const { mutate: removeportfolioMutate } = useMutation({
   //   mutationFn: removeportfolio,
@@ -276,6 +307,7 @@ const MyPortfolioEPL = () => {
     },
     [selectedTeams]
   );
+  console.log(portfolios);
 
   // const sendPortfolio = useCallback(() => {
   //   console.log(portfolios);
@@ -731,7 +763,7 @@ const MyPortfolioEPL = () => {
 
                 <h2 style={{ color: "#05fa87", fontSize: "40px" }}>
                   Portfolio{portfolios?.length > 1 && "s"}
-                  {" Name"}
+                  <p style={{ fontSize: "14px" }}>{portfolios[0].name}</p>
                   {/* {portfolios?.length > 0 && portfolios?.length} */}
                 </h2>
               </div>
