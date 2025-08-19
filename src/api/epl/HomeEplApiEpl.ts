@@ -42,7 +42,7 @@ export const getParticipantsEpl = async (tournamentId: User["id"]) => {
     });
 
     if (!data.data.participants) {
-      return "Error participants";
+      return 0;
     }
     if (data.data.participants) {
       return data?.data.participants;

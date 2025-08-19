@@ -3,24 +3,16 @@ import Grid from "@mui/material/Grid2";
 import { Zoom } from "@mui/material";
 import classes from "./HomeEPL.module.css";
 // import Table from "../../components/Table/Table";
-// import BallLoader from "../../components/EPLBallLoader/EPLBallLoader";
+import BallLoader from "../../components/EPLBallLoader/EPLBallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-// import {
-//   gatPayout,
-//   getHOINFO,
-//   getParticipants,
-//   getPopona,
-//   getPortfoliosCount,
-//   getScores,
-// } from "@/api/HomeAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import {
   getParticipantsEpl,
   getPayoutEpl,
   getPoponaEpl,
   getHOINFOEpl,
-} from "@/api/epl/HomeEplApi";
+} from "@/api/epl/HomeEplApiEpl";
 import { PayOut } from "@/types/index";
 
 const HomeEPL = () => {
@@ -36,27 +28,29 @@ const HomeEPL = () => {
   //   queryFn: () => getScores(userId),
   // });
 
-  const { data: DataPoponaEpl } = useQuery({
+  const { data: DataPoponaEpl, isLoading: isLoadingPopons } = useQuery({
     queryKey: ["poponaEpl", userId],
     queryFn: () => getPoponaEpl(),
   });
 
-  const { data: dataHOINFOEpl } = useQuery({
+  const { data: dataHOINFOEpl, isLoading: isLoadingHOINFOEpl } = useQuery({
     queryKey: ["HOINFOEpl", userId],
     queryFn: () => getHOINFOEpl(),
   });
 
-  const { data: participantsEpl } = useQuery({
-    queryKey: ["participantsEpl", userId],
-    queryFn: () => getParticipantsEpl("3"),
-  });
+  const { data: participantsEpl, isLoading: isLoadingParticipantsEpl } =
+    useQuery({
+      queryKey: ["participantsEpl", userId],
+      queryFn: () => getParticipantsEpl("3"),
+    });
+  console.log(participantsEpl);
 
   // const { data: portfoliosHome } = useQuery({
   //   queryKey: ["portfoliosHome", userId],
   //   queryFn: () => getPortfoliosCount(),
   // });
 
-  const { data: payout } = useQuery({
+  const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payoutEpl", userId],
     queryFn: () => getPayoutEpl("3", 99),
     retry: true,
@@ -75,7 +69,13 @@ const HomeEPL = () => {
   //   ));
   // };
 
-  // if (isLoading) return <BallLoader />;
+  if (
+    isLoadingPopons ||
+    isLoadingHOINFOEpl ||
+    isLoadingParticipantsEpl ||
+    isLoadingPayout
+  )
+    return <BallLoader />;
 
   return (
     <>
