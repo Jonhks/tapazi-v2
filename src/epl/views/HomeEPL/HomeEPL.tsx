@@ -12,6 +12,7 @@ import {
   getPayoutEpl,
   getPoponaEpl,
   getHOINFOEpl,
+  getAllPortfoliosEpl,
 } from "@/api/epl/HomeEplApiEpl";
 import { PayOut } from "@/types/index";
 
@@ -28,6 +29,11 @@ const HomeEPL = () => {
   //   queryFn: () => getScores(userId),
   // });
 
+  const { data: dataGetAllPortfoliosEpl, isLoadingAllPortfolios } = useQuery({
+    queryKey: ["AllportfoliosEpl", userId],
+    queryFn: () => getAllPortfoliosEpl(userId),
+  });
+
   const { data: DataPoponaEpl, isLoading: isLoadingPopons } = useQuery({
     queryKey: ["poponaEpl", userId],
     queryFn: () => getPoponaEpl(),
@@ -43,7 +49,8 @@ const HomeEPL = () => {
       queryKey: ["participantsEpl", userId],
       queryFn: () => getParticipantsEpl("3"),
     });
-  console.log(participantsEpl);
+
+  console.log(dataGetAllPortfoliosEpl);
 
   // const { data: portfoliosHome } = useQuery({
   //   queryKey: ["portfoliosHome", userId],
@@ -128,13 +135,9 @@ const HomeEPL = () => {
                 <p className={classes.titleBox}>Payouts</p>
                 <div className={classes.subBoxTwo}>
                   <p>
-                    Total Contestants:
-                    {participantsEpl}
+                    Total Contestants: {dataGetAllPortfoliosEpl?.participants}
                   </p>
-                  <p>
-                    Total Entries:
-                    {/* {portfoliosHome?.count} */}
-                  </p>
+                  <p>Total Entries: {dataGetAllPortfoliosEpl?.portfolios}</p>
                   <br />
                   {payout?.map((pay: PayOut, i: number) => (
                     <p key={i}>

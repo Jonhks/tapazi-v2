@@ -5,6 +5,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import BallLoader from "../../components/BallLoader/BallLoader";
 import EPLBallLoader from "../../../epl/components/EPLBallLoader/EPLBallLoader";
+import { getSports } from "@/api/SportsAPI";
+import { useQuery } from "@tanstack/react-query";
+import { Sport } from "@/types/index";
 
 export default function Sports() {
   const navigate = useNavigate();
@@ -12,13 +15,18 @@ export default function Sports() {
   const [showLoader, setShowLoader] = useState(false);
   const [changeLoader, setChangeLoader] = useState(false);
 
+  const { data: dataSports, isLoading } = useQuery({
+    queryKey: ["sports"],
+    queryFn: () => getSports(),
+  });
+
   setTimeout(() => setShowLoader(true), 1000);
   setTimeout(() => setChangeLoader(true), 500);
 
   return (
     <>
-      {!showLoader && !changeLoader && <BallLoader />}
-      {!showLoader && changeLoader && <EPLBallLoader />}
+      {!showLoader && !isLoading && !changeLoader && <BallLoader />}
+      {!showLoader && !isLoading && changeLoader && <EPLBallLoader />}
       {showLoader && (
         <Grid
           container
@@ -28,7 +36,7 @@ export default function Sports() {
             size={{ xs: 12, md: 6 }}
             sx={{
               backgroundImage:
-                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/fondo_basket.jpg?quality=80&format=webp')",
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/fondo_basket.png')",
               backgroundPosition: "right bottom",
               backgroundSize: "cover",
               display: "flex",
@@ -39,39 +47,35 @@ export default function Sports() {
               padding: 4,
             }}
           >
-            <Tooltip title="NCAA MALE">
-              <Box
-                sx={{
-                  backgroundImage:
-                    "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/ncaa_male_on.png?quality=80&format=webp')",
-                  justifyContent: "right",
-                  alignItems: "center",
-                  textAlign: "center",
-                }}
-                className={classes.imgCard}
-                onClick={() => {
-                  navigate(`/home/${params.userId}`);
-                }}
-              >
-                <p>NCAA MALE</p>
-              </Box>
-            </Tooltip>
-            <Tooltip title="NCAA FEMALE">
-              <Box
-                sx={{
-                  backgroundImage:
-                    "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/ncaa_female_on.png?quality=80&format=webp')",
-                  justifyContent: "left",
-                  alignItems: "center",
-                }}
-                className={classes.imgCard}
-                onClick={() => {
-                  navigate(`/wip/${params.userId}/3`);
-                }}
-              >
-                <p style={{ paddingLeft: 15 }}>NCAA FEMALE</p>
-              </Box>
-            </Tooltip>
+            {dataSports
+              .filter((sport: Sport) => sport?.name?.includes("NCAA"))
+              .map((sport: Sport, i: number) => {
+                return (
+                  <Tooltip
+                    key={i}
+                    title={sport?.description}
+                  >
+                    <Box
+                      sx={{
+                        backgroundImage: `url(${sport?.url})`,
+                        justifyContent: sport.id === 1 ? "right" : "left",
+                        alignItems: "center",
+                        textAlign: "center",
+                      }}
+                      className={classes.imgCard}
+                      onClick={() => {
+                        navigate(
+                          sport.id === 1
+                            ? `/home/${params.userId}`
+                            : `/wip/${params.userId}/${sport.id}`
+                        );
+                      }}
+                    >
+                      <p>{sport?.name}</p>
+                    </Box>
+                  </Tooltip>
+                );
+              })}
           </Grid>
 
           <Grid
@@ -79,7 +83,7 @@ export default function Sports() {
             size={{ xs: 12, md: 6 }}
             sx={{
               backgroundImage:
-                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/fondo_football.jpg?quality=80&format=webp')",
+                "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/fondo_soccer.png')",
               backgroundPosition: "left top",
               backgroundSize: "cover",
               display: "flex",
@@ -90,50 +94,43 @@ export default function Sports() {
               padding: 4,
             }}
           >
-            <Tooltip title="English Premier League">
-              <Box
-                sx={{
-                  justifyContent: "center",
-                  alignItems: "center",
-                  backgroundImage:
-                    "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/epl_on.png?quality=80&format=webp')",
-                }}
-                className={classes.imgCard}
-                onClick={() => {
-                  const userData = JSON.parse(
-                    localStorage.getItem("userTapaszi") || "{}"
-                  );
-                  const encodedData = btoa(JSON.stringify(userData));
-                  navigate(`/epl/home/${params.userId}/2?data=${encodedData}`);
-                }}
-              >
-                <p>EPL</p>
-              </Box>
-            </Tooltip>
-            <Tooltip title="WORLDCUP">
-              <Box
-                sx={{
-                  backgroundImage:
-                    "url('https://s3.mx-central-1.amazonaws.com/portfolio.pool/sport_selection/worldcup_on.png?quality=80&format=webp')",
-                  justifyContent: "right",
-                }}
-                className={classes.imgCard}
-                onClick={() => {
-                  navigate(`/wip/${params.userId}/4`);
-                }}
-              >
-                <p
-                  style={{
-                    height: "90%",
-                    display: "flex",
-                    alignItems: "end",
-                    justifyContent: "end",
-                  }}
-                >
-                  WORLDCUP
-                </p>
-              </Box>
-            </Tooltip>
+            {dataSports
+              .filter(
+                (sport: Sport) =>
+                  sport?.name?.includes("EPL") ||
+                  sport?.name?.includes("WORLDCUP")
+              )
+              .map((sport: Sport, i: number) => {
+                return (
+                  <Tooltip
+                    key={i}
+                    title={sport?.description}
+                  >
+                    <Box
+                      sx={{
+                        backgroundImage: `url(${sport?.url})`,
+                        justifyContent: sport.id === 2 ? "left" : "right",
+                        alignItems: "center",
+                        textAlign: "center",
+                      }}
+                      className={classes.imgCard}
+                      onClick={() => {
+                        const userData = JSON.parse(
+                          localStorage.getItem("userTapaszi") || "{}"
+                        );
+                        const encodedData = btoa(JSON.stringify(userData));
+                        navigate(
+                          sport.id === 2
+                            ? `/epl/home/${params.userId}/${sport.id}?data=${encodedData}`
+                            : `/wip/${params.userId}/${sport.id}`
+                        );
+                      }}
+                    >
+                      <p>{sport?.name}</p>
+                    </Box>
+                  </Tooltip>
+                );
+              })}
           </Grid>
         </Grid>
       )}

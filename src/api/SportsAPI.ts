@@ -1,0 +1,25 @@
+import { newApi } from "@/lib/axios";
+import { isAxiosError } from "axios";
+
+export const getSports = async () => {
+  try {
+    const url = "/sports";
+    // const url = "/participants/login";
+    const { data } = await newApi(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (!data.sports) {
+      return "Error en sports";
+    }
+
+    if (data.sports) {
+      return data.sports;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

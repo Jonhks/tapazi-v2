@@ -15,7 +15,7 @@ export const getPortfolios = async (id: User["id"]) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    // console.log(data.portfolios);
+    console.log(data);
 
     if (!data.portfolios) {
       return [];

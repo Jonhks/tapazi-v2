@@ -179,3 +179,13 @@ export const instructionsSchema = z.object({
 });
 
 export type Instructions = z.infer<typeof instructionsSchema>;
+
+export const sportSchema = z.object({
+  description: z.string(),
+  id: z.number(),
+  key: z.string(),
+  url: z.string().url(),
+  name: z.string(),
+});
+
+export type Sport = z.infer<typeof sportSchema>;

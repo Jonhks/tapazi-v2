@@ -101,3 +101,25 @@ export const getHOINFOEpl = async () => {
     return;
   }
 };
+
+export const getAllPortfoliosEpl = async (id: User["id"]) => {
+  try {
+    const url = `/tournaments/1/stats`;
+    const { data } = await newApi(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data) {
+      return [];
+    }
+    if (data.data) {
+      return data?.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

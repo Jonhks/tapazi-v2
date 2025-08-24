@@ -46,7 +46,6 @@ import { toast } from "react-toastify";
 // import Swal from "sweetalert2";
 // import { isDateTimeReached } from "@/utils/getDaysLeft";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
-import { sign } from "crypto";
 
 const MyPortfolioEPL = () => {
   const params = useParams();
@@ -79,6 +78,8 @@ const MyPortfolioEPL = () => {
     queryFn: () => getPortfolios(userId),
   });
 
+  // console.log(getAllPortfoliosEpl);
+
   const { data: teamsEPL, isLoading } = useQuery({
     queryKey: ["teamsEpl", userId],
     queryFn: () => getTeams(2),
@@ -100,14 +101,14 @@ const MyPortfolioEPL = () => {
   });
 
   useEffect(() => {
-    // console.log("portfoliosObtained:", portfoliosObtained);
-    // console.log("teamsEPL:", teamsEPL);
     if (
       portfoliosObtained &&
       portfoliosObtained.length > 0 &&
       teamsEPL &&
       portfoliosObtained[0].teams
     ) {
+      console.log(portfoliosObtained[0].teams);
+
       setSelectedTeams(
         portfoliosObtained[0].teams.map((team) => {
           if (typeof team === "object" && team !== null && team.id) {
@@ -307,7 +308,7 @@ const MyPortfolioEPL = () => {
     },
     [selectedTeams]
   );
-  console.log(portfolios);
+  // console.log(portfolios);
 
   // const sendPortfolio = useCallback(() => {
   //   console.log(portfolios);
