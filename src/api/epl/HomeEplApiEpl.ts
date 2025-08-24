@@ -102,7 +102,7 @@ export const getHOINFOEpl = async () => {
   }
 };
 
-export const getAllPortfoliosEpl = async (id: User["id"]) => {
+export const getAllPortfoliosEpl = async () => {
   try {
     const url = `/tournaments/1/stats`;
     const { data } = await newApi(url, {

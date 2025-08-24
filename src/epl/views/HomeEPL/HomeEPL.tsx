@@ -29,7 +29,7 @@ const HomeEPL = () => {
   //   queryFn: () => getScores(userId),
   // });
 
-  const { data: dataGetAllPortfoliosEpl, isLoadingAllPortfolios } = useQuery({
+  const { data: dataGetAllPortfoliosEpl } = useQuery({
     queryKey: ["AllportfoliosEpl", userId],
     queryFn: () => getAllPortfoliosEpl(userId),
   });
@@ -50,7 +50,7 @@ const HomeEPL = () => {
       queryFn: () => getParticipantsEpl("3"),
     });
 
-  console.log(dataGetAllPortfoliosEpl);
+  console.log(participantsEpl);
 
   // const { data: portfoliosHome } = useQuery({
   //   queryKey: ["portfoliosHome", userId],
