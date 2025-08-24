@@ -31,7 +31,7 @@ const HomeEPL = () => {
 
   const { data: dataGetAllPortfoliosEpl } = useQuery({
     queryKey: ["AllportfoliosEpl", userId],
-    queryFn: () => getAllPortfoliosEpl(userId),
+    queryFn: () => getAllPortfoliosEpl(),
   });
 
   const { data: DataPoponaEpl, isLoading: isLoadingPopons } = useQuery({
