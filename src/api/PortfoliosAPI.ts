@@ -46,24 +46,37 @@ export const getTeams = async (sport: User["id"]) => {
 
 export const postNewPortfolio = async ({
   port,
+  portId,
 }: // portfolios,
 // userId,
 {
   port: CreatePortfolio;
   // portfolios: Portfolios;
-  // userId: User["id"];
+  portId: User["id"];
 }) => {
   // if (portfolios?.length > 8) return;
   // console.log(port, userId);
 
-  const urlLogin = `/portfolios`;
+  const payload = { ...port };
+  if (portId && Array.isArray(port.teamsId)) {
+    payload.teamsId = port.teamsId.map((team) =>
+      typeof team === "object" && "id" in team ? { id: team.id } : { id: team }
+    );
+  }
+
+  const url = `/portfolios${portId ? `/${portId}` : ""}`;
   try {
-    const { data } = await newApi.post(urlLogin, port, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    console.log(data);
+    const { data } = portId
+      ? await newApi.put(url, portId ? { teams: payload.teams } : payload, {
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+        })
+      : await newApi.post(url, portId ? { teams: payload.teams } : payload, {
+          headers: {
+            "Content-Type": "application/json;charset=utf-8",
+          },
+        });
     if (
       !data.message &&
       data?.error?.description ===

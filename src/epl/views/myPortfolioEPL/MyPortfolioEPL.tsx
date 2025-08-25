@@ -55,6 +55,7 @@ const MyPortfolioEPL = () => {
 
   const [value, setValue] = React.useState(0);
   const [portfolios, setPortfolios] = useState<Portfolios>([]);
+  const [portExist, setPortExist] = useState(false);
   // const [error, setError] = useState(false);
   // const [editing, setEditing] = useState(false);
   // const [duplicates, setDuplicates] = useState(false);
@@ -107,8 +108,8 @@ const MyPortfolioEPL = () => {
       teamsEPL &&
       portfoliosObtained[0].teams
     ) {
-      console.log(portfoliosObtained[0].teams);
-
+      // console.log(portfoliosObtained[0].teams);
+      setPortExist(true);
       setSelectedTeams(
         portfoliosObtained[0].teams.map((team) => {
           if (typeof team === "object" && team !== null && team.id) {
@@ -379,7 +380,7 @@ const MyPortfolioEPL = () => {
       return;
     }
     const newPortfolio = {
-      tournament_id: "2",
+      tournament_id: "3",
       participant_id: userId,
       championshipPoints: 0,
       teams: selectedTeams.map((team) => {
@@ -400,11 +401,10 @@ const MyPortfolioEPL = () => {
     postNewPortfolioMutate({
       port: newPortfolio,
       userId: userId,
+      portId: portfolios[0]?.id,
     });
     // console.log([newPortfolio]);
-  }, [selectedTeams, teamsEPL, userId, postNewPortfolioMutate]);
-
-  // console.log(portfolios);
+  }, [selectedTeams, teamsEPL, userId, postNewPortfolioMutate, portfolios]);
 
   // const savePortfolio = useCallback(() => {
   //   if (!validTournament) {
@@ -866,7 +866,7 @@ const MyPortfolioEPL = () => {
                   }}
                   onClick={addportFolio}
                 >
-                  SUBMIT
+                  {portExist ? "EDIT" : "SUBMIT"}
                 </Button>
                 <Button
                   variant="contained"

@@ -100,6 +100,13 @@ export const createPortfolioSchema = z.object({
       id: z.number(),
     })
   ),
+  teams: z
+    .array(
+      z.object({
+        id: z.number(),
+      })
+    )
+    .optional(),
 });
 
 export const portfoliosSchema = z.array(portfolioSchema);

@@ -104,7 +104,7 @@ export const getHOINFOEpl = async () => {
 
 export const getAllPortfoliosEpl = async () => {
   try {
-    const url = `/tournaments/1/stats`;
+    const url = `/tournaments/3/stats`;
     const { data } = await newApi(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
