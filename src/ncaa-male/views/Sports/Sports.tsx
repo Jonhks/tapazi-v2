@@ -5,9 +5,10 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useState } from "react";
 import BallLoader from "../../components/BallLoader/BallLoader";
 import EPLBallLoader from "../../../epl/components/EPLBallLoader/EPLBallLoader";
-import { getSports } from "@/api/SportsAPI";
+import { getSports, getSportsDisponible } from "@/api/SportsAPI";
 import { useQuery } from "@tanstack/react-query";
 import { Sport } from "@/types/index";
+import { toast } from "react-toastify";
 
 export default function Sports() {
   const navigate = useNavigate();
@@ -20,13 +21,35 @@ export default function Sports() {
     queryFn: () => getSports(),
   });
 
+  const { data: dataSportsDisponible, isLoading: isLoadingDisponible } =
+    useQuery({
+      queryKey: ["sportsDisponible"],
+      queryFn: () => getSportsDisponible(params.userId || ""),
+    });
+
   setTimeout(() => setShowLoader(true), 1000);
   setTimeout(() => setChangeLoader(true), 500);
 
+  console.log(dataSports);
+  console.log(dataSportsDisponible);
+
+  interface SportDisponible {
+    id: number;
+    enabled: boolean;
+  }
+
+  const unavailableIds: number[] | undefined = dataSportsDisponible
+    ?.filter((sport: SportDisponible) => !sport.enabled)
+    .map((sport: SportDisponible) => sport.id);
+
   return (
     <>
-      {!showLoader && !isLoading && !changeLoader && <BallLoader />}
-      {!showLoader && !isLoading && changeLoader && <EPLBallLoader />}
+      {!showLoader && !isLoading && !isLoadingDisponible && changeLoader && (
+        <BallLoader />
+      )}
+      {!showLoader && !isLoading && !isLoadingDisponible && changeLoader && (
+        <EPLBallLoader />
+      )}
       {showLoader && (
         <Grid
           container
@@ -57,18 +80,27 @@ export default function Sports() {
                   >
                     <Box
                       sx={{
-                        backgroundImage: `url(${sport?.url})`,
+                        // backgroundImage: `url(${sport?.url})`,
+                        backgroundImage: `url(${
+                          !unavailableIds?.includes(sport.id)
+                            ? sport?.url
+                            : sport?.url_disabled
+                        })`,
                         justifyContent: sport.id === 1 ? "right" : "left",
                         alignItems: "center",
                         textAlign: "center",
                       }}
                       className={classes.imgCard}
                       onClick={() => {
-                        navigate(
-                          sport.id === 1
-                            ? `/home/${params.userId}`
-                            : `/wip/${params.userId}/${sport.id}`
-                        );
+                        if (!unavailableIds?.includes(sport.id)) {
+                          navigate(
+                            sport.id === 1
+                              ? `/home/${params.userId}`
+                              : `/wip/${params.userId}/${sport.id}`
+                          );
+                        } else {
+                          toast.info("This sport is currently unavailable.");
+                        }
                       }}
                     >
                       <p>{sport?.name}</p>
@@ -108,22 +140,31 @@ export default function Sports() {
                   >
                     <Box
                       sx={{
-                        backgroundImage: `url(${sport?.url})`,
+                        // backgroundImage: `url(${sport?.url})`,
+                        backgroundImage: `url(${
+                          !unavailableIds?.includes(sport.id)
+                            ? sport?.url
+                            : sport?.url_disabled
+                        })`,
                         justifyContent: sport.id === 2 ? "left" : "right",
                         alignItems: "center",
                         textAlign: "center",
                       }}
                       className={classes.imgCard}
                       onClick={() => {
-                        const userData = JSON.parse(
-                          localStorage.getItem("userTapaszi") || "{}"
-                        );
-                        const encodedData = btoa(JSON.stringify(userData));
-                        navigate(
-                          sport.id === 2
-                            ? `/epl/home/${params.userId}/${sport.id}?data=${encodedData}`
-                            : `/wip/${params.userId}/${sport.id}`
-                        );
+                        if (!unavailableIds?.includes(sport.id)) {
+                          const userData = JSON.parse(
+                            localStorage.getItem("userTapaszi") || "{}"
+                          );
+                          const encodedData = btoa(JSON.stringify(userData));
+                          navigate(
+                            sport.id === 2
+                              ? `/epl/home/${params.userId}/${sport.id}?data=${encodedData}`
+                              : `/wip/${params.userId}/${sport.id}`
+                          );
+                        } else {
+                          toast.info("This sport is currently unavailable.");
+                        }
                       }}
                     >
                       <p>{sport?.name}</p>

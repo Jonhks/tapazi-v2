@@ -33,7 +33,7 @@ import ImgHistory from "@/assets/img/details-ball-sport.jpg";
 import WIP from "./ncaa-male/views/WIP/WIP";
 import MyPortfolioEPL from "./epl/views/myPortfolioEPL/MyPortfolioEPL";
 const ImgSports =
-  "https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_girl_back.png?quality=40&format=webp";
+  "https://s3.mx-central-1.amazonaws.com/portfolio.pool/sports/epl/stats/back_stats.png?quality=5&format=webp";
 
 // ? --------------------------  EPL Imagenes -------------------------- ? //
 const NCAAFemaleImg =

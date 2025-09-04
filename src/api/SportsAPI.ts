@@ -23,3 +23,25 @@ export const getSports = async () => {
     return;
   }
 };
+
+export const getSportsDisponible = async (participant_id: string) => {
+  try {
+    const url = `/participants/${participant_id}/sports`;
+    const { data } = await newApi(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (!data.sports) {
+      return "Error en sports";
+    }
+
+    if (data.sports) {
+      return data.sports;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

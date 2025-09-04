@@ -26,13 +26,37 @@ export const getPortfolios = async (id: User["id"]) => {
 
 export const getTeams = async (sport: User["id"]) => {
   try {
-    const url = `/sports/${sport}/teams`;
+    // const url = `/sports/${sport}/teams`;
+    const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
     const { data } = await newApi.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
     // console.log(data);
+
+    if (data.teams) {
+      return data.teams;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getTeamsAvailable = async (
+  sport: User["id"],
+  tournamentId: User["id"]
+) => {
+  try {
+    const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
+    const { data } = await newApi.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    console.log(data);
 
     if (data.teams) {
       return data.teams;

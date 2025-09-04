@@ -193,6 +193,7 @@ export const sportSchema = z.object({
   key: z.string(),
   url: z.string().url(),
   name: z.string(),
+  url_disabled: z.string(),
 });
 
 export type Sport = z.infer<typeof sportSchema>;
