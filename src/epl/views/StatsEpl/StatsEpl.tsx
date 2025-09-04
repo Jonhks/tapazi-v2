@@ -14,10 +14,10 @@ import {
   useQuery,
   //  useQueryClient
 } from "@tanstack/react-query";
-import { getTournaments } from "@/api/HistoryAPI";
+import { getTournaments } from "@/api/epl/HistoryEPLAPI";
 import { Tournament } from "@/types/index";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
-import TableHistory from "../../components/Table/TableHistory";
+// import TableHistory from "../../components/Table/TableHistory";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
 // import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
@@ -27,7 +27,7 @@ import {
   getPortfolioSeedSelections,
   getSeedPickTotal,
   getTeamsNotPickedLog,
-  getTeamsPicked,
+  // getTeamsPicked,
   getTeamsPickedLog,
 } from "@/api/StatsAPI";
 import TableHistoryMostPickedTeams from "../../components/Table/TableHistoryMostPickedTeams";
@@ -75,9 +75,9 @@ const StatsEPL = () => {
     id: string;
   };
 
-  const { data: tournaments, isLoading } = useQuery({
-    queryKey: ["tournaments", userId],
-    queryFn: () => getTournaments(),
+  const { data: tournamentsEPL, isLoading } = useQuery({
+    queryKey: ["tournamentsEPL", userId],
+    queryFn: () => getTournaments(userId),
   });
 
   const [tournament, setTournament] = useState("");
@@ -93,42 +93,43 @@ const StatsEPL = () => {
 
   const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[2]);
   const [idSubDataSelected, setIdSubDataSelected] = useState(0);
-  const [round, setRound] = useState(8);
+  // const [round, setRound] = useState(8);
 
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   // const [pointsPerRound, setPointsPerRound] = useState([]);
-  const [
-    selectedOrderBy,
-    // setSelectedOrderBy
-  ] = useState("1");
+  // const [
+  //   // selectedOrderBy,
+  //   // setSelectedOrderBy
+  // ] = useState("1");
   // const [orderOptionSelected, setOrderOptionSelected] = useState(
   //   optionsOrder[0]
   // );
+  // console.log(tournamentsEPL);
 
   useEffect(() => {
-    if (tournaments) {
-      const current = tournaments.filter((el: Tournament) => el?.current)[0];
+    if (tournamentsEPL) {
+      const current = tournamentsEPL.filter((el: Tournament) => el?.current)[0];
       setTournament(current?.name);
       // setScore("Score");
       setSelectedTournament(current);
       setTimeout(async () => {
-        if (selectedTournament?.id) {
-          // const responsePointsPerRound = await getScorePPR(
-          //   selectedTournament?.id
-          // );
-          // setPointsPerRound(responsePointsPerRound);
-          // getScoreHistory();
-        }
+        // if (selectedTournament?.id) {
+        // const responsePointsPerRound = await getScorePPR(
+        //   selectedTournament?.id
+        // );
+        // setPointsPerRound(responsePointsPerRound);
+        // getScoreHistory();
+        // }
       }, 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tournaments]);
+  }, [tournamentsEPL]);
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleChange = (e) => {
     if (e?.target?.name === "tournament") {
-      const optionSelect = tournaments.filter(
+      const optionSelect = tournamentsEPL.filter(
         (el: Tournament) => el?.name === e?.target?.value
       )[0];
       setTournament(e?.target?.value);
@@ -168,15 +169,15 @@ const StatsEPL = () => {
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    setRound(+selected[0].round);
+    // setRound(+selected[0].round);
     setIdSubDataSelected(+selected[0].id - 1);
   };
 
-  const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
-    queryKey: ["teamsPicked", selectedOrderBy, round, selectedTournament.id],
-    queryFn: () =>
-      getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
-  });
+  // const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
+  //   queryKey: ["teamsPicked", selectedOrderBy, round, selectedTournament.id],
+  //   queryFn: () =>
+  //     getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
+  // });
 
   const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
     useQuery({
@@ -222,7 +223,7 @@ const StatsEPL = () => {
 
   if (
     isLoading ||
-    isLoadingTeamsPicked ||
+    // isLoadingTeamsPicked ||
     isLoadingMostPickedTeams ||
     isLoadinTeamsPickedLog ||
     isLoadinLeastPickedTeams ||
@@ -287,11 +288,9 @@ const StatsEPL = () => {
                     name={"tournament"}
                     label={"Tournament"}
                     className={classes.DropDownHistory}
-                    value={tournament}
+                    value={tournamentsEPL[0].name || ""}
                     handleChange={handleChange}
-                    options={tournaments?.filter(
-                      (el: Tournament) => el.current
-                    )}
+                    options={tournamentsEPL || []}
                   />
                 </div>
               </Grid>
@@ -369,7 +368,7 @@ const StatsEPL = () => {
         alignContent={"center"}
         mb={3}
       >
-        {teamsPicked &&
+        {/* {teamsPicked &&
           typeof teamsPicked !== "string" &&
           score === "Score" && (
             <Zoom in={true}>
@@ -380,7 +379,7 @@ const StatsEPL = () => {
                 />
               </Grid>
             </Zoom>
-          )}
+          )} */}
 
         {score === "Teams" && (
           <Zoom in={true}>
