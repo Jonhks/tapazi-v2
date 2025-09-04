@@ -70,10 +70,12 @@ const MyPortfolioEPL = () => {
       queryFn: () => getTeamsAvailable(userId, 3),
       // cacheTime: 30 * 60 * 1000, // 30 minutes
       // refetchOnWindowFocus: false,
+      refetchInterval: 60 * 1000, // Refetch cada minuto (60 segundos)
       // retry
     });
 
   console.log(teamsEPL);
+  console.log(teamsEPLAvailable);
 
   const { mutate: postNewPortfolioMutate } = useMutation({
     mutationFn: postNewPortfolio,
@@ -164,87 +166,221 @@ const MyPortfolioEPL = () => {
         (opt) =>
           !selectedTeams.includes(opt.name) || selectedTeams[idx] === opt.name
       );
+      const teamDetails = teamsEPL?.find(
+        (team) => team.name === selectedTeams[idx]
+      );
+      // return (
+      //   <FormControl
+      //     key={idx}
+      //     fullWidth
+      //     sx={{
+      //       backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+      //       "& .MuiInputLabel-root": {
+      //         color: "white",
+      //         fontWeight: "bold",
+      //         fontSize: "18px",
+      //       },
+      //     }}
+      //   >
+      //     <InputLabel
+      //       id={`select-label-${idx}`}
+      //       shrink={selectedTeams[idx] !== ""}
+      //       sx={{
+      //         color: "white",
+      //         fontWeight: "bold",
+      //         fontSize: "18px",
+      //         transition: "opacity 0.2s",
+      //         opacity: selectedTeams[idx] ? 0 : 1,
+      //       }}
+      //     >
+      //       Team
+      //     </InputLabel>
+      //     <Select
+      //       labelId={`select-label-${idx}`}
+      //       value={selectedTeams[idx] ?? ""} // Usa "" si el valor es undefined
+      //       label="Team"
+      //       onChange={(e) => handleChangeSelect(e.target.value, idx)}
+      //       sx={{
+      //         "& .MuiSelect-icon": {
+      //           color: "white",
+      //         },
+      //       }}
+      //     >
+      //       {availableOptions?.map((opt) => (
+      //         <MenuItem
+      //           key={opt.id}
+      //           value={opt.name}
+      //         >
+      //           <div
+      //             style={{
+      //               display: "flex",
+      //               flexDirection: "row",
+      //               justifyContent: "center",
+      //               alignItems: "center",
+      //               color: "white",
+      //               fontWeight: "bold",
+      //               fontSize: "18px",
+      //             }}
+      //           >
+      //             <ListItemIcon style={{ color: "white" }}>
+      //               <img
+      //                 src={opt.crest_url}
+      //                 alt={opt.name}
+      //                 style={{
+      //                   width: 28,
+      //                   height: 28,
+      //                   objectFit: "contain",
+      //                   marginRight: 8,
+      //                 }}
+      //               />
+      //             </ListItemIcon>
+      //             <ListItemText
+      //               style={{ textAlign: "left", fontWeight: "bold" }}
+      //             >
+      //               {opt.name}
+      //             </ListItemText>
+      //           </div>
+      //         </MenuItem>
+      //       ))}
+      //     </Select>
+      //   </FormControl>
+      // );
       return (
-        <FormControl
+        <div
           key={idx}
-          fullWidth
-          sx={{
-            backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
-            "& .MuiInputLabel-root": {
-              color: "white",
-              fontWeight: "bold",
-              fontSize: "18px",
-            },
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: "20px",
           }}
         >
-          <InputLabel
-            id={`select-label-${idx}`}
-            shrink={selectedTeams[idx] !== ""}
-            sx={{
+          {/* Select */}
+          <div
+            style={{
+              marginLeft: "20px",
               color: "white",
+              fontSize: "14px",
               fontWeight: "bold",
-              fontSize: "18px",
-              transition: "opacity 0.2s",
-              opacity: selectedTeams[idx] ? 0 : 1,
             }}
           >
-            Team
-          </InputLabel>
-          <Select
-            labelId={`select-label-${idx}`}
-            value={selectedTeams[idx] ?? ""} // Usa "" si el valor es undefined
-            label="Team"
-            onChange={(e) => handleChangeSelect(e.target.value, idx)}
+            {/* {teamDetails ? (
+              <>
+                <p>Seed: {teamDetails.seed}</p>
+                <p>
+                  Description: {teamDetails.description || "No description"}
+                </p>
+              </>
+            ) : (
+              <p style={{ fontStyle: "italic", color: "#aaa" }}>
+                No team selected
+              </p>
+            )} */}
+          </div>
+          <FormControl
+            fullWidth
             sx={{
-              "& .MuiSelect-icon": {
+              backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+              "& .MuiInputLabel-root": {
                 color: "white",
+                fontWeight: "bold",
+                fontSize: "18px",
               },
             }}
           >
-            {availableOptions?.map((opt) => (
-              <MenuItem
-                key={opt.id}
-                value={opt.name}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "18px",
-                  }}
+            <InputLabel
+              id={`select-label-${idx}`}
+              shrink={selectedTeams[idx] !== ""}
+              sx={{
+                color: "white",
+                fontWeight: "bold",
+                fontSize: "18px",
+                transition: "opacity 0.2s",
+                opacity: selectedTeams[idx] ? 0 : 1,
+              }}
+            >
+              Team
+            </InputLabel>
+            <Select
+              labelId={`select-label-${idx}`}
+              value={selectedTeams[idx] ?? ""}
+              label="Team"
+              onChange={(e) => handleChangeSelect(e.target.value, idx)}
+              sx={{
+                "& .MuiSelect-icon": {
+                  color: "white",
+                },
+              }}
+            >
+              {availableOptions?.map((opt) => (
+                <MenuItem
+                  key={opt.id}
+                  value={opt.name}
                 >
-                  <ListItemIcon style={{ color: "white" }}>
-                    <img
-                      src={opt.crest_url}
-                      alt={opt.name}
-                      style={{
-                        width: 28,
-                        height: 28,
-                        objectFit: "contain",
-                        marginRight: 8,
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    style={{ textAlign: "left", fontWeight: "bold" }}
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: "18px",
+                    }}
                   >
-                    {opt.name}
-                  </ListItemText>
-                </div>
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+                    <ListItemIcon style={{ color: "white" }}>
+                      <img
+                        src={opt.crest_url}
+                        alt={opt.name}
+                        style={{
+                          width: 28,
+                          height: 28,
+                          objectFit: "contain",
+                          marginRight: 8,
+                        }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
+                      style={{ textAlign: "left", fontWeight: "bold" }}
+                    >
+                      {opt.name}
+                    </ListItemText>
+                  </div>
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          {/* Team Details */}
+          {/* <div
+            style={{
+              marginLeft: "20px",
+              color: "white",
+              fontSize: "14px",
+              fontWeight: "bold",
+            }}
+          >
+            {teamDetails ? (
+              <>
+                <p>Seed: {teamDetails.seed}</p>
+                <p>
+                  Description: {teamDetails.description || "No description"}
+                </p>
+              </>
+            ) : (
+              <p style={{ fontStyle: "italic", color: "#aaa" }}>
+                No team selected
+              </p>
+            )}
+          </div> */}
+        </div>
       );
     });
   };
 
-  if (isLoading || isLoadingPortfoliosObtained || isLoadingTeamsEPLAvailable)
+  if (isLoading || isLoadingPortfoliosObtained || isLoadingTeamsEPLAvailable) {
     return <Loader />;
+  }
 
   return (
     <Grid
@@ -261,7 +397,7 @@ const MyPortfolioEPL = () => {
         justifyContent={"center"}
         alignContent={"center"}
       >
-        <Grid size={{ xs: 12, sm: 8, lg: 6 }}>
+        <Grid size={{ xs: 12, sm: 10, lg: 8 }}>
           <Box
             component="section"
             className={classes.boxPortfolio}
@@ -310,11 +446,7 @@ const MyPortfolioEPL = () => {
               style={{ marginTop: "30px" }}
             >
               <div
-                style={{
-                  width: "80%",
-                  margin: "0 auto",
-                  textAlign: "right",
-                }}
+                style={{ width: "80%", margin: "0 auto", textAlign: "right" }}
               >
                 {renderTeams()}
               </div>

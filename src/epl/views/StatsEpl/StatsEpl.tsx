@@ -85,14 +85,13 @@ const StatsEPL = () => {
   const [runMostTeamsPicked, setRunMostTeamsPicked] = useState(false);
   const [runSubDataPortfolios, setRunSubDataPortfolios] = useState(false);
   const [selectedScore, setSelectedScore] = useState({
-    name: "Score",
-    id: "1",
-    option: "Score",
-    placeholder: "Current Score",
-    round: "8",
+    name: "Portfolios",
+    id: "3",
+    option: "Seed",
+    placeholder: "Portfolios",
   });
 
-  const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[0]);
+  const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[2]);
   const [idSubDataSelected, setIdSubDataSelected] = useState(0);
   const [round, setRound] = useState(8);
 
@@ -150,13 +149,13 @@ const StatsEPL = () => {
   };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const handleChangeOrder = (e) => {
-    const selected = optionsOrder.filter(
-      (opt) => opt.name === e.target.value
-    )[0];
-    setOrderOptionSelected(selected);
-    setSelectedOrderBy(selected.id);
-  };
+  // const handleChangeOrder = (e) => {
+  //   const selected = optionsOrder.filter(
+  //     (opt) => opt.name === e.target.value
+  //   )[0];
+  //   setOrderOptionSelected(selected);
+  //   setSelectedOrderBy(selected.id);
+  // };
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
@@ -332,13 +331,13 @@ const StatsEPL = () => {
                 justifyContent={"center"}
                 alignItems={"center"}
               >
-                {selectedScore.id === "1" && !isMobile && (
+                {/* {selectedScore.id === "1" && !isMobile && (
                   <RadioButtonHistory
                     setSelectedOrderBy={setSelectedOrderBy}
                     selectedOrderBy={selectedOrderBy}
                   />
-                )}
-                {selectedScore.id === "1" && isMobile && (
+                )} */}
+                {/* {selectedScore.id === "1" && isMobile && (
                   <div style={{ width: "100%" }}>
                     <span>{"OrderBy"}</span>
                     <div className={classes.containerDrop}>
@@ -353,7 +352,7 @@ const StatsEPL = () => {
                       />
                     </div>
                   </div>
-                )}
+                )} */}
               </Grid>
             </Grid>
           </Grid>

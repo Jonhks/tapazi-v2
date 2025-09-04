@@ -1,21 +1,33 @@
 export const dataDropdowndata = [
-  {
-    name: "Score",
-    id: "1",
-    option: "Score",
-    placeholder: "Current Score",
-  },
+  // {
+  //   name: "Score",
+  //   id: "1",
+  //   option: "Score",
+  //   placeholder: "Current Score",
+  // },
+  // {
+  //   name: "Teams",
+  //   id: "2",
+  //   option: "Teams",
+  //   placeholder: "Teams Picked",
+  // },
   {
     name: "Teams",
     id: "2",
     option: "Teams",
-    placeholder: "Teams Picked",
+    placeholder: "Teams",
   },
+  // {
+  //   name: "Portfolios",
+  //   id: "3",
+  //   option: "Seed",
+  //   placeholder: "Picks by Seed's Distribution",
+  // },
   {
     name: "Portfolios",
     id: "3",
     option: "Seed",
-    placeholder: "Picks by Seed's Distribution",
+    placeholder: "Portfolios",
   },
 ];
 
@@ -79,19 +91,31 @@ export const subDataDropDown = [
     },
   ],
   [
+    // {
+    //   name: "Teams Picked",
+    //   id: "1",
+    //   option: "Teams Picked",
+    //   placeholder: "Teams Picked",
+    // },
     {
-      name: "Teams Picked",
+      name: "Arsenal",
       id: "1",
-      option: "Teams Picked",
-      placeholder: "Teams Picked",
+      option: "Arsenal",
+      placeholder: "Arsenal",
     },
   ],
   [
+    // {
+    //   name: "Picks by Seed's Distributi",
+    //   id: "1",
+    //   option: "Picks by Seed's Distributi",
+    //   placeholder: "Picks by Seed's Distributi",
+    // },
     {
-      name: "Picks by Seed's Distributi",
+      name: "Week 1",
       id: "1",
-      option: "Picks by Seed's Distributi",
-      placeholder: "Picks by Seed's Distributi",
+      option: "Week 1",
+      placeholder: "Week 1",
     },
   ],
 ];
