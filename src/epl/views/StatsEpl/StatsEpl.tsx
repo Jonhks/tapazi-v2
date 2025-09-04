@@ -104,7 +104,7 @@ const StatsEPL = () => {
   // const [orderOptionSelected, setOrderOptionSelected] = useState(
   //   optionsOrder[0]
   // );
-  // console.log(tournamentsEPL);
+  console.log(tournament);
 
   useEffect(() => {
     if (tournamentsEPL) {
