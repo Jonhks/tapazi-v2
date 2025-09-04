@@ -3,7 +3,7 @@ import classes from "./StatsEpl.module.css";
 import {
   Zoom,
   // Button,
-  useMediaQuery,
+  // useMediaQuery,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 // import HistoryIcon from "@mui/icons-material/History";
@@ -20,7 +20,7 @@ import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import TableHistory from "../../components/Table/TableHistory";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
-import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
+// import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
 import {
   getLeastPickedTeams,
   getMostPickedTeams,
@@ -35,7 +35,7 @@ import TableTeamsPickedLog from "../../components/Table/TableTeamsPickedLog";
 import TableHistoryTeamsNotPicked from "../../components/Table/TableHistoryTeamsNotPicked";
 import TableSeedPickTotal from "../../components/Table/TableSeedPickTotal";
 import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
-import SortIcon from "@mui/icons-material/Sort";
+// import SortIcon from "@mui/icons-material/Sort";
 import StatsGraphics from "../../components/Graphics/StatsGraphic";
 import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
 import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
@@ -45,30 +45,30 @@ const StatsEPL = () => {
   const params = useParams();
   const userId = params.userId!;
   // const queryClient = useQueryClient();
-  const isMobile = useMediaQuery("(max-width:900px)");
+  // const isMobile = useMediaQuery("(max-width:900px)");
 
-  const optionsOrder = [
-    {
-      id: "1",
-      value: "Score (Desc)",
-      name: "Score (Desc)",
-    },
-    {
-      id: "2",
-      value: "Portfolio (Asc)",
-      name: "Portfolio (Asc)",
-    },
-    {
-      id: "3",
-      value: "Weight (Desc)",
-      name: "Weight (Desc)",
-    },
-    {
-      id: "4",
-      value: "Weight (Asc)",
-      name: "Weight (Asc)",
-    },
-  ];
+  // const optionsOrder = [
+  //   {
+  //     id: "1",
+  //     value: "Score (Desc)",
+  //     name: "Score (Desc)",
+  //   },
+  //   {
+  //     id: "2",
+  //     value: "Portfolio (Asc)",
+  //     name: "Portfolio (Asc)",
+  //   },
+  //   {
+  //     id: "3",
+  //     value: "Weight (Desc)",
+  //     name: "Weight (Desc)",
+  //   },
+  //   {
+  //     id: "4",
+  //     value: "Weight (Asc)",
+  //     name: "Weight (Asc)",
+  //   },
+  // ];
 
   type dataDropdowndataType = {
     name: string;
@@ -97,10 +97,13 @@ const StatsEPL = () => {
 
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   // const [pointsPerRound, setPointsPerRound] = useState([]);
-  const [selectedOrderBy, setSelectedOrderBy] = useState("1");
-  const [orderOptionSelected, setOrderOptionSelected] = useState(
-    optionsOrder[0]
-  );
+  const [
+    selectedOrderBy,
+    // setSelectedOrderBy
+  ] = useState("1");
+  // const [orderOptionSelected, setOrderOptionSelected] = useState(
+  //   optionsOrder[0]
+  // );
 
   useEffect(() => {
     if (tournaments) {
