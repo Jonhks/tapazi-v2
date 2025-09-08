@@ -79,6 +79,8 @@ export const portfolioSchema = z.object({
   teams: z.union([z.array(teamSchema), z.array(z.boolean())]),
   name: z.string().optional(),
   id: z.number().optional(),
+  crest_url: z.string().url().optional(),
+  available: z.boolean().optional(),
 });
 
 export const portfolioCompleteSchema = z.object({
@@ -120,6 +122,7 @@ export const tournamentSchema = z.object({
   id: z.number(),
   key: z.string(),
   name: z.string(),
+  crest_url: z.string().url(),
 });
 
 export const tournamentsSchema = z.array(tournamentSchema);

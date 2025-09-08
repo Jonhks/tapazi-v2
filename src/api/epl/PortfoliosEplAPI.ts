@@ -7,15 +7,15 @@ import {
   User,
 } from "../../types";
 
-export const getPortfolios = async (id: User["id"]) => {
+export const getPortfolios = async (id: User["id"], portfolioId: string) => {
+  portfolioId = portfolioId || "0";
   try {
-    const url = `/participants/${id}/portfolios?tournament_id=3`;
+    const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
     const { data } = await newApi(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    // console.log(data);
 
     if (!data.portfolios) {
       return [];
@@ -33,6 +33,103 @@ export const getPortfolios = async (id: User["id"]) => {
 export const getTeams = async (sport: User["id"]) => {
   try {
     const url = `/sports/${sport}/teams`;
+    const { data } = await newApi.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (data.teams) {
+      return data.teams;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getNumberInputs = async () => {
+  try {
+    const url = `tournaments/3/parameters?key=TEAMXP`;
+    const { data } = await newApi.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (!data.value) {
+      return 0;
+    }
+
+    if (data.value) {
+      return data.value;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getTournamentsId = async () => {
+  try {
+    const url = `sports/1/tournaments`;
+    const { data } = await newApi.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (!data.tournaments) {
+      return 0;
+    }
+
+    if (data.tournaments) {
+      return data.tournaments;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getTeamsDynamic = async (
+  sport: User["id"],
+  portfolioId: string
+) => {
+  portfolioId = portfolioId || "0";
+  try {
+    // const url = `/sports/${sport}/teams`;
+    const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
+    const { data } = await newApi.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (data.teams) {
+      return data.teams;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getTeamsNotAvailable = async (
+  sport: User["id"],
+  tournamentId: User["id"]
+) => {
+  try {
+    // const url = `/sports/${sport}/teams`;
+    const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
     const { data } = await newApi.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
