@@ -334,8 +334,8 @@ const MyPortfolioEPL = () => {
             }}
             onClick={(e) => {
               // Handle click event
-              e.stopPropagation();
-              e.preventDefault();
+              // e.stopPropagation();
+              // e.preventDefault();
               if (team.disabled) {
                 toast.error("This team is not available");
               }
@@ -359,10 +359,13 @@ const MyPortfolioEPL = () => {
               value={team.name || ""}
               label="Team"
               readOnly={team.disabled}
+              disabled={team.disabled}
               onChange={(e) => {
                 handleChangeSelect(e.target.value, idx);
               }}
               sx={{
+                backgroundColor: team.disabled && "#72598cff",
+                opacity: team.disabled && 0.7,
                 "& .MuiSelect-icon": {
                   color: team.disabled ? "gray" : "white",
                 },
@@ -518,11 +521,11 @@ const MyPortfolioEPL = () => {
                   style={{
                     marginTop: "30px",
                     margin: "10px 0",
-                    padding: "0 10px",
+                    padding: "5px 10px",
                     display: "flex",
                     justifyContent: "space-between",
                     alignItems: "center",
-                    backgroundColor: "#380f65",
+                    backgroundColor: "#200930",
                   }}
                 >
                   <Grid size={12}>Seeds</Grid>
