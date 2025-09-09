@@ -20,7 +20,7 @@ import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioEPL.module.css";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 // import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 import {
@@ -30,6 +30,8 @@ import {
   // getTeamsDynamic,
   getTeamsNotAvailable,
   getTournamentsId,
+  postEditPortfolio,
+  postNewPortfolio,
   // getTeamsAvailable,
   // postNewPortfolio,
 } from "@/api/epl/PortfoliosEplAPI";
@@ -39,7 +41,6 @@ import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 const MyPortfolioEPL = () => {
   const params = useParams();
   const userId = params.userId!;
-  // const queryClient = useQueryClient();
 
   const [teamsComplete, setTeamsComplete] = useState<Portfolios>([]);
   const [numberInputs, setNumberInputs] = useState<string[] | NewPortfolio>([]);
@@ -54,7 +55,10 @@ const MyPortfolioEPL = () => {
   const { data: portfolios, isLoading: isLoadingPortfolios } = useQuery({
     queryKey: ["portfolios", userId, tournamentsId],
     queryFn: () =>
-      getPortfolios("2", tournamentsId ? tournamentsId[0].id.toString() : "0"),
+      getPortfolios(
+        userId,
+        tournamentsId ? tournamentsId[0].id.toString() : "0"
+      ),
     refetchOnWindowFocus: false,
   });
 
@@ -84,6 +88,35 @@ const MyPortfolioEPL = () => {
       refetchInterval: 60 * 1000, // Ejecuta la consulta cada minuto (60 segundos)
       refetchOnWindowFocus: false,
     });
+
+  const { mutate: postNewPortfolioMutate } = useMutation({
+    mutationFn: postNewPortfolio,
+    onSuccess: (resp) => {
+      toast.success(resp);
+      queryClient.invalidateQueries(["portfolios", userId]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const { mutate: postEditPortfolioMutate } = useMutation({
+    mutationFn: postEditPortfolio,
+    onSuccess: (resp) => {
+      toast.success(resp);
+      queryClient.invalidateQueries(["portfolios", userId]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const areAllInputsValid = () => {
+    return (
+      selectedTeams.length === numberInputs.length && // Verifica que el número de equipos coincida con el número de inputs
+      selectedTeams.every((team) => team && team.name) // Verifica que cada equipo tenga un nombre válido
+    );
+  };
 
   useEffect(() => {
     if (teamsEPL) {
@@ -163,7 +196,7 @@ const MyPortfolioEPL = () => {
 
   const handleChangeSelect = (value: string, index: number) => {
     const newSelectedTeams = [...selectedTeams];
-    console.log(teamsComplete);
+    // console.log(teamsComplete);
     newSelectedTeams[index] = teamsComplete.filter(
       (team) => team.name === value
     )[0];
@@ -171,38 +204,42 @@ const MyPortfolioEPL = () => {
   };
 
   const addportFolio = useCallback(() => {
-    const allFilled = selectedTeams.every((team) => team !== "");
-
-    console.log(selectedTeams);
-
+    const allFilled = areAllInputsValid();
     // // ? Verifica que los portfolios vayan llenos
-    // if (!allFilled) {
-    //   toast.error("You must select all teams!");
-    //   setValidTournament(true);
+    if (!allFilled) {
+      toast.error("You must select all teams!");
+      setValidTournament(true);
 
-    //   setTimeout(() => {
-    //     setValidTournament(false);
-    //   }, 2500);
-    //   return;
-    // }
-    // const newPortfolio = {
-    //   tournament_id: "3",
-    //   participant_id: userId,
-    //   championshipPoints: 0,
-    //   teams: selectedTeams.map((team) => {
-    //     if (team === "") return false;
-    //     const found = teamsEPL?.find((opt) => opt.name === team);
-    //     return found ? { id: found.id } : false;
-    //   }),
-    // };
+      setTimeout(() => {
+        setValidTournament(false);
+      }, 2500);
+      return;
+    }
+    const newPortfolio = {
+      tournament_id: "2",
+      participant_id: userId,
+      championship_points: 0,
+      teams: selectedTeams.map((team) => {
+        return { id: team.id };
+      }),
+    };
+    console.log(newPortfolio);
+    if (!portfolios || portfolios.length === 0) {
+      // Crea un nuevo portfolio
+      postNewPortfolioMutate({
+        port: newPortfolio,
+        userId: userId,
+        portId: portfolios[0]?.id,
+      });
+    } else if (portfolios && portfolios.length > 0) {
+      // Actualiza el primer portfolio
+      postEditPortfolioMutate({
+        port: newPortfolio.teams,
+        portId: portfolios[0]?.id,
+      });
+    }
+
     // Solo guarda un portfolio, actualizándolo
-    // setPortfolios([newPortfolio]);
-
-    // postNewPortfolioMutate({
-    //   port: newPortfolio,
-    //   userId: userId,
-    //   portId: portfolios[0]?.id,
-    // });
   }, [selectedTeams, teamsEPL, userId, portfolios]);
 
   const renderTeams = () => {
@@ -405,16 +442,20 @@ const MyPortfolioEPL = () => {
                 <Button
                   variant="contained"
                   style={{
-                    backgroundColor: "#05fa87",
+                    // backgroundColor: "#05fa87",
+                    backgroundColor: `${
+                      areAllInputsValid() ? "#05fa87" : "#0c5031ff"
+                    }`,
                     width: "30%",
                     color: "black",
                     fontWeight: "bold",
                     fontSize: "14px",
                     margin: 10,
+                    "&:disabled": { backgroundColor: "grey" },
                   }}
-                  onClick={addportFolio}
+                  onClick={() => areAllInputsValid() && addportFolio()}
                 >
-                  {portfolios && portfolios[0].teams.length > 0
+                  {portfolios && portfolios[0]?.teams.length > 0
                     ? "EDIT"
                     : "SUBMIT"}
                 </Button>

@@ -147,18 +147,7 @@ export const getTeamsNotAvailable = async (
   }
 };
 
-export const postNewPortfolio = async ({
-  port,
-}: // portfolios,
-// userId,
-{
-  port: CreatePortfolio;
-  // portfolios: Portfolios;
-  // userId: User["id"];
-}) => {
-  // if (portfolios?.length > 8) return;
-  // console.log(port, userId);
-
+export const postNewPortfolio = async ({ port }: { port: CreatePortfolio }) => {
   const urlLogin = `/portfolios`;
   try {
     const { data } = await newApi.post(urlLogin, port, {
@@ -166,6 +155,45 @@ export const postNewPortfolio = async ({
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+    console.log(data);
+    if (
+      !data.message &&
+      data?.error?.description ===
+        "Can't register portfolio, tournament already started."
+    ) {
+      return "Can't register portfolio, tournament already started.";
+    }
+
+    if (data.message === "success") {
+      return "Successfully created portfolio";
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const postEditPortfolio = async ({
+  port,
+  portId,
+}: {
+  port: CreatePortfolio;
+  portId: string;
+}) => {
+  const urlLogin = `/portfolios/${portId}`;
+  console.log(port);
+
+  try {
+    const { data } = await newApi.put(
+      urlLogin,
+      { teams: port },
+      {
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      }
+    );
     console.log(data);
     if (
       !data.message &&
