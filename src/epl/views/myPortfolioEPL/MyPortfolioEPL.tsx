@@ -20,8 +20,13 @@ import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioEPL.module.css";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 // import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import {
+  notifyManager,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useLocation, useParams } from "react-router-dom";
 
 import {
   getNumberInputs,
@@ -37,19 +42,36 @@ import {
 } from "@/api/epl/PortfoliosEplAPI";
 import { NewPortfolio, Portfolios } from "@/types/index";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
+import { toast } from "react-toastify";
 
 const MyPortfolioEPL = () => {
   const params = useParams();
   const userId = params.userId!;
+  const sportId = params.sportId!;
+  const location = useLocation();
+  const queryClient = useQueryClient();
 
   const [teamsComplete, setTeamsComplete] = useState<Portfolios>([]);
   const [numberInputs, setNumberInputs] = useState<string[] | NewPortfolio>([]);
   const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
 
+  useEffect(() => {
+    if (location.pathname === `/epl/myPortfolio/${userId}/${sportId}`) {
+      // window.location.reload();
+      // // Reinicializa los estados necesarios
+      setTeamsComplete([]);
+      setSelectedTeams([]);
+      setNumberInputs([]);
+      queryClient.invalidateQueries(); // Refresca las consultas de React Query
+    }
+  }, [location.pathname]);
+
+  console.log(location.pathname);
+
   const { data: tournamentsId, isLoading: isLoadingTournamentId } = useQuery({
     queryKey: ["tournamentsId", userId],
     queryFn: () => getTournamentsId(),
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: "always",
   });
 
   const { data: portfolios, isLoading: isLoadingPortfolios } = useQuery({
@@ -59,26 +81,26 @@ const MyPortfolioEPL = () => {
         userId,
         tournamentsId ? tournamentsId[0].id.toString() : "0"
       ),
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: "always",
   });
 
   const { data: teamsEPL, isLoading } = useQuery({
-    queryKey: ["teamsEpl", userId],
+    queryKey: ["teamsEpl", userId, location.pathname],
     queryFn: () => getTeams("2"),
-    refetchOnWindowFocus: false,
+    refetchOnWindowFocus: "always",
   });
 
   const { data: numberInputsRecived, isLoading: isLoadingNumberInputs } =
     useQuery({
-      queryKey: ["numberInputsRecived", userId],
+      queryKey: ["numberInputsRecived", userId, location.pathname],
       queryFn: () => getNumberInputs(),
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: "always",
     });
 
   // const { data: teamsDynamic, isLoading: isLoadingTeamsDynamic } = useQuery({
-  //   queryKey: ["teamsDynamic", userId, portfolios],
+  // queryKey: ["teamsDynamic", userId, portfolios],
   //   queryFn: () => getTeamsDynamic("2", portfolios ? portfolios[0].id : "0"),
-  //   refetchOnWindowFocus: false,
+  //   refetchOnWindowFocus: 'always'
   // });
 
   const { data: teamsNotAvailable, isLoading: isLoadingTeamsNotAvailable } =
@@ -86,7 +108,7 @@ const MyPortfolioEPL = () => {
       queryKey: ["teamsNotAvailable", userId, tournamentsId],
       queryFn: () => getTeamsNotAvailable("2", "3"),
       refetchInterval: 60 * 1000, // Ejecuta la consulta cada minuto (60 segundos)
-      refetchOnWindowFocus: false,
+      refetchOnWindowFocus: "always",
     });
 
   const { mutate: postNewPortfolioMutate } = useMutation({
@@ -143,7 +165,7 @@ const MyPortfolioEPL = () => {
     if (numberInputsRecived) {
       setNumberInputs(Array(numberInputsRecived).fill(""));
     }
-  }, [numberInputsRecived]);
+  }, [numberInputsRecived]); // Se ejecuta cada vez que cambia la ruta
 
   useEffect(() => {
     if (portfolios && portfolios.length > 0 && teamsComplete) {
@@ -159,7 +181,7 @@ const MyPortfolioEPL = () => {
           );
 
           // Combina las propiedades de ambos equipos
-          return { ...team, ...matchingPortfolioTeam, disabled: true };
+          return { ...team, ...matchingPortfolioTeam };
         });
 
       setSelectedTeams(combinedTeams);
@@ -216,14 +238,13 @@ const MyPortfolioEPL = () => {
       return;
     }
     const newPortfolio = {
-      tournament_id: "2",
+      tournament_id: "3",
       participant_id: userId,
       championship_points: 0,
       teams: selectedTeams.map((team) => {
         return { id: team.id };
       }),
     };
-    console.log(newPortfolio);
     if (!portfolios || portfolios.length === 0) {
       // Crea un nuevo portfolio
       postNewPortfolioMutate({
@@ -241,6 +262,11 @@ const MyPortfolioEPL = () => {
 
     // Solo guarda un portfolio, actualizándolo
   }, [selectedTeams, teamsEPL, userId, portfolios]);
+
+  // useEffect(() => {
+  //   console.log(location.pathname);
+  console.log(numberInputs);
+  // }, [location.pathname]);
 
   const renderTeams = () => {
     return numberInputs.map((team, idx: number) => {
@@ -271,7 +297,16 @@ const MyPortfolioEPL = () => {
                 color: "white",
                 fontWeight: "bold",
                 fontSize: "18px",
+                // transition: "opacity 0.2s",
               },
+            }}
+            onClick={(e) => {
+              // Handle click event
+              e.stopPropagation();
+              e.preventDefault();
+              if (team.disabled) {
+                toast.error("This team is not available");
+              }
             }}
           >
             <InputLabel
@@ -282,7 +317,7 @@ const MyPortfolioEPL = () => {
                 fontWeight: "bold",
                 fontSize: "18px",
                 transition: "opacity 0.2s",
-                opacity: selectedTeams[idx] ? 0 : 1,
+                opacity: selectedTeams[idx] ? 0.5 : 1,
               }}
             >
               Team
@@ -291,54 +326,62 @@ const MyPortfolioEPL = () => {
               labelId={`select-label-${idx}`}
               value={team.name || ""}
               label="Team"
-              // disabled={team.disabled}
               readOnly={team.disabled}
               onChange={(e) => {
                 handleChangeSelect(e.target.value, idx);
               }}
+              sx={{
+                "& .MuiSelect-icon": {
+                  color: team.disabled ? "gray" : "white",
+                },
+              }}
             >
-              {teamsComplete
-                // ?.filter((opt) => opt.selected === true)
-                .map((opt) => (
-                  <MenuItem
-                    key={opt.id}
-                    value={opt.name || ""}
-                    disabled={opt.selected} // Deshabilita si available es false
+              {teamsComplete.map((opt) => (
+                <MenuItem
+                  key={opt.id}
+                  value={opt.name || ""}
+                  disabled={opt.selected} // Deshabilita si available es false
+                  style={{
+                    color: "white",
+                  }}
+                >
+                  <div
+                    className={classes.selectMio}
                     style={{
-                      // backgroundColor: "red",
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: "18px",
                       color: "white",
                     }}
                   >
-                    <div
-                      className={classes.selectMio}
+                    <ListItemIcon style={{ color: "white" }}>
+                      <img
+                        src={opt.crest_url}
+                        alt={opt.name}
+                        style={{
+                          width: 28,
+                          height: 28,
+                          objectFit: "contain",
+                          marginRight: 8,
+                        }}
+                      />
+                    </ListItemIcon>
+                    <ListItemText
                       style={{
-                        display: "flex",
-                        flexDirection: "row",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        color: "white",
+                        color: opt.disabled ? "#595757ff" : "white",
+                        textAlign: "left",
                         fontWeight: "bold",
-                        fontSize: "18px",
                       }}
                     >
-                      <ListItemIcon style={{ color: "white" }}>
-                        <img
-                          src={opt.crest_url}
-                          alt={opt.name}
-                          style={{
-                            width: 28,
-                            height: 28,
-                            objectFit: "contain",
-                            marginRight: 8,
-                          }}
-                        />
-                      </ListItemIcon>
-                      <ListItemText className={classes.clasePrueba}>
-                        {opt.name}
-                      </ListItemText>
-                    </div>
-                  </MenuItem>
-                ))}
+                      {opt.name}
+                    </ListItemText>
+                  </div>
+                </MenuItem>
+              ))}
             </Select>
           </FormControl>
         </div>
