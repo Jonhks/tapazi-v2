@@ -102,6 +102,17 @@
   text-align: center;
 }
 
+.clasePrueba {
+  text-align: left;
+  color: white;
+  font-weight: bold;
+}
+
+.clasePrueba:disabled {
+  color: white !important;
+  font-weight: bold !important;
+}
+
 @media (width < 800px) {
   .boxPortfolio {
     margin-top: 2rem;

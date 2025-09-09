@@ -1,4 +1,9 @@
-import { useEffect, useState } from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-disable no-extra-boolean-cast */
+/* eslint-disable no-unsafe-optional-chaining */
+
+import { useCallback, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -7,6 +12,7 @@ import {
   InputLabel,
   ListItemIcon,
   ListItemText,
+  // makeStyles,
   MenuItem,
   Select,
 } from "@mui/material";
@@ -21,15 +27,14 @@ import {
   getNumberInputs,
   getPortfolios,
   getTeams,
-  getTeamsDynamic,
+  // getTeamsDynamic,
   getTeamsNotAvailable,
   getTournamentsId,
   // getTeamsAvailable,
   // postNewPortfolio,
 } from "@/api/epl/PortfoliosEplAPI";
-import { Portfolios } from "@/types/index";
+import { NewPortfolio, Portfolios } from "@/types/index";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
-import { set } from "zod";
 
 const MyPortfolioEPL = () => {
   const params = useParams();
@@ -37,7 +42,7 @@ const MyPortfolioEPL = () => {
   // const queryClient = useQueryClient();
 
   const [teamsComplete, setTeamsComplete] = useState<Portfolios>([]);
-  const [numberInputs, setNumberInputs] = useState<string[]>([]);
+  const [numberInputs, setNumberInputs] = useState<string[] | NewPortfolio>([]);
   const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
 
   const { data: tournamentsId, isLoading: isLoadingTournamentId } = useQuery({
@@ -63,29 +68,22 @@ const MyPortfolioEPL = () => {
     useQuery({
       queryKey: ["numberInputsRecived", userId],
       queryFn: () => getNumberInputs(),
-      // staleTime: 30 * 60 * 1000, // 30 minutes
       refetchOnWindowFocus: false,
     });
 
-  const { data: teamsDynamic, isLoading: isLoadingTeamsDynamic } = useQuery({
-    queryKey: ["teamsDynamic", userId, portfolios],
-    // queryFn: () => getTeamsDynamic("2", portfolios ? portfolios[0].id : "0"),
-    queryFn: () => getTeamsDynamic("2", portfolios ? portfolios[0].id : "0"),
-    // staleTime: 30 * 60 * 1000, // 30 minutes
-    refetchOnWindowFocus: false,
-  });
+  // const { data: teamsDynamic, isLoading: isLoadingTeamsDynamic } = useQuery({
+  //   queryKey: ["teamsDynamic", userId, portfolios],
+  //   queryFn: () => getTeamsDynamic("2", portfolios ? portfolios[0].id : "0"),
+  //   refetchOnWindowFocus: false,
+  // });
 
   const { data: teamsNotAvailable, isLoading: isLoadingTeamsNotAvailable } =
     useQuery({
       queryKey: ["teamsNotAvailable", userId, tournamentsId],
-      queryFn: () =>
-        // getTeamsNotAvailable("2", tournamentsId ? tournamentsId[0].id : "0"),
-        getTeamsNotAvailable("2", "3"),
+      queryFn: () => getTeamsNotAvailable("2", "3"),
       refetchInterval: 60 * 1000, // Ejecuta la consulta cada minuto (60 segundos)
       refetchOnWindowFocus: false,
     });
-
-  // console.log(selectedTeams);
 
   useEffect(() => {
     if (teamsEPL) {
@@ -101,7 +99,7 @@ const MyPortfolioEPL = () => {
         );
         return {
           ...team,
-          available: !isNotAvailable, // Si está en teamsNotAvailable, `available` será false
+          disabled: isNotAvailable, // Si está en teamsNotAvailable, `disabled` será true
         };
       });
       setTeamsComplete(updatedTeams); // Actualiza el estado con los equipos modificados
@@ -115,41 +113,100 @@ const MyPortfolioEPL = () => {
   }, [numberInputsRecived]);
 
   useEffect(() => {
-    if (portfolios && portfolios.length > 0) {
-      setSelectedTeams(portfolios[0].teams);
+    if (portfolios && portfolios.length > 0 && teamsComplete) {
+      const combinedTeams = teamsComplete
+        .filter((team) =>
+          portfolios[0].teams.some(
+            (portfolioTeam) => portfolioTeam.id === team.id
+          )
+        )
+        .map((team) => {
+          const matchingPortfolioTeam = portfolios[0].teams.find(
+            (portfolioTeam) => portfolioTeam.id === team.id
+          );
+
+          // Combina las propiedades de ambos equipos
+          return { ...team, ...matchingPortfolioTeam, disabled: true };
+        });
+
+      setSelectedTeams(combinedTeams);
     }
   }, [portfolios]);
 
   useEffect(() => {
     if (selectedTeams) {
       setNumberInputs(
-        numberInputs.map((_, index) => selectedTeams[index] || "")
+        numberInputs.map((_, index) => {
+          if (!selectedTeams[index]) return "";
+          return {
+            ...selectedTeams[index],
+          };
+        })
       );
     }
   }, [selectedTeams]);
 
+  useEffect(() => {
+    if (selectedTeams && teamsComplete) {
+      const teamsNotSelected = teamsComplete.map((team) => {
+        if (
+          !selectedTeams.some((selectedTeam) => selectedTeam.id === team.id)
+        ) {
+          return { ...team, selected: false };
+        } else {
+          return { ...team, selected: true };
+        }
+      });
+      setTeamsComplete(teamsNotSelected);
+    }
+  }, [selectedTeams, numberInputs]);
+
+  const handleChangeSelect = (value: string, index: number) => {
+    const newSelectedTeams = [...selectedTeams];
+    console.log(teamsComplete);
+    newSelectedTeams[index] = teamsComplete.filter(
+      (team) => team.name === value
+    )[0];
+    setSelectedTeams(newSelectedTeams);
+  };
+
+  const addportFolio = useCallback(() => {
+    const allFilled = selectedTeams.every((team) => team !== "");
+
+    console.log(selectedTeams);
+
+    // // ? Verifica que los portfolios vayan llenos
+    // if (!allFilled) {
+    //   toast.error("You must select all teams!");
+    //   setValidTournament(true);
+
+    //   setTimeout(() => {
+    //     setValidTournament(false);
+    //   }, 2500);
+    //   return;
+    // }
+    // const newPortfolio = {
+    //   tournament_id: "3",
+    //   participant_id: userId,
+    //   championshipPoints: 0,
+    //   teams: selectedTeams.map((team) => {
+    //     if (team === "") return false;
+    //     const found = teamsEPL?.find((opt) => opt.name === team);
+    //     return found ? { id: found.id } : false;
+    //   }),
+    // };
+    // Solo guarda un portfolio, actualizándolo
+    // setPortfolios([newPortfolio]);
+
+    // postNewPortfolioMutate({
+    //   port: newPortfolio,
+    //   userId: userId,
+    //   portId: portfolios[0]?.id,
+    // });
+  }, [selectedTeams, teamsEPL, userId, portfolios]);
+
   const renderTeams = () => {
-    type Team = {
-      id: number;
-      name: string;
-      crest_url: string;
-      current_streak: number;
-      current_seed: number;
-      streak_multiplier: number;
-      streak_seed: string;
-    };
-
-    return numberInputs.map((team: Team, idx: number) => {
-      // Opciones disponibles para este select (excluye las ya seleccionadas en otros selects)
-      // const availableOptions = teamsEPL?.filter(
-      //   (opt) =>
-      //     !selectedTeams.includes(opt.name) || selectedTeams[idx] === opt.name
-      // );
-      // const teamDetails = teamsEPL?.find(
-      //   (team) => team.name === selectedTeams[idx]
-      // );
-      console.log(team);
-
+    return numberInputs.map((team, idx: number) => {
       return (
         <div
           key={idx}
@@ -182,70 +239,69 @@ const MyPortfolioEPL = () => {
           >
             <InputLabel
               id={`select-label-${idx}`}
-              // shrink={selectedTeams[idx] !== ""}
+              shrink={selectedTeams[idx] !== ""}
               sx={{
                 color: "white",
                 fontWeight: "bold",
                 fontSize: "18px",
                 transition: "opacity 0.2s",
-                // opacity: selectedTeams[idx] ? 0 : 1,
+                opacity: selectedTeams[idx] ? 0 : 1,
               }}
             >
               Team
             </InputLabel>
             <Select
               labelId={`select-label-${idx}`}
-              value={team.name}
+              value={team.name || ""}
               label="Team"
+              // disabled={team.disabled}
+              readOnly={team.disabled}
               onChange={(e) => {
-                console.log(selectedTeams[idx], idx);
-
-                console.log("asdlñmaskd");
-                // handleChangeSelect(e.target.value, idx)
-              }}
-              sx={{
-                "& .MuiSelect-icon": {
-                  color: "white",
-                },
+                handleChangeSelect(e.target.value, idx);
               }}
             >
-              {teamsComplete?.map((opt) => (
-                <MenuItem
-                  key={opt.id}
-                  value={opt.name || ""}
-                  disabled={!opt.available} // Deshabilita si available es false
-                >
-                  <div
+              {teamsComplete
+                // ?.filter((opt) => opt.selected === true)
+                .map((opt) => (
+                  <MenuItem
+                    key={opt.id}
+                    value={opt.name || ""}
+                    disabled={opt.selected} // Deshabilita si available es false
                     style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      // backgroundColor: "red",
                       color: "white",
-                      fontWeight: "bold",
-                      fontSize: "18px",
                     }}
                   >
-                    <ListItemIcon style={{ color: "white" }}>
-                      <img
-                        src={opt.crest_url}
-                        alt={opt.name}
-                        style={{
-                          width: 28,
-                          height: 28,
-                          objectFit: "contain",
-                          marginRight: 8,
-                        }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      style={{ textAlign: "left", fontWeight: "bold" }}
+                    <div
+                      className={classes.selectMio}
+                      style={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "18px",
+                      }}
                     >
-                      {opt.name}
-                    </ListItemText>
-                  </div>
-                </MenuItem>
-              ))}
+                      <ListItemIcon style={{ color: "white" }}>
+                        <img
+                          src={opt.crest_url}
+                          alt={opt.name}
+                          style={{
+                            width: 28,
+                            height: 28,
+                            objectFit: "contain",
+                            marginRight: 8,
+                          }}
+                        />
+                      </ListItemIcon>
+                      <ListItemText className={classes.clasePrueba}>
+                        {opt.name}
+                      </ListItemText>
+                    </div>
+                  </MenuItem>
+                ))}
             </Select>
           </FormControl>
         </div>
@@ -258,7 +314,7 @@ const MyPortfolioEPL = () => {
     isLoading ||
     isLoadingPortfolios ||
     isLoadingNumberInputs ||
-    isLoadingTeamsDynamic ||
+    // isLoadingTeamsDynamic ||
     isLoadingTeamsNotAvailable
   ) {
     return <Loader />;
@@ -356,9 +412,11 @@ const MyPortfolioEPL = () => {
                     fontSize: "14px",
                     margin: 10,
                   }}
-                  // onClick={addportFolio}
+                  onClick={addportFolio}
                 >
-                  {/* {portExist ? "EDIT" : "SUBMIT"} */}
+                  {portfolios && portfolios[0].teams.length > 0
+                    ? "EDIT"
+                    : "SUBMIT"}
                 </Button>
                 <Button
                   variant="contained"
