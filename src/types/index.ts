@@ -69,7 +69,22 @@ export const teamSchema = z.object({
   seed: z.number(),
 });
 
+export const numberInputsSchema = z.object({
+  crest_url: z.string().url().optional(),
+  current_seed: z.number(),
+  current_streak: z.number(),
+  description: z.string(),
+  id: z.number(),
+  key: z.string(),
+  name: z.string(),
+  seed: z.number(),
+  selected: z.boolean().optional(),
+  streak_multiplier: z.number(),
+  streak_seed: z.string(),
+});
+
 export type Team = z.infer<typeof teamSchema>;
+export type NumberInputs = z.infer<typeof numberInputsSchema>;
 
 export type PayOut = z.infer<typeof PayOutSchema>;
 

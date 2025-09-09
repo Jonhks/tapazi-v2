@@ -3,7 +3,7 @@
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable no-unsafe-optional-chaining */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import {
   Box,
   Button,
@@ -19,54 +19,37 @@ import {
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioEPL.module.css";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
-// import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
-import {
-  notifyManager,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useLocation, useParams } from "react-router-dom";
 
 import {
   getNumberInputs,
   getPortfolios,
   getTeams,
-  // getTeamsDynamic,
   getTeamsNotAvailable,
   getTournamentsId,
   postEditPortfolio,
   postNewPortfolio,
-  // getTeamsAvailable,
-  // postNewPortfolio,
 } from "@/api/epl/PortfoliosEplAPI";
-import { NewPortfolio, Portfolios } from "@/types/index";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import { toast } from "react-toastify";
+import { usePortfolio } from "../../../context/PortfolioContext";
+import Swal from "sweetalert2";
 
 const MyPortfolioEPL = () => {
   const params = useParams();
   const userId = params.userId!;
-  const sportId = params.sportId!;
   const location = useLocation();
   const queryClient = useQueryClient();
 
-  const [teamsComplete, setTeamsComplete] = useState<Portfolios>([]);
-  const [numberInputs, setNumberInputs] = useState<string[] | NewPortfolio>([]);
-  const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (location.pathname === `/epl/myPortfolio/${userId}/${sportId}`) {
-      // window.location.reload();
-      // // Reinicializa los estados necesarios
-      setTeamsComplete([]);
-      setSelectedTeams([]);
-      setNumberInputs([]);
-      queryClient.invalidateQueries(); // Refresca las consultas de React Query
-    }
-  }, [location.pathname]);
-
-  console.log(location.pathname);
+  const {
+    teamsComplete,
+    setTeamsComplete,
+    numberInputs,
+    setNumberInputs,
+    selectedTeams,
+    setSelectedTeams,
+  } = usePortfolio();
 
   const { data: tournamentsId, isLoading: isLoadingTournamentId } = useQuery({
     queryKey: ["tournamentsId", userId],
@@ -96,12 +79,6 @@ const MyPortfolioEPL = () => {
       queryFn: () => getNumberInputs(),
       refetchOnWindowFocus: "always",
     });
-
-  // const { data: teamsDynamic, isLoading: isLoadingTeamsDynamic } = useQuery({
-  // queryKey: ["teamsDynamic", userId, portfolios],
-  //   queryFn: () => getTeamsDynamic("2", portfolios ? portfolios[0].id : "0"),
-  //   refetchOnWindowFocus: 'always'
-  // });
 
   const { data: teamsNotAvailable, isLoading: isLoadingTeamsNotAvailable } =
     useQuery({
@@ -218,11 +195,65 @@ const MyPortfolioEPL = () => {
 
   const handleChangeSelect = (value: string, index: number) => {
     const newSelectedTeams = [...selectedTeams];
-    // console.log(teamsComplete);
     newSelectedTeams[index] = teamsComplete.filter(
       (team) => team.name === value
     )[0];
     setSelectedTeams(newSelectedTeams);
+  };
+
+  const addportFolioAlert = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to save changes",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3ED076",
+      cancelButtonColor: "#c7630b",
+      color: "white",
+      background: "#200930", //
+      confirmButtonText: "Yes, I want to save changes!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        console.log("Confirmed");
+        addportFolio();
+        Swal.fire({
+          title: "Changes saved!",
+          text: "You have changes saved successfully.",
+          icon: "success",
+          background: "#421065", // Cambia el color de fondo
+          confirmButtonColor: "#3ED076",
+          color: "white", // Cambia el color del texto
+        });
+      }
+    });
+  };
+
+  const cancelAlert = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to discard changes",
+      icon: "error",
+      showCancelButton: true,
+      confirmButtonColor: "#3ED076",
+      cancelButtonColor: "#c7630b",
+      color: "white",
+      background: "#200930", //
+      confirmButtonText: "Yes, I want to discard changes!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setTimeout(() => {
+          window.location.reload();
+        }, 100);
+        Swal.fire({
+          title: "Changes discarded!",
+          text: "You have changes discarded successfully.",
+          icon: "success",
+          background: "#421065", // Cambia el color de fondo
+          confirmButtonColor: "#3ED076",
+          color: "white", // Cambia el color del texto
+        });
+      }
+    });
   };
 
   const addportFolio = useCallback(() => {
@@ -259,17 +290,12 @@ const MyPortfolioEPL = () => {
         portId: portfolios[0]?.id,
       });
     }
-
-    // Solo guarda un portfolio, actualizándolo
   }, [selectedTeams, teamsEPL, userId, portfolios]);
-
-  // useEffect(() => {
-  //   console.log(location.pathname);
-  console.log(numberInputs);
-  // }, [location.pathname]);
 
   const renderTeams = () => {
     return numberInputs.map((team, idx: number) => {
+      console.log(team);
+
       return (
         <div
           key={idx}
@@ -283,12 +309,18 @@ const MyPortfolioEPL = () => {
           {/* Select */}
           <div
             style={{
-              marginLeft: "20px",
-              color: "white",
-              fontSize: "14px",
+              backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+              height: "-webkit-fill-available",
+              width: "80px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "#05fa87",
               fontWeight: "bold",
             }}
-          ></div>
+          >
+            {team.seed}
+          </div>
           <FormControl
             fullWidth
             sx={{
@@ -384,6 +416,20 @@ const MyPortfolioEPL = () => {
               ))}
             </Select>
           </FormControl>
+          <div
+            style={{
+              backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+              height: "-webkit-fill-available",
+              width: "80px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "#05fa87",
+              fontWeight: "bold",
+            }}
+          >
+            {team.streak_multiplier}
+          </div>
         </div>
       );
     });
@@ -461,13 +507,32 @@ const MyPortfolioEPL = () => {
                 }}
               />
             </div>
+
             <Grid
               size={12}
               style={{ marginTop: "30px" }}
             >
-              <div
-                style={{ width: "80%", margin: "0 auto", textAlign: "right" }}
-              >
+              <div style={{ width: "80%", margin: "0 auto" }}>
+                <Grid
+                  size={{ xs: 12 }}
+                  style={{
+                    marginTop: "30px",
+                    margin: "10px 0",
+                    padding: "0 10px",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    backgroundColor: "#380f65",
+                  }}
+                >
+                  <Grid size={12}>Seeds</Grid>
+                  <Grid
+                    size={12}
+                    style={{ textAlign: "right", fontWeight: "bold" }}
+                  >
+                    Multiplier
+                  </Grid>
+                </Grid>
                 {renderTeams()}
               </div>
             </Grid>
@@ -496,7 +561,7 @@ const MyPortfolioEPL = () => {
                     margin: 10,
                     "&:disabled": { backgroundColor: "grey" },
                   }}
-                  onClick={() => areAllInputsValid() && addportFolio()}
+                  onClick={() => areAllInputsValid() && addportFolioAlert()}
                 >
                   {portfolios && portfolios[0]?.teams.length > 0
                     ? "EDIT"
@@ -512,7 +577,8 @@ const MyPortfolioEPL = () => {
                     fontSize: "14px",
                     margin: 10,
                   }}
-                  // onClick={() => removeportfolioFunction(1)}
+                  onClick={() => cancelAlert()}
+                  // onClick={() => removeportfolioFunction()}
                 >
                   Cancel
                 </Button>

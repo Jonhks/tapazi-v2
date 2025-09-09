@@ -52,6 +52,8 @@ const StatsEpl = lazy(() => import("./epl/views/StatsEpl/StatsEpl"));
 
 // ? --------------------------  URL Parameter Handler -------------------------- ? //
 
+import { PortfolioProvider } from "./providers/PortfolioProvider";
+
 // function URLParameterHandler({ children }: { children: React.ReactNode }) {
 //   const navigate = useNavigate();
 //   const location = useLocation();
@@ -86,133 +88,136 @@ const Router = () => {
   return (
     <BrowserRouter>
       {/* <URLParameterHandler> */}
-      <Routes>
-        {/* Portfolio Pool Routes */}
-        <Route
-          path="/"
-          element={<Splash />}
-        />
-        <Route element={<AuthLayout />}>
+      <PortfolioProvider>
+        <Routes>
+          {/* Portfolio Pool Routes */}
           <Route
-            path="/login"
-            element={<Login />}
+            path="/"
+            element={<Splash />}
           />
-          <Route
-            path="/signup"
-            element={<Signup />}
-          />
-          <Route
-            path="/forgot"
-            element={<Forgot />}
-          />
-        </Route>
-        <Route element={<SportsLayout ImgSports={ImgSports} />}>
-          <Route
-            path="/sports/:userId"
-            element={<Sports />}
-          />
-        </Route>
-        <Route
-          path="/wip/:userId/:sport"
-          element={
-            <WIP
-              NCAAFemaleImg={NCAAFemaleImg}
-              NCAAMaleImg={NCAAMaleImg}
+          <Route element={<AuthLayout />}>
+            <Route
+              path="/login"
+              element={<Login />}
             />
-          }
-        />
-        <Route element={<AppLayout />}>
+            <Route
+              path="/signup"
+              element={<Signup />}
+            />
+            <Route
+              path="/forgot"
+              element={<Forgot />}
+            />
+          </Route>
+          <Route element={<SportsLayout ImgSports={ImgSports} />}>
+            <Route
+              path="/sports/:userId"
+              element={<Sports />}
+            />
+          </Route>
           <Route
-            path="/home/:userId"
+            path="/wip/:userId/:sport"
             element={
-              <PrivateRoute>
-                <Home />
-              </PrivateRoute>
+              <WIP
+                NCAAFemaleImg={NCAAFemaleImg}
+                NCAAMaleImg={NCAAMaleImg}
+              />
             }
           />
-          <Route
-            path="/myPortfolio/:userId"
-            element={
-              <PrivateRoute>
-                <MyPortfolio />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/instructions/:userId"
-            element={
-              <PrivateRoute>
-                <Instructions />
-              </PrivateRoute>
-            }
-          />
-        </Route>
-        <Route element={<HistoryLayout ImgHistory={ImgHistory} />}>
-          <Route
-            path="/history/:userId"
-            element={
-              <PrivateRoute>
-                <History />
-              </PrivateRoute>
-            }
-          />
-        </Route>
-        <Route element={<StatsLayout ImgStats={ImgStats} />}>
-          <Route
-            path="/stats/:userId"
-            element={
-              <PrivateRoute>
-                <Stats />
-              </PrivateRoute>
-            }
-          />
-        </Route>
-        <Route element={<AuthLayout />}>
-          <Route
-            path="*"
-            element={<Error404 />}
-          />
-        </Route>
-        {/* EPL Routes */}
-        <Route element={<AppLayoutEPL />}>
-          <Route
-            path="/epl/home/:userId/:sportId"
-            element={
-              <PrivateRoute>
-                <HomeEPL />
-              </PrivateRoute>
-            }
-          />
-        </Route>
-        <Route element={<AppLayoutEPL />}>
-          <Route
-            path="/epl/myPortfolio/:userId/:sportId"
-            element={
-              <PrivateRoute>
-                <MyPortfolioEPL />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/epl/instructions/:userId/:sportId"
-            element={
-              <PrivateRoute>
-                <InstructionsEPL />
-              </PrivateRoute>
-            }
-          />
-        </Route>
-        <Route element={<StatsLayoutEpl />}>
-          <Route
-            path="/epl/stats/:userId/:sportId"
-            element={
-              <PrivateRoute>
-                <StatsEpl />
-              </PrivateRoute>
-            }
-          />
-        </Route>
-      </Routes>
+          <Route element={<AppLayout />}>
+            <Route
+              path="/home/:userId"
+              element={
+                <PrivateRoute>
+                  <Home />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/myPortfolio/:userId"
+              element={
+                <PrivateRoute>
+                  <MyPortfolio />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/instructions/:userId"
+              element={
+                <PrivateRoute>
+                  <Instructions />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<HistoryLayout ImgHistory={ImgHistory} />}>
+            <Route
+              path="/history/:userId"
+              element={
+                <PrivateRoute>
+                  <History />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<StatsLayout ImgStats={ImgStats} />}>
+            <Route
+              path="/stats/:userId"
+              element={
+                <PrivateRoute>
+                  <Stats />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<AuthLayout />}>
+            <Route
+              path="*"
+              element={<Error404 />}
+            />
+          </Route>
+          {/* EPL Routes */}
+          <Route element={<AppLayoutEPL />}>
+            <Route
+              path="/epl/home/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <HomeEPL />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<AppLayoutEPL />}>
+            <Route
+              path="/epl/myPortfolio/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <MyPortfolioEPL />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/epl/instructions/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <InstructionsEPL />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<StatsLayoutEpl />}>
+            <Route
+              path="/epl/stats/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <StatsEpl />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+        </Routes>
+      </PortfolioProvider>
+
       {/* </URLParameterHandler> */}
     </BrowserRouter>
   );
