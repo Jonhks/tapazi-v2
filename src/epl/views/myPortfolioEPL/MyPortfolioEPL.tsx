@@ -334,8 +334,8 @@ const MyPortfolioEPL = () => {
             }}
             onClick={(e) => {
               // Handle click event
-              // e.stopPropagation();
-              // e.preventDefault();
+              e.stopPropagation();
+              e.preventDefault();
               if (team.disabled) {
                 toast.error("This team is not available");
               }
