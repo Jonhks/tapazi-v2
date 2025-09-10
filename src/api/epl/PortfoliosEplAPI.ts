@@ -76,7 +76,7 @@ export const getNumberInputs = async () => {
 
 export const getTournamentsId = async () => {
   try {
-    const url = `sports/1/tournaments`;
+    const url = `sports/2/tournaments`;
     const { data } = await newApi.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
