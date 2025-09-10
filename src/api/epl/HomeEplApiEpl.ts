@@ -123,3 +123,28 @@ export const getAllPortfoliosEpl = async () => {
     return;
   }
 };
+
+export const getScoreHomeEpl = async (
+  tournamentId: User["id"],
+  portfolioId: string
+) => {
+  try {
+    const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}`;
+    const { data } = await newApi(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.score) {
+      return [];
+    }
+    if (data.score) {
+      return data?.score;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

@@ -34,11 +34,27 @@
   border: 1px solid #8885;
   outline: none;
   margin-right: 5%;
-  background: #330948;
+  background: #3ed076;
+  color: white;
   padding: 5px 10px;
   border-radius: 10px;
   width: 40%;
   border-color: #4b0d6a;
+  color: white;
+  margin-top: 5px;
+  box-shadow: 3px 4px 5px 0 #343333;
+}
+
+.PWABadgeToastButtonCancel {
+  border: 1px solid #8885;
+  outline: none;
+  margin-right: 5%;
+  background: #3ed076;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 10px;
+  width: 40%;
+  border-color: #c7630b;
   color: white;
   margin-top: 5px;
   box-shadow: 3px 4px 5px 0 #343333;

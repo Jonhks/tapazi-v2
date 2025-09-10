@@ -51,7 +51,7 @@ function PWABadge() {
               Reload
             </button>
             <button
-              className={classes.PWABadgeToastButton}
+              className={classes.PWABadgeToastButtonCancel}
               onClick={() => close()}
             >
               Close
