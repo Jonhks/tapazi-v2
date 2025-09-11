@@ -260,3 +260,18 @@ export const scoresEplSchema = z.object({
   score: z.number(),
 });
 export type ScoresEplHome = z.infer<typeof scoresEplSchema>;
+
+export const ScorePortfolioTableSchema = z.object({
+  seed: z.number(),
+  team_name: z.string(),
+  team_id: z.number(),
+  streak_multiplier: z.number(),
+  type: z.string(),
+});
+
+export const ScorePortfoliosTableSchema = z.array(ScorePortfolioTableSchema);
+
+export type ScorePortfoliosTable = z.infer<typeof ScorePortfoliosTableSchema>;
+export const ScorePortfolioTableArraySchema = z.array(
+  ScorePortfolioTableSchema
+);

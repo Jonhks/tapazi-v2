@@ -528,7 +528,7 @@ const MyPortfolioEPL = () => {
                     backgroundColor: "#200930",
                   }}
                 >
-                  <Grid size={12}>Seeds</Grid>
+                  <Grid size={12}>Seed</Grid>
                   <Grid
                     size={12}
                     style={{ textAlign: "right", fontWeight: "bold" }}

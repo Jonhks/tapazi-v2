@@ -37,3 +37,16 @@
   border: 2px solid #eaad2b;
   box-sizing: border-box;
 }
+
+.cell:hover {
+  cursor: pointer;
+  background-color: #200930 !important;
+  transition: background-color 0.3s ease;
+}
+
+.cell:active,
+.cell:focus {
+  background-color: #25093a !important;
+  transition: background-color 0.3s ease;
+  font-size: 4rem;
+}

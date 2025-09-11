@@ -125,10 +125,10 @@ export const getAllPortfoliosEpl = async () => {
 };
 
 export const getScoreHomeEpl = async (
-  tournamentId: User["id"],
-  portfolioId: string
+  tournamentId: User["id"]
+  // portfolioId: string
 ) => {
-  console.log(portfolioId);
+  // console.log("portfolioId", portfolioId);
 
   try {
     const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${0}`;
@@ -143,6 +143,32 @@ export const getScoreHomeEpl = async (
     }
     if (data.score) {
       return data?.score;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getScorePeerWeekHomeEpl = async (
+  week: string,
+  portfolioId: string
+) => {
+  try {
+    const url = `/portfolios/${portfolioId}/per-week?week=${week}`;
+    const { data } = await newApi(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (!data.teams) {
+      return "Error teams";
+    }
+    if (data.teams) {
+      return data?.teams;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)

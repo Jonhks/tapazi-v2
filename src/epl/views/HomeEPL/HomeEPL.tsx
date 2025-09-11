@@ -59,8 +59,6 @@ const HomeEPL = () => {
     queryFn: () => getScoreHomeEpl("3", portfoliosHome[0]?.id || "0"),
   });
 
-  console.log(scoreHomeEpl);
-
   // const { data: participantsEpl, isLoading: isLoadingParticipantsEpl } =
   //   useQuery({
   //     queryKey: ["participantsEpl", userId],
@@ -78,19 +76,6 @@ const HomeEPL = () => {
     retry: true,
   });
 
-  // console.log(participantsEpl);
-
-  // const renderDescription = (dataHOINFO: string) => {
-  //   return dataHOINFO.split("\n").map((line, index) => (
-  //     <p
-  //       key={index}
-  //       style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
-  //     >
-  //       {line}
-  //     </p>
-  //   ));
-  // };
-
   if (
     isLoadingPopons ||
     isLoadingHOINFOEpl ||
@@ -99,6 +84,7 @@ const HomeEPL = () => {
     isLoadingPortfoliosHome ||
     isLoadingPayout ||
     isLoadingScoreHomeEpl
+    // isLoadingScorePeerWeekHomeEpl
   )
     return <BallLoader />;
 
@@ -203,7 +189,10 @@ const HomeEPL = () => {
             }}
           >
             {/* <Zoom in={true}> */}
-            <TableHomeEpl data={scoreHomeEpl} />
+            <TableHomeEpl
+              data={scoreHomeEpl}
+              portfolio={portfoliosHome[0]}
+            />
             {/* </Zoom> */}
           </div>
         </Grid>

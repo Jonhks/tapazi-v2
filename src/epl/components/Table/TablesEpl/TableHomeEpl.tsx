@@ -6,17 +6,29 @@ import {
   getSortedRowModel,
   getFilteredRowModel,
   SortingState,
+  // RowSelectionState,
 } from "@tanstack/react-table";
 
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { Input, InputAdornment } from "@mui/material";
-import { ScoresEplHome } from "@/types/index";
+import { NewPortfolio, ScoresEplHome } from "@/types/index";
 import SearchIcon from "@mui/icons-material/Search";
-const TableHomeEpl = ({ data }: { data: ScoresEplHome }) => {
-  const [sorting, setSorting] = useState<SortingState>([
-    // { id: "name", desc: false },para qeu se vea la
-  ]);
+import classes from "../Table.module.css";
+import ModalTableHome from "../../Modal/Modal";
+import { extractWeekNumber } from "@/utils/formulas";
+
+const TableHomeEpl = ({
+  data,
+  portfolio,
+}: {
+  data: ScoresEplHome;
+  portfolio: NewPortfolio;
+}) => {
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [filtered, setFiltered] = useState<string>("");
+  const [openModal, setOpenModal] = useState(false);
+  const [week, setWeek] = useState<string>("1");
+  const [portfolioId, setPortfolioId] = useState<string>("1");
 
   const columns = [
     {
@@ -218,6 +230,13 @@ const TableHomeEpl = ({ data }: { data: ScoresEplHome }) => {
           justifyContent: "center",
         }}
       >
+        <ModalTableHome
+          openModal={openModal}
+          setOpenModal={setOpenModal}
+          week={week}
+          portfolioId={portfolioId}
+          portfolio={portfolio}
+        />
         <Input
           type={"search"}
           sx={{
@@ -240,49 +259,14 @@ const TableHomeEpl = ({ data }: { data: ScoresEplHome }) => {
           }}
         />
       </div>
-      {/* <table>
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  {header.isPlaceholder ? null : (
-                    <div>
-                      {flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
-                      {{
-                        asc: <ArrowUpwardIcon />,
-                        desc: (
-                          <ArrowUpwardIcon
-                            style={{ transform: "rotate(180deg)" }}
-                          />
-                        ),
-                      }[header.column.getIsSorted() as string] || null}
-                    </div>
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id}>
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table> */}
-      <table>
+      <table
+        style={{
+          width: "100%", // Asegura que la tabla ocupe el ancho completo del contenedor
+          // tableLayout: "fixed", // Asegura que las columnas tengan un ancho fijo
+          borderCollapse: "collapse",
+          overflow: "hideden",
+        }}
+      >
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
@@ -362,6 +346,23 @@ const TableHomeEpl = ({ data }: { data: ScoresEplHome }) => {
               {row.getVisibleCells().map((cell, index) => (
                 <td
                   key={cell.id}
+                  onClick={() => {
+                    if (
+                      index === 0 ||
+                      index === 1 ||
+                      index === columns.length - 1
+                    )
+                      return;
+                    setPortfolioId(cell.row.original.portfolio_id);
+                    setWeek(extractWeekNumber(cell.id)?.toString() || "1");
+                    setOpenModal(true);
+                  }}
+                  className={`${
+                    index !== 0 &&
+                    index !== 1 &&
+                    index !== columns.length - 1 &&
+                    classes.cell
+                  }`}
                   style={{
                     position:
                       index === 0 || index === columns.length - 1
@@ -370,16 +371,16 @@ const TableHomeEpl = ({ data }: { data: ScoresEplHome }) => {
                     left: index === 0 ? 0 : undefined, // Fija la primera columna a la izquierda
                     right: index === columns.length - 1 ? 0 : undefined, // Fija la última columna a la derecha
                     backgroundColor:
-                      index === 0 || index === columns.length - 1
+                      index === 0 || index === 1 || index === columns.length - 1
                         ? "#200930"
                         : "#380f51", // Fondo para las columnas fijas, // Fondo para las columnas fijas
+                    transition: "background-color 0.3s ease", // Transición suave
                     zIndex: 1, // Asegura que las columnas fijas estén por encima de las demás
                     color: "white",
                     fontWeight: "bold",
-                    fontSize: "14px",
+                    fontSize: "12px",
                     textAlign: "center",
                     padding: "8px",
-                    cursor: "pointer",
                   }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
