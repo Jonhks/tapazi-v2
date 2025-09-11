@@ -10,8 +10,8 @@ import {
 } from "@tanstack/react-table";
 
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { Input, InputAdornment } from "@mui/material";
-import { NewPortfolio, ScoresEplHome } from "@/types/index";
+import { Input, InputAdornment, Tooltip } from "@mui/material";
+import { NewPortfolio, ScoresEplHome, Tournament } from "@/types/index";
 import SearchIcon from "@mui/icons-material/Search";
 import classes from "../Table.module.css";
 import ModalTableHome from "../../Modal/Modal";
@@ -20,9 +20,11 @@ import { extractWeekNumber } from "@/utils/formulas";
 const TableHomeEpl = ({
   data,
   portfolio,
+  tournament,
 }: {
   data: ScoresEplHome;
   portfolio: NewPortfolio;
+  tournament: Tournament;
 }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filtered, setFiltered] = useState<string>("");
@@ -210,6 +212,8 @@ const TableHomeEpl = ({
     onSortingChange: setSorting,
     onGlobalFilterChange: setFiltered,
   });
+  // console.log(extractWeekNumber);
+  // console.log(tournament.current_round);
 
   return (
     <>
@@ -262,7 +266,6 @@ const TableHomeEpl = ({
       <table
         style={{
           width: "100%", // Asegura que la tabla ocupe el ancho completo del contenedor
-          // tableLayout: "fixed", // Asegura que las columnas tengan un ancho fijo
           borderCollapse: "collapse",
           overflow: "hideden",
         }}
@@ -271,71 +274,90 @@ const TableHomeEpl = ({
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header, index) => (
-                <th
+                <Tooltip
                   key={header.id}
-                  onClick={header.column.getToggleSortingHandler()}
-                  style={{
-                    position:
-                      index === 0 || index === columns.length - 1
-                        ? "sticky"
-                        : "static", // Fija la primera y última columna
-                    left: index === 0 ? 0 : undefined, // Fija la primera columna a la izquierda
-                    right: index === columns.length - 1 ? 0 : undefined, // Fija la última columna a la derecha
-                    backgroundColor: "#200930",
-                    zIndex: 2, // Asegura que las columnas fijas estén por encima de las demás
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    textAlign: "center",
-                    padding: "12px",
-                    cursor: "pointer",
-                  }}
-                >
-                  {header.isPlaceholder ? null : (
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <p>
-                        {flexRender(
+                  placement="top"
+                  title={`${
+                    extractWeekNumber(header.id) ===
+                    String(tournament.current_round)
+                      ? "Current Round"
+                      : flexRender(
                           header.column.columnDef.header,
                           header.getContext()
-                        )}
-                      </p>
-                      {{
-                        asc: <ArrowUpwardIcon style={{ fontSize: "20px" }} />,
-                        desc: (
-                          <ArrowUpwardIcon
-                            style={{
-                              transform: "rotate(180deg)",
-                              fontSize: "20px",
-                            }}
-                          />
-                        ),
-                        undefined: (
-                          <div>
+                        )
+                  }`}
+                >
+                  <th
+                    key={header.id}
+                    onClick={header.column.getToggleSortingHandler()}
+                    style={{
+                      position:
+                        index === 0 || index === columns.length - 1
+                          ? "sticky"
+                          : "static", // Fija la primera y última columna
+                      left: index === 0 ? 0 : undefined, // Fija la primera columna a la izquierda
+                      right: index === columns.length - 1 ? 0 : undefined, // Fija la última columna a la derecha
+                      backgroundColor:
+                        extractWeekNumber(header.id) ===
+                        String(tournament.current_round)
+                          ? "var(--verde)" // Fondo para las columnas fijas, // Fondo para las columnas fijas
+                          : "#200930",
+                      zIndex: 2, // Asegura que las columnas fijas estén por encima de las demás
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                      textAlign: "center",
+                      padding: "12px",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {/* {console.log(extractWeekNumber(header.id))} */}
+                    {header.isPlaceholder ? null : (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <p>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                        </p>
+                        {{
+                          asc: <ArrowUpwardIcon style={{ fontSize: "20px" }} />,
+                          desc: (
                             <ArrowUpwardIcon
                               style={{
-                                color: "gray", // Color neutro para indicar que no está ordenado
+                                transform: "rotate(180deg)",
                                 fontSize: "20px",
                               }}
                             />
-                          </div>
-                        ),
-                      }[header.column.getIsSorted() as string] || (
-                        <ArrowUpwardIcon
-                          style={{
-                            color: "gray", // Color neutro para indicar que no está ordenado
-                            fontSize: "18px",
-                          }}
-                        />
-                      )}
-                    </div>
-                  )}
-                </th>
+                          ),
+                          undefined: (
+                            <div>
+                              <ArrowUpwardIcon
+                                style={{
+                                  color: "gray", // Color neutro para indicar que no está ordenado
+                                  fontSize: "20px",
+                                }}
+                              />
+                            </div>
+                          ),
+                        }[header.column.getIsSorted() as string] || (
+                          <ArrowUpwardIcon
+                            style={{
+                              color: "gray", // Color neutro para indicar que no está ordenado
+                              fontSize: "18px",
+                            }}
+                          />
+                        )}
+                      </div>
+                    )}
+                  </th>
+                </Tooltip>
               ))}
             </tr>
           ))}
@@ -382,6 +404,7 @@ const TableHomeEpl = ({
                     textAlign: "center",
                     padding: "8px",
                   }}
+                  // style={{ backgroundColor: "red" }}
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>

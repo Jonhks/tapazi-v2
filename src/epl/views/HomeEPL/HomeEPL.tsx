@@ -59,6 +59,8 @@ const HomeEPL = () => {
     queryFn: () => getScoreHomeEpl("3", "0"),
   });
 
+  // console.log(tournamentId);
+
   // const { data: participantsEpl, isLoading: isLoadingParticipantsEpl } =
   //   useQuery({
   //     queryKey: ["participantsEpl", userId],
@@ -192,6 +194,7 @@ const HomeEPL = () => {
             <TableHomeEpl
               data={scoreHomeEpl}
               portfolio={portfoliosHome[0]}
+              tournament={tournamentId[0]}
             />
             {/* </Zoom> */}
           </div>

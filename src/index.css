@@ -3,6 +3,11 @@
   padding: 0;
 }
 
+:root {
+  --verde: #3ed076;
+  --text-color: white;
+}
+
 body {
   font-family: "Raleway", sans-serif;
 }
@@ -32,10 +37,6 @@ thead {
   background-color: #200930;
   color: white !important;
   opacity: 0.8;
-}
-
-tbody {
-  /* background-color: red; */
 }
 
 th,

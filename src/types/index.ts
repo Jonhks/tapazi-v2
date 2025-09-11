@@ -132,7 +132,7 @@ export type CreatePortfolio = z.infer<typeof createPortfolioSchema>;
 // Tournaments
 
 export const tournamentSchema = z.object({
-  current: z.boolean(),
+  current_round: z.boolean(),
   description: z.string(),
   id: z.number(),
   key: z.string(),
