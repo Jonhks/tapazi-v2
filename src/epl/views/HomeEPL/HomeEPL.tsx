@@ -56,7 +56,7 @@ const HomeEPL = () => {
 
   const { data: scoreHomeEpl, isLoading: isLoadingScoreHomeEpl } = useQuery({
     queryKey: ["scoreHomeEpl", userId, tournamentId, portfoliosHome],
-    queryFn: () => getScoreHomeEpl("3", portfoliosHome[0]?.id || "0"),
+    queryFn: () => getScoreHomeEpl("3", "0"),
   });
 
   // const { data: participantsEpl, isLoading: isLoadingParticipantsEpl } =
