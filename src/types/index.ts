@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { boolean, z } from "zod";
 
 export const userSchema = z.object({
   id: z.string(),
@@ -133,6 +133,7 @@ export type CreatePortfolio = z.infer<typeof createPortfolioSchema>;
 
 export const tournamentSchema = z.object({
   current_round: z.boolean(),
+  current: z.boolean().optional(),
   description: z.string(),
   id: z.number(),
   key: z.string(),
