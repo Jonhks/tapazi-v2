@@ -7,13 +7,15 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import { ScorePortfoliosTable } from "../../../types";
 import { useMediaQuery } from "@mui/material";
+
 function createData(
   team_name: string,
   seed: number,
   multiplier: number,
-  result: number
+  result: number,
+  type: string
 ) {
-  return { team_name, seed, multiplier, result };
+  return { team_name, seed, multiplier, result, type };
 }
 
 export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
@@ -30,7 +32,8 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
       item.team_name,
       item.seed,
       item.streak_multiplier,
-      item.team_id
+      item.team_id,
+      item.type
     );
   });
 
@@ -43,6 +46,11 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
         color: "white",
         maxHeight: "50vh",
         overflow: "scroll",
+      }}
+      sx={{
+        "&::-webkit-scrollbar": {
+          display: "none", // Oculta las barras de desplazamiento en navegadores WebKit
+        },
       }}
     >
       <Table
@@ -107,7 +115,7 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
                 style={style}
                 align="right"
               >
-                {row.result}
+                {row.type}
               </TableCell>
             </TableRow>
           ))}
