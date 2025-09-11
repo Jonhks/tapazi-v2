@@ -247,10 +247,10 @@ const MyPortfolioEPL = () => {
                 handleChangeSelect(e.target.value, idx);
               }}
               sx={{
-                backgroundColor: team.disabled && "#72598cff",
-                opacity: team.disabled && 0.7,
+                backgroundColor: checkNotValidTeam(team) && "#72598cff",
+                opacity: checkNotValidTeam(team) && 0.7,
                 "& .MuiSelect-icon": {
-                  color: team.disabled ? "gray" : "white",
+                  color: checkNotValidTeam(team) ? "gray" : "white",
                 },
               }}
             >
