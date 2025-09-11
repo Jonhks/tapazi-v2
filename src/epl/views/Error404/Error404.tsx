@@ -42,31 +42,17 @@ export default function Error() {
             <Button
               variant="contained"
               style={{
-                backgroundColor: "#238b94",
+                backgroundColor: "var(--primary)",
               }}
               onClick={() =>
-                navigate(`/home/${user.id}`, {
+                navigate(`/epl/home/${user.id}`, {
                   replace: true,
                 })
               }
             >
-              Back Home
+              Back Home qweqwe
             </Button>
           </Grid>
-          {/* <Grid
-            size={{ xs: 12, md: 6 }}
-            display={"flex"}
-            flexDirection={"column"}
-            justifyContent={"center"}
-            alignItems={"center"}
-          >
-            <img
-              src="https://cdn.pixabay.com/photo/2017/03/09/12/31/error-2129569__340.jpg"
-              alt=""
-              width={500}
-              height={250}
-            />
-          </Grid> */}
         </Grid>
       </Container>
     </Box>

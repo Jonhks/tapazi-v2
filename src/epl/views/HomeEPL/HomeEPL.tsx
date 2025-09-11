@@ -193,7 +193,6 @@ const HomeEPL = () => {
             {/* <Zoom in={true}> */}
             <TableHomeEpl
               data={scoreHomeEpl}
-              portfolio={portfoliosHome[0]}
               tournament={tournamentId[0]}
             />
             {/* </Zoom> */}

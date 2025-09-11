@@ -5,7 +5,8 @@
 
 :root {
   --verde: #3ed076;
-  --text-color: white;
+  --primary: #200930;
+  --secondary: #380f65;
 }
 
 body {

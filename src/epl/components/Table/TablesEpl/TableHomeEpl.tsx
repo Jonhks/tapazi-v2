@@ -19,11 +19,11 @@ import { extractWeekNumber } from "@/utils/formulas";
 
 const TableHomeEpl = ({
   data,
-  portfolio,
+  // portfolio,
   tournament,
 }: {
   data: ScoresEplHome;
-  portfolio: NewPortfolio;
+  // portfolio: NewPortfolio;
   tournament: Tournament;
 }) => {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -31,6 +31,8 @@ const TableHomeEpl = ({
   const [openModal, setOpenModal] = useState(false);
   const [week, setWeek] = useState<string>("1");
   const [portfolioId, setPortfolioId] = useState<string>("1");
+  const [portfolio, setPortfolio] = useState<NewPortfolio>({} as NewPortfolio);
+  // console.log(portfolioId);
 
   const columns = [
     {
@@ -212,8 +214,6 @@ const TableHomeEpl = ({
     onSortingChange: setSorting,
     onGlobalFilterChange: setFiltered,
   });
-  // console.log(extractWeekNumber);
-  // console.log(tournament.current_round);
 
   return (
     <>
@@ -378,6 +378,7 @@ const TableHomeEpl = ({
                     setPortfolioId(cell.row.original.portfolio_id);
                     setWeek(extractWeekNumber(cell.id)?.toString() || "1");
                     setOpenModal(true);
+                    setPortfolio(cell.row.original);
                   }}
                   className={`${
                     index !== 0 &&

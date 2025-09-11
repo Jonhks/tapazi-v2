@@ -42,10 +42,10 @@ export default function Error() {
             <Button
               variant="contained"
               style={{
-                backgroundColor: "#238b94",
+                backgroundColor: "var(--secondary)",
               }}
               onClick={() =>
-                navigate(`/home/${user.id}`, {
+                navigate(`/epl/home/${user.id}/${2}`, {
                   replace: true,
                 })
               }
