@@ -16,7 +16,7 @@ import {
   getScoreHomeEpl,
 } from "@/api/epl/HomeEplApiEpl";
 import { PayOut } from "@/types/index";
-import { getTournamentsId, getPortfolios } from "@/api/epl/PortfoliosEplAPI";
+import { getTournamentsId, getPortfoliosEpl } from "@/api/epl/PortfoliosEplAPI";
 import TableHomeEpl from "@/epl/components/Table/TablesEpl/TableHomeEpl";
 
 const HomeEPL = () => {
@@ -50,7 +50,7 @@ const HomeEPL = () => {
   const { data: portfoliosHome, isLoading: isLoadingPortfoliosHome } = useQuery(
     {
       queryKey: ["portfoliosHome", userId, tournamentId],
-      queryFn: () => getPortfolios(userId, tournamentId[0]?.id || "0"),
+      queryFn: () => getPortfoliosEpl(userId, tournamentId[0]?.id || "0"),
     }
   );
 
@@ -69,7 +69,7 @@ const HomeEPL = () => {
 
   // const { data: portfoliosHome } = useQuery({
   //   queryKey: ["portfoliosHome", userId],
-  //   queryFn: () => getPortfoliosCount(),
+  //   queryFn: () => getPortfoliosEplCount(),
   // });
 
   const { data: payout, isLoading: isLoadingPayout } = useQuery({

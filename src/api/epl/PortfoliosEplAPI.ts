@@ -7,7 +7,7 @@ import {
   User,
 } from "../../types";
 
-export const getPortfolios = async (id: User["id"], portfolioId: string) => {
+export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
   portfolioId = portfolioId || "0";
   try {
     const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
@@ -30,7 +30,7 @@ export const getPortfolios = async (id: User["id"], portfolioId: string) => {
   }
 };
 
-export const getTeams = async (sport: User["id"]) => {
+export const getTeamsEpl = async (sport: User["id"]) => {
   try {
     const url = `/sports/${sport}/teams`;
     const { data } = await newApi.get(url, {
