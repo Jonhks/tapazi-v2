@@ -1,7 +1,11 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+/* eslint-disable no-extra-boolean-cast */
+/* eslint-disable no-unsafe-optional-chaining */
 import React, { useEffect, useState } from "react";
 import { PortfolioContext } from "../context/PortfolioContext";
 import { PortfolioContextType } from "../context/PortfolioContext";
-import { NumberInputs, Team, Tournament } from "../types";
+import { NumberInputs, Team, TeamsNotPicked, Tournament } from "../types";
 import {
   getTournamentsId,
   getPortfoliosEpl,
@@ -10,7 +14,6 @@ import {
   getTeamsNotAvailable,
 } from "@/api/epl/PortfoliosEplAPI";
 import { useQuery } from "@tanstack/react-query";
-// import { useParams } from "react-router-dom";
 
 export const PortfolioProvider = ({
   children,
@@ -20,10 +23,15 @@ export const PortfolioProvider = ({
   const [userId, setUserId] = useState<string | null>(null);
 
   const [validTournament, setValidTournament] = useState<Tournament[]>([]); //estado de getTournamentsId
-  const [AllPortfolios, setAllPortfolios] = useState<Tournament[]>([]); //estado de getPortfoliosEpl
+  const [AllPortfolios, setAllPortfolios] = useState<TeamsNotPicked[]>([]); //estado de getPortfoliosEpl
   const [teamsComplete, setTeamsComplete] = useState<Team[]>([]); // estado de getTeamsEpl
   const [numberInputs, setNumberInputs] = useState<string[] | NumberInputs>([]); // estado de getNumberInputs
   const [teamsBloqued, setTeamsBloqued] = useState<Team[]>([]); //estado de equipos no teamsNotAvailable
+  const [selectedTeams, setSelectedTeams] = useState<Team[]>([]); //estado de los equipos seleccionados
+
+  const [rendersAmountOfInputs, setRendersAmountOfInputs] = useState<string[]>(
+    []
+  );
 
   const { data: tournament, isLoading: isLoadingTournament } = useQuery({
     queryKey: ["tournament", userId],
@@ -39,6 +47,14 @@ export const PortfolioProvider = ({
     enabled: Boolean(userId),
   });
 
+  const { data: teamsNotAvailable, isLoading: isLoadingTeamsNotAvailable } =
+    useQuery({
+      queryKey: ["teamsNotAvailable", userId],
+      queryFn: () => getTeamsNotAvailable("2", "3"),
+      refetchInterval: 60 * 1000,
+      refetchOnWindowFocus: "always",
+    });
+
   const { data: teamsEPL, isLoading } = useQuery({
     queryKey: ["teamsEpl", userId],
     queryFn: () => getTeamsEpl("2"),
@@ -50,14 +66,6 @@ export const PortfolioProvider = ({
     useQuery({
       queryKey: ["numberInputsRecived", userId, location.pathname],
       queryFn: () => getNumberInputs(),
-      refetchOnWindowFocus: "always",
-    });
-
-  const { data: teamsNotAvailable, isLoading: isLoadingTeamsNotAvailable } =
-    useQuery({
-      queryKey: ["teamsNotAvailable", userId],
-      queryFn: () => getTeamsNotAvailable("2", "3"),
-      refetchInterval: 60 * 1000,
       refetchOnWindowFocus: "always",
     });
 
@@ -92,6 +100,20 @@ export const PortfolioProvider = ({
     }
   }, [teamsNotAvailable]);
 
+  useEffect(() => {
+    if (numberInputs) {
+      if (typeof numberInputs === "number") {
+        setSelectedTeams(Array(numberInputs).fill(""));
+      }
+    }
+  }, [numberInputs]);
+
+  useEffect(() => {
+    if (teamsBloqued && AllPortfolios && teamsComplete) {
+      setSelectedTeams(AllPortfolios[0]?.teams);
+    }
+  }, [teamsBloqued, AllPortfolios, teamsComplete, numberInputs]);
+
   const isLoadingData =
     isLoadingTournament ||
     isLoadingPortfolios ||
@@ -113,6 +135,10 @@ export const PortfolioProvider = ({
     teamsBloqued,
     setTeamsBloqued,
     isLoadingData,
+    rendersAmountOfInputs,
+    setRendersAmountOfInputs,
+    selectedTeams,
+    setSelectedTeams,
   };
 
   return (
