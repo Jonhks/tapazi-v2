@@ -10,7 +10,7 @@ import {
   getTournamentsId,
   getPortfoliosEpl,
   getTeamsEpl,
-  getNumberInputs,
+  getNumberTEAMXP,
   getTeamsNotAvailable,
 } from "@/api/epl/PortfoliosEplAPI";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ export const PortfolioProvider = ({
   const [validTournament, setValidTournament] = useState<Tournament[]>([]); //estado de getTournamentsId
   const [AllPortfolios, setAllPortfolios] = useState<TeamsNotPicked[]>([]); //estado de getPortfoliosEpl
   const [teamsComplete, setTeamsComplete] = useState<Team[]>([]); // estado de getTeamsEpl
-  const [numberInputs, setNumberInputs] = useState<string[] | NumberInputs>([]); // estado de getNumberInputs
+  const [numberInputs, setNumberInputs] = useState<string[] | NumberInputs>([]); // estado de getNumberTEAMXP
   const [teamsBloqued, setTeamsBloqued] = useState<Team[]>([]); //estado de equipos no teamsNotAvailable
   const [selectedTeams, setSelectedTeams] = useState<Team[]>([]); //estado de los equipos seleccionados
 
@@ -65,9 +65,11 @@ export const PortfolioProvider = ({
   const { data: numberInputsRecived, isLoading: isLoadingNumberInputs } =
     useQuery({
       queryKey: ["numberInputsRecived", userId, location.pathname],
-      queryFn: () => getNumberInputs(),
+      queryFn: () => getNumberTEAMXP(),
       refetchOnWindowFocus: "always",
     });
+
+  console.log(portfolios);
 
   // Actualiza los estados locales cuando las consultas cambien
   useEffect(() => {
@@ -89,10 +91,14 @@ export const PortfolioProvider = ({
   }, [portfolios]);
 
   useEffect(() => {
-    if (numberInputsRecived) {
-      setNumberInputs(numberInputsRecived);
+    if (numberInputsRecived && portfolios) {
+      if (portfolios[0]?.available_teams) {
+        setNumberInputs(portfolios[0]?.available_teams);
+      } else {
+        setNumberInputs(numberInputsRecived);
+      }
     }
-  }, [numberInputsRecived]);
+  }, [numberInputsRecived, portfolios]);
 
   useEffect(() => {
     if (teamsNotAvailable) {

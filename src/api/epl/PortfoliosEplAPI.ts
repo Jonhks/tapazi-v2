@@ -50,7 +50,7 @@ export const getTeamsEpl = async (sport: User["id"]) => {
   }
 };
 
-export const getNumberInputs = async () => {
+export const getNumberTEAMXP = async () => {
   try {
     const url = `tournaments/3/parameters?key=TEAMXP`;
     const { data } = await newApi.get(url, {
