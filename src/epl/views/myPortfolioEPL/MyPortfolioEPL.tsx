@@ -242,7 +242,7 @@ const MyPortfolioEPL = () => {
               value={team.name || ""}
               label="Team"
               readOnly={checkNotValidTeam(team)}
-              disabled={team.disabled}
+              disabled={checkNotValidTeam(team)}
               onChange={(e) => {
                 handleChangeSelect(e.target.value, idx);
               }}
