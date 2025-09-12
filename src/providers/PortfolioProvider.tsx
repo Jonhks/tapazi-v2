@@ -69,8 +69,6 @@ export const PortfolioProvider = ({
       refetchOnWindowFocus: "always",
     });
 
-  console.log(portfolios);
-
   // Actualiza los estados locales cuando las consultas cambien
   useEffect(() => {
     if (tournament) {
@@ -117,6 +115,12 @@ export const PortfolioProvider = ({
   useEffect(() => {
     if (teamsBloqued && AllPortfolios && teamsComplete) {
       setSelectedTeams(AllPortfolios[0]?.teams);
+    }
+    if (
+      (teamsBloqued.length === 0 || AllPortfolios.length === 0) &&
+      teamsComplete
+    ) {
+      setSelectedTeams(Array(numberInputs).fill(""));
     }
   }, [teamsBloqued, AllPortfolios, teamsComplete, numberInputs]);
 

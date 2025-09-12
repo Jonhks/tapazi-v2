@@ -30,9 +30,6 @@ export default function Sports() {
   setTimeout(() => setShowLoader(true), 1000);
   setTimeout(() => setChangeLoader(true), 500);
 
-  console.log(dataSports);
-  console.log(dataSportsDisponible);
-
   interface SportDisponible {
     id: number;
     enabled: boolean;
