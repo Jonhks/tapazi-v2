@@ -8,15 +8,17 @@ import {
 } from "../../types";
 
 export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
-  portfolioId = portfolioId || "0";
   try {
-    const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
+    const url =
+      portfolioId !== "0"
+        ? `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`
+        : `/participants/${id}/portfolios?tournament_id=3`;
+    // const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
     const { data } = await newApi(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-
     if (!data.portfolios) {
       return [];
     }
@@ -26,6 +28,7 @@ export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
+    console.log(error);
     return;
   }
 };
@@ -147,7 +150,11 @@ export const getTeamsNotAvailable = async (
   }
 };
 
-export const postNewPortfolio = async ({ port }: { port: CreatePortfolio }) => {
+export const postNewPortfolioEpl = async ({
+  port,
+}: {
+  port: CreatePortfolio;
+}) => {
   const urlLogin = `/portfolios`;
   try {
     const { data } = await newApi.post(urlLogin, port, {
@@ -182,8 +189,6 @@ export const postEditPortfolio = async ({
   portId: string;
 }) => {
   const urlLogin = `/portfolios/${portId}`;
-  console.log(port);
-
   try {
     const { data } = await newApi.put(
       urlLogin,

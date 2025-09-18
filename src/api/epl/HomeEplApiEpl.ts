@@ -128,8 +128,6 @@ export const getScoreHomeEpl = async (
   tournamentId: User["id"],
   portfolioId: string
 ) => {
-  // console.log("portfolioId", portfolioId);
-
   try {
     const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}`;
     const { data } = await newApi(url, {
@@ -137,6 +135,7 @@ export const getScoreHomeEpl = async (
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+    console.log(data);
 
     if (!data.score) {
       return [];

@@ -43,6 +43,7 @@ const MyPortfolioEPL = () => {
     isLoadingData,
     selectedTeams,
     setSelectedTeams,
+    postNewPortfolioMutate,
   } = usePortfolio();
 
   useEffect(() => {
@@ -88,7 +89,6 @@ const MyPortfolioEPL = () => {
       confirmButtonText: "Yes, I want to save changes!",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log("Confirmed");
         addportFolio();
         Swal.fire({
           title: "Changes saved!",
@@ -150,14 +150,16 @@ const MyPortfolioEPL = () => {
         return { id: team.id };
       }),
     };
-    if (!AllPortfolios || AllPortfolios.length === 0) {
+    console.log(AllPortfolios);
+
+    if (AllPortfolios && !AllPortfolios[0]?.teams) {
       // Crea un nuevo portfolio
       postNewPortfolioMutate({
         port: newPortfolio,
         userId: userId,
         portId: AllPortfolios[0]?.id,
       });
-    } else if (AllPortfolios && AllPortfolios.length > 0) {
+    } else if (AllPortfolios && AllPortfolios[0]?.teams) {
       // Actualiza el primer portfolio
       postEditPortfolioMutate({
         port: newPortfolio.teams,
@@ -165,7 +167,6 @@ const MyPortfolioEPL = () => {
       });
     }
   }, [selectedTeams, userId, AllPortfolios]);
-  // console.log(numberInputs);
 
   const checkNotValidTeam = (team: Team) =>
     teamsBloqued.some((bloquedTeam) => bloquedTeam.id === team.id);
@@ -175,7 +176,6 @@ const MyPortfolioEPL = () => {
 
   const renderTeams = () => {
     return selectedTeams?.map((team, idx: number) => {
-      // console.log(team);
       return (
         <div
           key={idx}
@@ -355,7 +355,6 @@ const MyPortfolioEPL = () => {
 
                 <h2 style={{ color: "#05fa87", fontSize: "40px" }}>
                   AllPortfolios
-                  {AllPortfolios?.length > 1 && "s"}
                   <p style={{ fontSize: "14px" }}>
                     {AllPortfolios && AllPortfolios[0]?.name}
                   </p>
@@ -442,7 +441,7 @@ const MyPortfolioEPL = () => {
                   }}
                   onClick={() => areAllInputsValid() && addportFolioAlert()}
                 >
-                  {AllPortfolios && AllPortfolios[0]?.teams.length > 0
+                  {AllPortfolios && AllPortfolios[0]?.teams?.length > 0
                     ? "EDIT"
                     : "SUBMIT"}
                 </Button>

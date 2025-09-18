@@ -12,8 +12,9 @@ import {
   getTeamsEpl,
   getNumberTEAMXP,
   getTeamsNotAvailable,
+  postNewPortfolioEpl,
 } from "@/api/epl/PortfoliosEplAPI";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export const PortfolioProvider = ({
   children,
@@ -69,6 +70,18 @@ export const PortfolioProvider = ({
       refetchOnWindowFocus: "always",
     });
 
+  //? Mutation para crear un nuevo portfolio
+  const { mutate: postNewPortfolioMutate } = useMutation({
+    mutationFn: postNewPortfolioEpl,
+    onSuccess: (resp) => {
+      toast.success(resp);
+      queryClient.invalidateQueries(["portfolios", userId]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   // Actualiza los estados locales cuando las consultas cambien
   useEffect(() => {
     if (tournament) {
@@ -113,16 +126,37 @@ export const PortfolioProvider = ({
   }, [numberInputs]);
 
   useEffect(() => {
-    if (teamsBloqued && AllPortfolios && teamsComplete) {
-      setSelectedTeams(AllPortfolios[0]?.teams);
-    }
+    // if (teamsBloqued && AllPortfolios && teamsComplete) {
+    //   setSelectedTeams(AllPortfolios[0]?.teams);
+    // }
+    // if (
+    //   (teamsBloqued.length === 0 || AllPortfolios.length === 0) &&
+    //   teamsComplete
+    // ) {
+    //   setSelectedTeams(Array(numberInputs).fill(""));
+    // }
     if (
-      (teamsBloqued.length === 0 || AllPortfolios.length === 0) &&
+      teamsBloqued &&
+      AllPortfolios &&
+      AllPortfolios[0]?.teams &&
+      teamsComplete
+    ) {
+      setSelectedTeams(AllPortfolios[0]?.teams);
+    } else if (
+      teamsBloqued &&
+      AllPortfolios &&
+      !AllPortfolios[0]?.teams &&
       teamsComplete
     ) {
       setSelectedTeams(Array(numberInputs).fill(""));
     }
   }, [teamsBloqued, AllPortfolios, teamsComplete, numberInputs]);
+
+  // console.log(teamsBloqued); // []
+  // console.log(AllPortfolios); // Portfolio[0].teams || !Portfolio[0].teams
+  // console.log(teamsComplete); // all teams
+
+  // console.log(selectedTeams);  // Equipos seleccionados
 
   const isLoadingData =
     isLoadingTournament ||
@@ -149,6 +183,7 @@ export const PortfolioProvider = ({
     setRendersAmountOfInputs,
     selectedTeams,
     setSelectedTeams,
+    postNewPortfolioMutate,
   };
 
   return (

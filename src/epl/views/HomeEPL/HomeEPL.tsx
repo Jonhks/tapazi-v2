@@ -57,20 +57,10 @@ const HomeEPL = () => {
   const { data: scoreHomeEpl, isLoading: isLoadingScoreHomeEpl } = useQuery({
     queryKey: ["scoreHomeEpl", userId, tournamentId, portfoliosHome],
     queryFn: () => getScoreHomeEpl("3", "0"),
+    retry: false,
   });
 
-  // console.log(tournamentId);
-
-  // const { data: participantsEpl, isLoading: isLoadingParticipantsEpl } =
-  //   useQuery({
-  //     queryKey: ["participantsEpl", userId],
-  //     queryFn: () => getParticipantsEpl("3"),
-  //   });
-
-  // const { data: portfoliosHome } = useQuery({
-  //   queryKey: ["portfoliosHome", userId],
-  //   queryFn: () => getPortfoliosEplCount(),
-  // });
+  console.log(dataHOINFOEpl);
 
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payoutEpl", userId],
@@ -94,14 +84,10 @@ const HomeEPL = () => {
     <>
       <Grid
         container
+        spacing={2}
         flexWrap={"wrap"}
         justifyContent={"center"}
         ml={!isMobile ? "25px" : 0}
-        style={{
-          minHeight: "700px",
-          height: "calc(100vh - 56px)",
-          overflow: "scroll",
-        }}
       >
         <Grid
           size={11}
@@ -109,6 +95,8 @@ const HomeEPL = () => {
           flexWrap={isMobile ? "wrap" : "nowrap"}
           justifyContent={"space-around"}
           flexDirection={"row"}
+          height={"auto"}
+          mb={5}
         >
           <Grid
             size={{ xs: 12, md: 5 }}
@@ -123,7 +111,26 @@ const HomeEPL = () => {
               {DataPoponaEpl?.toUpperCase()}
               IS HERE!!!
             </p>
-            <div className={classes.subBox}>{dataHOINFOEpl?.toUpperCase()}</div>
+            <div
+              className={classes.subBox}
+              style={{
+                display: "flex",
+                alignItems: "center", // Centra verticalmente
+                justifyContent: "center", // Centra horizontalmente el contenedor
+                height: "100%", // Opcional, para ocupar todo el alto
+              }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  whiteSpace: "pre-wrap", // Permite que el texto se ajuste al ancho
+                  wordBreak: "break-word",
+                  textAlign: "center",
+                }}
+              >
+                {dataHOINFOEpl}
+              </p>
+            </div>
           </Grid>
           <Grid
             size={{ xs: 11.4, md: 3 }}
@@ -135,7 +142,16 @@ const HomeEPL = () => {
             onClick={() => setSelected("second")}
           >
             <p className={classes.titleBox}>Payouts</p>
-            <div className={classes.subBoxTwo}>
+            <div
+              className={classes.subBoxTwo}
+              style={{
+                display: "flex",
+                alignItems: "center", // Centra verticalmente
+                justifyContent: "center", // Centra horizontalmente el contenedor
+                height: "100%", // Opcional, para ocupar todo el alto
+                flexDirection: "column",
+              }}
+            >
               <p>Total Contestants: {dataGetAllPortfoliosEpl?.participants}</p>
               <p>Total Entries: {dataGetAllPortfoliosEpl?.portfolios}</p>
               <br />
@@ -156,7 +172,16 @@ const HomeEPL = () => {
             onClick={() => setSelected("third")}
           >
             <p className={classes.titleBox}>Payment Methods </p>
-            <div className={classes.subBoxTwo}>
+            <div
+              className={classes.subBoxTwo}
+              style={{
+                display: "flex",
+                alignItems: "center", // Centra verticalmente
+                justifyContent: "center", // Centra horizontalmente el contenedor
+                height: "100%", // Opcional, para ocupar todo el alto
+                flexDirection: "column",
+              }}
+            >
               <p>Paypal</p>
               <p>adingo8yourbaby@gmail.com</p>
               <p>
@@ -174,7 +199,6 @@ const HomeEPL = () => {
             </div>
           </Grid>
         </Grid>
-
         <Grid
           size={11}
           display={"flex"}
@@ -190,12 +214,12 @@ const HomeEPL = () => {
               backgroundColor: "transparent",
             }}
           >
-            {/* <Zoom in={true}> */}
-            <TableHomeEpl
-              data={scoreHomeEpl}
-              tournament={tournamentId[0]}
-            />
-            {/* </Zoom> */}
+            {scoreHomeEpl && (
+              <TableHomeEpl
+                data={scoreHomeEpl}
+                tournament={tournamentId[0]}
+              />
+            )}
           </div>
         </Grid>
       </Grid>

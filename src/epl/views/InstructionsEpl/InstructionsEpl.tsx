@@ -54,8 +54,20 @@ const InstructionsEpl = () => {
                   }
                 >
                   {i !== 0 && (
-                    <p>
-                      {paragrpah.description || "Sin información disponible"}
+                    <p
+                      style={{
+                        margin: 0,
+                        whiteSpace: "pre-wrap",
+                        wordBreak: "break-word",
+                        textAlign: "center",
+                        padding: "4px 8px",
+                        fontSize: "14px",
+                        fontFamily: "Raleway, sans-serif monospace",
+                      }}
+                    >
+                      {(
+                        paragrpah.description || "Sin información disponible"
+                      ).replace(/\t/g, "  ")}
                     </p>
                   )}
                 </div>
