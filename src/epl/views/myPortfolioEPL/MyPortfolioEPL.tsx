@@ -179,6 +179,17 @@ const MyPortfolioEPL = () => {
   const checkTeamSelected = (team: Team) =>
     !!selectedTeams?.some((selectedTeam) => selectedTeam.id === team.id);
 
+  const getSeed = (team: Team) => {
+    let seed = 0;
+    const currentTeam = teamsComplete.filter((t) => t.id === team.id);
+    if (team?.streak_multiplier > 1) {
+      seed = team?.current_seed;
+    } else {
+      seed = currentTeam[0]?.seed;
+    }
+    return seed;
+  };
+
   const renderTeams = () => {
     return selectedTeams?.map((team, idx: number) => {
       return (
@@ -203,10 +214,11 @@ const MyPortfolioEPL = () => {
               fontWeight: "bold",
             }}
           >
-            {team?.seed && team?.seed}
-            {team?.streak_multiplier > 1
+            {getSeed(team)}
+            {/* {team?.seed && team?.seed} */}
+            {/* {team?.streak_multiplier > 1
               ? team?.streak_seed
-              : team?.current_seed}
+              : team?.current_seed} */}
           </div>
           <FormControl
             fullWidth

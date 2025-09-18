@@ -369,3 +369,27 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
     return;
   }
 };
+
+export const getTeamsDynamics = async (id: string, portfolioId: string) => {
+  try {
+    const url = `/sports/${2}/teams/dynamics?tournament_id=3&portfolio_id=${66}`;
+    const { data } = await api(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    console.log(data);
+
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.winnerOfTeamHasTeam;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

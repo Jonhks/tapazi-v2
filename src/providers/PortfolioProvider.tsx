@@ -13,6 +13,7 @@ import {
   getNumberTEAMXP,
   getTeamsNotAvailable,
   postNewPortfolioEpl,
+  getTeamsDynamics,
 } from "@/api/epl/PortfoliosEplAPI";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
@@ -69,6 +70,13 @@ export const PortfolioProvider = ({
       queryFn: () => getNumberTEAMXP(),
       refetchOnWindowFocus: "always",
     });
+
+  const { data: teamsDynamics, isLoading: isLoadingTeamsDynamics } = useQuery({
+    queryKey: ["teamsDynamics", userId, location.pathname],
+    queryFn: () => getTeamsDynamics(userId!, portfolios?.[0]?.id || "0"),
+    refetchOnWindowFocus: "always",
+    retry: 1,
+  });
 
   //? Mutation para crear un nuevo portfolio
   const { mutate: postNewPortfolioMutate } = useMutation({
@@ -163,6 +171,7 @@ export const PortfolioProvider = ({
     isLoadingPortfolios ||
     isLoading ||
     isLoadingNumberInputs ||
+    isLoadingTeamsDynamics ||
     isLoadingTeamsNotAvailable;
 
   const value: PortfolioContextType = {
