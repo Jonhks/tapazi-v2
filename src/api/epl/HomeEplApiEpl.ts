@@ -135,7 +135,7 @@ export const getScoreHomeEpl = async (
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data);
+    // console.log(data);
 
     if (!data.score) {
       return [];

@@ -147,10 +147,15 @@ const MyPortfolioEPL = () => {
       participant_id: userId,
       championship_points: 0,
       teams: selectedTeams.map((team) => {
-        return { id: team.id };
+        return {
+          id: team.id,
+          seed: team.current_seed,
+          streak_multiplier: team.streak_multiplier,
+        };
       }),
     };
-    console.log(AllPortfolios);
+    console.log(newPortfolio);
+    console.log(selectedTeams);
 
     if (AllPortfolios && !AllPortfolios[0]?.teams) {
       // Crea un nuevo portfolio

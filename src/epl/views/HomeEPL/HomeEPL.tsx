@@ -60,8 +60,6 @@ const HomeEPL = () => {
     retry: false,
   });
 
-  console.log(dataHOINFOEpl);
-
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payoutEpl", userId],
     queryFn: () => getPayoutEpl("3", 99),
