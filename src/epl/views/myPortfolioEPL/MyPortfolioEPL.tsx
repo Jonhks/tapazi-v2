@@ -184,13 +184,14 @@ const MyPortfolioEPL = () => {
             flexDirection: "row",
             alignItems: "center",
             marginBottom: "20px",
-            backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+            // backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+            backgroundColor: "red",
           }}
         >
-          {/* Select */}
           <div
             style={{
-              backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+              // backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+              backgroundColor: "blue",
               // height: "-webkit-fill-available",
               width: "80px",
               display: "flex",
@@ -208,7 +209,8 @@ const MyPortfolioEPL = () => {
           <FormControl
             fullWidth
             sx={{
-              backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+              // backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+              backgroundColor: "green",
               "& .MuiInputLabel-root": {
                 color: "white",
                 fontWeight: "bold",
@@ -304,7 +306,7 @@ const MyPortfolioEPL = () => {
           </FormControl>
           <div
             style={{
-              backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
+              // backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
               height: "-webkit-fill-available",
               width: "80px",
               display: "flex",
@@ -312,6 +314,7 @@ const MyPortfolioEPL = () => {
               alignItems: "center",
               color: "#05fa87",
               fontWeight: "bold",
+              backgroundColor: "cyan",
             }}
           >
             {team?.streak_multiplier}
