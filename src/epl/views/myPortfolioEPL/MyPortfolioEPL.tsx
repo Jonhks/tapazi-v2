@@ -189,9 +189,7 @@ const MyPortfolioEPL = () => {
         >
           <div
             style={{
-              // backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
-              backgroundColor: "blue",
-              // height: "-webkit-fill-available",
+              backgroundColor: idx % 2 === 0 ? "#380f65" : "#200930",
               width: "80px",
               display: "flex",
               justifyContent: "center",
