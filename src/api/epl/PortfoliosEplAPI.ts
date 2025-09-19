@@ -370,7 +370,10 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
   }
 };
 
-export const getTeamsDynamics = async (id: string, portfolioId: string) => {
+export const getTeamsDynamics = async (
+  // id: string,
+  portfolioId: string
+) => {
   // portfolioId = "566";
   try {
     const url = `/sports/${2}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
