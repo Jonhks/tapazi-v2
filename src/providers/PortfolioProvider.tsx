@@ -119,6 +119,9 @@ export const PortfolioProvider = ({
     }
   }, [numberInputsRecived, portfolios]);
 
+  console.log(portfolios);
+  console.log(numberInputsRecived, "numberInputsRecived");
+
   useEffect(() => {
     if (teamsNotAvailable) {
       setTeamsBloqued(teamsNotAvailable);

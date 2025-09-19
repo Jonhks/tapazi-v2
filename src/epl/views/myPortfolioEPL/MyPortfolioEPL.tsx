@@ -67,6 +67,9 @@ const MyPortfolioEPL = () => {
       selectedTeams.every((team) => team && team.name) // Verifica que cada equipo tenga un nombre válido
     );
   };
+  console.log(selectedTeams, numberInputs);
+
+  console.log(areAllInputsValid());
 
   const handleChangeSelect = (value: string, index: number) => {
     const newSelectedTeams = [...selectedTeams];
