@@ -44,20 +44,64 @@ const MyPortfolioEPL = () => {
     selectedTeams,
     setSelectedTeams,
     postNewPortfolioMutate,
+    teamsDynamics,
   } = usePortfolio();
 
   useEffect(() => {
     setUserId(userId);
   }, [userId, setUserId]);
 
+  // const { mutate: postEditPortfolioMutate } = useMutation({
+  //   mutationFn: postEditPortfolio,
+  //   onSuccess: (resp) => {
+  //     toast.success(resp);
+  //     // queryClient.invalidateQueries(["portfolios", userId]);
+  //     queryClient.refetchQueries(["portfolios", userId, "teamsDynamics"]);
+  //     Swal.fire({
+  //       title: "Updated!",
+  //       text: "Your portfolio was updated successfully.",
+  //       icon: "success",
+  //       background: "#421065",
+  //       confirmButtonColor: "#3ED076",
+  //       color: "white",
+  //     });
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //     Swal.fire({
+  //       title: "Error!",
+  //       text: "There was a problem updating the portfolio.",
+  //       icon: "error",
+  //       background: "#421065",
+  //       confirmButtonColor: "#c7630b",
+  //       color: "white",
+  //     });
+  //   },
+  // });
+
   const { mutate: postEditPortfolioMutate } = useMutation({
     mutationFn: postEditPortfolio,
-    onSuccess: (resp) => {
-      toast.success(resp);
-      queryClient.invalidateQueries(["portfolios", userId]);
+    onSuccess: () => {
+      Swal.close();
+      Swal.fire({
+        title: "Updated!",
+        text: "Your portfolio was updated successfully.",
+        icon: "success",
+        background: "#421065",
+        confirmButtonColor: "#3ED076",
+        color: "white",
+      });
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: () => {
+      Swal.close();
+      Swal.fire({
+        title: "Error!",
+        text: "There was a problem updating the portfolio.",
+        icon: "error",
+        background: "#421065",
+        confirmButtonColor: "#c7630b",
+        color: "white",
+      });
     },
   });
 
@@ -67,9 +111,6 @@ const MyPortfolioEPL = () => {
       selectedTeams.every((team) => team && team.name) // Verifica que cada equipo tenga un nombre válido
     );
   };
-  console.log(selectedTeams, numberInputs);
-
-  console.log(areAllInputsValid());
 
   const handleChangeSelect = (value: string, index: number) => {
     const newSelectedTeams = [...selectedTeams];
@@ -88,19 +129,22 @@ const MyPortfolioEPL = () => {
       confirmButtonColor: "#3ED076",
       cancelButtonColor: "#c7630b",
       color: "white",
-      background: "#200930", //
+      background: "#200930",
       confirmButtonText: "Yes, I want to save changes!",
     }).then((result) => {
       if (result.isConfirmed) {
-        addportFolio();
         Swal.fire({
-          title: "Changes saved!",
-          text: "You have changes saved successfully.",
-          icon: "success",
-          background: "#421065", // Cambia el color de fondo
-          confirmButtonColor: "#3ED076",
-          color: "white", // Cambia el color del texto
+          title: "Saving...",
+          allowOutsideClick: false,
+          background: "#200930",
+          color: "white",
+          didOpen: () => {
+            Swal.showLoading();
+          },
         });
+
+        // Ejecutar la función de guardado
+        addportFolio();
       }
     });
   };
@@ -157,22 +201,22 @@ const MyPortfolioEPL = () => {
         };
       }),
     };
-    console.log(newPortfolio);
-    console.log(selectedTeams);
-
     if (AllPortfolios && !AllPortfolios[0]?.teams) {
       // Crea un nuevo portfolio
+      console.log("lo esta creando");
       postNewPortfolioMutate({
         port: newPortfolio,
         userId: userId,
         portId: AllPortfolios[0]?.id,
       });
+      queryClient.refetchQueries(["portfolios", userId, "teamsDynamics"]);
     } else if (AllPortfolios && AllPortfolios[0]?.teams) {
       // Actualiza el primer portfolio
       postEditPortfolioMutate({
         port: newPortfolio.teams,
         portId: AllPortfolios[0]?.id,
       });
+      queryClient.refetchQueries(["portfolios", userId, "teamsDynamics"]);
     }
   }, [selectedTeams, userId, AllPortfolios]);
 
@@ -191,6 +235,70 @@ const MyPortfolioEPL = () => {
       seed = currentTeam[0]?.seed;
     }
     return seed;
+  };
+
+  const getMultiplier = (team: Team) => {
+    let multiplier = "inicio";
+    // console.log(team, "team");
+    // console.log(teamsDynamics, "dynamics");
+    // console.log(AllPortfolios[0]?.teams, "portfolios");
+
+    // ? Nuevo usuario Sin portafolio
+    //? {
+    //?  team: undefined;
+    //?  team.streak_multiplier: undefined;
+    //?  teamsDynamics: completo
+    //?  AllPortfolios[0]?.teams: undefined;
+    //? }
+
+    // ? Usuario para editar al cargar
+    //? {
+    //?  team: trae;
+    //?  team.streak_multiplier: trae;
+    //?  teamsDynamics : completo,
+    //?  AllPortfolios[0]?.teams: completo;
+    //? }
+
+    // ? Usuario para editar
+    //? {
+    //?  team: trae;
+    //?  team.streak_multiplier: trae;
+    //?  teamsDynamics : completo,
+    //?  AllPortfolios[0]?.teams: completo;
+    //? }
+
+    if (
+      !AllPortfolios[0]?.teams &&
+      team &&
+      !team.streak_multiplier &&
+      teamsDynamics?.length
+    ) {
+      // console.log("entro al primero", team.id);
+      const currentTeam = teamsDynamics.filter((t) => t.id === team.id)[0];
+      multiplier = currentTeam?.streak_multiplier;
+    }
+
+    if (
+      AllPortfolios &&
+      AllPortfolios[0]?.teams &&
+      team &&
+      team?.streak_multiplier &&
+      teamsDynamics.length
+    ) {
+      // console.log("entro al segundo");
+      multiplier = team?.streak_multiplier;
+    }
+
+    if (
+      AllPortfolios[0]?.teams &&
+      !team?.streak_multiplier &&
+      teamsDynamics?.length
+    ) {
+      // console.log("entro al tercero");
+      const currentTeam = teamsDynamics.filter((t) => t.id !== team.id);
+      multiplier = currentTeam[0]?.streak_multiplier;
+    }
+    return multiplier;
   };
 
   const renderTeams = () => {
@@ -331,7 +439,7 @@ const MyPortfolioEPL = () => {
               fontWeight: "bold",
             }}
           >
-            {team?.streak_multiplier}
+            {getMultiplier(team)}
           </div>
         </div>
       );

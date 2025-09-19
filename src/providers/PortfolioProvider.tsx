@@ -72,21 +72,67 @@ export const PortfolioProvider = ({
     });
 
   const { data: teamsDynamics, isLoading: isLoadingTeamsDynamics } = useQuery({
-    queryKey: ["teamsDynamics", userId, location.pathname],
+    queryKey: ["teamsDynamics", userId, portfolios],
     queryFn: () => getTeamsDynamics(userId!, portfolios?.[0]?.id || "0"),
     refetchOnWindowFocus: "always",
     retry: 1,
+    enabled: Boolean(userId && portfolios),
   });
 
   //? Mutation para crear un nuevo portfolio
+  // const { mutate: postNewPortfolioMutate } = useMutation({
+  //   mutationFn: postNewPortfolioEpl,
+  //   onSuccess: (resp) => {
+  //     toast.success(resp);
+  //     queryClient.refetchQueries(["portfolios", userId, "teamsDynamics"]);
+  //     Swal.fire({
+  //       title: "Saved!",
+  //       text: "Your portfolio was created successfully.",
+  //       icon: "success",
+  //       background: "#421065",
+  //       confirmButtonColor: "#3ED076",
+  //       color: "white",
+  //     });
+  //   },
+  //   onError: (error) => {
+  //     toast.error(error.message);
+  //     Swal.fire({
+  //       title: "Error!",
+  //       text: "There was a problem creating the portfolio.",
+  //       icon: "error",
+  //       background: "#421065",
+  //       confirmButtonColor: "#c7630b",
+  //       color: "white",
+  //     });
+  //   },
+  // });
   const { mutate: postNewPortfolioMutate } = useMutation({
     mutationFn: postNewPortfolioEpl,
-    onSuccess: (resp) => {
-      toast.success(resp);
-      queryClient.invalidateQueries(["portfolios", userId]);
+    onSuccess: () => {
+      Swal.close(); // Cierra el loader
+      Swal.fire({
+        title: "Saved!",
+        text: "Your portfolio was created successfully.",
+        icon: "success",
+        background: "#421065",
+        confirmButtonColor: "#3ED076",
+        color: "white",
+      });
+      window.location.reload();
     },
-    onError: (error) => {
-      toast.error(error.message);
+    onError: () => {
+      Swal.close(); // Cierra el loader
+      Swal.fire({
+        title: "Error!",
+        text: "There was a problem creating the portfolio.",
+        icon: "error",
+        background: "#421065",
+        confirmButtonColor: "#c7630b",
+        color: "white",
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
     },
   });
 
@@ -119,8 +165,8 @@ export const PortfolioProvider = ({
     }
   }, [numberInputsRecived, portfolios]);
 
-  console.log(portfolios);
-  console.log(numberInputsRecived, "numberInputsRecived");
+  // console.log(portfolios);
+  // console.log(numberInputsRecived, "numberInputsRecived");
 
   useEffect(() => {
     if (teamsNotAvailable) {
@@ -196,6 +242,7 @@ export const PortfolioProvider = ({
     selectedTeams,
     setSelectedTeams,
     postNewPortfolioMutate,
+    teamsDynamics,
   };
 
   return (

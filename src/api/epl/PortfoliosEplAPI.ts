@@ -209,7 +209,7 @@ export const postEditPortfolio = async ({
     }
 
     if (data.message === "success") {
-      return "Successfully created portfolio";
+      return "Successfully edited portfolio";
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -371,21 +371,21 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
 };
 
 export const getTeamsDynamics = async (id: string, portfolioId: string) => {
+  // portfolioId = "566";
   try {
-    const url = `/sports/${id}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
-    const { data } = await api(url, {
+    const url = `/sports/${2}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
+    const { data } = await newApi(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data);
 
-    if (!data.success) {
+    if (!data.teams) {
       return "Error";
     }
 
-    if (data.success) {
-      return data.data.winnerOfTeamHasTeam;
+    if (data.teams) {
+      return data.teams;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
