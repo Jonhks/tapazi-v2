@@ -73,7 +73,7 @@ export const PortfolioProvider = ({
 
   const { data: teamsDynamics, isLoading: isLoadingTeamsDynamics } = useQuery({
     queryKey: ["teamsDynamics", userId, portfolios],
-    queryFn: () => getTeamsDynamics(userId!, portfolios?.[0]?.id || "0"),
+    queryFn: () => getTeamsDynamics(2, portfolios?.[0]?.id || "0"),
     refetchOnWindowFocus: "always",
     retry: 1,
     enabled: Boolean(userId && portfolios),

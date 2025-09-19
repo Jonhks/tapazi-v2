@@ -142,7 +142,6 @@ const MyPortfolioEPL = () => {
             Swal.showLoading();
           },
         });
-
         // Ejecutar la función de guardado
         addportFolio();
       }
@@ -238,10 +237,18 @@ const MyPortfolioEPL = () => {
   };
 
   const getMultiplier = (team: Team) => {
-    let multiplier = "inicio";
+    let multiplier = "";
     // console.log(team, "team");
     // console.log(teamsDynamics, "dynamics");
     // console.log(AllPortfolios[0]?.teams, "portfolios");
+
+    // ?Prueba usuario con portfolio
+    //? {
+    //?  team: undefined;
+    //?  team.streak_multiplier: undefined;
+    //?  teamsDynamics: completo
+    //?  AllPortfolios[0]?.teams: undefined;
+    //? }
 
     // ? Nuevo usuario Sin portafolio
     //? {
@@ -273,8 +280,8 @@ const MyPortfolioEPL = () => {
       !team.streak_multiplier &&
       teamsDynamics?.length
     ) {
-      // console.log("entro al primero", team.id);
       const currentTeam = teamsDynamics.filter((t) => t.id === team.id)[0];
+      // console.log("entro al primero", team.id, currentTeam);
       multiplier = currentTeam?.streak_multiplier;
     }
 
