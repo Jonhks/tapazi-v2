@@ -203,7 +203,7 @@ const MyPortfolioEPL = () => {
         return {
           id: team.id,
           seed: getSeed(team),
-          multiplier: getMultiplier(team),
+          streak_multiplier: getMultiplier(team),
         };
       }),
     };
@@ -244,7 +244,7 @@ const MyPortfolioEPL = () => {
   };
 
   const getMultiplier = (team: Team) => {
-    let multiplier = "inicio";
+    let multiplier = "";
     // const dataMulti = [];
     // console.log(team, "team");
     // console.log(teamsDynamics, "dynamics");
@@ -299,8 +299,8 @@ const MyPortfolioEPL = () => {
       AllPortfolios[0]?.teams &&
       teamsDynamics?.length
     ) {
-      multiplier = currentTeamPortfolios?.streak_multiplier || 1;
-      console.log("entro al tercero", team);
+      multiplier = currentTeamPortfolios?.current_streak;
+      console.log("entro al tercero", currentTeamPortfolios);
       return multiplier;
     }
     return multiplier;
