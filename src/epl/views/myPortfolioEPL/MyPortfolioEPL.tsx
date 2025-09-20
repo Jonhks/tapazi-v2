@@ -233,32 +233,55 @@ const MyPortfolioEPL = () => {
     !!selectedTeams?.some((selectedTeam) => selectedTeam.id === team.id);
 
   const getSeed = (team: Team) => {
-    let seed = 0;
-    const currentTeam = teamsComplete.filter((t) => t.id === team.id);
-    if (team?.streak_multiplier > 1) {
-      seed = team?.current_seed;
-    } else {
-      seed = currentTeam[0]?.seed;
+    let seed = "";
+    const currentTeamDynamics = teamsDynamics?.filter(
+      (t) => t?.id === team?.id
+    )[0];
+    const currentTeamPortfolios = AllPortfolios[0]?.teams?.filter(
+      (t) => t?.id === team?.id
+    )[0];
+    if (
+      team &&
+      AllPortfolios.length === 0 &&
+      !AllPortfolios[0] &&
+      !AllPortfolios[0]?.teams &&
+      !teamsDynamics?.length
+    ) {
+      seed = team.seed || "";
+      console.log("entro al primero nuevo", team);
+      return seed;
+    }
+
+    if (
+      team &&
+      AllPortfolios.length > 0 &&
+      AllPortfolios[0] &&
+      !AllPortfolios[0]?.teams &&
+      teamsDynamics?.length
+    ) {
+      seed = currentTeamDynamics?.current_seed;
+      console.log("entro al segundo casi nuevo", team);
+      return seed;
+    }
+
+    if (
+      team &&
+      AllPortfolios.length > 0 &&
+      AllPortfolios[0] &&
+      AllPortfolios[0]?.teams &&
+      teamsDynamics?.length
+    ) {
+      seed = currentTeamPortfolios?.current_seed
+        ? currentTeamPortfolios?.current_seed
+        : currentTeamDynamics?.current_seed;
+      console.log("entro al tercero", currentTeamPortfolios);
+      return seed;
     }
     return seed;
   };
 
   const getMultiplier = (team: Team) => {
     let multiplier = "";
-    // const dataMulti = [];
-    // console.log(team, "team");
-    // console.log(teamsDynamics, "dynamics");
-    // console.log(AllPortfolios.length, "portfolios");
-    // console.log(AllPortfolios[0]?.teams, "portfoliosTeams");
-
-    // ?Prueba usuario con portfolio
-    //? {
-    //?  team: undefined;
-    //?  team.streak_multiplier: undefined;
-    //?  teamsDynamics: completo
-    //?  AllPortfolios[0]?.teams: undefined;
-    //? }
-
     const currentTeamDynamics = teamsDynamics?.filter(
       (t) => t?.id === team?.id
     )[0];
@@ -289,8 +312,6 @@ const MyPortfolioEPL = () => {
       console.log("entro al segundo casi nuevo", team);
       return multiplier;
     }
-
-    // console.log(AllPortfolios[0]?.teams, "portfolios");
 
     if (
       team &&
