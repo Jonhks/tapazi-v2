@@ -21,13 +21,10 @@ function createData(
 
 export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
   const isMobile = useMediaQuery("(max-width:700px)");
-  console.log(data);
-
   const style = {
     color: "white",
     fontSize: isMobile ? "0.7rem" : ".9rem",
     fontWeight: "bold",
-    // width: "25%",
   };
 
   const rows = data.map((item) => {
@@ -76,7 +73,6 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
                 left: 0,
                 background: "#200930",
                 zIndex: 2,
-                // width: isMobile ? "30vw" : "0vw",
                 textOverflow: "ellipsis",
                 whiteSpace: "nowrap",
                 overflow: "visible",

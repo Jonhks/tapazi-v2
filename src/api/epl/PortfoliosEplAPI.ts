@@ -156,13 +156,15 @@ export const postNewPortfolioEpl = async ({
   port: CreatePortfolio;
 }) => {
   const urlLogin = `/portfolios`;
+  console.log(postNewPortfolioEpl, "postNewPortfolioEpl");
+
   try {
     const { data } = await newApi.post(urlLogin, port, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data);
+    console.log(data, "respuesta");
     if (
       !data.message &&
       data?.error?.description ===
@@ -172,7 +174,7 @@ export const postNewPortfolioEpl = async ({
     }
 
     if (data.message === "success") {
-      return "Successfully created portfolio";
+      return true;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -188,6 +190,8 @@ export const postEditPortfolio = async ({
   port: CreatePortfolio;
   portId: string;
 }) => {
+  console.log(postEditPortfolio, "postEditPortfolio");
+
   const urlLogin = `/portfolios/${portId}`;
   try {
     const { data } = await newApi.put(

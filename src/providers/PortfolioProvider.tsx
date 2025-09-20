@@ -12,10 +12,9 @@ import {
   getTeamsEpl,
   getNumberTEAMXP,
   getTeamsNotAvailable,
-  postNewPortfolioEpl,
   getTeamsDynamics,
 } from "@/api/epl/PortfoliosEplAPI";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 export const PortfolioProvider = ({
   children,
@@ -77,63 +76,6 @@ export const PortfolioProvider = ({
     refetchOnWindowFocus: "always",
     retry: 1,
     enabled: Boolean(userId && portfolios),
-  });
-
-  //? Mutation para crear un nuevo portfolio
-  // const { mutate: postNewPortfolioMutate } = useMutation({
-  //   mutationFn: postNewPortfolioEpl,
-  //   onSuccess: (resp) => {
-  //     toast.success(resp);
-  //     queryClient.refetchQueries(["portfolios", userId, "teamsDynamics"]);
-  //     Swal.fire({
-  //       title: "Saved!",
-  //       text: "Your portfolio was created successfully.",
-  //       icon: "success",
-  //       background: "#421065",
-  //       confirmButtonColor: "#3ED076",
-  //       color: "white",
-  //     });
-  //   },
-  //   onError: (error) => {
-  //     toast.error(error.message);
-  //     Swal.fire({
-  //       title: "Error!",
-  //       text: "There was a problem creating the portfolio.",
-  //       icon: "error",
-  //       background: "#421065",
-  //       confirmButtonColor: "#c7630b",
-  //       color: "white",
-  //     });
-  //   },
-  // });
-  const { mutate: postNewPortfolioMutate } = useMutation({
-    mutationFn: postNewPortfolioEpl,
-    onSuccess: () => {
-      Swal.close(); // Cierra el loader
-      Swal.fire({
-        title: "Saved!",
-        text: "Your portfolio was created successfully.",
-        icon: "success",
-        background: "#421065",
-        confirmButtonColor: "#3ED076",
-        color: "white",
-      });
-      window.location.reload();
-    },
-    onError: () => {
-      Swal.close(); // Cierra el loader
-      Swal.fire({
-        title: "Error!",
-        text: "There was a problem creating the portfolio.",
-        icon: "error",
-        background: "#421065",
-        confirmButtonColor: "#c7630b",
-        color: "white",
-        didOpen: () => {
-          Swal.showLoading();
-        },
-      });
-    },
   });
 
   // Actualiza los estados locales cuando las consultas cambien
@@ -241,7 +183,6 @@ export const PortfolioProvider = ({
     setRendersAmountOfInputs,
     selectedTeams,
     setSelectedTeams,
-    postNewPortfolioMutate,
     teamsDynamics,
   };
 

@@ -26,7 +26,10 @@ import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import { toast } from "react-toastify";
 import { usePortfolio } from "../../../context/PortfolioContext";
 import Swal from "sweetalert2";
-import { postEditPortfolio } from "@/api/epl/PortfoliosEplAPI";
+import {
+  postEditPortfolio,
+  postNewPortfolioEpl,
+} from "@/api/epl/PortfoliosEplAPI";
 
 const MyPortfolioEPL = () => {
   const params = useParams();
@@ -43,7 +46,6 @@ const MyPortfolioEPL = () => {
     isLoadingData,
     selectedTeams,
     setSelectedTeams,
-    postNewPortfolioMutate,
     teamsDynamics,
   } = usePortfolio();
 
@@ -51,36 +53,51 @@ const MyPortfolioEPL = () => {
     setUserId(userId);
   }, [userId, setUserId]);
 
-  // const { mutate: postEditPortfolioMutate } = useMutation({
-  //   mutationFn: postEditPortfolio,
-  //   onSuccess: (resp) => {
-  //     toast.success(resp);
-  //     // queryClient.invalidateQueries(["portfolios", userId]);
-  //     queryClient.refetchQueries(["portfolios", userId, "teamsDynamics"]);
-  //     Swal.fire({
-  //       title: "Updated!",
-  //       text: "Your portfolio was updated successfully.",
-  //       icon: "success",
-  //       background: "#421065",
-  //       confirmButtonColor: "#3ED076",
-  //       color: "white",
-  //     });
-  //   },
-  //   onError: (error) => {
-  //     toast.error(error.message);
-  //     Swal.fire({
-  //       title: "Error!",
-  //       text: "There was a problem updating the portfolio.",
-  //       icon: "error",
-  //       background: "#421065",
-  //       confirmButtonColor: "#c7630b",
-  //       color: "white",
-  //     });
-  //   },
-  // });
+  const { mutate: postNewPortfolioMutate } = useMutation({
+    mutationFn: postNewPortfolioEpl,
+    onSuccess: () => {
+      Swal.close(); // Cierra el loader
+      Swal.fire({
+        title: "Saved!",
+        text: "Your portfolio was created successfully.",
+        icon: "success",
+        background: "#421065",
+        confirmButtonColor: "#3ED076",
+        color: "white",
+      });
+      queryClient.refetchQueries(); // Refresca todas
+    },
+    onError: () => {
+      Swal.close(); // Cierra el loader
+      Swal.fire({
+        title: "Error!",
+        text: "There was a problem creating the portfolio.",
+        icon: "error",
+        background: "#421065",
+        confirmButtonColor: "#c7630b",
+        color: "white",
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+      console.log("There was a problem creating the portfolio");
+    },
+  });
 
   const { mutate: postEditPortfolioMutate } = useMutation({
     mutationFn: postEditPortfolio,
+    onLoading: () => {
+      Swal.fire({
+        title: "Updating...",
+        text: "Please wait while we update your portfolio.",
+        allowOutsideClick: false,
+        background: "#200930",
+        color: "white",
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+    },
     onSuccess: () => {
       Swal.close();
       Swal.fire({
@@ -91,6 +108,7 @@ const MyPortfolioEPL = () => {
         confirmButtonColor: "#3ED076",
         color: "white",
       });
+      queryClient.refetchQueries(); // Refresca todas
     },
     onError: () => {
       Swal.close();
@@ -120,8 +138,8 @@ const MyPortfolioEPL = () => {
     setSelectedTeams(newSelectedTeams);
   };
 
-  const addportFolioAlert = () => {
-    Swal.fire({
+  const addportFolioAlert = async () => {
+    const result = await Swal.fire({
       title: "Are you sure?",
       text: "You want to save changes",
       icon: "warning",
@@ -131,21 +149,10 @@ const MyPortfolioEPL = () => {
       color: "white",
       background: "#200930",
       confirmButtonText: "Yes, I want to save changes!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire({
-          title: "Saving...",
-          allowOutsideClick: false,
-          background: "#200930",
-          color: "white",
-          didOpen: () => {
-            Swal.showLoading();
-          },
-        });
-        // Ejecutar la función de guardado
-        addportFolio();
-      }
     });
+    if (result.isConfirmed) {
+      await addportFolio();
+    }
   };
 
   const cancelAlert = () => {
@@ -208,14 +215,13 @@ const MyPortfolioEPL = () => {
         userId: userId,
         portId: AllPortfolios[0]?.id,
       });
-      queryClient.refetchQueries(["portfolios", userId, "teamsDynamics"]);
     } else if (AllPortfolios && AllPortfolios[0]?.teams) {
+      console.log("lo esta editando");
       // Actualiza el primer portfolio
       postEditPortfolioMutate({
         port: newPortfolio.teams,
         portId: AllPortfolios[0]?.id,
       });
-      queryClient.refetchQueries(["portfolios", userId, "teamsDynamics"]);
     }
   }, [selectedTeams, userId, AllPortfolios]);
 
@@ -280,9 +286,10 @@ const MyPortfolioEPL = () => {
       !team.streak_multiplier &&
       teamsDynamics?.length
     ) {
-      const currentTeam = teamsDynamics.filter((t) => t.id === team.id)[0];
+      // const currentTeam = teamsDynamics.filter((t) => t.id === team.id)[0];
       // console.log("entro al primero", team.id, currentTeam);
-      multiplier = currentTeam?.streak_multiplier;
+      multiplier = 1;
+      // multiplier = currentTeam?.streak_multiplier;
     }
 
     if (
@@ -333,10 +340,6 @@ const MyPortfolioEPL = () => {
             }}
           >
             {getSeed(team)}
-            {/* {team?.seed && team?.seed} */}
-            {/* {team?.streak_multiplier > 1
-              ? team?.streak_seed
-              : team?.current_seed} */}
           </div>
           <FormControl
             fullWidth
@@ -571,7 +574,10 @@ const MyPortfolioEPL = () => {
                     margin: 10,
                     "&:disabled": { backgroundColor: "grey" },
                   }}
-                  onClick={() => areAllInputsValid() && addportFolioAlert()}
+                  onClick={() =>
+                    // areAllInputsValid() &&
+                    addportFolioAlert()
+                  }
                 >
                   {AllPortfolios && AllPortfolios[0]?.teams?.length > 0
                     ? "EDIT"
