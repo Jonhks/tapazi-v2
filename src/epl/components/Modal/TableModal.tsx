@@ -25,8 +25,9 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
 
   const style = {
     color: "white",
-    fontSize: isMobile ? "0.7rem" : "1rem",
+    fontSize: isMobile ? "0.7rem" : ".9rem",
     fontWeight: "bold",
+    // width: "25%",
   };
 
   const rows = data.map((item) => {
@@ -68,7 +69,21 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
       >
         <TableHead>
           <TableRow style={{ backgroundColor: "#200930" }}>
-            <TableCell style={style}>Team</TableCell>
+            <TableCell
+              style={{
+                ...style,
+                position: "sticky",
+                left: 0,
+                background: "#200930",
+                zIndex: 2,
+                // width: isMobile ? "30vw" : "0vw",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+                overflow: "visible",
+              }}
+            >
+              Team
+            </TableCell>
             <TableCell
               style={style}
               align="right"
@@ -98,7 +113,13 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
               <TableCell
                 component="th"
                 scope="row"
-                style={style}
+                style={{
+                  ...style,
+                  position: "sticky",
+                  left: 0,
+                  background: "#200930",
+                  zIndex: 2,
+                }}
               >
                 <span
                   style={{
@@ -112,8 +133,8 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
                       src={row.crest_url}
                       alt={row.team_name}
                       style={{
-                        width: isMobile ? 20 : 32,
-                        height: isMobile ? 20 : 32,
+                        width: isMobile ? 20 : 25,
+                        height: isMobile ? 20 : 25,
                         objectFit: "contain",
                         borderRadius: "4px",
                       }}
