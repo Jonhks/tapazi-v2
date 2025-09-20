@@ -299,7 +299,9 @@ const MyPortfolioEPL = () => {
       AllPortfolios[0]?.teams &&
       teamsDynamics?.length
     ) {
-      multiplier = currentTeamPortfolios?.current_streak;
+      multiplier = currentTeamPortfolios?.current_streak
+        ? currentTeamPortfolios?.current_streak
+        : currentTeamDynamics?.streak_multiplier;
       console.log("entro al tercero", currentTeamPortfolios);
       return multiplier;
     }
