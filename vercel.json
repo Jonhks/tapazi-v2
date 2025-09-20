@@ -2,7 +2,11 @@
   "rewrites": [
     {
       "source": "/epl/(.*)",
-      "destination": "https://tapaszi-epl.vercel.app/$1"
+      "destination": "https://tapaszi-epl.vercel.app/"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
     }
   ]
 }
