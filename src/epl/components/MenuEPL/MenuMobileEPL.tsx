@@ -57,6 +57,33 @@ function MenuMobileEpl() {
 
   const userName = JSON.parse(localStorage.getItem("userTapaszi") || "");
 
+  const removeUser = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You want to log out",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3ED076",
+      cancelButtonColor: "#c7630b",
+      color: "white",
+      background: "#200930", // Cambia el color de fondo
+      confirmButtonText: "Yes, I want to log out!!",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        localStorage.removeItem("userTapaszi");
+        navigate("/login");
+        Swal.fire({
+          title: "Logged out!",
+          text: "You have logged out.",
+          icon: "success",
+          background: "#200930", // Cambia el color de fondo
+          confirmButtonColor: "#3ED076",
+          color: "white", // Cambia el color del texto
+        });
+      }
+    });
+  };
+
   const LogoutSwal = () => {
     handleMobileMenuClose();
     Swal.fire({
@@ -192,11 +219,15 @@ function MenuMobileEpl() {
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
-                  onClick={(e) =>
-                    pages[index].id !== "more"
-                      ? navigate(pages[index].id)
-                      : openMenuMobile(e)
-                  }
+                  onClick={(e) => {
+                    if (pages[index].id === "logOut") {
+                      removeUser();
+                    } else if (pages[index].id === "epl/more") {
+                      openMenuMobile(e);
+                    } else {
+                      navigate(pages[index].id);
+                    }
+                  }}
                   color="inherit"
                 >
                   {icon}
