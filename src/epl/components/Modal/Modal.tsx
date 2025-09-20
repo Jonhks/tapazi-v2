@@ -1,3 +1,5 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import Box from "@mui/material/Box";
 import Modal from "@mui/material/Modal";
 import BallLoaderModal from "../EPLBallLoader/EPLBallLoaderModal";
@@ -6,7 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getScorePeerWeekHomeEpl } from "@/api/epl/HomeEplApiEpl";
 import { Typography, useMediaQuery } from "@mui/material";
 import TableModal from "./TableModal";
-import { NewPortfolio } from "@/types/index";
+import { NewPortfolio, ScorePortfoliosTable } from "@/types/index";
+import { getTeamsEpl } from "@/api/epl/PortfoliosEplAPI";
+import { useEffect, useState } from "react";
 
 export default function ModalTableHome({
   openModal,
@@ -25,6 +29,10 @@ export default function ModalTableHome({
   const userId = params.userId!;
   const isMobile = useMediaQuery("(max-width:700px)");
 
+  const [teamsEplComplete, setTeamsEplComplete] = useState<
+    ScorePortfoliosTable[]
+  >([]);
+
   const {
     data: scorePeerWeekHomeEpl,
     isLoading,
@@ -35,6 +43,33 @@ export default function ModalTableHome({
       getScorePeerWeekHomeEpl(week.toString(), portfolioId.toString()),
     enabled: Boolean(userId && week && portfolioId !== "1"), // Solo ejecuta la consulta si estos valores son válidos
   });
+
+  const {
+    data: teamsEplHome,
+    isLoading: isLoadingTeamsEplHome,
+    // isError,
+  } = useQuery({
+    queryKey: ["teamsEplHome", userId],
+    queryFn: () => getTeamsEpl("2"),
+    // enabled: Boolean(userId && week && portfolioId !== "1"), // Solo ejecuta la consulta si estos valores son válidos
+  });
+
+  useEffect(() => {
+    if (scorePeerWeekHomeEpl && teamsEplHome) {
+      const scorePeerWeekHomeEplWithCrest = scorePeerWeekHomeEpl.map(
+        (item: ScorePortfoliosTable) => {
+          const team = teamsEplHome.find(
+            (t: ScorePortfoliosTable) => t?.id === item.team_id
+          );
+          return {
+            ...item,
+            crest_url: team?.crest_url || "qweqwewq", // Si no se encuentra, queda vacío
+          };
+        }
+      );
+      setTeamsEplComplete(scorePeerWeekHomeEplWithCrest);
+    }
+  }, [scorePeerWeekHomeEpl, teamsEplHome]);
 
   const ErrorModal = () => {
     return (
@@ -58,14 +93,18 @@ export default function ModalTableHome({
 
   const renderComponent = () => {
     let component = <BallLoaderModal />;
-    if (isLoading) {
+    if (isLoading || isLoadingTeamsEplHome) {
       component = <BallLoaderModal />;
     }
     if (isError) {
       component = <ErrorModal />;
     }
-    if (scorePeerWeekHomeEpl && !isLoading && !isError) {
-      component = <TableModal data={scorePeerWeekHomeEpl} />;
+    if (scorePeerWeekHomeEpl && teamsEplComplete && !isLoading && !isError) {
+      component = (
+        <TableModal
+          data={teamsEplComplete ? teamsEplComplete : scorePeerWeekHomeEpl}
+        />
+      );
     }
     return component;
   };

@@ -13,13 +13,15 @@ function createData(
   seed: number,
   multiplier: number,
   result: number,
-  type: string
+  type: string,
+  crest_url?: string
 ) {
-  return { team_name, seed, multiplier, result, type };
+  return { team_name, seed, multiplier, result, type, crest_url };
 }
 
 export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
   const isMobile = useMediaQuery("(max-width:700px)");
+  console.log(data);
 
   const style = {
     color: "white",
@@ -32,8 +34,9 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
       item.team_name,
       item.seed,
       item.streak_multiplier,
-      item.team_id,
-      item.type
+      Number(item.team_id),
+      item.type,
+      item.crest_url
     );
   });
 
@@ -97,7 +100,28 @@ export default function DenseTable({ data }: { data: ScorePortfoliosTable }) {
                 scope="row"
                 style={style}
               >
-                {row.team_name}
+                <span
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  {row.crest_url && (
+                    <img
+                      src={row.crest_url}
+                      alt={row.team_name}
+                      style={{
+                        width: isMobile ? 20 : 32,
+                        height: isMobile ? 20 : 32,
+                        objectFit: "contain",
+                        borderRadius: "4px",
+                      }}
+                    />
+                  )}
+                  {/* {console.log(row)} */}
+                  {row.team_name}
+                </span>
               </TableCell>
               <TableCell
                 style={style}

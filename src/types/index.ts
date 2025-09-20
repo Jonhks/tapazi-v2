@@ -265,9 +265,11 @@ export type ScoresEplHome = z.infer<typeof scoresEplSchema>;
 export const ScorePortfolioTableSchema = z.object({
   seed: z.number(),
   team_name: z.string(),
-  team_id: z.number(),
+  team_id: z.number().optional(),
+  id: z.number().optional(),
   streak_multiplier: z.number(),
   type: z.string(),
+  crest_url: z.string().optional(),
 });
 
 export const ScorePortfoliosTableSchema = z.array(ScorePortfolioTableSchema);
