@@ -281,6 +281,7 @@ const MyPortfolioEPL = () => {
     //? }
 
     if (
+      AllPortfolios &&
       !AllPortfolios[0]?.teams &&
       team &&
       !team.streak_multiplier &&
