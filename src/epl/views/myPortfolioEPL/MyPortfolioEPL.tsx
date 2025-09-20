@@ -202,11 +202,12 @@ const MyPortfolioEPL = () => {
       teams: selectedTeams.map((team) => {
         return {
           id: team.id,
-          seed: team.current_seed,
-          streak_multiplier: team.streak_multiplier,
+          seed: getSeed(team),
+          multiplier: getMultiplier(team),
         };
       }),
     };
+
     if (AllPortfolios && !AllPortfolios[0]?.teams) {
       // Crea un nuevo portfolio
       console.log("lo esta creando");
@@ -243,10 +244,12 @@ const MyPortfolioEPL = () => {
   };
 
   const getMultiplier = (team: Team) => {
-    let multiplier = "";
+    let multiplier = "inicio";
+    // const dataMulti = [];
     // console.log(team, "team");
     // console.log(teamsDynamics, "dynamics");
-    // console.log(AllPortfolios[0]?.teams, "portfolios");
+    // console.log(AllPortfolios.length, "portfolios");
+    // console.log(AllPortfolios[0]?.teams, "portfoliosTeams");
 
     // ?Prueba usuario con portfolio
     //? {
@@ -256,63 +259,49 @@ const MyPortfolioEPL = () => {
     //?  AllPortfolios[0]?.teams: undefined;
     //? }
 
-    // ? Nuevo usuario Sin portafolio
-    //? {
-    //?  team: undefined;
-    //?  team.streak_multiplier: undefined;
-    //?  teamsDynamics: completo
-    //?  AllPortfolios[0]?.teams: undefined;
-    //? }
-
-    // ? Usuario para editar al cargar
-    //? {
-    //?  team: trae;
-    //?  team.streak_multiplier: trae;
-    //?  teamsDynamics : completo,
-    //?  AllPortfolios[0]?.teams: completo;
-    //? }
-
-    // ? Usuario para editar
-    //? {
-    //?  team: trae;
-    //?  team.streak_multiplier: trae;
-    //?  teamsDynamics : completo,
-    //?  AllPortfolios[0]?.teams: completo;
-    //? }
+    const currentTeamDynamics = teamsDynamics?.filter(
+      (t) => t?.id === team?.id
+    )[0];
+    const currentTeamPortfolios = AllPortfolios[0]?.teams?.filter(
+      (t) => t?.id === team?.id
+    )[0];
 
     if (
-      AllPortfolios &&
+      team &&
+      AllPortfolios.length === 0 &&
+      !AllPortfolios[0] &&
       !AllPortfolios[0]?.teams &&
-      team &&
-      !team.streak_multiplier &&
-      teamsDynamics?.length
+      !teamsDynamics?.length
     ) {
-      // const currentTeam = teamsDynamics.filter((t) => t.id === team.id)[0];
-      // console.log("entro al primero", team.id, currentTeam);
       multiplier = 1;
+      console.log("entro al primero nuevo", team);
+      return multiplier;
     }
 
     if (
-      AllPortfolios &&
-      AllPortfolios[0]?.teams &&
       team &&
-      team?.streak_multiplier &&
-      teamsDynamics.length
-    ) {
-      const currentTeam = teamsDynamics.filter((t) => t.id === team.id)[0];
-      multiplier = currentTeam?.streak_multiplier;
-      // console.log("entro al segundo");
-      // multiplier = team?.streak_multiplier;
-    }
-
-    if (
-      AllPortfolios[0]?.teams &&
-      !team?.streak_multiplier &&
+      AllPortfolios.length > 0 &&
+      AllPortfolios[0] &&
+      !AllPortfolios[0]?.teams &&
       teamsDynamics?.length
     ) {
-      // console.log("entro al tercero");
-      const currentTeam = teamsDynamics.filter((t) => t.id !== team.id);
-      multiplier = currentTeam[0]?.streak_multiplier;
+      multiplier = currentTeamDynamics?.streak_multiplier || 1;
+      console.log("entro al segundo casi nuevo", team);
+      return multiplier;
+    }
+
+    // console.log(AllPortfolios[0]?.teams, "portfolios");
+
+    if (
+      team &&
+      AllPortfolios.length > 0 &&
+      AllPortfolios[0] &&
+      AllPortfolios[0]?.teams &&
+      teamsDynamics?.length
+    ) {
+      multiplier = currentTeamPortfolios?.streak_multiplier || 1;
+      console.log("entro al tercero", team);
+      return multiplier;
     }
     return multiplier;
   };

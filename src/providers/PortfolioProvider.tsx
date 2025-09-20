@@ -75,8 +75,10 @@ export const PortfolioProvider = ({
     queryFn: () => getTeamsDynamics(2, portfolios?.[0]?.id || "0"),
     refetchOnWindowFocus: "always",
     retry: 1,
-    enabled: Boolean(userId && portfolios),
+    enabled: Boolean(userId && portfolios?.length > 0),
   });
+
+  // console.log(portfolios, "portfolios");
 
   // Actualiza los estados locales cuando las consultas cambien
   useEffect(() => {
