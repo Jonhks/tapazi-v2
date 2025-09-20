@@ -289,7 +289,6 @@ const MyPortfolioEPL = () => {
       // const currentTeam = teamsDynamics.filter((t) => t.id === team.id)[0];
       // console.log("entro al primero", team.id, currentTeam);
       multiplier = 1;
-      // multiplier = currentTeam?.streak_multiplier;
     }
 
     if (
@@ -299,8 +298,10 @@ const MyPortfolioEPL = () => {
       team?.streak_multiplier &&
       teamsDynamics.length
     ) {
+      const currentTeam = teamsDynamics.filter((t) => t.id === team.id)[0];
+      multiplier = currentTeam?.streak_multiplier;
       // console.log("entro al segundo");
-      multiplier = team?.streak_multiplier;
+      // multiplier = team?.streak_multiplier;
     }
 
     if (
