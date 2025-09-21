@@ -48,28 +48,28 @@ const StatsEPL = () => {
   // const queryClient = useQueryClient();
   // const isMobile = useMediaQuery("(max-width:900px)");
 
-  // const optionsOrder = [
-  //   {
-  //     id: "1",
-  //     value: "Score (Desc)",
-  //     name: "Score (Desc)",
-  //   },
-  //   {
-  //     id: "2",
-  //     value: "Portfolio (Asc)",
-  //     name: "Portfolio (Asc)",
-  //   },
-  //   {
-  //     id: "3",
-  //     value: "Weight (Desc)",
-  //     name: "Weight (Desc)",
-  //   },
-  //   {
-  //     id: "4",
-  //     value: "Weight (Asc)",
-  //     name: "Weight (Asc)",
-  //   },
-  // ];
+  const optionsOrder = [
+    {
+      id: "1",
+      value: "Score (Desc)",
+      name: "Score (Desc)",
+    },
+    {
+      id: "2",
+      value: "Portfolio (Asc)",
+      name: "Portfolio (Asc)",
+    },
+    {
+      id: "3",
+      value: "Weight (Desc)",
+      name: "Weight (Desc)",
+    },
+    {
+      id: "4",
+      value: "Weight (Asc)",
+      name: "Weight (Asc)",
+    },
+  ];
 
   type dataDropdowndataType = {
     name: string;
@@ -98,14 +98,11 @@ const StatsEPL = () => {
   // const [round, setRound] = useState(8);
 
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
-  // const [pointsPerRound, setPointsPerRound] = useState([]);
-  // const [
-  //   // selectedOrderBy,
-  //   // setSelectedOrderBy
-  // ] = useState("1");
-  // const [orderOptionSelected, setOrderOptionSelected] = useState(
-  //   optionsOrder[0]
-  // );
+  const [pointsPerRound, setPointsPerRound] = useState([]);
+  const [selectedOrderBy, setSelectedOrderBy] = useState("1");
+  const [orderOptionSelected, setOrderOptionSelected] = useState(
+    optionsOrder[0]
+  );
   console.log(tournament);
 
   useEffect(() => {
@@ -181,38 +178,38 @@ const StatsEPL = () => {
   //     getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
   // });
 
-  // const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
-  //   useQuery({
-  //     queryKey: ["mostPickedTeams", userId],
-  //     queryFn: () => getMostPickedTeams(selectedTournament.id),
-  //     enabled: runMostTeamsPicked,
-  //   });
+  const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
+    useQuery({
+      queryKey: ["mostPickedTeams", userId],
+      queryFn: () => getMostPickedTeams(selectedTournament.id),
+      enabled: runMostTeamsPicked,
+    });
 
-  // const { data: TeamsPickedLog, isLoading: isLoadinTeamsPickedLog } = useQuery({
-  //   queryKey: ["TeamsPickedLog", userId],
-  //   queryFn: () => getTeamsPickedLog(selectedTournament.id),
-  //   enabled: runMostTeamsPicked,
-  // });
+  const { data: TeamsPickedLog, isLoading: isLoadinTeamsPickedLog } = useQuery({
+    queryKey: ["TeamsPickedLog", userId],
+    queryFn: () => getTeamsPickedLog(selectedTournament.id),
+    enabled: runMostTeamsPicked,
+  });
 
-  // const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
-  //   useQuery({
-  //     queryKey: ["leastPickedTeams", userId],
-  //     queryFn: () => getLeastPickedTeams(selectedTournament.id),
-  //     enabled: runMostTeamsPicked,
-  //   });
+  const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
+    useQuery({
+      queryKey: ["leastPickedTeams", userId],
+      queryFn: () => getLeastPickedTeams(selectedTournament.id),
+      enabled: runMostTeamsPicked,
+    });
 
-  // const { data: teamsNotPickedLog, isLoading: isLoadinTeamsNotPickedLog } =
-  //   useQuery({
-  //     queryKey: ["teamsNotPickedLog", userId],
-  //     queryFn: () => getTeamsNotPickedLog(selectedTournament.id),
-  //     enabled: runMostTeamsPicked,
-  //   });
+  const { data: teamsNotPickedLog, isLoading: isLoadinTeamsNotPickedLog } =
+    useQuery({
+      queryKey: ["teamsNotPickedLog", userId],
+      queryFn: () => getTeamsNotPickedLog(selectedTournament.id),
+      enabled: runMostTeamsPicked,
+    });
 
-  // const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
-  //   queryKey: ["seedPickTotal", userId],
-  //   queryFn: () => getSeedPickTotal(selectedTournament.id),
-  //   enabled: runSubDataPortfolios,
-  // });
+  const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
+    queryKey: ["seedPickTotal", userId],
+    queryFn: () => getSeedPickTotal(selectedTournament.id),
+    enabled: runSubDataPortfolios,
+  });
 
   // const {
   //   data: portfolioSeedSelections,
