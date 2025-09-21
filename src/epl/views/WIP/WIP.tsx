@@ -2,13 +2,13 @@ import { useParams } from "react-router-dom";
 
 const NCAAFemaleImg =
   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_rose.png?quality=80&format=webp";
-const NCAAMaleImg =
-  "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_orange.png?quality=80&format=webp";
+// const NCAAMaleImg =
+//   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_orange.png?quality=80&format=webp";
 
 const WIP = () => {
   const params = useParams();
 
-  const img = params.sport === "3" ? NCAAFemaleImg : NCAAMaleImg;
+  const img = NCAAFemaleImg;
   console.log(params);
 
   return (
