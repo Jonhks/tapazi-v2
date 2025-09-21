@@ -63,7 +63,7 @@ const HomeEPL = () => {
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payoutEpl", userId],
     queryFn: () => getPayoutEpl("3", 99),
-    retry: true,
+    retry: false,
   });
 
   if (
@@ -155,7 +155,7 @@ const HomeEPL = () => {
               <br />
               {payout?.map((pay: PayOut, i: number) => (
                 <p key={i}>
-                  Place {pay?.place}: <span>{pay?.percentage}%</span>
+                  Place {pay?.place}: <span>{pay?.percentage || 0}%</span>
                 </p>
               ))}
             </div>
