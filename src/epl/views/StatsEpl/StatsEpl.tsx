@@ -40,6 +40,7 @@ import StatsGraphics from "../../components/Graphics/StatsGraphic";
 import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
 import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
 import StatsPortfoliosSelectionsGraphicPercentLeast from "../../components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
+import WIP from "../WIP/WIP";
 
 const StatsEPL = () => {
   const params = useParams();
@@ -78,6 +79,7 @@ const StatsEPL = () => {
   const { data: tournamentsEPL, isLoading } = useQuery({
     queryKey: ["tournamentsEPL", userId],
     queryFn: () => getTournaments(userId),
+    retry: 1,
   });
 
   const [tournament, setTournament] = useState("");
@@ -179,59 +181,61 @@ const StatsEPL = () => {
   //     getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
   // });
 
-  const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
-    useQuery({
-      queryKey: ["mostPickedTeams", userId],
-      queryFn: () => getMostPickedTeams(selectedTournament.id),
-      enabled: runMostTeamsPicked,
-    });
+  // const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
+  //   useQuery({
+  //     queryKey: ["mostPickedTeams", userId],
+  //     queryFn: () => getMostPickedTeams(selectedTournament.id),
+  //     enabled: runMostTeamsPicked,
+  //   });
 
-  const { data: TeamsPickedLog, isLoading: isLoadinTeamsPickedLog } = useQuery({
-    queryKey: ["TeamsPickedLog", userId],
-    queryFn: () => getTeamsPickedLog(selectedTournament.id),
-    enabled: runMostTeamsPicked,
-  });
+  // const { data: TeamsPickedLog, isLoading: isLoadinTeamsPickedLog } = useQuery({
+  //   queryKey: ["TeamsPickedLog", userId],
+  //   queryFn: () => getTeamsPickedLog(selectedTournament.id),
+  //   enabled: runMostTeamsPicked,
+  // });
 
-  const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
-    useQuery({
-      queryKey: ["leastPickedTeams", userId],
-      queryFn: () => getLeastPickedTeams(selectedTournament.id),
-      enabled: runMostTeamsPicked,
-    });
+  // const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
+  //   useQuery({
+  //     queryKey: ["leastPickedTeams", userId],
+  //     queryFn: () => getLeastPickedTeams(selectedTournament.id),
+  //     enabled: runMostTeamsPicked,
+  //   });
 
-  const { data: teamsNotPickedLog, isLoading: isLoadinTeamsNotPickedLog } =
-    useQuery({
-      queryKey: ["teamsNotPickedLog", userId],
-      queryFn: () => getTeamsNotPickedLog(selectedTournament.id),
-      enabled: runMostTeamsPicked,
-    });
+  // const { data: teamsNotPickedLog, isLoading: isLoadinTeamsNotPickedLog } =
+  //   useQuery({
+  //     queryKey: ["teamsNotPickedLog", userId],
+  //     queryFn: () => getTeamsNotPickedLog(selectedTournament.id),
+  //     enabled: runMostTeamsPicked,
+  //   });
 
-  const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
-    queryKey: ["seedPickTotal", userId],
-    queryFn: () => getSeedPickTotal(selectedTournament.id),
-    enabled: runSubDataPortfolios,
-  });
+  // const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
+  //   queryKey: ["seedPickTotal", userId],
+  //   queryFn: () => getSeedPickTotal(selectedTournament.id),
+  //   enabled: runSubDataPortfolios,
+  // });
 
-  const {
-    data: portfolioSeedSelections,
-    isLoading: isLoadinPortfolioSeedSelections,
-  } = useQuery({
-    queryKey: ["portfolioSeedSelections", userId],
-    queryFn: () => getPortfolioSeedSelections(selectedTournament.id),
-    enabled: runSubDataPortfolios,
-  });
+  // const {
+  //   data: portfolioSeedSelections,
+  //   isLoading: isLoadinPortfolioSeedSelections,
+  // } = useQuery({
+  //   queryKey: ["portfolioSeedSelections", userId],
+  //   queryFn: () => getPortfolioSeedSelections(selectedTournament.id),
+  //   enabled: runSubDataPortfolios,
+  // });
 
-  if (
-    isLoading ||
-    // isLoadingTeamsPicked ||
-    isLoadingMostPickedTeams ||
-    isLoadinTeamsPickedLog ||
-    isLoadinLeastPickedTeams ||
-    isLoadinTeamsNotPickedLog ||
-    isLoadinSeedPickTotal ||
-    isLoadinPortfolioSeedSelections
-  )
-    return <Loader />;
+  // if (
+  //   isLoading ||
+  //   // isLoadingTeamsPicked ||
+  //   isLoadingMostPickedTeams ||
+  //   isLoadinTeamsPickedLog ||
+  //   isLoadinLeastPickedTeams ||
+  //   isLoadinTeamsNotPickedLog ||
+  //   isLoadinSeedPickTotal ||
+  //   isLoadinPortfolioSeedSelections
+  // )
+  //   return <Loader />;
+
+  return <WIP />;
 
   return (
     <Grid
