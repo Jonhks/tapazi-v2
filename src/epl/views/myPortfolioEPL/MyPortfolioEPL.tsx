@@ -374,16 +374,19 @@ const MyPortfolioEPL = () => {
       multiplier = "1";
       return multiplier;
     }
-    // console.log(AllPortfolios[0]?.teams?.length);
 
     // ? Si hay portafolios si equipos y la semanas son diferentes tiene datos del team
     if (
       AllPortfolios.length &&
-      AllPortfolios[0]?.teams?.length &&
+      AllPortfolios[0]?.teams?.length > 0 &&
       team &&
       weekParameter !== validTournament?.[0]?.current_round
     ) {
-      multiplier = currentTeamPortfolios?.current_streak;
+      console.log("");
+
+      multiplier = currentTeamPortfolios?.current_streak
+        ? currentTeamPortfolios?.current_streak
+        : currentTeamDynamics?.current_streak;
       return multiplier;
     }
 
