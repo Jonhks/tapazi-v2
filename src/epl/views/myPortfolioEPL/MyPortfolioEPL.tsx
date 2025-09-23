@@ -240,25 +240,33 @@ const MyPortfolioEPL = () => {
     const estaEn0 = newPortfolio.teams?.some((port) => {
       return port.seed === 0 || port.streak_multiplier === "0";
     });
+
     if (estaEn0) {
       showErrorEnCero();
       return;
     }
-    if (AllPortfolios && !AllPortfolios[0]?.teams) {
+    // console.log(AllPortfolios);
+    console.log(AllPortfolios?.length === 0 && true);
+    // return;
+
+    if (AllPortfolios?.length === 0) {
+      console.log("lo esta creando");
       // Crea un nuevo portfolio
-      // console.log("lo esta creando");
       postNewPortfolioMutate({
         port: newPortfolio,
         userId: userId,
         portId: AllPortfolios[0]?.id,
       });
-    } else if (AllPortfolios && AllPortfolios[0]?.teams) {
-      // console.log("lo esta editando");
+      return;
+    }
+    if (AllPortfolios?.length > 0) {
       // Actualiza el primer portfolio
+      console.log("lo esta editando");
       postEditPortfolioMutate({
         port: newPortfolio.teams,
         portId: AllPortfolios[0]?.id,
       });
+      return;
     }
   }, [selectedTeams, userId, AllPortfolios]);
 
