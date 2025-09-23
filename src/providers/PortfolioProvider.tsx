@@ -13,6 +13,7 @@ import {
   getNumberTEAMXP,
   getTeamsNotAvailable,
   getTeamsDynamics,
+  getParameterWeek,
 } from "@/api/epl/PortfoliosEplAPI";
 import { useQuery } from "@tanstack/react-query";
 
@@ -29,6 +30,7 @@ export const PortfolioProvider = ({
   const [numberInputs, setNumberInputs] = useState<string[] | NumberInputs>([]); // estado de getNumberTEAMXP
   const [teamsBloqued, setTeamsBloqued] = useState<Team[]>([]); //estado de equipos no teamsNotAvailable
   const [selectedTeams, setSelectedTeams] = useState<Team[]>([]); //estado de los equipos seleccionados
+  const [weekParameter, setWeekParameter] = useState<number>(null); //estado de la semana seleccionada
 
   const [rendersAmountOfInputs, setRendersAmountOfInputs] = useState<string[]>(
     []
@@ -71,14 +73,28 @@ export const PortfolioProvider = ({
     });
 
   const { data: teamsDynamics, isLoading: isLoadingTeamsDynamics } = useQuery({
-    queryKey: ["teamsDynamics", userId, portfolios],
+    queryKey: ["teamsDynamics", userId, portfolios, weekParameter],
     queryFn: () => getTeamsDynamics(2, portfolios?.[0]?.id || "0"),
     refetchOnWindowFocus: "always",
     retry: 1,
-    enabled: Boolean(userId && portfolios?.length > 0),
+    enabled: Boolean(
+      userId &&
+        portfolios?.length > 0 &&
+        validTournament &&
+        validTournament[0]?.current_round !== weekParameter
+    ),
   });
 
-  // console.log(portfolios, "portfolios");
+  const { data: getWeekParameter, isLoading: isLoadingWeekParameter } =
+    useQuery({
+      queryKey: ["weekParameter", userId, portfolios],
+      queryFn: () => getParameterWeek("3", "WEETOU"),
+      refetchOnWindowFocus: "always",
+      // retry: 1,
+      // enabled: Boolean(userId && portfolios?.length > 0),
+    });
+
+  // console.log(weekParameter, "weekParameter");
 
   // Actualiza los estados locales cuando las consultas cambien
   useEffect(() => {
@@ -127,6 +143,12 @@ export const PortfolioProvider = ({
   }, [numberInputs]);
 
   useEffect(() => {
+    if (getWeekParameter) {
+      setWeekParameter(getWeekParameter);
+    }
+  }, [getWeekParameter]);
+
+  useEffect(() => {
     // if (teamsBloqued && AllPortfolios && teamsComplete) {
     //   setSelectedTeams(AllPortfolios[0]?.teams);
     // }
@@ -165,6 +187,7 @@ export const PortfolioProvider = ({
     isLoading ||
     isLoadingNumberInputs ||
     isLoadingTeamsDynamics ||
+    isLoadingWeekParameter ||
     isLoadingTeamsNotAvailable;
 
   const value: PortfolioContextType = {
@@ -186,6 +209,7 @@ export const PortfolioProvider = ({
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    weekParameter,
   };
 
   return (

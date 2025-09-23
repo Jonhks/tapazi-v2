@@ -397,3 +397,28 @@ export const getTeamsDynamics = async (id: string, portfolioId: string) => {
     return;
   }
 };
+
+export const getParameterWeek = async (id: string, parameter: string) => {
+  // portfolioId = "566";
+  try {
+    const url = `/tournaments/${id}/parameters?key=${parameter}`;
+    const { data } = await newApi(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (!data.value) {
+      return "Error";
+    }
+
+    if (data.value) {
+      return data.value;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};

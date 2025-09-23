@@ -47,6 +47,8 @@ const MyPortfolioEPL = () => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    weekParameter,
+    validTournament,
   } = usePortfolio();
 
   useEffect(() => {
@@ -240,48 +242,31 @@ const MyPortfolioEPL = () => {
     const currentTeamPortfolios = AllPortfolios[0]?.teams?.filter(
       (t) => t?.id === team?.id
     )[0];
-    if (
-      team &&
-      AllPortfolios.length === 0 &&
-      !AllPortfolios[0] &&
-      !AllPortfolios[0]?.teams &&
-      !teamsDynamics?.length
-    ) {
-      seed = team.seed || "";
-      console.log("entro al primero nuevo", team);
-      return seed;
+    // console.log(team, "team");
+    // console.log(AllPortfolios, "AllPortfolios");
+    // console.log(validTournament, "validTournament");
+
+    if (AllPortfolios && AllPortfolios[0]?.teams?.length > 0) {
+      if (team && weekParameter === validTournament?.[0]?.current_round) {
+        seed = currentTeamPortfolios?.current_seed
+          ? currentTeamPortfolios?.current_seed
+          : team?.seed;
+      }
+      //  else {
+      //   seed = currentTeamDynamics?.current_seed;
+      // }
     }
 
-    if (
-      team &&
-      AllPortfolios.length > 0 &&
-      AllPortfolios[0] &&
-      !AllPortfolios[0]?.teams &&
-      teamsDynamics?.length
-    ) {
-      seed = currentTeamDynamics?.current_seed;
-      console.log("entro al segundo casi nuevo", team);
-      return seed;
-    }
-
-    if (
-      team &&
-      AllPortfolios.length > 0 &&
-      AllPortfolios[0] &&
-      AllPortfolios[0]?.teams &&
-      teamsDynamics?.length
-    ) {
-      seed = currentTeamPortfolios?.current_seed
-        ? currentTeamPortfolios?.current_seed
-        : currentTeamDynamics?.current_seed;
-      console.log("entro al tercero", currentTeamPortfolios);
-      return seed;
+    if (!AllPortfolios?.length && team) {
+      seed = team?.seed;
+      // console.log("No hay teams en el portfolio");
+      // console.log(currentTeamPortfolios, "currentTeamPortfolios");
     }
     return seed;
   };
 
   const getMultiplier = (team: Team) => {
-    let multiplier = "";
+    let multiplier = "Nada";
     const currentTeamDynamics = teamsDynamics?.filter(
       (t) => t?.id === team?.id
     )[0];
@@ -289,42 +274,12 @@ const MyPortfolioEPL = () => {
       (t) => t?.id === team?.id
     )[0];
 
-    if (
-      team &&
-      AllPortfolios.length === 0 &&
-      !AllPortfolios[0] &&
-      !AllPortfolios[0]?.teams &&
-      !teamsDynamics?.length
-    ) {
-      multiplier = 1;
-      console.log("entro al primero nuevo", team);
-      return multiplier;
-    }
+    // console.log(currentTeamPortfolios);
 
-    if (
-      team &&
-      AllPortfolios.length > 0 &&
-      AllPortfolios[0] &&
-      !AllPortfolios[0]?.teams &&
-      teamsDynamics?.length
-    ) {
-      multiplier = currentTeamDynamics?.streak_multiplier || 1;
-      console.log("entro al segundo casi nuevo", team);
-      return multiplier;
-    }
-
-    if (
-      team &&
-      AllPortfolios.length > 0 &&
-      AllPortfolios[0] &&
-      AllPortfolios[0]?.teams &&
-      teamsDynamics?.length
-    ) {
-      multiplier = currentTeamPortfolios?.current_streak
-        ? currentTeamPortfolios?.current_streak
-        : currentTeamDynamics?.streak_multiplier;
-      console.log("entro al tercero", currentTeamPortfolios);
-      return multiplier;
+    if (team && weekParameter === validTournament?.[0]?.current_round) {
+      multiplier = "1";
+    } else {
+      multiplier = currentTeamDynamics?.current_streak;
     }
     return multiplier;
   };
