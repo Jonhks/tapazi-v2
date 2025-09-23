@@ -26,6 +26,7 @@ const HomeEPL = () => {
   const userId = params.userId!;
 
   const [selected, setSelected] = useState("first");
+  const [participants, setParticipants] = useState(0);
 
   const { data: dataGetAllPortfoliosEpl } = useQuery({
     queryKey: ["AllportfoliosEpl", userId],
@@ -61,12 +62,11 @@ const HomeEPL = () => {
   });
 
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
-    queryKey: ["payoutEpl", userId],
-    queryFn: () => getPayoutEpl("3", 99), //? Mandar el participants de stats
+    queryKey: ["payoutEpl", userId, dataGetAllPortfoliosEpl],
+    queryFn: () => getPayoutEpl("3", dataGetAllPortfoliosEpl?.participants),
+    enabled: !!dataGetAllPortfoliosEpl?.participants,
     retry: false,
   });
-
-  // console.log(dataGetAllPortfoliosEpl);
 
   if (
     isLoadingPopons ||
