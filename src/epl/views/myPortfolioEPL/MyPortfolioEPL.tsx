@@ -246,14 +246,14 @@ const MyPortfolioEPL = () => {
     }
     if (AllPortfolios && !AllPortfolios[0]?.teams) {
       // Crea un nuevo portfolio
-      console.log("lo esta creando");
+      // console.log("lo esta creando");
       postNewPortfolioMutate({
         port: newPortfolio,
         userId: userId,
         portId: AllPortfolios[0]?.id,
       });
     } else if (AllPortfolios && AllPortfolios[0]?.teams) {
-      console.log("lo esta editando");
+      // console.log("lo esta editando");
       // Actualiza el primer portfolio
       postEditPortfolioMutate({
         port: newPortfolio.teams,
@@ -276,7 +276,7 @@ const MyPortfolioEPL = () => {
     const currentTeamPortfolios = AllPortfolios[0]?.teams?.filter(
       (t) => t?.id === team?.id
     )[0];
-    console.log(weekParameter, validTournament?.[0]?.current_round);
+    // console.log(weekParameter, validTournament?.[0]?.current_round);
 
     // ? Primer caso, usuario completamente nuevo semanas iguales  Sin portafolios ni equipos
     if (
@@ -346,6 +346,8 @@ const MyPortfolioEPL = () => {
 
   // ? multiplier
   const getMultiplier = (team: Team) => {
+    // console.log(team);
+
     let multiplier = "";
     const currentTeamDynamics = teamsDynamics?.filter(
       (t) => t?.id === team?.id
@@ -359,16 +361,18 @@ const MyPortfolioEPL = () => {
     // ? las semanas son iguales
     if (team && weekParameter === validTournament?.[0]?.current_round) {
       multiplier = "1";
+      return multiplier;
     }
 
     // ? No hay portafolios no equipos y la semanas son diferentes
     if (
       !AllPortfolios.length &&
-      !AllPortfolios[0]?.teams?.length &&
+      !AllPortfolios[0]?.teams?.length > 0 &&
       team &&
       weekParameter !== validTournament?.[0]?.current_round
     ) {
       multiplier = "1";
+      return multiplier;
     }
     // console.log(AllPortfolios[0]?.teams?.length);
 
@@ -380,6 +384,7 @@ const MyPortfolioEPL = () => {
       weekParameter !== validTournament?.[0]?.current_round
     ) {
       multiplier = currentTeamPortfolios?.current_streak;
+      return multiplier;
     }
 
     // ? Si hay portafolios no hay equipos y la semanas son diferentes
@@ -392,6 +397,7 @@ const MyPortfolioEPL = () => {
       multiplier = currentTeamPortfolios?.current_streak
         ? currentTeamPortfolios?.current_streak
         : currentTeamDynamics?.current_streak;
+      return multiplier;
     }
 
     // ? Semanas diferentes si hay portafolios y portfolio.teams no hay datos del team
