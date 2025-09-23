@@ -157,6 +157,32 @@ const MyPortfolioEPL = () => {
     }
   };
 
+  const showErrorEnCero = async () => {
+    const result = await Swal.fire({
+      title: "Error!",
+      text: "There are 0 seeds, please wait a few minutes",
+      icon: "error",
+      showCancelButton: false,
+      confirmButtonColor: "#3ED076",
+      color: "white",
+      background: "#200930",
+      confirmButtonText: "Ok",
+    });
+    if (result.isConfirmed) {
+      setTimeout(() => {
+        window.location.reload();
+      }, 100);
+      Swal.fire({
+        title: "Changes discarded!",
+        text: "You have changes discarded successfully.",
+        icon: "success",
+        background: "#421065", // Cambia el color de fondo
+        confirmButtonColor: "#3ED076",
+        color: "white", // Cambia el color del texto
+      });
+    }
+  };
+
   const cancelAlert = () => {
     Swal.fire({
       title: "Are you sure?",
@@ -197,6 +223,7 @@ const MyPortfolioEPL = () => {
       }, 2500);
       return;
     }
+
     const newPortfolio = {
       tournament_id: "3",
       participant_id: userId,
@@ -210,6 +237,13 @@ const MyPortfolioEPL = () => {
       }),
     };
 
+    const estaEn0 = newPortfolio.teams?.some((port) => {
+      return port.seed === 0 || port.streak_multiplier === "0";
+    });
+    if (estaEn0) {
+      showErrorEnCero();
+      return;
+    }
     if (AllPortfolios && !AllPortfolios[0]?.teams) {
       // Crea un nuevo portfolio
       console.log("lo esta creando");
@@ -242,31 +276,76 @@ const MyPortfolioEPL = () => {
     const currentTeamPortfolios = AllPortfolios[0]?.teams?.filter(
       (t) => t?.id === team?.id
     )[0];
-    // console.log(team, "team");
-    // console.log(AllPortfolios, "AllPortfolios");
-    // console.log(validTournament, "validTournament");
 
-    if (AllPortfolios && AllPortfolios[0]?.teams?.length > 0) {
-      if (team && weekParameter === validTournament?.[0]?.current_round) {
+    // ? Primer caso, usuario completamente nuevo semanas iguales  Sin portafolios ni equipos
+    if (
+      !AllPortfolios?.length &&
+      !AllPortfolios[0]?.teams?.length === 0 &&
+      team &&
+      weekParameter === validTournament?.[0]?.current_round
+    ) {
+      // console.log(
+      //   "No hay portafolios y Ni portfolio.teams, no hay team y las semanas son iguales "
+      // );
+      seed = team?.seed;
+      return seed;
+    }
+
+    // ? Semanas iguales si hay portafolios y portfolio.teams
+    if (
+      AllPortfolios &&
+      AllPortfolios[0]?.teams?.length > 0 &&
+      weekParameter === validTournament?.[0]?.current_round
+    ) {
+      // console.log("Hay portafolios y portfolio.teams son semanas iguales");
+      if (team) {
         seed = currentTeamPortfolios?.current_seed
           ? currentTeamPortfolios?.current_seed
           : team?.seed;
+        return seed;
       }
-      //  else {
-      //   seed = currentTeamDynamics?.current_seed;
-      // }
     }
 
-    if (!AllPortfolios?.length && team) {
+    // ? Semanas diferentes no hay portafolios ni portfolio.teams (nuevo escenario)!
+    if (
+      !AllPortfolios.length &&
+      !AllPortfolios[0]?.teams?.length > 0 &&
+      team &&
+      weekParameter !== validTournament?.[0]?.current_round
+    ) {
       seed = team?.seed;
-      // console.log("No hay teams en el portfolio");
-      // console.log(currentTeamPortfolios, "currentTeamPortfolios");
+      return seed;
+    }
+
+    // ? Semanas diferentes si hay portafolios y no exista portfolio.teams => Dynamics
+    if (AllPortfolios && !AllPortfolios[0]?.teams?.length > 0) {
+      if (team && weekParameter !== validTournament?.[0]?.current_round) {
+        seed = currentTeamDynamics?.current_seed
+          ? currentTeamDynamics?.current_seed
+          : team?.seed;
+      }
+    }
+
+    // ? Semanas diferentes si hay portafolios y portfolio.teams
+    if (
+      AllPortfolios.length &&
+      AllPortfolios[0]?.teams?.length > 0 &&
+      weekParameter !== validTournament?.[0]?.current_round
+    ) {
+      // console.log("Hay portafolios y portfolio.teams son semanas diferentes");
+      if (team) {
+        seed = currentTeamPortfolios?.current_seed
+          ? currentTeamPortfolios?.current_seed
+          : currentTeamDynamics?.current_seed;
+        return seed;
+      }
     }
     return seed;
   };
 
+  // ? multiplier
   const getMultiplier = (team: Team) => {
-    let multiplier = "Nada";
+    let multiplier = "";
     const currentTeamDynamics = teamsDynamics?.filter(
       (t) => t?.id === team?.id
     )[0];
@@ -276,10 +355,57 @@ const MyPortfolioEPL = () => {
 
     // console.log(currentTeamPortfolios);
 
+    // ? las semanas son iguales
     if (team && weekParameter === validTournament?.[0]?.current_round) {
       multiplier = "1";
-    } else {
-      multiplier = currentTeamDynamics?.current_streak;
+    }
+
+    // ? No hay portafolios no equipos y la semanas son diferentes
+    if (
+      !AllPortfolios.length &&
+      !AllPortfolios[0]?.teams?.length &&
+      team &&
+      weekParameter !== validTournament?.[0]?.current_round
+    ) {
+      multiplier = "1";
+    }
+    // console.log(AllPortfolios[0]?.teams?.length);
+
+    // ? Si hay portafolios si equipos y la semanas son diferentes tiene datos del team
+    if (
+      AllPortfolios.length &&
+      AllPortfolios[0]?.teams?.length &&
+      team &&
+      weekParameter !== validTournament?.[0]?.current_round
+    ) {
+      multiplier = currentTeamPortfolios?.current_streak;
+    }
+
+    // ? Si hay portafolios no hay equipos y la semanas son diferentes
+    if (
+      AllPortfolios &&
+      !AllPortfolios[0]?.teams?.length > 0 &&
+      team &&
+      weekParameter !== validTournament?.[0]?.current_round
+    ) {
+      multiplier = currentTeamPortfolios?.current_streak
+        ? currentTeamPortfolios?.current_streak
+        : currentTeamDynamics?.current_streak;
+    }
+
+    // ? Semanas diferentes si hay portafolios y portfolio.teams no hay datos del team
+    if (
+      AllPortfolios.length &&
+      AllPortfolios[0]?.teams?.length > 0 &&
+      weekParameter !== validTournament?.[0]?.current_round
+    ) {
+      // console.log("Hay portafolios y portfolio.teams son semanas diferentes");
+      if (team) {
+        multiplier = currentTeamPortfolios?.current_streak
+          ? currentTeamPortfolios?.current_streak
+          : currentTeamDynamics?.current_streak;
+        return multiplier;
+      }
     }
     return multiplier;
   };

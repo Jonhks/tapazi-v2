@@ -62,9 +62,11 @@ const HomeEPL = () => {
 
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payoutEpl", userId],
-    queryFn: () => getPayoutEpl("3", 99),
+    queryFn: () => getPayoutEpl("3", 99), //? Mandar el participants de stats
     retry: false,
   });
+
+  // console.log(dataGetAllPortfoliosEpl);
 
   if (
     isLoadingPopons ||
