@@ -276,11 +276,12 @@ const MyPortfolioEPL = () => {
     const currentTeamPortfolios = AllPortfolios[0]?.teams?.filter(
       (t) => t?.id === team?.id
     )[0];
+    console.log(weekParameter, validTournament?.[0]?.current_round);
 
     // ? Primer caso, usuario completamente nuevo semanas iguales  Sin portafolios ni equipos
     if (
       !AllPortfolios?.length &&
-      !AllPortfolios[0]?.teams?.length === 0 &&
+      !AllPortfolios[0]?.teams?.length &&
       team &&
       weekParameter === validTournament?.[0]?.current_round
     ) {

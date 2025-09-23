@@ -26,7 +26,6 @@ const HomeEPL = () => {
   const userId = params.userId!;
 
   const [selected, setSelected] = useState("first");
-  const [participants, setParticipants] = useState(0);
 
   const { data: dataGetAllPortfoliosEpl } = useQuery({
     queryKey: ["AllportfoliosEpl", userId],
