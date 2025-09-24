@@ -13,6 +13,10 @@
   height: 40vh;
 }
 
+.boxHome:hover {
+  cursor: pointer;
+}
+
 .active {
   opacity: 0.9;
 }

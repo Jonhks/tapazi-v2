@@ -568,6 +568,7 @@ const MyPortfolioEPL = () => {
       );
     });
   };
+  console.log(validTournament);
 
   if (isLoadingData) {
     return <Loader />;
@@ -624,7 +625,7 @@ const MyPortfolioEPL = () => {
                   textAlign: "center",
                 }}
               >
-                Tournament
+                {validTournament ? validTournament[0]?.name : "Tournament"}
               </h2>
               <Divider
                 style={{
