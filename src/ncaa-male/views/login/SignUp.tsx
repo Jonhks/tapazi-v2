@@ -43,7 +43,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSignUp, getStates, getCountries } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
 import Loader from "../../components/BallLoader/BallLoader";
-import Swal from "sweetalert2";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -81,24 +80,7 @@ const Login = () => {
     retry: false,
   });
 
-  const getSignUpAlert = async (formData: User) => {
-    const result = await Swal.fire({
-      title: "Are you sure?",
-      text: "You want to save changes",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3ED076",
-      cancelButtonColor: "#c7630b",
-      color: "white",
-      background: "#200930",
-      confirmButtonText: "Yes, I want to save changes!",
-    });
-    if (result.isConfirmed) {
-      // await getSignUpMutate(formData);
-    }
-  };
-
-  const { mutate: getSignUpMutate } = useMutation({
+  const { mutate } = useMutation({
     mutationFn: getSignUp,
     onSuccess: (resp) => {
       if (resp === "User Registered Successfully") {
@@ -115,7 +97,7 @@ const Login = () => {
   });
 
   const handleRegister = (formData: User) => {
-    getSignUpAlert(formData);
+    mutate(formData);
   };
 
   if (isLoading && isLoadingCountries) return <Loader />;

@@ -613,12 +613,17 @@ const MyPortfolioEPL = () => {
                   style={{
                     color: "#05fa87",
                     fontSize: "40px",
-                    textAlign: "center",
                   }}
                 >
                   My Portfolio
-                  <p style={{ fontSize: "16px" }}>
-                    {AllPortfolios && AllPortfolios[0]?.name}
+                  <p
+                    style={{
+                      color: "white",
+                      fontSize: "16px",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    {validTournament ? validTournament[0]?.name : "Tournament"}
                   </p>
                 </h2>
               </div>
@@ -629,19 +634,17 @@ const MyPortfolioEPL = () => {
                 flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
+                fontSize: "22px",
+                fontWeight: "bold",
               }}
             >
-              <h2
-                style={{
-                  color: "white",
-                  fontSize: "24px",
-                  textAlign: "center",
-                }}
-              >
-                {validTournament ? validTournament[0]?.name : "Tournament"}
-              </h2>
+              <p style={{ textAlign: "center", color: "#05fa87" }}>
+                {AllPortfolios && AllPortfolios[0]?.name}
+              </p>
+
               <Divider
                 style={{
+                  // backgroundColor: "#05fa87",
                   backgroundColor: "white",
                   width: "60%",
                 }}
