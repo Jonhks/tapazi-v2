@@ -568,7 +568,7 @@ const MyPortfolioEPL = () => {
       );
     });
   };
-  console.log(validTournament);
+  // console.log(validTournament);
 
   if (isLoadingData) {
     return <Loader />;
@@ -595,14 +595,27 @@ const MyPortfolioEPL = () => {
             className={classes.boxPortfolio}
             m={3}
           >
-            <div className={classes.headerPortfolio}>
+            <div
+              className={classes.headerPortfolio}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
               <div style={{ color: "white" }}>
                 <EmojiEventsOutlinedIcon
                   color="inherit"
                   style={{ fontSize: "2.6rem" }}
                 />
 
-                <h2 style={{ color: "#05fa87", fontSize: "40px" }}>
+                <h2
+                  style={{
+                    color: "#05fa87",
+                    fontSize: "40px",
+                    textAlign: "center",
+                  }}
+                >
                   My Portfolio
                   <p style={{ fontSize: "16px" }}>
                     {AllPortfolios && AllPortfolios[0]?.name}
