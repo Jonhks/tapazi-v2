@@ -114,7 +114,7 @@ const HomeEPL = () => {
               className={classes.subBox}
               style={{
                 display: "flex",
-                alignItems: "center", // Centra verticalmente
+                alignItems: "start", // Centra verticalmente
                 justifyContent: "center", // Centra horizontalmente el contenedor
                 height: "100%", // Opcional, para ocupar todo el alto
               }}

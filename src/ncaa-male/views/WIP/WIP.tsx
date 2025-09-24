@@ -8,7 +8,7 @@ interface WIPProps {
 const WIP = ({ NCAAFemaleImg, NCAAMaleImg }: WIPProps) => {
   const params = useParams();
 
-  const img = params.sport === "3" ? NCAAFemaleImg : NCAAMaleImg;
+  const img = params.sport === "4" ? NCAAFemaleImg : NCAAMaleImg;
   console.log(params);
 
   return (

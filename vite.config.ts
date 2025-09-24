@@ -9,8 +9,8 @@ export default defineConfig({
     react(),
     VitePWA({
       manifest: {
-        name: "Sports Pool App",
-        short_name: "Sports Pool",
+        name: "Portfolio Pool App",
+        short_name: "Portfolio Pool",
         description: "Portfolio Pool + EPL Combined App",
         start_url: "/",
         scope: "/",

@@ -39,13 +39,15 @@ export default function Sports() {
     ?.filter((sport: SportDisponible) => !sport.enabled)
     .map((sport: SportDisponible) => sport.id);
 
+  // return <EPLBallLoader />;
+
   return (
     <>
       {!showLoader && !isLoading && !isLoadingDisponible && changeLoader && (
-        <BallLoader />
+        <EPLBallLoader />
       )}
       {!showLoader && !isLoading && !isLoadingDisponible && changeLoader && (
-        <EPLBallLoader />
+        <BallLoader />
       )}
       {showLoader && (
         <Grid
