@@ -390,8 +390,6 @@ const MyPortfolioEPL = () => {
       team &&
       weekParameter !== validTournament?.[0]?.current_round
     ) {
-      console.log("");
-
       multiplier = currentTeamPortfolios?.current_streak
         ? currentTeamPortfolios?.current_streak
         : currentTeamDynamics?.current_streak;
@@ -429,6 +427,21 @@ const MyPortfolioEPL = () => {
   };
 
   const renderTeams = () => {
+    if (numberInputs === 0) {
+      return (
+        <p
+          style={{
+            color: "white",
+            fontWeight: "bold",
+            textAlign: "center",
+            fontSize: "24px",
+          }}
+        >
+          No teams are available for selection.
+        </p>
+      );
+    }
+
     return selectedTeams?.map((team, idx: number) => {
       return (
         <div

@@ -117,6 +117,10 @@ export const PortfolioProvider = ({
 
   useEffect(() => {
     if (numberInputsRecived && portfolios) {
+      if (portfolios[0].available_teams === 0) {
+        setNumberInputs(0);
+        return;
+      }
       if (portfolios[0]?.available_teams) {
         setNumberInputs(portfolios[0]?.available_teams);
       } else {
