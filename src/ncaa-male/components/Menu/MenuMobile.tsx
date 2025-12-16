@@ -15,14 +15,36 @@ import { Badge, Menu, MenuItem } from "@mui/material";
 import Swal from "sweetalert2";
 import InstallMobileIcon from "@mui/icons-material/InstallMobile";
 import { messagemodalInstallmobile } from "@/utils/app";
+import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
+import Basket from "@/assets/icons/basket.png";
+
 const Icons = [
-  <BallIcon key="ball" />,
-  <BasquetIcon key="basquet" />,
+  <SportsBasketballOutlinedIcon key="ball" />,
+      <img 
+    key="basquet" 
+    src={Basket} 
+    alt="Basketball Hoop" 
+    style={{ width: 24, height: 24 }}
+  />,
   <ReceiptLongIcon key="receipt" />,
-  <PodiumIcon key="stats" />,
+  // <PodiumIcon key="stats" />,
   <HistoryIcon key="history" />,
   <MoreIcon key="more" />,
 ];
+
+  // const Icons = [
+  //   <SportsBasketballOutlinedIcon key="ball" />,
+  //   <img 
+  //   key="basquet" 
+  //   src={Basket} 
+  //   alt="Basketball Hoop" 
+  //   style={{ width: 24, height: 24 }}
+  // />,
+  //   <ReceiptLongIcon key="receipt" />,
+  //   // <PodiumIcon key="stats" />,
+  //   <HistoryIcon key="history" />,
+  //   <LogoutIcon key="logout" />,
+  // ];
 
 function ResponsiveAppBar() {
   const params = useParams();
@@ -38,7 +60,7 @@ function ResponsiveAppBar() {
     { text: "Home", id: `home/${userId}` },
     { text: "My Portfolios", id: `myPortfolio/${userId}` },
     { text: "Instructions", id: `instructions/${userId}` },
-    { text: "Stats", id: `stats/${userId}` },
+    // { text: "Stats", id: `stats/${userId}` },
     { text: "History", id: `history/${userId}` },
     { text: "More", id: "more" },
   ];
@@ -151,7 +173,7 @@ function ResponsiveAppBar() {
     <Box>
       <AppBar
         position="sticky"
-        sx={{ bottom: 0, backgroundColor: "#238b94" }}
+        sx={{ bottom: 0, backgroundColor: "#000" }}
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
@@ -160,7 +182,7 @@ function ResponsiveAppBar() {
                 key={icon.key}
                 sx={{
                   flexGrow: 1,
-                  display: { xs: "flex", md: "none", justifyContent: "center" },
+                  display: { xs: "flex", md: "none", justifyContent: "center", color: "#DC903B" },
                 }}
               >
                 <IconButton

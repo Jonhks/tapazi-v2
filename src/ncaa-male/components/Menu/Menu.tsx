@@ -23,12 +23,14 @@ import Tooltip from "@mui/material/Tooltip";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
+// import { BasquetIcon } from "@/assets/icons/icons";
 import classes from "./Menu.module.css";
 import { PodiumIcon } from "@/assets/icons/icons";
 import Swal from "sweetalert2";
 import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
 import { messagemodalInstall } from "@/utils/app";
+import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
+import Basket from "@/assets/icons/basket.png";
 
 const drawerWidth = 240;
 
@@ -154,10 +156,15 @@ export default function MiniDrawer() {
   };
 
   const Icons = [
-    <BallIcon key="ball" />,
-    <BasquetIcon key="basquet" />,
+    <SportsBasketballOutlinedIcon key="ball" />,
+    <img 
+    key="basquet" 
+    src={Basket} 
+    alt="Basketball Hoop" 
+    style={{ width: 24, height: 24 }}
+  />,
     <ReceiptLongIcon key="receipt" />,
-    <PodiumIcon key="stats" />,
+    // <PodiumIcon key="stats" />,
     <HistoryIcon key="history" />,
     <LogoutIcon key="logout" />,
   ];
@@ -183,6 +190,12 @@ export default function MiniDrawer() {
               sx={{ marginRight: 5, ...(open && { display: "none" }) }}
             >
               <MenuIcon />
+              <div>
+                <Typography className={classes.titleDrawerFuera}>
+                  {JSON.parse(localStorage.getItem("userTapaszi") || "{}")
+                    ?.name || "Username"}
+                </Typography>
+              </div>
             </IconButton>
             <div
               style={{
@@ -233,7 +246,7 @@ export default function MiniDrawer() {
               { text: "Home", id: `home/${userId}` },
               { text: "My Portfolios", id: `myPortfolio/${userId}` },
               { text: "Instructions", id: `instructions/${userId}` },
-              { text: "Stats", id: `stats/${userId}` },
+              // { text: "Stats", id: `stats/${userId}` },
               { text: "History", id: `history/${userId}` },
               { text: "LogOut", id: "logOut" },
             ].map((el, index) => (
@@ -261,7 +274,7 @@ export default function MiniDrawer() {
                           minWidth: 0,
                           mr: open ? 3 : "auto",
                           justifyContent: "center",
-                          color: "white",
+                          color: "#DC903B",
                         }}
                       >
                         {Icons[index]}

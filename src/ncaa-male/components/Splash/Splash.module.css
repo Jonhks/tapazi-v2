@@ -8,7 +8,7 @@
   padding: 0;
   height: 100vh;
   width: 100%;
-  background-image: url(../../../assets/img/fondo2.jpeg);
+  background-image: url(../../../assets/img/fondo-nuevo.webp);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
@@ -24,32 +24,46 @@
 .ball {
   position: absolute;
   bottom: 20px; /* Posición inicial */
-  left: 40%;
+  left: 35%;
   width: 100px;
   height: 100px;
   background: url("./basketball.png") no-repeat;
   background-size: cover;
   border-radius: 50%;
-  /*animation: bounce 2s infinite;*/
+  animation: bounce 2s infinite;
   animation: bounce 1s infinite linear, spin 10s infinite linear;
 }
+.ballWC {
+  position: absolute;
+  bottom: 20px; /* Posición inicial */
+  left: 50%;
+  width: 95px;
+  height: 95px;
+  background: url("./ball-wc.png") no-repeat;
+  background-size: cover;
+  border-radius: 50%;
+  background-position: center;
+  animation: bounce 2s infinite;
+  animation: bounceEpl 1s infinite linear, spin 10s infinite linear;
+}
+
 .ballEpl {
   position: absolute;
   bottom: 20px; /* Posición inicial */
-  left: 60%;
+  left: 65%;
   width: 100px;
   height: 100px;
   background: url("./ball-epl.png") no-repeat;
   background-size: cover;
   border-radius: 50%;
-  /*animation: bounce 2s infinite;*/
+  animation: bounce 2s infinite;
   animation: bounceEpl 1s infinite linear, spin 10s infinite linear;
 }
 
 .shadow {
   position: absolute;
   bottom: 10px; /* Posición inicial */
-  left: 40%;
+  left: 35%;
   width: 60px;
   height: 20px;
   background-color: rgba(0, 0, 0, 0.3);
@@ -57,10 +71,23 @@
   transform: translateX(-50%);
   transition: all 0.2s ease-in-out;
 }
+
 .shadowEpl {
   position: absolute;
   bottom: 10px; /* Posición inicial */
-  left: 60%;
+  left: 65%;
+  width: 60px;
+  height: 20px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  transform: translateX(-50%);
+  transition: all 0.2s ease-in-out;
+}
+
+.shadowWC {
+  position: absolute;
+  bottom: 10px; /* Posición inicial */
+  left: 50%;
   width: 60px;
   height: 20px;
   background-color: rgba(0, 0, 0, 0.3);

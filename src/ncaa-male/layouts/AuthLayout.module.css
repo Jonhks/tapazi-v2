@@ -11,12 +11,13 @@
 }
 
 .containerApp {
-  background-image: url("../../assets/img/home.jpeg");
+  /* background-image: url("../../assets/img/home.jpeg"); */
+  background-image: url("../../assets/img/new-home.png");
   background-size: cover;
   background-repeat: no-repeat;
-  background-position: left;
-  height: 100vh;
-  overflow: scroll;
+  background-position: center;
+  /* height: 100vh; */
+  /* overflow: scroll; */
 }
 
 .containerHistory {

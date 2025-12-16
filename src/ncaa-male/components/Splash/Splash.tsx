@@ -14,8 +14,10 @@ const Splash = () => {
         <div className={classes.container}>
           <div className={classes.shadow}></div>
           <div className={classes.shadowEpl}></div>
+          <div className={classes.shadowWC}></div>
           <div className={classes.ballEpl}></div>
           <div className={classes.ball}></div>
+          <div className={classes.ballWC}></div>
         </div>
       </Slide>
     </div>
