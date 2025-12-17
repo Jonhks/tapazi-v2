@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Box, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./Sports.module.css";

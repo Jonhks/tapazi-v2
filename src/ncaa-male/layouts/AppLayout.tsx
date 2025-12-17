@@ -1,4 +1,4 @@
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import classes from "./AuthLayout.module.css";
 import Menu from "../components/Menu/Menu";
 import MenuMobile from "../components/Menu/MenuMobile";

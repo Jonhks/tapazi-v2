@@ -1,11 +1,11 @@
-import { useState } from "react";
-import Grid from "@mui/material/Grid2";
-import { Zoom } from "@mui/material";
-import classes from "./HomeFemale.module.css";
+// import { useState } from "react";
+// import Grid from "@mui/material/Grid2";
+// import { Zoom } from "@mui/material";
+// import classes from "./HomeFemale.module.css";
 // import Table from "../../components/Table/Table";
 // import BallLoader from "../../components/BallLoader/BallLoader";
-import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+// import { useQuery } from "@tanstack/react-query";
+// import { useParams } from "react-router-dom";
 // import {
 //   gatPayout,
 //   getHOINFO,
@@ -23,7 +23,7 @@ const Home = () => {
   // const params = useParams();
   // const userId = params.userId!;
 
-  const [selected, setSelected] = useState("first");
+  // const [selected, setSelected] = useState("first");
   // const { data, isLoading } = useQuery({
   //   queryKey: ["scores", userId],
   //   queryFn: () => getScores(userId),

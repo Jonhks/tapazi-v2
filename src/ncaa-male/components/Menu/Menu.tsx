@@ -25,7 +25,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
 // import { BasquetIcon } from "@/assets/icons/icons";
 import classes from "./Menu.module.css";
-import { PodiumIcon } from "@/assets/icons/icons";
+// import { PodiumIcon } from "@/assets/icons/icons";
 import Swal from "sweetalert2";
 import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
 import { messagemodalInstall } from "@/utils/app";
