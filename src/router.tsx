@@ -50,6 +50,12 @@ const InstructionsEPL = lazy(
 );
 const StatsEpl = lazy(() => import("./epl/views/StatsEpl/StatsEpl"));
 
+
+// ? --------------------------  Female Router -------------------------- ? //
+const AppLayoutFemale = lazy(() => import("./female/layouts/AppLayoutFemale"));
+const HomeFemale = lazy(() => import("./female/views/homeFemale/HomeFemale"));
+
+
 // ? --------------------------  URL Parameter Handler -------------------------- ? //
 
 import { PortfolioProvider } from "./providers/PortfolioProvider";
@@ -115,15 +121,49 @@ const Router = () => {
               element={<Sports />}
             />
           </Route>
-          <Route
-            path="/wip/:userId/:sport"
-            element={
-              <WIP
-                NCAAFemaleImg={NCAAFemaleImg}
-                NCAAMaleImg={NCAAMaleImg}
-              />
-            }
-          />
+          <Route element={<AppLayoutFemale />}>
+             <Route
+              path="/ncaa-female/home/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                <HomeFemale />
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/ncaa-female/myPortfolio/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <WIP
+                    NCAAFemaleImg={NCAAFemaleImg}
+                    NCAAMaleImg={NCAAMaleImg}
+                  />
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/ncaa-female/instructions/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <WIP
+                    NCAAFemaleImg={NCAAFemaleImg}
+                    NCAAMaleImg={NCAAMaleImg}
+                  />
+                </PrivateRoute>
+              }
+            />
+             <Route
+              path="/ncaa-female/history/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <WIP
+                    NCAAFemaleImg={NCAAFemaleImg}
+                    NCAAMaleImg={NCAAMaleImg}
+                  />
+                </PrivateRoute>
+              }
+            />
+          </Route>
           <Route element={<AppLayout />}>
             <Route
               path="/home/:userId"

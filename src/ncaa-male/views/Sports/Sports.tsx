@@ -1,8 +1,8 @@
+import { useEffect, useState } from "react";
 import { Box, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./Sports.module.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { useState } from "react";
 import BallLoader from "../../components/BallLoader/BallLoader";
 import EPLBallLoader from "../../../epl/components/EPLBallLoader/EPLBallLoader";
 import { getSports, getSportsDisponible } from "@/api/SportsAPI";
@@ -29,6 +29,12 @@ export default function Sports() {
 
   setTimeout(() => setShowLoader(true), 1000);
   setTimeout(() => setChangeLoader(true), 500);
+
+  // useEffect(() => {
+  //   setShowLoader(false);
+  //   // setTimeout(() => setChangeLoader(true), 500);
+  // }, []);
+  // console.log(showLoader);
 
   interface SportDisponible {
     id: number;
@@ -95,7 +101,7 @@ export default function Sports() {
                           navigate(
                             sport.id === 1
                               ? `/home/${params.userId}`
-                              : `/wip/${params.userId}/${sport.id}`
+                              : `/ncaa-female/home/${params.userId}/3`
                           );
                         } else {
                           toast.info("This sport is currently unavailable.");

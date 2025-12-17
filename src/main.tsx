@@ -10,9 +10,6 @@ import PWABadge from "./PWABadge.tsx";
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")!).render(
-  // comentarios innecesarios
-  // comentarios innecesarios
-  // comentarios innecesarios
   <StrictMode>
     <PWABadge />
     <QueryClientProvider client={queryClient}>
