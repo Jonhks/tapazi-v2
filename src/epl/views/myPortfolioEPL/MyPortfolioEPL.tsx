@@ -535,7 +535,7 @@ const MyPortfolioEPL = () => {
                       color: "white",
                       fontWeight: "bold",
                       fontSize: "18px",
-                      color: "white",
+                      // color: "white",
                     }}
                   >
                     <ListItemIcon style={{ color: "white" }}>
@@ -706,7 +706,7 @@ const MyPortfolioEPL = () => {
                 <Button
                   variant="contained"
                   style={{
-                    backgroundColor: "#05fa87",
+                    // backgroundColor: "#05fa87",
                     backgroundColor: `${
                       areAllInputsValid() ? "#05fa87" : "#0c5031ff"
                     }`,
