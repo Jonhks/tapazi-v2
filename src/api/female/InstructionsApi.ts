@@ -4,7 +4,7 @@ import { isAxiosError } from "axios";
 
 export const getInstructionsFemale = async () => {
   try {
-    const url = `tournaments/4/instructions`;
+    const url = `tournaments/5/instructions`;
     const { data } = await newApi(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -13,7 +13,7 @@ export const getInstructionsFemale = async () => {
     
     // console.log(data);
     if (!data.instructions) {
-      return [{ payout: 0 }];
+      return [];
     }
     if (data.instructions) {
       return data.instructions;

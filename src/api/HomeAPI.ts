@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { api, newApi } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User } from "../types";
 
@@ -130,19 +130,19 @@ export const gatPayout = async (portfFoliosCount: number) => {
 
 export const getInstructions = async () => {
   try {
-    const url = `/instructions?api-key=TESTAPIKEY&id=0`;
-    const { data } = await api(url, {
+    const url = `tournaments/4/instructions`;
+    const { data } = await newApi(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-
-    if (!data.success) {
-      return [{ payout: 0 }];
+// console.log(data);
+    if (!data.instructions) {
+      return [];
     }
 
-    if (data.success) {
-      return data.data.instructions;
+    if (data.instructions) {
+      return data.instructions;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
