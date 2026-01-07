@@ -1,82 +1,82 @@
-// import { useState } from "react";
-// import Grid from "@mui/material/Grid2";
-// import { Zoom } from "@mui/material";
-// import classes from "./HomeFemale.module.css";
+import { useState } from "react";
+import Grid from "@mui/material/Grid2";
+import { Zoom } from "@mui/material";
+import classes from "./HomeFemale.module.css";
 // import Table from "../../components/Table/Table";
 // import BallLoader from "../../components/BallLoader/BallLoader";
-// import { useQuery } from "@tanstack/react-query";
-// import { useParams } from "react-router-dom";
-// import {
-//   gatPayout,
-//   getHOINFO,
-//   getParticipants,
-//   getPopona,
-//   getPortfoliosCount,
-//   // getScores,
-// } from "@/api/HomeAPI";
-// import useMediaQuery from "@mui/material/useMediaQuery";
-// import { PayOut } from "@/types/index";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+import {
+  gatPayout,
+  getHOINFO,
+  getParticipants,
+  getPopona,
+  getPortfoliosCount,
+  // getScores,
+} from "@/api/HomeAPI";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { PayOut } from "@/types/index";
 
 const Home = () => {
-  // const isMobile = useMediaQuery("(max-width:900px)");
+  const isMobile = useMediaQuery("(max-width:900px)");
 
-  // const params = useParams();
-  // const userId = params.userId!;
+  const params = useParams();
+  const userId = params.userId!;
 
-  // const [selected, setSelected] = useState("first");
+  const [selected, setSelected] = useState("first");
   // const { data, isLoading } = useQuery({
   //   queryKey: ["scores", userId],
   //   queryFn: () => getScores(userId),
   // });
 
-  // const { data: DataPopona } = useQuery({
-  //   queryKey: ["popona", userId],
-  //   queryFn: () => getPopona(),
-  // });
+  const { data: DataPopona } = useQuery({
+    queryKey: ["popona", userId],
+    queryFn: () => getPopona(),
+  });
 
-  // const { data: dataHOINFO } = useQuery({
-  //   queryKey: ["HOINFO", userId],
-  //   queryFn: () => getHOINFO(),
-  // });
+  const { data: dataHOINFO } = useQuery({
+    queryKey: ["HOINFO", userId],
+    queryFn: () => getHOINFO(),
+  });
 
-  // const { data: participants } = useQuery({
-  //   queryKey: ["participants", userId],
-  //   queryFn: () => getParticipants(),
-  // });
+  const { data: participants } = useQuery({
+    queryKey: ["participants", userId],
+    queryFn: () => getParticipants(),
+  });
 
-  // const { data: portfoliosHome } = useQuery({
-  //   queryKey: ["portfoliosHome", userId],
-  //   queryFn: () => getPortfoliosCount(),
-  // });
+  const { data: portfoliosHome } = useQuery({
+    queryKey: ["portfoliosHome", userId],
+    queryFn: () => getPortfoliosCount(),
+  });
 
-  // const { data: payout } = useQuery({
-  //   queryKey: ["payout", userId],
-  //   queryFn: () => gatPayout(portfoliosHome.count),
-  //   retry: true,
-  // });
+  const { data: payout } = useQuery({
+    queryKey: ["payout", userId],
+    queryFn: () => gatPayout(portfoliosHome.count),
+    retry: true,
+  });
 
-  // const renderDescription = (dataHOINFO: string) => {
-  //   return dataHOINFO.split("\n").map((line, index) => (
-  //     <p
-  //       key={index}
-  //       style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
-  //     >
-  //       {line}
-  //     </p>
-  //   ));
-  // };
-  // console.log(payout);
+  const renderDescription = (dataHOINFO: string) => {
+    return dataHOINFO.split("\n").map((line, index) => (
+      <p
+        key={index}
+        style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
+      >
+        {line}
+      </p>
+    ));
+  };
+  console.log(payout);
 
   return (
     <>
-    <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", color: "white", fontSize: "2rem" }}>
+    {/* <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", color: "white", fontSize: "2rem" }}>
       HomeFemale
-    </div>
+    </div> */}
       {/* {isLoading ? (
         <BallLoader />
       ) : ( */}
       <>
-        {/* <Grid
+        <Grid
           container
           flexWrap={"wrap"}
           justifyContent={"center"}
@@ -177,14 +177,14 @@ const Home = () => {
                 size={11}
                 offset={0.5}
               >
-                <Table
+                {/* <Table
                     participantScore={data?.data?.participant}
                     othersParticipants={data?.data?.others}
-                  />
+                  /> */}
               </Grid>
             </Zoom>
           </Grid>
-        </Grid> */}
+        </Grid>
       </>
       {/* )} */}
     </>

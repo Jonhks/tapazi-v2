@@ -1,8 +1,9 @@
+// InstructionsFemale
 import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
-import classes from "./InstructionsPortfolios.module.css";
+import classes from "./InstructionsFemale.module.css";
 import { useQuery } from "@tanstack/react-query";
-import { getInstructions } from "@/api/HomeAPI";
+import { getInstructionsFemale } from "@/api/female/InstructionsApi";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/BallLoader/BallLoader";
 import type { Instructions } from "@/types/index";
@@ -12,8 +13,8 @@ const Instructions = () => {
   const userId = params.userId!;
 
   const { data: instructionsData, isLoading } = useQuery({
-    queryKey: ["instructions", userId],
-    queryFn: () => getInstructions(),
+    queryKey: ["instructionsFemale", userId],
+    queryFn: () => getInstructionsFemale(),
   });
 
   if (isLoading) return <Loader />;
@@ -23,7 +24,7 @@ const Instructions = () => {
       .split("\n")
       .map((line, index) => <p key={index}>{line}</p>);
   };
-// console.log(instructionsData);
+console.log(instructionsData);
   if (instructionsData)
     return (
       <Grid

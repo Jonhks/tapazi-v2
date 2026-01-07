@@ -17,6 +17,7 @@ const MyPortfolio = lazy(
   () => import("./ncaa-male/views/myPortfolio/MyPortfolio")
 );
 const HistoryLayout = lazy(() => import("./ncaa-male/layouts/HistoryLayout"));
+const InstructionsLayout = lazy(() => import("./ncaa-male/layouts/InstructionsLayout"));
 const StatsLayout = lazy(() => import("./ncaa-male/layouts/StatsLayout"));
 const Stats = lazy(() => import("./ncaa-male/views/Stats/Stats"));
 const Instructions = lazy(
@@ -30,6 +31,7 @@ const Error404 = lazy(() => import("./ncaa-male/views/Error404/Error404"));
 // fondos
 import ImgStats from "@/assets/img/doing-sport-concept.jpg";
 import ImgHistory from "@/assets/img/details-ball-sport.jpg";
+import ImgInstructions from "@/assets/img/NCAA-MALE-INSTRUCTIONS-BACK.png";
 import WIP from "./ncaa-male/views/WIP/WIP";
 import MyPortfolioEPL from "./epl/views/myPortfolioEPL/MyPortfolioEPL";
 const ImgSports =
@@ -54,6 +56,8 @@ const StatsEpl = lazy(() => import("./epl/views/StatsEpl/StatsEpl"));
 // ? --------------------------  Female Router -------------------------- ? //
 const AppLayoutFemale = lazy(() => import("./female/layouts/AppLayoutFemale"));
 const HomeFemale = lazy(() => import("./female/views/homeFemale/HomeFemale"));
+const InstructionsFemale = lazy(() => import("./female/views/InstructionsFemale/InstructionsFemale"));
+const InstructionsFemaleLayout = lazy(() => import("./female/layouts/InstructionsFemaleLayout"));
 
 
 // ? --------------------------  URL Parameter Handler -------------------------- ? //
@@ -141,14 +145,13 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
+          </Route>
+          <Route element={<InstructionsFemaleLayout />}>
              <Route
               path="/ncaa-female/instructions/:userId/:sportId"
               element={
                 <PrivateRoute>
-                  <WIP
-                    NCAAFemaleImg={NCAAFemaleImg}
-                    NCAAMaleImg={NCAAMaleImg}
-                  />
+                  <InstructionsFemale />
                 </PrivateRoute>
               }
             />
@@ -181,6 +184,8 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
+          </Route>
+          <Route element={<InstructionsLayout ImgInstructions={ImgInstructions} />}>
             <Route
               path="/instructions/:userId"
               element={
@@ -236,6 +241,8 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
+          {/* </Route> */}
+          {/* <Route element={<AppLayoutEPL />}> */}
             <Route
               path="/epl/instructions/:userId/:sportId"
               element={

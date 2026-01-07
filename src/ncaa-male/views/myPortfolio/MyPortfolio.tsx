@@ -480,10 +480,13 @@ const MyPortfolio = () => {
       </div>
     ));
   };
+  console.log(portfolios);
 
   if (isLoading) return <Loader />;
 
-  if ((portfolios, portfoliosObtained))
+  
+
+  // if ((portfolios, portfoliosObtained))
     return (
       <Grid
         size={12}

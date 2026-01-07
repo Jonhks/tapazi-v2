@@ -23,7 +23,7 @@
 
 .ball {
   position: absolute;
-  bottom: 20px; /* Posición inicial */
+  bottom: 270px; /* Posición inicial */
   left: 35%;
   width: 100px;
   height: 100px;
@@ -35,7 +35,7 @@
 }
 .ballWC {
   position: absolute;
-  bottom: 20px; /* Posición inicial */
+  bottom: 270px; /* Posición inicial */
   left: 50%;
   width: 95px;
   height: 95px;
@@ -49,7 +49,7 @@
 
 .ballEpl {
   position: absolute;
-  bottom: 20px; /* Posición inicial */
+  bottom: 270px; /* Posición inicial */
   left: 65%;
   width: 100px;
   height: 100px;
