@@ -1,11 +1,11 @@
-import { api, newApi } from "@/lib/axios";
+import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { CreatePortfolio, PortfolioComplete, Portfolios, User } from "../types";
 
 export const getPortfolios = async (id: User["id"]) => {
   try {
     const url = `/portfolios?api-key=TESTAPIKEY&participant-id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -28,7 +28,7 @@ export const getTeams = async (sport: User["id"]) => {
   try {
     // const url = `/sports/${sport}/teams`;
     const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
-    const { data } = await newApi.get(url, {
+    const { data } = await apiEnv.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -51,7 +51,7 @@ export const getTeamsAvailable = async (
 ) => {
   try {
     const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
-    const { data } = await newApi.get(url, {
+    const { data } = await apiEnv.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -91,12 +91,12 @@ export const postNewPortfolio = async ({
   const url = `/portfolios${portId ? `/${portId}` : ""}`;
   try {
     const { data } = portId
-      ? await newApi.put(url, portId ? { teams: payload.teams } : payload, {
+      ? await apiEnv.put(url, portId ? { teams: payload.teams } : payload, {
           headers: {
             "Content-Type": "application/json;charset=utf-8",
           },
         })
-      : await newApi.post(url, portId ? { teams: payload.teams } : payload, {
+      : await apiEnv.post(url, portId ? { teams: payload.teams } : payload, {
           headers: {
             "Content-Type": "application/json;charset=utf-8",
           },
@@ -162,7 +162,7 @@ export const removeportfolio = async ({
     ],
   };
   try {
-    const { data } = await api.post(
+    const { data } = await apiEnv.post(
       urlRemovePortfolio,
       JSON.stringify(postPortfolio),
       {
@@ -182,7 +182,7 @@ export const removeportfolio = async ({
 export const getDATTOU = async () => {
   try {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=DATTOU`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -205,7 +205,7 @@ export const getDATTOU = async () => {
 export const getHOUTOU = async () => {
   try {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOUTOU`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -228,7 +228,7 @@ export const getHOUTOU = async () => {
 export const getWinnerOfTeam = async () => {
   try {
     const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -251,7 +251,7 @@ export const getWinnerOfTeam = async () => {
 export const getWinnerOfTeamHasTeam = async (id: string) => {
   try {
     const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
