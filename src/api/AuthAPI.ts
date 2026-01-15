@@ -1,4 +1,4 @@
-import { newApi } from "@/lib/axios";
+import {  apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User, UserForgot, UserLogin } from "types";
 
@@ -8,7 +8,7 @@ export const getSignUp = async (user: User) => {
   try {
     const url = "/participants/signup";
     // const url = "/participants/login";
-    const { data } = await newApi.post(url, user, {
+    const { data } = await apiEnv.post(url, user, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -37,7 +37,7 @@ export const getLogin = async (user: UserLogin) => {
 
   try {
     const url = "/participants/login";
-    const { data } = await newApi.post(url, formData, {
+    const { data } = await apiEnv.post(url, formData, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -60,7 +60,7 @@ export const getLogin = async (user: UserLogin) => {
 export const getCountries = async () => {
   try {
     const url = "/countries";
-    const { data } = await newApi(url);
+    const { data } = await apiEnv(url);
     if (data.countries) {
       return data.countries;
     }
@@ -74,7 +74,7 @@ export const getCountries = async () => {
 export const getStates = async (countryId: User["id"]) => {
   try {
     const url = `/countries/${countryId}/states`;
-    const { data } = await newApi(url);
+    const { data } = await apiEnv(url);
     if (data.states) {
       return data.states;
     }
@@ -91,7 +91,7 @@ export const postForgot = async (user: UserForgot) => {
   };
   try {
     const url = "/participants/forgot";
-    const { data } = await newApi.post(url, formData);
+    const { data } = await apiEnv.post(url, formData);
     if (data.success) {
       return data.data.states;
     }

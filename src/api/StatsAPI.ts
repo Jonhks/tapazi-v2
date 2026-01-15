@@ -1,4 +1,4 @@
-import { api } from "@/lib/axios";
+import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User } from "../types";
 
@@ -13,7 +13,7 @@ export const getTeamsPicked = async (
 
   try {
     const url = `/score/stats?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -35,7 +35,7 @@ export const getTeamsPicked = async (
 export const getMostPickedTeams = async (id: number) => {
   try {
     const url = `/most-picked-teams?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -57,7 +57,7 @@ export const getMostPickedTeams = async (id: number) => {
 export const getTeamsPickedLog = async (id: number) => {
   try {
     const url = `/teams-picked-log?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -79,7 +79,7 @@ export const getTeamsPickedLog = async (id: number) => {
 export const getLeastPickedTeams = async (id: number) => {
   try {
     const url = `/least-picked-teams?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -101,7 +101,7 @@ export const getLeastPickedTeams = async (id: number) => {
 export const getTeamsNotPickedLog = async (id: number) => {
   try {
     const url = `/teams-not-picked-log?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -123,7 +123,7 @@ export const getTeamsNotPickedLog = async (id: number) => {
 export const getSeedPickTotal = async (id: number) => {
   try {
     const url = `/seed-pick-totals?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -145,7 +145,7 @@ export const getSeedPickTotal = async (id: number) => {
 export const getPortfolioSeedSelections = async (id: number) => {
   try {
     const url = `/portfolio-seed-selections?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },

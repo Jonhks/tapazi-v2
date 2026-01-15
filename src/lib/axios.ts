@@ -12,6 +12,13 @@ const newApi = axios.create({
   baseURL: "https://ercom-b.dev:443/portfolio-pool/",
 });
 
+
+const apiEnv = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  // Si necesitas agregar rutas adicionales, puedes hacerlo así:
+  // baseURL: `${import.meta.env.VITE_API_URL}/com.tapaszi.ws/rest`,
+});
+
 // api.interceptors.request.use((config) => {
 //   const token = localStorage.getItem("AuthTokenUpTask");
 //   if (token) {
@@ -20,4 +27,4 @@ const newApi = axios.create({
 //   return config;
 // });
 
-export { api, newApi };
+export { api, newApi, apiEnv };

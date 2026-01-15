@@ -1,4 +1,4 @@
-import { newApi } from "@/lib/axios";
+import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import {
   // CreatePortfolio,
@@ -13,7 +13,7 @@ export const getPayoutEpl = async (
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/payouts?portfolios=${portfolioCount}`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -35,7 +35,7 @@ export const getPayoutEpl = async (
 export const getParticipantsEpl = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/stats`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -57,7 +57,7 @@ export const getParticipantsEpl = async (tournamentId: User["id"]) => {
 export const getPoponaEpl = async () => {
   try {
     const url = `/tournaments/3/parameters?key=POPONA`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -81,7 +81,7 @@ export const getPoponaEpl = async () => {
 export const getHOINFOEpl = async () => {
   try {
     const url = `/tournaments/3/parameters?key=HOINFO`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -105,7 +105,7 @@ export const getHOINFOEpl = async () => {
 export const getAllPortfoliosEpl = async () => {
   try {
     const url = `/tournaments/3/stats`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -130,7 +130,7 @@ export const getScoreHomeEpl = async (
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -156,7 +156,7 @@ export const getScorePeerWeekHomeEpl = async (
 ) => {
   try {
     const url = `/portfolios/${portfolioId}/per-week?week=${week}`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },

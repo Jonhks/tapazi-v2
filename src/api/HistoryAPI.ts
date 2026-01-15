@@ -1,11 +1,11 @@
-import { api } from "@/lib/axios";
+import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { Tournament } from "../types";
 
 export const getTournaments = async () => {
   const urlGetTournaments = `/tournaments?api-key=TESTAPIKEY`;
   try {
-    const { data } = await api.get(urlGetTournaments, {
+    const { data } = await apiEnv.get(urlGetTournaments, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -24,7 +24,7 @@ export const getScorePPR = async (id: Tournament["id"]) => {
   if (id) {
     const urlGetScorePPR = `https://ercom-b.dev:8443/com.tapaszi.ws/rest/points-per-round?api-key=TESTAPIKEY&tournament-id=${id}`;
     try {
-      const { data } = await api.get(urlGetScorePPR, {
+      const { data } = await apiEnv.get(urlGetScorePPR, {
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
@@ -69,8 +69,8 @@ export const getScoreHistory = () => {
 
 export const getTeamsPerYearLog = async () => {
   try {
-    const url = `/teams-per-year-log?api-key=TESTAPIKEY`;
-    const { data } = await api(url, {
+    const url = `/teams-per-year-log`;
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -93,7 +93,7 @@ export const getTeamsPerYearLog = async () => {
 export const getTeamsPerfectPortfolios = async () => {
   try {
     const url = `/historical-perfect-portfolios-header?api-key=TESTAPIKEY`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -116,7 +116,7 @@ export const getTeamsPerfectPortfolios = async () => {
 export const getTeamsHistoricAllRounds = async (param: string) => {
   try {
     const url = `historical-all-rounds?api-key=TESTAPIKEY&order-by=${param}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -138,7 +138,7 @@ export const getTeamsHistoricAllRounds = async (param: string) => {
 export const getHistoricalPerfectPortfoliosHistory = async (year: number) => {
   try {
     const url = `historical-perfect-portfolios-history?api-key=TESTAPIKEY&year=${year}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -161,7 +161,7 @@ export const getHistoricalPerfectPortfoliosHistory = async (year: number) => {
 export const getTeamsPickedLogHistory = async (year: number) => {
   try {
     const url = `teams-picked-log-history?api-key=TESTAPIKEY&year=${year}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },

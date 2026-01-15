@@ -1,11 +1,11 @@
-import { api, newApi } from "@/lib/axios";
+import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User } from "../types";
 
 export const getScores = async (id: User["id"]) => {
   try {
     const url = `/score/home?api-key=TESTAPIKEY&participant-id=${id}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -21,7 +21,7 @@ export const getScores = async (id: User["id"]) => {
 export const getPopona = async () => {
   try {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=POPONA`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -39,7 +39,7 @@ export const getPopona = async () => {
 export const getHOINFO = async () => {
   try {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOINFO`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -62,7 +62,7 @@ export const getHOINFO = async () => {
 export const getParticipants = async () => {
   try {
     const url = `/participants/count?api-key=TESTAPIKEY`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -85,7 +85,7 @@ export const getParticipants = async () => {
 export const getPortfoliosCount = async () => {
   try {
     const url = `/portfolios/count?api-key=TESTAPIKEY`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -108,7 +108,7 @@ export const getPortfoliosCount = async () => {
 export const gatPayout = async (portfFoliosCount: number) => {
   try {
     const url = `/payout?api-key=TESTAPIKEY&portfolios=${portfFoliosCount}`;
-    const { data } = await api(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
@@ -131,7 +131,7 @@ export const gatPayout = async (portfFoliosCount: number) => {
 export const getInstructions = async () => {
   try {
     const url = `tournaments/4/instructions`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },

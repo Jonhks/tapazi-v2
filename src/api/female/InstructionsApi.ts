@@ -1,11 +1,11 @@
-import { newApi } from "@/lib/axios";
+import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 // import { User } from "../types";
 
 export const getInstructionsFemale = async () => {
   try {
     const url = `tournaments/5/instructions`;
-    const { data } = await newApi(url, {
+    const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
