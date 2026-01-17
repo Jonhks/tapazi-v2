@@ -27,7 +27,7 @@ export const getTournaments = async (id: string) => {
 
 // export const getScorePPR = async (id: Tournament["id"]) => {
 //   if (id) {
-//     const urlGetScorePPR = `https://ercom-b.dev:8443/com.tapaszi.ws/rest/points-per-round?api-key=TESTAPIKEY&tournament-id=${id}`;
+//     const urlGetScorePPR = `/rest/points-per-round?api-key=TESTAPIKEY&tournament-id=${id}`;
 //     try {
 //       const { data } = await api.get(urlGetScorePPR, {
 //         headers: {
@@ -50,7 +50,7 @@ export const getTournaments = async (id: string) => {
 // };
 
 // export const getScoreHistory = () => {
-//   // const urlGetScoreHistory = `https://ercom-b.dev:8443/com.tapaszi.ws/rest/score/history?api-key=TESTAPIKEY&tournament-id=${
+//   // const urlGetScoreHistory = `/rest/score/history?api-key=TESTAPIKEY&tournament-id=${
 //   //   selectedTournament?.id
 //   // }&round=${
 //   //   selectedScore?.consecutive ? selectedScore?.consecutive : 8
