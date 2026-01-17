@@ -22,7 +22,8 @@ export const getTournaments = async () => {
 
 export const getScorePPR = async (id: Tournament["id"]) => {
   if (id) {
-    const urlGetScorePPR = `https://ercom-b.dev:8443/com.tapaszi.ws/rest/points-per-round?api-key=TESTAPIKEY&tournament-id=${id}`;
+    // const urlGetScorePPR = `https://ercom-b.dev:8443/com.tapaszi.ws/rest/points-per-round?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const urlGetScorePPR = ''
     try {
       const { data } = await apiEnv.get(urlGetScorePPR, {
         headers: {
