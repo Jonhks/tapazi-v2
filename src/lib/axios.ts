@@ -1,16 +1,16 @@
 import axios from "axios";
 
-const api = axios.create({
-  // baseURL: import.meta.env.API_BASE_URL,
-  baseURL: "https://ercom-b.dev:8443/com.tapaszi.ws/rest",
-});
+// const api = axios.create({
+//   // baseURL: import.meta.env.API_BASE_URL,
+//   baseURL: "https://ercom-b.dev:8443/com.tapaszi.ws/rest",
+// });
 
-const newApi = axios.create({
-  // baseURL: import.meta.env.VITE_NEWAPI_URL,
-  // baseURL: "http://78.13.6.44:7003",
-  // baseURL: "http://ercom-b.dev:80/portfolio-pool/",
-  baseURL: "https://ercom-b.dev:443/portfolio-pool/",
-});
+// const newApi = axios.create({
+//   // baseURL: import.meta.env.VITE_NEWAPI_URL,
+//   // baseURL: "http://78.13.6.44:7003",
+//   // baseURL: "http://ercom-b.dev:80/portfolio-pool/",
+//   baseURL: "https://ercom-b.dev:443/portfolio-pool/",
+// });
 
 
 const apiEnv = axios.create({
@@ -27,4 +27,4 @@ const apiEnv = axios.create({
 //   return config;
 // });
 
-export { api, newApi, apiEnv };
+export { apiEnv };
