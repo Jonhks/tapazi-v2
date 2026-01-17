@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  // baseURL: import.meta.env.VITE_API_URL,
+  // baseURL: import.meta.env.API_BASE_URL,
   baseURL: "https://ercom-b.dev:8443/com.tapaszi.ws/rest",
 });
 
@@ -14,9 +14,9 @@ const newApi = axios.create({
 
 
 const apiEnv = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.API_BASE_URL,
   // Si necesitas agregar rutas adicionales, puedes hacerlo así:
-  // baseURL: `${import.meta.env.VITE_API_URL}/com.tapaszi.ws/rest`,
+  // baseURL: `${import.meta.env.API_BASE_URL}/com.tapaszi.ws/rest`,
 });
 
 // api.interceptors.request.use((config) => {
