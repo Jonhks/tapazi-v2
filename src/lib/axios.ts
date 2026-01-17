@@ -2,7 +2,7 @@ import axios from "axios";
 
 // const api = axios.create({
 //   // baseURL: import.meta.env.API_BASE_URL,
-//   baseURL: "https://ercom-b.dev:8443/com.tapaszi.ws/rest",
+//   baseURL: "/rest",
 // });
 
 // const newApi = axios.create({
