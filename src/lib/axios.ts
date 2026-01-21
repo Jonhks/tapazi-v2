@@ -13,8 +13,17 @@ import axios from "axios";
 // });
 
 
+console.log('API URL:', import.meta.env.VITE_API_URL);
+console.log('Todas las env vars:', import.meta.env);
+
+// const url = import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : "https://portfolio-pool-prod.damnserver.com:443";
+const url = import.meta.env.MODE === 'development' ? "https://portfolio-pool-test.damnserver.com:443" : "https://portfolio-pool-prod.damnserver.com:443";
+// const url = "https://portfolio-pool-test.damnserver.com:443"
+
+console.log('URL usada:', url);
+
 const apiEnv = axios.create({
-  baseURL: import.meta.env.API_BASE_URL,
+  baseURL: url,
   // Si necesitas agregar rutas adicionales, puedes hacerlo así:
   // baseURL: `${import.meta.env.API_BASE_URL}/com.tapaszi.ws/rest`,
 });
