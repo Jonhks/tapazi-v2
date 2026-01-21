@@ -16,7 +16,8 @@ import axios from "axios";
 console.log('API URL:', import.meta.env.VITE_API_URL);
 console.log('Todas las env vars:', import.meta.env);
 
-const url = import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : import.meta.env.API_BASE_URL;
+// const url = import.meta.env.MODE === 'development' ? import.meta.env.VITE_API_URL : import.meta.env.API_BASE_URL;
+const url = "https://portfolio-pool-test.damnserver.com:443"
 
 console.log('URL usada:', url);
 
