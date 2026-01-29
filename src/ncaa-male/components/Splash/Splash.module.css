@@ -62,7 +62,7 @@
 
 .shadow {
   position: absolute;
-  bottom: 10px; /* Posición inicial */
+  bottom: 280px; /* Posición inicial */
   left: 35%;
   width: 60px;
   height: 20px;
@@ -74,7 +74,7 @@
 
 .shadowEpl {
   position: absolute;
-  bottom: 10px; /* Posición inicial */
+  bottom: 280px; /* Posición inicial */
   left: 65%;
   width: 60px;
   height: 20px;
@@ -86,7 +86,7 @@
 
 .shadowWC {
   position: absolute;
-  bottom: 10px; /* Posición inicial */
+  bottom: 280px; /* Posición inicial */
   left: 50%;
   width: 60px;
   height: 20px;

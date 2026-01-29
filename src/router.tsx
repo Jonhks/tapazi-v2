@@ -58,41 +58,12 @@ const AppLayoutFemale = lazy(() => import("./female/layouts/AppLayoutFemale"));
 const HomeFemale = lazy(() => import("./female/views/homeFemale/HomeFemale"));
 const InstructionsFemale = lazy(() => import("./female/views/InstructionsFemale/InstructionsFemale"));
 const InstructionsFemaleLayout = lazy(() => import("./female/layouts/InstructionsFemaleLayout"));
+const PortfolioFemale = lazy(() => import("./female/views/PortfolioFemale/PortfolioFemale"));
 
 
 // ? --------------------------  URL Parameter Handler -------------------------- ? //
 
 import { PortfolioProvider } from "./providers/PortfolioProvider";
-
-// function URLParameterHandler({ children }: { children: React.ReactNode }) {
-//   const navigate = useNavigate();
-//   const location = useLocation();
-
-//   useEffect(() => {
-//     // Detectar si viene de Portfolio Pool hacia EPL
-//     const pathSegments = location.pathname.split("/").filter(Boolean);
-//     const isEPLRoute = pathSegments[0] === "epl";
-
-//     if (isEPLRoute) {
-//       const userId = pathSegments[1]; // epl/123?data=...
-// const urlParams = new URLSearchParams(location.search);
-// const encodedData = urlParams.get("data");
-// console.log({ encodedData });
-
-//       if (userId && encodedData) {
-//         try {
-//           const userData = JSON.parse(atob(encodedData));
-//           localStorage.setItem("userTapaszi", JSON.stringify(userData));
-//           navigate(`/epl/home/${userId}`, { replace: true });
-//         } catch (error) {
-//           navigate("/epl/login", { replace: true });
-//         }
-//       }
-//     }
-//   }, [navigate, location]);
-
-//   return <>{children}</>;
-// }
 
 const Router = () => {
   return (
@@ -138,10 +109,7 @@ const Router = () => {
               path="/ncaa-female/myPortfolio/:userId/:sportId"
               element={
                 <PrivateRoute>
-                  <WIP
-                    NCAAFemaleImg={NCAAFemaleImg}
-                    NCAAMaleImg={NCAAMaleImg}
-                  />
+                  <PortfolioFemale />
                 </PrivateRoute>
               }
             />

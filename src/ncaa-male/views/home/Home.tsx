@@ -12,7 +12,7 @@ import {
   getParticipants,
   getPopona,
   getPortfoliosCount,
-  getScores,
+  // getScores,
 } from "@/api/HomeAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { PayOut } from "@/types/index";
@@ -24,13 +24,11 @@ const Home = () => {
   const userId = params.userId!;
 
   const [selected, setSelected] = useState("first");
-  const { data: dataScores, isLoading: isLoadingScores } = useQuery({
-    queryKey: ["scores", userId],
-    queryFn: () => getScores(userId),
-  });
+  // const { data: dataScores, isLoading: isLoadingScores } = useQuery({
+  //   queryKey: ["scores", userId],
+  //   queryFn: () => getScores(userId),
+  // });
 
-  console.log(dataScores);
-  console.log(isLoadingScores);
 
   const { data: DataPopona } = useQuery({
     queryKey: ["popona", userId],
@@ -68,7 +66,7 @@ const Home = () => {
       </p>
     ));
   };
-  console.log(payout);
+  // console.log(payout);
 
   return (
     <>
@@ -192,22 +190,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
-// https://portfolio-pool-test.damnserver.com/score/home?api-key=TESTAPIKEY&participant-id=2
-// https://portfolio-pool-test.damnserver.com/parameters?api-key=TESTAPIKEY&parameter-key=POPONA
-// https://portfolio-pool-test.damnserver.com/parameters?api-key=TESTAPIKEY&parameter-key=HOINFO
-// https://portfolio-pool-test.damnserver.com/participants/count?api-key=TESTAPIKEY
-// https://portfolio-pool-test.damnserver.com/portfolios/count?api-key=TESTAPIKEY
-// https://portfolio-pool-test.damnserver.com/portfolios?api-key=TESTAPIKEY&participant-id=2
-// https://portfolio-pool-test.damnserver.com/parameters?api-key=TESTAPIKEY&parameter-key=DATTOU
-// https://portfolio-pool-test.damnserver.com/parameters?api-key=TESTAPIKEY&parameter-key=HOUTOU
-// https://portfolio-pool-test.damnserver.com/winner-of-team?api-key=TESTAPIKEY&limit=99
-// https://portfolio-pool-test.damnserver.com/sports/undefined/teams/dynamics?tournament_id=3&portfolio_id=566
-// https://portfolio-pool-test.damnserver.com/tournaments/4/instructions
-// https://portfolio-pool-test.damnserver.com/teams-picked-log-history?api-key=TESTAPIKEY&year=0
-// https://portfolio-pool-test.damnserver.com/teams-per-year-log
-// https://portfolio-pool-test.damnserver.com/historical-perfect-portfolios-header?api-key=TESTAPIKEY
-// https://portfolio-pool-test.damnserver.com/historical-all-rounds?api-key=TESTAPIKEY&order-by=year
-// https://portfolio-pool-test.damnserver.com/historical-perfect-portfolios-history?api-key=TESTAPIKEY&year=0
-// https://portfolio-pool-test.damnserver.com/teams-picked-log-history?api-key=TESTAPIKEY&year=0

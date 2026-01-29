@@ -129,6 +129,8 @@ export const gatPayout = async (portfFoliosCount: number) => {
 };
 
 export const getInstructions = async () => {
+  // console.log(apiEnv, 'apiEnv');
+
   try {
     const url = `tournaments/4/instructions`;
     const { data } = await apiEnv(url, {
@@ -136,7 +138,7 @@ export const getInstructions = async () => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-// console.log(data);
+    console.log(data, 'dsandjlndajndjsajld');
     if (!data.instructions) {
       return [];
     }
