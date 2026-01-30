@@ -29,7 +29,7 @@ export const getPortfolios = async (id: User["id"]) => {
   }
 };
 
-export const getTeams = async (sport: User["id"]) => {
+export const getTeams = async () => {
   try {
     // const url = `/sports/${sport}/teams`;
     const url = `/sports/2/teams/dynamics?tournament_id=3&portfolio_id=566`;
