@@ -29,8 +29,8 @@ export const getPortfolios = async (id: User["id"]) => {
   }
 };
 
-export const getTeams = async () => {
-  try {
+export const getTeams = async () => { 
+  try {    
     // const url = `/sports/${sport}/teams`;
     const url = `/sports/2/teams/dynamics?tournament_id=3&portfolio_id=566`;
     const { data } = await apiEnv.get(url, {
