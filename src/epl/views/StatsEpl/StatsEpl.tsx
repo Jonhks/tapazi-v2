@@ -317,9 +317,9 @@ const StatsEpl = () => {
                         } */}
                         
                         {/* Scrollable Team Cells */}
-                        {JSON.parse(row?.teams)?.map((team: Key | null | undefined) => (
-                          <StyledBodyCell key={team}>
-                            <TeamDisplay name={team} />
+                        {JSON.parse(row?.teams)?.map((team) => (
+                          <StyledBodyCell key={team || ' '}>
+                            <TeamDisplay name={team || ' ' } />
                           </StyledBodyCell>
                         ))}
                         
