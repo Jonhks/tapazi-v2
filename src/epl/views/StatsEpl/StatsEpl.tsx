@@ -1,4 +1,4 @@
-import { Key, useState } from "react";
+import { useState } from "react";
 import classes from "./StatsEpl.module.css";
 import { 
   FormControl, 
@@ -317,7 +317,7 @@ const StatsEpl = () => {
                         } */}
                         
                         {/* Scrollable Team Cells */}
-                        {JSON.parse(row?.teams)?.map((team) => (
+                        {JSON.parse(row?.teams)?.map((team: string) => (
                           <StyledBodyCell key={team || ' '}>
                             <TeamDisplay name={team || ' ' } />
                           </StyledBodyCell>
