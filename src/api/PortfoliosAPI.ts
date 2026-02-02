@@ -4,18 +4,18 @@ import { CreatePortfolio, PortfolioComplete, Portfolios, User } from "../types";
 
 export const getPortfolios = async (id: User["id"]) => {
   try {
-    const url = `/portfolios?api-key=TESTAPIKEY&participant-id=${id}`;
+    const url = `/participants/${id}/portfolios?tournament_id=3`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (data.success === false) {
+    if (data.portfolios === false) {
       return [];
     }
-    if (data.success) {
-      return data?.data?.portfolios;
+    if (data.portfolios) {
+      return data?.portfolios;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -24,10 +24,11 @@ export const getPortfolios = async (id: User["id"]) => {
   }
 };
 
-export const getTeams = async (sport: User["id"]) => {
+export const getTeamsMale = async (sport: User["id"]) => {
   try {
     // const url = `/sports/${sport}/teams`;
-    const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
+    const url = `/sports/1/teams`;
+    // const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
     const { data } = await apiEnv.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -49,6 +50,7 @@ export const getTeamsAvailable = async (
   sport: User["id"],
   tournamentId: User["id"]
 ) => {
+  // console.log(sport, tournamentId);
   try {
     const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
     const { data } = await apiEnv.get(url, {
@@ -70,54 +72,54 @@ export const getTeamsAvailable = async (
 
 export const postNewPortfolio = async ({
   port,
+  userId,
   portId,
-}: // portfolios,
-// userId,
-{
+}: {
   port: CreatePortfolio;
-  // portfolios: Portfolios;
-  portId: User["id"];
+  userId: string;
+  portId?: string | number | null;
 }) => {
-  // if (portfolios?.length > 8) return;
-  // console.log(port, userId);
+  const url = portId
+    ? `/portfolios/${portId}`
+    : `/participants/${userId}/portfolios?tournament_id=3`;
 
-  const payload = { ...port };
-  if (portId && Array.isArray(port.teamsId)) {
-    payload.teamsId = port.teamsId.map((team) =>
-      typeof team === "object" && "id" in team ? { id: team.id } : { id: team }
-    );
-  }
+  const teamsFormatted = (port.teams || port.teamsId || []).map((t) => {
+    const id = typeof t === "object" ? t.id : t;
+    return { id: Number(id) };
+  });
 
-  const url = `/portfolios${portId ? `/${portId}` : ""}`;
+  const payload = {
+    championshipPoints: Number(port.championshipPoints || 0),
+    teams: teamsFormatted,
+    teamsId: teamsFormatted, // Include both just in case
+  };
+
   try {
     const { data } = portId
-      ? await apiEnv.put(url, portId ? { teams: payload.teams } : payload, {
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
+      ? await apiEnv.put(url, payload, {
+          headers: { "Content-Type": "application/json;charset=utf-8" },
         })
-      : await apiEnv.post(url, portId ? { teams: payload.teams } : payload, {
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
+      : await apiEnv.post(url, payload, {
+          headers: { "Content-Type": "application/json;charset=utf-8" },
         });
-    if (
-      !data.message &&
-      data?.error?.description ===
-        "Can't register portfolio, tournament already started."
-    ) {
-      return "Can't register portfolio, tournament already started.";
+
+    if (data.id || data.success || data.message === "success" || data.portfolios) {
+      return "Successfully saved portfolio";
     }
 
-    if (data.message === "success") {
-      return "Successfully created portfolio";
+    if (data.error && typeof data.error === "object") {
+      throw new Error(data.error.description || data.error.message || "Unknown API error");
     }
+
+    return "Successfully processed request";
   } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
+    if (isAxiosError(error) && error.response) {
+      throw new Error(error.response.data.error || error.response.data.message || "Request failed");
+    }
+    throw error;
   }
 };
+
 
 export const removeportfolio = async ({
   portId,

@@ -3,6 +3,7 @@
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable no-unsafe-optional-chaining */
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import { PortfolioContext } from "../context/PortfolioContext";
 import { PortfolioContextType } from "../context/PortfolioContext";
 import { NumberInputs, Team, TeamsNotPicked, Tournament } from "../types";
@@ -23,6 +24,8 @@ export const PortfolioProvider = ({
   children: React.ReactNode;
 }) => {
   const [userId, setUserId] = useState<string | null>(null);
+  const location = useLocation();
+  const isEplRoute = location.pathname.startsWith("/epl");
 
   const [validTournament, setValidTournament] = useState<Tournament[]>([]); //estado de getTournamentsId
   const [AllPortfolios, setAllPortfolios] = useState<TeamsNotPicked[]>([]); //estado de getPortfoliosEpl
@@ -40,14 +43,14 @@ export const PortfolioProvider = ({
     queryKey: ["tournament", userId],
     queryFn: () => getTournamentsId(),
     refetchOnWindowFocus: "always",
-    enabled: Boolean(userId),
+    enabled: Boolean(userId) && isEplRoute,
   });
 
   const { data: portfolios, isLoading: isLoadingPortfolios } = useQuery({
     queryKey: ["portfolios", userId],
     queryFn: () => getPortfoliosEpl(userId!, "0"),
     refetchOnWindowFocus: "always",
-    enabled: Boolean(userId),
+    enabled: Boolean(userId) && isEplRoute,
   });
 
   const { data: teamsNotAvailable, isLoading: isLoadingTeamsNotAvailable } =
@@ -56,13 +59,14 @@ export const PortfolioProvider = ({
       queryFn: () => getTeamsNotAvailable("2", "3"),
       refetchInterval: 60 * 1000,
       refetchOnWindowFocus: "always",
+      enabled: isEplRoute,
     });
 
   const { data: teamsEPL, isLoading } = useQuery({
     queryKey: ["teamsEpl", userId],
     queryFn: () => getTeamsEpl("2"),
     refetchOnWindowFocus: "always",
-    enabled: Boolean(userId),
+    enabled: Boolean(userId) && isEplRoute,
   });
 
   const { data: numberInputsRecived, isLoading: isLoadingNumberInputs } =
@@ -70,6 +74,7 @@ export const PortfolioProvider = ({
       queryKey: ["numberInputsRecived", userId, location.pathname],
       queryFn: () => getNumberTEAMXP(),
       refetchOnWindowFocus: "always",
+      enabled: isEplRoute,
     });
 
   const { data: teamsDynamics, isLoading: isLoadingTeamsDynamics } = useQuery({
@@ -90,6 +95,7 @@ export const PortfolioProvider = ({
       queryKey: ["weekParameter", userId, portfolios],
       queryFn: () => getParameterWeek("3", "WEETOU"),
       refetchOnWindowFocus: "always",
+      enabled: isEplRoute,
       // retry: 1,
       // enabled: Boolean(userId && portfolios?.length > 0),
     });
