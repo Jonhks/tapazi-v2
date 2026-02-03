@@ -1,19 +1,101 @@
 openapi: 3.0.3
 info:
-  title: Portfolio Pool API
-  description: Documentación de la API
+  title: PortfolioPool API
+  description: API for managing portfolios, participants, sports, and tournaments
   version: 1.0.0
+  contact:
+    email: tavo@ercom.tech
 
 servers:
   - url: https://portfolio-pool-test.damnserver.com:443
+    description: Test environment
+
+tags:
+  - name: Countries
+    description: Country and state management
+  - name: Participants
+    description: Participant authentication and portfolio management
+  - name: Portfolios
+    description: Portfolio CRUD operations
+  - name: Sports
+    description: Sports, teams, and tournament information
+  - name: Tournaments
+    description: Tournament details, scoring, and statistics
 
 paths:
+  /:
+    get:
+      tags:
+        - Test
+      summary: Test endpoint
+      description: Basic test endpoint to verify API is running
+      responses:
+        "200":
+          description: Successful response
+
+  /countries:
+    get:
+      tags:
+        - Countries
+      summary: Get all countries
+      description: Retrieve list of all countries
+      responses:
+        "200":
+          description: List of countries
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Country"
+
+  /countries/{countryId}/states:
+    get:
+      tags:
+        - Countries
+      summary: Get states by country
+      description: Retrieve all states for a specific country
+      parameters:
+        - name: countryId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: List of states
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/State"
+
+  /participants/signup:
+    post:
+      tags:
+        - Participants
+      summary: Sign up new participant
+      description: Register a new participant account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupRequest"
+      responses:
+        "201":
+          description: Participant created successfully
+        "400":
+          description: Invalid input
+
   /participants/login:
     post:
-      summary: Login de participante
-      description: Autentica a un participante con usuario y contraseña
       tags:
-        - Auth
+        - Participants
+      summary: Login participant
+      description: Authenticate a participant
       requestBody:
         required: true
         content:
@@ -22,15 +104,513 @@ paths:
               $ref: "#/components/schemas/LoginRequest"
       responses:
         "200":
-          description: Login exitoso
+          description: Login successful
+        "401":
+          description: Invalid credentials
+
+  /participants/forgot:
+    post:
+      tags:
+        - Participants
+      summary: Forgot password
+      description: Request password reset for a participant
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user:
+                  type: string
+                  example: eduardo
+      responses:
+        "200":
+          description: Password reset request processed
+
+  /participants/{participantId}/portfolios:
+    get:
+      tags:
+        - Participants
+      summary: Get participant portfolios
+      description: Retrieve all portfolios for a participant
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: tournament_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 3
+      responses:
+        "200":
+          description: List of portfolios
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginResponse"
-        "401":
-          description: Credenciales inválidas
+                type: array
+                items:
+                  $ref: "#/components/schemas/Portfolio"
+
+  /participants/{participantId}/sports:
+    get:
+      tags:
+        - Participants
+      summary: Get participant sports
+      description: Retrieve all sports associated with a participant
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 121
+      responses:
+        "200":
+          description: List of sports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Sport"
+
+  /portfolios:
+    post:
+      tags:
+        - Portfolios
+      summary: Create portfolio
+      description: Create a new portfolio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioCreateRequest"
+      responses:
+        "201":
+          description: Portfolio created successfully
+        "400":
+          description: Invalid input
+
+  /portfolios/{portfolioId}:
+    put:
+      tags:
+        - Portfolios
+      summary: Update portfolio
+      description: Update an existing portfolio
+      parameters:
+        - name: portfolioId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 570
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioUpdateRequest"
+      responses:
+        "200":
+          description: Portfolio updated successfully
+        "404":
+          description: Portfolio not found
+
+    delete:
+      tags:
+        - Portfolios
+      summary: Delete portfolio
+      description: Delete a portfolio
+      parameters:
+        - name: portfolioId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 565
+      responses:
+        "204":
+          description: Portfolio deleted successfully
+        "404":
+          description: Portfolio not found
+
+  /portfolios/{portfolioId}/per-week:
+    get:
+      tags:
+        - Portfolios
+      summary: Get portfolio by week
+      description: Retrieve portfolio information for a specific week
+      parameters:
+        - name: portfolioId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 566
+        - name: week
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Portfolio weekly data
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Portfolio"
+
+  /sports:
+    get:
+      tags:
+        - Sports
+      summary: Get all sports
+      description: Retrieve list of all sports
+      responses:
+        "200":
+          description: List of sports
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Sport"
+
+  /sports/{sportId}/teams:
+    get:
+      tags:
+        - Sports
+      summary: Get teams by sport
+      description: Retrieve all teams for a specific sport
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: List of teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Team"
+
+  /sports/{sportId}/teams/not-available:
+    get:
+      tags:
+        - Sports
+      summary: Get unavailable teams
+      description: Retrieve teams not available for a tournament
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 3
+      responses:
+        "200":
+          description: List of unavailable teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Team"
+
+  /sports/{sportId}/teams/dynamics:
+    get:
+      tags:
+        - Sports
+      summary: Get team dynamics
+      description: Retrieve team dynamics for a tournament and portfolio
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 3
+        - name: portfolio_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 561
+      responses:
+        "200":
+          description: Team dynamics data
+
+  /sports/{sportId}/tournaments:
+    get:
+      tags:
+        - Sports
+      summary: Get tournaments by sport
+      description: Retrieve all tournaments for a specific sport
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: List of tournaments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Tournament"
+
+  /tournaments/{tournamentId}:
+    get:
+      tags:
+        - Tournaments
+      summary: Get tournament
+      description: Retrieve tournament details
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Tournament details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tournament"
+
+  /tournaments/{tournamentId}/instructions:
+    get:
+      tags:
+        - Tournaments
+      summary: Get tournament instructions
+      description: Retrieve instructions for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+      responses:
+        "200":
+          description: Tournament instructions
+
+  /tournaments/{tournamentId}/payouts:
+    get:
+      tags:
+        - Tournaments
+      summary: Get tournament payouts
+      description: Retrieve payout information for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: portfolios
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 99
+      responses:
+        "200":
+          description: Payout information
+
+  /tournaments/{tournamentId}/parameters:
+    get:
+      tags:
+        - Tournaments
+      summary: Get tournament parameters
+      description: Retrieve tournament parameters by key
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 0
+        - name: key
+          in: query
+          required: true
+          schema:
+            type: string
+          example: RECODE
+      responses:
+        "200":
+          description: Tournament parameters
+
+  /tournaments/{tournamentId}/score/home:
+    get:
+      tags:
+        - Tournaments
+      summary: Get home score
+      description: Retrieve home score for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+        - name: portfolio_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 0
+      responses:
+        "200":
+          description: Home score data
+
+  /tournaments/{tournamentId}/score/weeks:
+    get:
+      tags:
+        - Tournaments
+      summary: Get weekly scores
+      description: Retrieve scores by week for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+      responses:
+        "200":
+          description: Weekly scores
+
+  /tournaments/{tournamentId}/score/stats/portfolio:
+    get:
+      tags:
+        - Tournaments
+      summary: Get portfolio statistics
+      description: Retrieve portfolio statistics for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+        - name: week
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 6
+      responses:
+        "200":
+          description: Portfolio statistics
+
+  /tournaments/{tournamentId}/stats:
+    get:
+      tags:
+        - Tournaments
+      summary: Get tournament statistics
+      description: Retrieve general statistics for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Tournament statistics
+
 components:
   schemas:
+    Country:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    State:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        country_id:
+          type: integer
+
+    SignupRequest:
+      type: object
+      required:
+        - code
+        - name
+        - surname
+        - email
+        - username
+        - password
+        - country_id
+        - state_id
+      properties:
+        code:
+          type: integer
+          example: 123456
+        name:
+          type: string
+          example: Gustavo
+        surname:
+          type: string
+          example: Calderón
+        email:
+          type: string
+          format: email
+          example: tavo@ercom.tech
+        username:
+          type: string
+          example: tavo.tech
+        password:
+          type: string
+          format: password
+          example: pass1234
+        country_id:
+          type: integer
+          example: 1
+        state_id:
+          type: integer
+          example: 1
+
     LoginRequest:
       type: object
       required:
@@ -42,39 +622,107 @@ components:
           example: eduardo
         password:
           type: string
+          format: password
           example: Eblanca5
 
-    Participant:
+    Team:
       type: object
       properties:
         id:
-          type: number
-          example: 2
+          type: integer
         name:
           type: string
-          example: EDUARDO
-        surname:
-          type: string
-          example: BLANCAS
-        key:
-          type: string
-          example: "0002"
-        username:
-          type: string
-          example: eduardo
-        email:
-          type: string
-          format: email
-          example: astbel@gmail.com
-        country_id:
-          type: number
-          example: 2
-        state_id:
-          type: number
-          example: 52
+        seed:
+          type: integer
+        streak_multiplier:
+          type: integer
 
-    LoginResponse:
+    PortfolioTeam:
+      type: object
+      required:
+        - id
+        - seed
+        - streak_multiplier
+      properties:
+        id:
+          type: integer
+          example: 145
+        seed:
+          type: integer
+          example: 1
+        streak_multiplier:
+          type: integer
+          example: 1
+
+    Portfolio:
       type: object
       properties:
-        participant:
-          $ref: "#/components/schemas/Participant"
+        id:
+          type: integer
+        tournament_id:
+          type: integer
+        participant_id:
+          type: integer
+        championship_points:
+          type: integer
+        teams:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortfolioTeam"
+
+    PortfolioCreateRequest:
+      type: object
+      required:
+        - tournament_id
+        - participant_id
+        - championship_points
+        - teams
+      properties:
+        tournament_id:
+          type: integer
+          example: 2
+        participant_id:
+          type: integer
+          example: 134
+        championship_points:
+          type: integer
+          example: 0
+        teams:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortfolioTeam"
+          minItems: 5
+
+    PortfolioUpdateRequest:
+      type: object
+      required:
+        - teams
+      properties:
+        teams:
+          type: array
+          items:
+            $ref: "#/components/schemas/PortfolioTeam"
+
+    Sport:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    Tournament:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        sport_id:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
