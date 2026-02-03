@@ -70,21 +70,21 @@
 //     queryFn: () => getWinnerOfTeam(),
 //   });
 
-//   // useEffect(() => {
-//   // if (winnerOfTeam) {
-//   //   Promise.all(
-//   //     winnerOfTeam?.map((el) => getWinnerOfTeamHasTeam(el.id))
-//   //   ).then((resp) => {
-//   //     const formattedData = winnerOfTeam.map((winner, index) => {
-//   //       return {
-//   //         winnerOfTeam: winner.id,
-//   //         winnerOfTeamHasTeam: resp[index].map((team) => team.teamId),
-//   //       };
-//   //     });
-//   //     setComparing(formattedData);
-//   //   });
-//   // }
-//   // }, [winnerOfTeam]);
+// useEffect(() => {
+// if (winnerOfTeam) {
+//   Promise.all(
+//     winnerOfTeam?.map((el) => getWinnerOfTeamHasTeam(el.id))
+//   ).then((resp) => {
+//     const formattedData = winnerOfTeam.map((winner, index) => {
+//       return {
+//         winnerOfTeam: winner.id,
+//         winnerOfTeamHasTeam: resp[index].map((team) => team.teamId),
+//       };
+//     });
+//     setComparing(formattedData);
+//   });
+// }
+// }, [winnerOfTeam]);
 
 //   useEffect(() => {
 //     if (dataDATTOU && dataHOUTOU) {
@@ -484,8 +484,6 @@
 
 //   if (isLoading) return <Loader />;
 
-  
-
 //   // if ((portfolios, portfoliosObtained))
 //     return (
 //       <Grid
@@ -686,8 +684,7 @@
 
 // export default memo(MyPortfolio);
 
-
-import React, { useState, useContext, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Grid,
   Box,
@@ -706,12 +703,15 @@ import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import Swal from "sweetalert2";
 import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getPortfolios, getTeamsMale, postNewPortfolio } from "@/api/PortfoliosAPI";
+import {
+  getPortfolios,
+  getTeamsMale,
+  postNewPortfolio,
+} from "@/api/PortfoliosAPI";
 import { toast } from "react-toastify";
 // import { toast } from "react-toastify";
 
 const MyPortfolio = () => {
-
   const params = useParams();
   const userId = params.userId!;
   const queryClient = useQueryClient();
@@ -744,7 +744,7 @@ const MyPortfolio = () => {
   });
 
   // console.log(teams);
-  
+
   useEffect(() => {
     setPortfolios(portfoliosObtained);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -1155,7 +1155,13 @@ const MyPortfolio = () => {
                             </div>
                           )}
 
-                          <Box sx={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              justifyContent: "center",
+                              width: "100%",
+                            }}
+                          >
                             <Input
                               required
                               type="text"

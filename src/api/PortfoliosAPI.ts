@@ -4,7 +4,7 @@ import { CreatePortfolio, PortfolioComplete, Portfolios, User } from "../types";
 
 export const getPortfolios = async (id: User["id"]) => {
   try {
-    const url = `/participants/${id}/portfolios?tournament_id=3`;
+    const url = `/participants/${id}/portfolios?tournament_id=2`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -24,31 +24,34 @@ export const getPortfolios = async (id: User["id"]) => {
   }
 };
 
-export const getTeamsMale = async (sport: User["id"]) => {
-  try {
-    // const url = `/sports/${sport}/teams`;
-    const url = `/sports/1/teams`;
-    // const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
-    const { data } = await apiEnv.get(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    // console.log(data);
+export const getTeamsMale = async () =>
+  // sport: User["id"]
 
-    if (data.teams) {
-      return data.teams;
+  {
+    try {
+      // const url = `/sports/${sport}/teams`;
+      const url = `/sports/1/teams`;
+      // const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
+      const { data } = await apiEnv.get(url, {
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      });
+      // console.log(data);
+
+      if (data.teams) {
+        return data.teams;
+      }
+    } catch (error) {
+      if (isAxiosError(error) && error.response)
+        throw new Error(error.response.data.error);
+      return;
     }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
+  };
 
 export const getTeamsAvailable = async (
   sport: User["id"],
-  tournamentId: User["id"]
+  tournamentId: User["id"],
 ) => {
   // console.log(sport, tournamentId);
   try {
@@ -103,23 +106,33 @@ export const postNewPortfolio = async ({
           headers: { "Content-Type": "application/json;charset=utf-8" },
         });
 
-    if (data.id || data.success || data.message === "success" || data.portfolios) {
+    if (
+      data.id ||
+      data.success ||
+      data.message === "success" ||
+      data.portfolios
+    ) {
       return "Successfully saved portfolio";
     }
 
     if (data.error && typeof data.error === "object") {
-      throw new Error(data.error.description || data.error.message || "Unknown API error");
+      throw new Error(
+        data.error.description || data.error.message || "Unknown API error",
+      );
     }
 
     return "Successfully processed request";
   } catch (error) {
     if (isAxiosError(error) && error.response) {
-      throw new Error(error.response.data.error || error.response.data.message || "Request failed");
+      throw new Error(
+        error.response.data.error ||
+          error.response.data.message ||
+          "Request failed",
+      );
     }
     throw error;
   }
 };
-
 
 export const removeportfolio = async ({
   portId,
@@ -171,7 +184,7 @@ export const removeportfolio = async ({
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
-      }
+      },
     );
     console.log(data);
   } catch (error) {

@@ -113,7 +113,7 @@ export const gatPayout = async (portfFoliosCount: number) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-
+    // console.log(data, "payouyt data");
     if (!data.success) {
       return [{ payout: 0 }];
     }
@@ -138,7 +138,7 @@ export const getInstructions = async () => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    console.log(data, 'dsandjlndajndjsajld');
+
     if (!data.instructions) {
       return [];
     }

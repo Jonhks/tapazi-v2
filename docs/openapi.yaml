@@ -1,0 +1,80 @@
+openapi: 3.0.3
+info:
+  title: Portfolio Pool API
+  description: Documentación de la API
+  version: 1.0.0
+
+servers:
+  - url: https://portfolio-pool-test.damnserver.com:443
+
+paths:
+  /participants/login:
+    post:
+      summary: Login de participante
+      description: Autentica a un participante con usuario y contraseña
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "401":
+          description: Credenciales inválidas
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - user
+        - password
+      properties:
+        user:
+          type: string
+          example: eduardo
+        password:
+          type: string
+          example: Eblanca5
+
+    Participant:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+        name:
+          type: string
+          example: EDUARDO
+        surname:
+          type: string
+          example: BLANCAS
+        key:
+          type: string
+          example: "0002"
+        username:
+          type: string
+          example: eduardo
+        email:
+          type: string
+          format: email
+          example: astbel@gmail.com
+        country_id:
+          type: number
+          example: 2
+        state_id:
+          type: number
+          example: 52
+
+    LoginResponse:
+      type: object
+      properties:
+        participant:
+          $ref: "#/components/schemas/Participant"

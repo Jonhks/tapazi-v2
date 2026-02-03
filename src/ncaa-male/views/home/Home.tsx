@@ -29,7 +29,6 @@ const Home = () => {
   //   queryFn: () => getScores(userId),
   // });
 
-
   const { data: DataPopona } = useQuery({
     queryKey: ["popona", userId],
     queryFn: () => getPopona(),
@@ -55,6 +54,8 @@ const Home = () => {
     queryFn: () => gatPayout(portfoliosHome.count),
     retry: true,
   });
+
+  // console.log(payout);
 
   const renderDescription = (dataHOINFO: string) => {
     return dataHOINFO.split("\n").map((line, index) => (
