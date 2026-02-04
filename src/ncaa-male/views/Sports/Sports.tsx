@@ -18,7 +18,7 @@ export default function Sports() {
 
   const { data: dataSports, isLoading } = useQuery({
     queryKey: ["sports"],
-    queryFn: () => getSports(),
+    queryFn: () => getSports(params.userId || ""),
   });
 
   const { data: dataSportsDisponible, isLoading: isLoadingDisponible } =
@@ -46,6 +46,8 @@ export default function Sports() {
     .map((sport: SportDisponible) => sport.id);
 
   // return <EPLBallLoader />;
+
+  console.log("dataSports:", dataSports);
 
   return (
     <>
@@ -101,7 +103,7 @@ export default function Sports() {
                           navigate(
                             sport.id === 1
                               ? `/home/${params.userId}`
-                              : `/ncaa-female/home/${params.userId}/3`
+                              : `/ncaa-female/home/${params.userId}/3`,
                           );
                         } else {
                           toast.info("This sport is currently unavailable.");
@@ -135,7 +137,7 @@ export default function Sports() {
               .filter(
                 (sport: Sport) =>
                   sport?.name?.includes("EPL") ||
-                  sport?.name?.includes("WORLDCUP")
+                  sport?.name?.includes("WORLDCUP"),
               )
               .map((sport: Sport, i: number) => {
                 return (
@@ -159,13 +161,13 @@ export default function Sports() {
                       onClick={() => {
                         if (!unavailableIds?.includes(sport.id)) {
                           const userData = JSON.parse(
-                            localStorage.getItem("userTapaszi") || "{}"
+                            localStorage.getItem("userTapaszi") || "{}",
                           );
                           const encodedData = btoa(JSON.stringify(userData));
                           navigate(
                             sport.id === 2
                               ? `/epl/home/${params.userId}/${sport.id}?data=${encodedData}`
-                              : `/wip/${params.userId}/${sport.id}`
+                              : `/wip/${params.userId}/${sport.id}`,
                           );
                         } else {
                           toast.info("This sport is currently unavailable.");

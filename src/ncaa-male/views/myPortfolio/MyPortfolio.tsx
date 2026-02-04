@@ -3,766 +3,136 @@
 /* eslint-disable no-extra-boolean-cast */
 /* eslint-disable no-unsafe-optional-chaining */
 
-// import React, { useCallback, useEffect, useState, memo } from "react";
-// import { Box, Tabs, Tab, Button, Input, InputAdornment } from "@mui/material";
-// import Grid from "@mui/material/Grid2";
-// import classes from "./MyPortfolio.module.css";
-// import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
-// import Dropdown from "../../components/Inputs/Dropdown";
-// import Loader from "../../components/BallLoader/BallLoader";
-// import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import { useParams } from "react-router-dom";
-// import {
-//   getDATTOU,
-//   getHOUTOU,
-//   getPortfolios,
-//   getTeams,
-//   getWinnerOfTeam,
-//   getWinnerOfTeamHasTeam,
-//   postNewPortfolio,
-//   removeportfolio,
-// } from "@/api/PortfoliosAPI";
-// import { Portfolios } from "@/types/index";
-// import { toast } from "react-toastify";
-// import Swal from "sweetalert2";
-// import { isDateTimeReached } from "@/utils/getDaysLeft";
-
-// const MyPortfolio = () => {
-//   const params = useParams();
-//   const userId = params.userId!;
-//   const queryClient = useQueryClient();
-
-//   const [value, setValue] = React.useState(0);
-//   const [portfolios, setPortfolios] = useState<Portfolios>([]);
-//   const [error, setError] = useState(false);
-//   const [editing, setEditing] = useState(false);
-//   const [duplicates, setDuplicates] = useState(false);
-//   const [focused, setFocused] = useState(false);
-//   const [championshipPoints, setChampionshipPoints] = useState("");
-//   const [validTournament, setValidTournament] = useState(true);
-//   const [comparing, setComparing] = useState([]);
-//   const [winnerSelected, setWinnerSelected] = useState(false);
-
-//   useEffect(() => {
-//     if (portfolios) {
-//       setChampionshipPoints(portfolios[value]?.championshipPoints);
-//     }
-//   }, [portfolios, value]);
-
-//   const { data: portfoliosObtained, isLoading } = useQuery({
-//     queryKey: ["portfolios", userId],
-//     queryFn: () => getPortfolios(userId),
-//   });
-
-//   const { data: dataDATTOU } = useQuery({
-//     queryKey: ["dattou", userId],
-//     queryFn: () => getDATTOU(userId),
-//   });
-
-//   const { data: dataHOUTOU } = useQuery({
-//     queryKey: ["houtou", userId],
-//     queryFn: () => getHOUTOU(userId),
-//   });
-
-//   const { data: winnerOfTeam } = useQuery({
-//     queryKey: ["winnerOfTeam", userId],
-//     queryFn: () => getWinnerOfTeam(),
-//   });
-
-// useEffect(() => {
-// if (winnerOfTeam) {
-//   Promise.all(
-//     winnerOfTeam?.map((el) => getWinnerOfTeamHasTeam(el.id))
-//   ).then((resp) => {
-//     const formattedData = winnerOfTeam.map((winner, index) => {
-//       return {
-//         winnerOfTeam: winner.id,
-//         winnerOfTeamHasTeam: resp[index].map((team) => team.teamId),
-//       };
-//     });
-//     setComparing(formattedData);
-//   });
-// }
-// }, [winnerOfTeam]);
-
-//   useEffect(() => {
-//     if (dataDATTOU && dataHOUTOU) {
-//       const isValid = isDateTimeReached(dataDATTOU, dataHOUTOU);
-//       setValidTournament(isValid);
-//     }
-//   }, [dataDATTOU, dataHOUTOU, portfolios]);
-
-//   const { data: teams } = useQuery({
-//     queryKey: ["teams", userId],
-//     queryFn: () => getTeams(),
-//     cacheTime: 30 * 60 * 1000, // 30 minutes
-//     refetchOnWindowFocus: false,
-//   });
-
-//   const { mutate } = useMutation({
-//     mutationFn: postNewPortfolio,
-//     onSuccess: (resp) => {
-//       toast.success(resp);
-//       queryClient.invalidateQueries(["portfolios", userId]);
-//     },
-//     onError: (error) => {
-//       toast.error(error.message);
-//     },
-//   });
-
-//   const { mutate: removeportfolioMutate } = useMutation({
-//     mutationFn: removeportfolio,
-//     onSuccess: (resp) => {
-//       toast.success(resp);
-//     },
-//     onError: (error) => {
-//       toast.error(error.message);
-//     },
-//   });
-
-//   useEffect(() => {
-//     setPortfolios(portfoliosObtained);
-//   }, [portfoliosObtained]);
-
-//   interface CustomTabPanelProps {
-//     children: React.ReactNode;
-//     value: number;
-//     index: number;
-//   }
-
-//   function CustomTabPanel(props: CustomTabPanelProps) {
-//     const { children, value, index, ...other } = props;
-//     return (
-//       <div
-//         role="tabpanel"
-//         hidden={value !== index}
-//         id={`simple-tabpanel-${index}`}
-//         aria-labelledby={`simple-tab-${index}`}
-//         {...other}
-//       >
-//         {value === index && (
-//           <Box sx={{ p: 3 }}>
-//             <div>{children}</div>
-//           </Box>
-//         )}
-//       </div>
-//     );
-//   }
-
-//   function a11yProps(index: number) {
-//     return {
-//       id: `simple-tab-${index}`,
-//       "aria-controls": `simple-tabpanel-${index}`,
-//     };
-//   }
-
-//   const handleChange = useCallback((event, newValue) => {
-//     setValue(newValue);
-//   }, []);
-
-//   const handleChangeInput = (
-//     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-//   ) => {
-//     const newValue = event.target.value;
-//     const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
-//     if (!regex.test(newValue)) {
-//       setChampionshipPoints("");
-//       return;
-//     }
-//     setChampionshipPoints(event.target.value);
-//     const newData = portfolios.map((el) => {
-//       if (el?.newPortfolio) {
-//         return {
-//           ...el,
-//           championshipPoints: +e?.target?.value,
-//         };
-//       } else {
-//         return el;
-//       }
-//     });
-//     setPortfolios(newData);
-//     setFocused(true);
-//   };
-
-//   const checkCombination = (arr, arrIds) => {
-//     for (let i = 0; i < arrIds.length; i++) {
-//       for (let j = 0; j < arrIds.length; j++) {
-//         if (i !== j) {
-//           const winnerOfTeam = arrIds[i];
-//           const teamId = arrIds[j];
-//           const exists = arr.some(
-//             (item) =>
-//               item.winnerOfTeam === winnerOfTeam &&
-//               item.winnerOfTeamHasTeam.includes(teamId)
-//           );
-//           if (exists) {
-//             toast.error(
-//               "You cannot select a team that also belongs to the selection of a winner of team!!"
-//             );
-//             setWinnerSelected(true);
-//             return true;
-//           } else {
-//             setWinnerSelected(false);
-//           }
-//         }
-//       }
-//     }
-//     return false;
-//   };
-
-//   useEffect(() => {
-//     if (portfolios) {
-//       if (portfolios[value]) {
-//         const arrIds = portfolios[value].teams.map((port) => port.id);
-//         checkCombination(comparing, arrIds);
-//       }
-//     }
-//   }, [comparing, portfolios, value]);
-
-//   const handleChangeSelect = useCallback(
-//     (port: boolean, index: string | number) => {
-//       setFocused(false);
-//       const newData = [...portfolios];
-//       const portFolioEditable = [
-//         ...newData?.filter((port) => port?.newPortfolio),
-//       ];
-//       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//       // @ts-expect-error
-//       if (portFolioEditable[0]?.teams?.includes(port)) {
-//         setDuplicates(true);
-//         port = false;
-//         toast.error("You cannot enter duplicate fields!!");
-//         setTimeout(() => setDuplicates(false), 3000);
-//       }
-//       if (portFolioEditable[0]) {
-//         const newPort = portFolioEditable[0]?.teams;
-//         newPort[+index] = port;
-//         setPortfolios(newData);
-//       }
-//     },
-//     [portfolios]
-//   );
-
-//   const addportFolio = useCallback(() => {
-//     setValue(portfolios?.length);
-//     setEditing(true);
-//     const newData = [...portfolios];
-//     newData.push({
-//       newPortfolio: true,
-//       teams: [false, false, false, false, false, false, false, false],
-//       championshipPoints: "",
-//     });
-//     setPortfolios(newData);
-//   }, [portfolios]);
-
-//   const savePortfolio = useCallback(() => {
-//     if (!validTournament) {
-//       toast.error("The tournament has already started!!");
-//       return;
-//     }
-//     const newData = [...portfolios];
-//     const portFolioEditable = [
-//       ...newData?.filter((port) => port?.newPortfolio),
-//     ][0];
-//     const portfoliExist = portFolioEditable?.teams?.some((el) => el === false);
-
-//     if (portFolioEditable?.championshipPoints >= 1 && !portfoliExist) {
-//       const teamsId = portFolioEditable?.teams?.map((el) => {
-//         if (typeof el === "object") {
-//           return { id: el.id };
-//         }
-//       });
-//       sendPortfolio({
-//         championshipPoints: portFolioEditable?.championshipPoints,
-//         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//         // @ts-expect-error
-//         teamsId,
-//       });
-//       setChampionshipPoints("");
-//       setFocused(false);
-//       setError(false);
-//       setEditing(false);
-//     } else if (
-//       portFolioEditable?.championshipPoints >= 1 &&
-//       portFolioEditable?.teams?.some((el) => el === false)
-//     ) {
-//       setError(true);
-//       setTimeout(() => setError(false), 1000);
-//       toast.error("You must select all Teams!");
-//     } else {
-//       setError(true);
-//       setTimeout(() => setError(false), 1000);
-//       toast.error("All fields are mandatory!!");
-//     }
-//     // eslint-disable-next-line react-hooks/exhaustive-deps
-//   }, [portfolios]);
-
-//   const sendPortfolio = useCallback(
-//     (port: { championshipPoints: number; teamsId: [] }) => {
-//       const swalWithBootstrapButtons = Swal.mixin({});
-//       swalWithBootstrapButtons
-//         .fire({
-//           title: "Are you sure?",
-//           text: "You won't be able to revert this!",
-//           icon: "warning",
-//           confirmButtonColor: "#238b94",
-//           showCancelButton: true,
-//           confirmButtonText: "Yes, send it to!",
-//           cancelButtonText: "No, cancel!",
-//           reverseButtons: true,
-//         })
-//         .then(async (result) => {
-//           if (result.isConfirmed) {
-//             const sendData = {
-//               port,
-//               portfolios,
-//               userId,
-//             };
-//             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//             // @ts-expect-error
-//             mutate(sendData);
-//             try {
-//               swalWithBootstrapButtons.fire({
-//                 title: "Saved!",
-//                 text: "your portfolio has been saved.",
-//                 icon: "success",
-//               });
-//             } catch {
-//               swalWithBootstrapButtons.fire({
-//                 title: "Saved!",
-//                 text: "an error has occurred.",
-//                 icon: "error",
-//               });
-//             }
-//           } else if (
-//             /* Read more about handling dismissals below */
-//             result.dismiss === Swal.DismissReason.cancel
-//           ) {
-//             swalWithBootstrapButtons.fire({
-//               title: "Cancelled",
-//               text: "Don't worry, you can still continue editing your portfolio :)",
-//               icon: "error",
-//             });
-//           }
-//         });
-//     },
-//     [portfolios, mutate, userId]
-//   );
-
-//   const removeportfolioFunction = useCallback(
-//     (portId: number) => {
-//       const index = portfolios.findIndex(
-//         (portfolio) => portfolio.id === portId
-//       );
-//       setValue(index);
-//       const swalWithBootstrapButtons = Swal.mixin({});
-//       swalWithBootstrapButtons
-//         .fire({
-//           title: `Are you sure to delete the portfolio ${portId}`,
-//           text: "You won't be able to revert this!",
-//           icon: "warning",
-//           showCancelButton: true,
-//           confirmButtonColor: "#238b94",
-//           confirmButtonText: "Yes, delete it!",
-//           cancelButtonText: "No, cancel!",
-//           reverseButtons: true,
-//         })
-//         .then(async (result) => {
-//           if (result.isConfirmed) {
-//             setPortfolios(portfolios?.filter((el) => el?.id !== portId));
-//             const sendData = {
-//               portId,
-//               portfolios,
-//               userId,
-//             };
-//             await removeportfolioMutate(sendData);
-//             try {
-//               swalWithBootstrapButtons.fire({
-//                 title: "Deleted!",
-//                 text: "Your file has been deleted.",
-//                 icon: "success",
-//               });
-//               if (index > 0) {
-//                 setValue(index - 1);
-//               } else {
-//                 setValue(index);
-//               }
-//             } catch {
-//               swalWithBootstrapButtons.fire({
-//                 title: "Error!",
-//                 text: "an error has occurred.",
-//                 icon: "error",
-//               });
-//             }
-//           } else if (
-//             /* Read more about handling dismissals below */
-//             result.dismiss === Swal.DismissReason.cancel
-//           ) {
-//             swalWithBootstrapButtons.fire({
-//               title: "Cancelled",
-//               text: "Don't worry, you can still continue editing your portfolio :)",
-//               icon: "error",
-//             });
-//             setValue(index);
-//           }
-//         });
-//     },
-//     [portfolios, removeportfolioMutate, userId]
-//   );
-
-//   const cancelPortfolio = useCallback(() => {
-//     const swalWithBootstrapButtons = Swal.mixin({});
-//     swalWithBootstrapButtons
-//       .fire({
-//         title: "Are you sure?",
-//         text: "You won't be able to revert this!",
-//         icon: "warning",
-//         showCancelButton: true,
-//         confirmButtonText: "Yes, delete it!",
-//         cancelButtonText: "No, cancel!",
-//         reverseButtons: true,
-//       })
-//       .then(async (result) => {
-//         if (result.isConfirmed) {
-//           if (value >= 1) {
-//             setValue(0);
-//           }
-//           setPortfolios(portfoliosObtained);
-//           setEditing(false);
-//           try {
-//             swalWithBootstrapButtons.fire({
-//               title: "Deleted!",
-//               text: "Your file has been deleted.",
-//               icon: "success",
-//             });
-//           } catch {
-//             swalWithBootstrapButtons.fire({
-//               title: "Error!",
-//               text: "an error has occurred.",
-//               icon: "error",
-//             });
-//           }
-//         } else if (result.dismiss === Swal.DismissReason.cancel) {
-//           swalWithBootstrapButtons.fire({
-//             title: "Cancelled",
-//             text: "Don't worry, you can still continue editing your portfolio :)",
-//             icon: "error",
-//           });
-//         }
-//       });
-//   }, [portfoliosObtained, value]);
-
-//   const renderTeams = (indexPortfolio) => {
-//     return portfolios[indexPortfolio]?.teams.map((team, indexTeam) => (
-//       <div
-//         key={indexTeam}
-//         className={classes.containerDropdown}
-//       >
-//         <BallIcon />
-//         <Dropdown
-//           disabled={!!portfolios[indexPortfolio]?.id}
-//           indexPortfolio={indexPortfolio}
-//           indexTeam={indexTeam}
-//           name={`${team}`}
-//           label={`Selection ${indexTeam + 1}`}
-//           value={
-//             typeof team === "object" &&
-//             portfolios[indexPortfolio]?.teams[indexTeam]?.name
-//           }
-//           options={
-//             !!portfolios[indexPortfolio]?.id
-//               ? portfolios[indexPortfolio]?.teams
-//               : teams
-//           }
-//           handleChange={handleChangeSelect}
-//         />
-//       </div>
-//     ));
-//   };
-//   console.log(portfolios);
-
-//   if (isLoading) return <Loader />;
-
-//   // if ((portfolios, portfoliosObtained))
-//     return (
-//       <Grid
-//         size={12}
-//         sx={{
-//           minHeight: "650px",
-//           height: "calc(100vh - 56px)",
-//           overflow: "scroll",
-//         }}
-//       >
-//         <Grid
-//           container
-//           spacing={2}
-//           justifyContent={"center"}
-//           alignContent={"center"}
-//         >
-//           <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
-//             <Box
-//               component="section"
-//               className={classes.boxPortfolio}
-//               m={3}
-//             >
-//               <div className={classes.headerPortfolio}>
-//                 <div>
-//                   <BasquetIcon />
-//                   <h2 style={{ color: "white", fontSize: "2.4rem" }}>
-//                     Portfolio{portfolios?.length > 1 && "s"}:{" "}
-//                     {portfolios?.length > 0 && portfolios?.length}
-//                   </h2>
-//                 </div>
-//               </div>
-//               <Box>
-//                 <Grid size={12}>
-//                   <Box sx={{ width: "100%" }}>
-//                     {portfolios?.length < 8 && validTournament && (
-//                       <div className={classes.addPortFolio}>
-//                         <Button
-//                           variant="contained"
-//                           color="success"
-//                           disabled={editing}
-//                           onClick={() => addportFolio()}
-//                         >
-//                           Add Portfolio
-//                         </Button>
-//                       </div>
-//                     )}
-//                     <Box
-//                       sx={{
-//                         borderBottom: 1,
-//                         borderColor: "divider",
-//                       }}
-//                     >
-//                       <Tabs
-//                         value={value}
-//                         onChange={handleChange}
-//                         variant="scrollable"
-//                         scrollButtons="auto"
-//                         aria-label="scrollable auto tabs example"
-//                         indicatorColor="primary"
-//                       >
-//                         {portfolios?.map((port, i) => (
-//                           <Tab
-//                             key={i}
-//                             label={port?.name || `New (Portfolio ${i + 1})`}
-//                             {...a11yProps(i + 1)}
-//                             className={`${classes.tabComponent} ${
-//                               i === value && classes.activeTab
-//                             }`}
-//                           />
-//                         ))}
-//                       </Tabs>
-//                     </Box>
-//                     {portfolios?.map((port, indexPortfolio) => (
-//                       <CustomTabPanel
-//                         index={indexPortfolio}
-//                         key={indexPortfolio}
-//                         value={value}
-//                       >
-//                         {renderTeams(indexPortfolio)}
-//                         <Grid
-//                           container
-//                           display={"flex"}
-//                           justifyContent={"end"}
-//                         >
-//                           {error && (
-//                             <div>
-//                               <p className={classes.error}>
-//                                 All fields are mandatory!!
-//                               </p>
-//                             </div>
-//                           )}
-//                           {duplicates && (
-//                             <div>
-//                               <p className={classes.error}>
-//                                 You cannot enter duplicate fields!!
-//                               </p>
-//                             </div>
-//                           )}
-//                           {winnerSelected && (
-//                             <div>
-//                               <p className={classes.error}>
-//                                 You cannot select a team that also belongs to
-//                                 the selection of a winner of team!!!
-//                               </p>
-//                             </div>
-//                           )}
-//                           <Grid
-//                             display={"flex"}
-//                             justifyContent={"center"}
-//                             alignItems={"center"}
-//                           >
-//                             <Input
-//                               required
-//                               type="text"
-//                               autoFocus={focused}
-//                               value={championshipPoints}
-//                               sx={{ width: "80%", m: 1 }}
-//                               id="input-with-icon-adornment"
-//                               name="championshipPoints"
-//                               readOnly={!!port?.id}
-//                               placeholder="Championship Points"
-//                               className={classes.championshipPoints}
-//                               inputProps={{
-//                                 maxLength: 3,
-//                                 inputMode: "numeric",
-//                               }}
-//                               startAdornment={
-//                                 <InputAdornment position="start">
-//                                   <EmojiEventsOutlinedIcon color="inherit" />
-//                                 </InputAdornment>
-//                               }
-//                               onChange={handleChangeInput}
-//                             />
-//                           </Grid>
-//                         </Grid>
-//                         <Grid
-//                           container
-//                           m={2}
-//                           justifyContent={"end"}
-//                         >
-//                           {!!port?.id ? (
-//                             <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-//                               {validTournament && (
-//                                 <Button
-//                                   variant="contained"
-//                                   color="warning"
-//                                   className={classes.btnRemove}
-//                                   onClick={() => {
-//                                     if (value >= 1) {
-//                                       setValue(0);
-//                                     }
-//                                     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-//                                     // @ts-expect-error
-//                                     removeportfolioFunction(port?.id);
-//                                   }}
-//                                 >
-//                                   Remove
-//                                 </Button>
-//                               )}
-//                             </Grid>
-//                           ) : (
-//                             <>
-//                               <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-//                                 <Button
-//                                   variant="contained"
-//                                   color="success"
-//                                   className={classes.btnSubmit}
-//                                   onClick={() => savePortfolio()}
-//                                   disabled={winnerSelected}
-//                                 >
-//                                   Submit
-//                                 </Button>
-//                               </Grid>
-//                               <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-//                                 <Button
-//                                   variant="contained"
-//                                   color="error"
-//                                   className={classes.btnCancel}
-//                                   onClick={() => cancelPortfolio()}
-//                                 >
-//                                   Cancel
-//                                 </Button>
-//                               </Grid>
-//                             </>
-//                           )}
-//                         </Grid>
-//                       </CustomTabPanel>
-//                     ))}
-//                   </Box>
-//                 </Grid>
-//               </Box>
-//             </Box>
-//           </Grid>
-//         </Grid>
-//       </Grid>
-//     );
-// };
-
-// export default memo(MyPortfolio);
-
-import React, { useState, useEffect } from "react";
-import {
-  Grid,
-  Box,
-  Tabs,
-  Tab,
-  Button,
-  Input,
-  InputAdornment,
-} from "@mui/material";
+import React, { useCallback, useEffect, useState, memo } from "react";
+import { Box, Tabs, Tab, Button, Input, InputAdornment } from "@mui/material";
+import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolio.module.css";
-import { BasquetIcon, BallIcon } from "../../../assets/icons/icons";
+import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
 import Dropdown from "../../components/Inputs/Dropdown";
-// import PortfoliosContext from "../../../context/PortfoliosContext";
 import Loader from "../../components/BallLoader/BallLoader";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
-import Swal from "sweetalert2";
-import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
 import {
+  getDATTOU,
+  getHOUTOU,
   getPortfolios,
-  getTeamsMale,
+  getTeamsMale as getTeams,
+  getWinnerOfTeam,
+  getWinnerOfTeamHasTeam,
   postNewPortfolio,
+  removeportfolio,
 } from "@/api/PortfoliosAPI";
+// } from "../../../api/PortfoliosAPI";
+import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
-// import { toast } from "react-toastify";
+import Swal from "sweetalert2";
+import { isDateTimeReached } from "@/utils/getDaysLeft";
 
 const MyPortfolio = () => {
   const params = useParams();
   const userId = params.userId!;
   const queryClient = useQueryClient();
+
   const [value, setValue] = React.useState(0);
-  const [portfolios, setPortfolios] = useState([]);
+  const [portfolios, setPortfolios] = useState<Portfolios>([]);
   const [error, setError] = useState(false);
   const [editing, setEditing] = useState(false);
   const [duplicates, setDuplicates] = useState(false);
   const [focused, setFocused] = useState(false);
+  const [championshipPoints, setChampionshipPoints] = useState("");
+  const [validTournament, setValidTournament] = useState(true);
+  const [comparing, setComparing] = useState([]);
+  const [winnerSelected, setWinnerSelected] = useState(false);
 
-  // const {
-  //   portfoliosObtained,
-  //   isLoading,
-  //   teams,
-  //   postNewPortfolio,
-  //   removeportfolio,
-  //   errorSavePortfolio,
-  //   setErrorSavePortfolio,
-  //   portXp,
-  // } = useContext(PortfoliosContext);
+  useEffect(() => {
+    if (portfolios) {
+      setChampionshipPoints(portfolios[value]?.championship_points);
+    }
+  }, [portfolios, value]);
 
   const { data: portfoliosObtained, isLoading } = useQuery({
-    queryKey: ["portfoliosMale", userId],
+    queryKey: ["portfolios", userId],
     queryFn: () => getPortfolios(userId),
   });
 
-  const { data: teams, isLoading: isLoadingTeams } = useQuery({
-    queryKey: ["teamsMale", userId],
-    queryFn: () => getTeamsMale(userId),
+  const { data: dataDATTOU } = useQuery({
+    queryKey: ["dattou", userId],
+    queryFn: () => getDATTOU(userId),
   });
 
-  // console.log(teams);
+  const { data: dataHOUTOU } = useQuery({
+    queryKey: ["houtou", userId],
+    queryFn: () => getHOUTOU(userId),
+  });
+
+  const { data: winnerOfTeam } = useQuery({
+    queryKey: ["winnerOfTeam", userId],
+    queryFn: () => getWinnerOfTeam(),
+  });
+
+  useEffect(() => {
+    if (winnerOfTeam) {
+      Promise.all(
+        winnerOfTeam?.map((el) => getWinnerOfTeamHasTeam(el.id)),
+      ).then((resp) => {
+        const formattedData = winnerOfTeam.map((winner, index) => {
+          return {
+            winnerOfTeam: winner.id,
+            winnerOfTeamHasTeam: resp[index].map((team) => team.teamId),
+          };
+        });
+        setComparing(formattedData);
+      });
+    }
+  }, [winnerOfTeam]);
+
+  useEffect(() => {
+    if (dataDATTOU && dataHOUTOU) {
+      const isValid = isDateTimeReached(dataDATTOU, dataHOUTOU);
+      setValidTournament(isValid);
+    }
+  }, [dataDATTOU, dataHOUTOU, portfolios]);
+
+  const { data: teams } = useQuery({
+    queryKey: ["teams", userId],
+    queryFn: () => getTeams(),
+    cacheTime: 30 * 60 * 1000, // 30 minutes
+    refetchOnWindowFocus: false,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: postNewPortfolio,
+    onSuccess: (resp) => {
+      toast.success(resp);
+      queryClient.invalidateQueries(["portfolios", userId]);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const { mutate: removeportfolioMutate } = useMutation({
+    mutationFn: removeportfolio,
+    onSuccess: (resp) => {
+      toast.success(resp);
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   useEffect(() => {
     setPortfolios(portfoliosObtained);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [portfoliosObtained]);
 
-  // useEffect(() => {
-  //   if (errorSavePortfolio) {
-  //     Swal.fire({
-  //       icon: "error",
-  //       title: "Oops...",
-  //       text: "Can't register portfolio, tournament already started.",
-  //     });
-  //     setTimeout(() => setErrorSavePortfolio(false), 2000);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [errorSavePortfolio]);
+  interface CustomTabPanelProps {
+    children: React.ReactNode;
+    value: number;
+    index: number;
+  }
 
-  function CustomTabPanel(props) {
+  function CustomTabPanel(props: CustomTabPanelProps) {
     const { children, value, index, ...other } = props;
     return (
       <div
@@ -781,24 +151,32 @@ const MyPortfolio = () => {
     );
   }
 
-  function a11yProps(index) {
+  function a11yProps(index: number) {
     return {
       id: `simple-tab-${index}`,
       "aria-controls": `simple-tabpanel-${index}`,
     };
   }
 
-  const handleChange = (event, newValue) => {
+  const handleChange = useCallback((event, newValue) => {
     setValue(newValue);
-  };
+  }, []);
 
-  const handleChangeInput = (e) => {
-    const val = e.target.value;
+  const handleChangeInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const newValue = e.target.value;
+    const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
+    if (!regex.test(newValue) && newValue !== "") {
+      // Permitir string vacío
+      return;
+    }
+    setChampionshipPoints(e.target.value);
     const newData = portfolios.map((el) => {
       if (el?.newPortfolio) {
         return {
           ...el,
-          championshipPoints: val === "" ? "" : Number(val),
+          championshipPoints: +e.target.value || "",
         };
       } else {
         return el;
@@ -808,66 +186,164 @@ const MyPortfolio = () => {
     setFocused(true);
   };
 
-  const handleChangeSelect = (port, index) => {
-    setFocused(false);
-    const newData = [...portfolios];
-    const portFolioEditable = [
-      ...newData?.filter((port) => port?.newPortfolio),
-    ];
-    if (portFolioEditable[0]?.teams?.includes(port)) {
-      setDuplicates(true);
-      port = false;
-      toast.error("You cannot enter duplicate fields!!");
-      setTimeout(() => setDuplicates(false), 3000);
+  const checkCombination = (arr, arrIds) => {
+    for (let i = 0; i < arrIds.length; i++) {
+      for (let j = 0; j < arrIds.length; j++) {
+        if (i !== j) {
+          const winnerOfTeam = arrIds[i];
+          const teamId = arrIds[j];
+          const exists = arr.some(
+            (item) =>
+              item.winnerOfTeam === winnerOfTeam &&
+              item.winnerOfTeamHasTeam.includes(teamId),
+          );
+          if (exists) {
+            toast.error(
+              "You cannot select a team that also belongs to the selection of a winner of team!!",
+            );
+            setWinnerSelected(true);
+            return true;
+          } else {
+            setWinnerSelected(false);
+          }
+        }
+      }
     }
-    if (portFolioEditable[0]) {
-      const newPort = portFolioEditable[0]?.teams;
-      newPort[index] = port;
-      setPortfolios(newData);
-    }
+    return false;
   };
 
-  const addportFolio = () => {
+  useEffect(() => {
+    if (portfolios) {
+      if (portfolios[value]) {
+        const arrIds = portfolios[value].teams.map((port) => port.id);
+        checkCombination(comparing, arrIds);
+      }
+    }
+  }, [comparing, portfolios, value]);
+
+  const handleChangeSelect = useCallback(
+    (port: boolean, index: string | number) => {
+      setFocused(false);
+      const newData = [...portfolios];
+      const portFolioEditable = [
+        ...newData?.filter((port) => port?.newPortfolio),
+      ];
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      if (portFolioEditable[0]?.teams?.includes(port)) {
+        setDuplicates(true);
+        port = false;
+        toast.error("You cannot enter duplicate fields!!");
+        setTimeout(() => setDuplicates(false), 3000);
+      }
+      if (portFolioEditable[0]) {
+        const newPort = portFolioEditable[0]?.teams;
+        newPort[+index] = port;
+        setPortfolios(newData);
+      }
+    },
+    [portfolios],
+  );
+
+  const addportFolio = useCallback(() => {
     setValue(portfolios?.length);
     setEditing(true);
     const newData = [...portfolios];
     newData.push({
       newPortfolio: true,
       teams: [false, false, false, false, false, false, false, false],
-      championshipPoints: 0,
+      championshipPoints: "",
     });
     setPortfolios(newData);
-  };
+  }, [portfolios]);
 
-  const { mutateAsync: postNewPortfolioMutation } = useMutation({
-    mutationFn: (port) => postNewPortfolio({ port, userId, portId: null }),
-    onSuccess: (resp) => {
-      toast.success(resp);
-      queryClient.invalidateQueries(["portfoliosMale", userId]);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
+  const sendPortfolio = useCallback(
+    (port: { championshipPoints: number; teamsId: { id: number }[] }) => {
+      const swalWithBootstrapButtons = Swal.mixin({});
+      swalWithBootstrapButtons
+        .fire({
+          title: "Are you sure?",
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          confirmButtonColor: "#238b94",
+          showCancelButton: true,
+          confirmButtonText: "Yes, send it to!",
+          cancelButtonText: "No, cancel!",
+          reverseButtons: true,
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            const sendData = {
+              tournament_id: 1,
+              participant_id: +userId,
+              championship_points: +port.championshipPoints, // ✅ Asegurar que sea número
+              teams: port.teamsId.map((el) => ({
+                id: el.id, // ✅ Asegurar que 'id' exista
+                seed: 1,
+                streak_multiplier: 1,
+              })),
+            };
 
-  const savePortfolio = () => {
+            console.log("Data being sent:", sendData); // Para debug
+
+            mutate(sendData);
+
+            swalWithBootstrapButtons.fire({
+              title: "Saved!",
+              text: "your portfolio has been saved.",
+              icon: "success",
+            });
+          } else if (result.dismiss === Swal.DismissReason.cancel) {
+            swalWithBootstrapButtons.fire({
+              title: "Cancelled",
+              text: "Don't worry, you can still continue editing your portfolio :)",
+              icon: "error",
+            });
+          }
+        })
+        .catch((error) => {
+          console.error("Error saving portfolio:", error);
+          swalWithBootstrapButtons.fire({
+            title: "Error!",
+            text: "an error has occurred.",
+            icon: "error",
+          });
+        });
+    },
+    [mutate, userId],
+  );
+
+  const savePortfolio = useCallback(() => {
+    if (!validTournament) {
+      toast.error("The tournament has already started!!");
+      return;
+    }
     const newData = [...portfolios];
     const portFolioEditable = [
       ...newData?.filter((port) => port?.newPortfolio),
     ][0];
-    if (
-      portFolioEditable?.championshipPoints >= 1 &&
-      !portFolioEditable?.teams?.some((el) => el === false)
-    ) {
-      const teamsId = portFolioEditable?.teams?.map((el) => {
-        return { id: el.id };
-      });
-      sendPortfolio({
-        championshipPoints: portFolioEditable?.championshipPoints,
-        teamsId,
-      });
-      setError(false);
-      setEditing(false);
+    const portfoliExist = portFolioEditable?.teams?.some((el) => el === false);
+
+    if (portFolioEditable?.championshipPoints >= 1 && !portfoliExist) {
+      const teamsId = portFolioEditable?.teams
+        ?.filter((el) => typeof el === "object" && el.id) // ✅ Filtrar solo objetos válidos
+        .map((el) => ({ id: el.id }));
+
+      if (teamsId && teamsId.length === 8) {
+        // ✅ Verificar que haya 8 equipos
+        sendPortfolio({
+          championshipPoints: +portFolioEditable.championshipPoints,
+          teamsId,
+        });
+        setChampionshipPoints("");
+        setFocused(false);
+        setError(false);
+        setEditing(false);
+      } else {
+        toast.error("All teams must be selected!");
+        setError(true);
+        setTimeout(() => setError(false), 1000);
+      }
     } else if (
       portFolioEditable?.championshipPoints >= 1 &&
       portFolioEditable?.teams?.some((el) => el === false)
@@ -880,98 +356,70 @@ const MyPortfolio = () => {
       setTimeout(() => setError(false), 1000);
       toast.error("All fields are mandatory!!");
     }
-  };
+  }, [portfolios, sendPortfolio, validTournament]);
 
-  // #238b94
-
-  const sendPortfolio = (port) => {
-    const swalWithBootstrapButtons = Swal.mixin({});
-    swalWithBootstrapButtons
-      .fire({
-        title: "Are you sure?",
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        confirmButtonColor: "#238b94",
-        showCancelButton: true,
-        confirmButtonText: "Yes, send it to!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            const resp = await postNewPortfolioMutation(port);
+  const removeportfolioFunction = useCallback(
+    (portId: number) => {
+      const index = portfolios.findIndex(
+        (portfolio) => portfolio.id === portId,
+      );
+      setValue(index);
+      const swalWithBootstrapButtons = Swal.mixin({});
+      swalWithBootstrapButtons
+        .fire({
+          title: `Are you sure to delete the portfolio ${portId}`,
+          text: "You won't be able to revert this!",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#238b94",
+          confirmButtonText: "Yes, delete it!",
+          cancelButtonText: "No, cancel!",
+          reverseButtons: true,
+        })
+        .then(async (result) => {
+          if (result.isConfirmed) {
+            setPortfolios(portfolios?.filter((el) => el?.id !== portId));
+            const sendData = {
+              portId,
+              portfolios,
+              userId,
+            };
+            await removeportfolioMutate(sendData);
+            try {
+              swalWithBootstrapButtons.fire({
+                title: "Deleted!",
+                text: "Your file has been deleted.",
+                icon: "success",
+              });
+              if (index > 0) {
+                setValue(index - 1);
+              } else {
+                setValue(index);
+              }
+            } catch {
+              swalWithBootstrapButtons.fire({
+                title: "Error!",
+                text: "an error has occurred.",
+                icon: "error",
+              });
+            }
+          } else if (
+            /* Read more about handling dismissals below */
+            result.dismiss === Swal.DismissReason.cancel
+          ) {
             swalWithBootstrapButtons.fire({
-              title: "Saved!",
-              text: resp || "Your portfolio has been saved.",
-              icon: "success",
-            });
-          } catch (error) {
-            swalWithBootstrapButtons.fire({
-              title: "Error!",
-              text: error.message || "An error has occurred.",
+              title: "Cancelled",
+              text: "Don't worry, you can still continue editing your portfolio :)",
               icon: "error",
             });
+            setValue(index);
           }
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelled",
-            text: "Don't worry, you can still continue editing your portfolio :)",
-            icon: "error",
-          });
-        }
-      });
-  };
+        });
+    },
+    [portfolios, removeportfolioMutate, userId],
+  );
 
-  // console.log(portfolios);
-
-  const removeportfolioFunction = (portId) => {
-    const swalWithBootstrapButtons = Swal.mixin({});
-    swalWithBootstrapButtons
-      .fire({
-        title: `Are you sure to delete the portfolio ${portId}`,
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#238b94",
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, cancel!",
-        reverseButtons: true,
-      })
-      .then(async (result) => {
-        if (result.isConfirmed) {
-          setPortfolios(portfolios?.filter((el) => el?.id !== portId));
-          await removeportfolio(portId);
-          try {
-            swalWithBootstrapButtons.fire({
-              title: "Deleted!",
-              text: "Your file has been deleted.",
-              icon: "success",
-            });
-          } catch {
-            swalWithBootstrapButtons.fire({
-              title: "Error!",
-              text: "an error has occurred.",
-              icon: "error",
-            });
-          }
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
-          swalWithBootstrapButtons.fire({
-            title: "Cancelled",
-            text: "Don't worry, you can still continue editing your portfolio :)",
-            icon: "error",
-          });
-        }
-      });
-  };
-
-  const cancelPortfolio = () => {
+  const cancelPortfolio = useCallback(() => {
     const swalWithBootstrapButtons = Swal.mixin({});
     swalWithBootstrapButtons
       .fire({
@@ -1003,10 +451,7 @@ const MyPortfolio = () => {
               icon: "error",
             });
           }
-        } else if (
-          /* Read more about handling dismissals below */
-          result.dismiss === Swal.DismissReason.cancel
-        ) {
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
           swalWithBootstrapButtons.fire({
             title: "Cancelled",
             text: "Don't worry, you can still continue editing your portfolio :)",
@@ -1014,17 +459,43 @@ const MyPortfolio = () => {
           });
         }
       });
+  }, [portfoliosObtained, value]);
+
+  const renderTeams = (indexPortfolio) => {
+    return portfolios[indexPortfolio]?.teams.map((team, indexTeam) => (
+      <div
+        key={indexTeam}
+        className={classes.containerDropdown}
+      >
+        <BallIcon />
+        <Dropdown
+          disabled={!!portfolios[indexPortfolio]?.id}
+          indexPortfolio={indexPortfolio}
+          indexTeam={indexTeam}
+          name={`${team}`}
+          label={`Selection ${indexTeam + 1}`}
+          value={
+            typeof team === "object" &&
+            portfolios[indexPortfolio]?.teams[indexTeam]?.name
+          }
+          options={
+            !!portfolios[indexPortfolio]?.id
+              ? portfolios[indexPortfolio]?.teams
+              : teams
+          }
+          handleChange={handleChangeSelect}
+        />
+      </div>
+    ));
   };
-
   // console.log(portfolios);
-  // console.log(teams);
 
-  // const isLoading = false
+  if (isLoading) return <Loader />;
 
+  // if ((portfolios, portfoliosObtained))
   return (
     <Grid
-      item
-      xs={12}
+      size={12}
       sx={{
         minHeight: "650px",
         height: "calc(100vh - 56px)",
@@ -1036,166 +507,134 @@ const MyPortfolio = () => {
         spacing={2}
         justifyContent={"center"}
         alignContent={"center"}
-        mt={4}
       >
-        {isLoading ? (
-          <Loader />
-        ) : (
-          <Grid
-            item
-            xs={6}
+        <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
+          <Box
+            component="section"
+            className={classes.boxPortfolio}
+            m={3}
           >
-            <Box
-              component="section"
-              className={classes.boxPortfolio}
-            >
-              <div className={classes.headerPortfolio}>
-                <div>
-                  <BasquetIcon />
-                  <h2 style={{ color: "white", fontSize: "2.4rem" }}>
-                    Portfolio{portfolios?.length > 1 && "s"}:{" "}
-                    {portfolios?.length > 0 && portfolios?.length}
-                  </h2>
-                </div>
-                {/* <div>
-                  <PodiumIcon />
-                  <h4>Name Tournament</h4>
-                </div> */}
+            <div className={classes.headerPortfolio}>
+              <div>
+                <BasquetIcon />
+                <h2 style={{ color: "white", fontSize: "2.4rem" }}>
+                  Portfolio{portfolios?.length > 1 && "s"}:{" "}
+                  {portfolios?.length > 0 && portfolios?.length}
+                </h2>
               </div>
-              <Box>
-                <Grid
-                  item
-                  xs={12}
-                >
-                  <Box sx={{ width: "100%" }}>
-                    {portfolios?.length < 8 && (
-                      <div className={classes.addPortFolio}>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          disabled={editing}
-                          onClick={() => addportFolio()}
-                        >
-                          Add Portfolio
-                        </Button>
-                      </div>
-                    )}
-                    <Box
-                      sx={{
-                        borderBottom: 1,
-                        borderColor: "divider",
-                      }}
+            </div>
+            <Box>
+              <Grid size={12}>
+                <Box sx={{ width: "100%" }}>
+                  {portfolios?.length < 8 && validTournament && (
+                    <div className={classes.addPortFolio}>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        disabled={editing}
+                        onClick={() => addportFolio()}
+                      >
+                        Add Portfolio
+                      </Button>
+                    </div>
+                  )}
+                  <Box
+                    sx={{
+                      borderBottom: 1,
+                      borderColor: "divider",
+                    }}
+                  >
+                    <Tabs
+                      value={value}
+                      onChange={handleChange}
+                      variant="scrollable"
+                      scrollButtons="auto"
+                      aria-label="scrollable auto tabs example"
+                      indicatorColor="primary"
                     >
-                      <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        variant="scrollable"
-                        scrollButtons="auto"
-                        aria-label="scrollable auto tabs example"
-                        indicatorColor="inherit"
+                      {portfolios?.map((port, i) => (
+                        <Tab
+                          key={i}
+                          label={port?.name || `New (Portfolio ${i + 1})`}
+                          {...a11yProps(i + 1)}
+                          className={`${classes.tabComponent} ${
+                            i === value && classes.activeTab
+                          }`}
+                        />
+                      ))}
+                    </Tabs>
+                  </Box>
+                  {portfolios?.map((port, indexPortfolio) => (
+                    <CustomTabPanel
+                      index={indexPortfolio}
+                      key={indexPortfolio}
+                      value={value}
+                    >
+                      {renderTeams(indexPortfolio)}
+                      <Grid
+                        container
+                        display={"flex"}
+                        justifyContent={"end"}
                       >
-                        {portfolios?.map((port, i) => (
-                          <Tab
-                            key={i}
-                            label={port?.name || `New (Portfolio ${i + 1})`}
-                            {...a11yProps(i + 1)}
-                            className={`${classes.tabComponent} ${
-                              i === value && classes.activeTab
-                            }`}
-                          />
-                        ))}
-                      </Tabs>
-                    </Box>
-
-                    {portfolios?.map((port, indexPortfolio) => (
-                      <CustomTabPanel
-                        key={indexPortfolio}
-                        value={value}
-                        index={indexPortfolio}
-                      >
-                        {port.teams?.map((team, indexTeam) => (
-                          <div
-                            key={indexTeam}
-                            className={classes.containerDropdown}
-                          >
-                            <BallIcon />
-                            <Dropdown
-                              disabled={!!port?.id}
-                              indexPortfolio={indexPortfolio}
-                              indexTeam={indexTeam}
-                              name={`name`}
-                              readOnly={!!port?.id}
-                              label={`Selection ${indexTeam + 1}`}
-                              value={
-                                portfolios[indexPortfolio]?.teams[indexTeam]
-                                  ?.name
-                              }
-                              options={!!port?.id ? port?.teams : teams}
-                              handleChange={handleChangeSelect}
-                            />
+                        {error && (
+                          <div>
+                            <p className={classes.error}>
+                              All fields are mandatory!!
+                            </p>
                           </div>
-                        ))}
+                        )}
+                        {duplicates && (
+                          <div>
+                            <p className={classes.error}>
+                              You cannot enter duplicate fields!!
+                            </p>
+                          </div>
+                        )}
+                        {winnerSelected && (
+                          <div>
+                            <p className={classes.error}>
+                              You cannot select a team that also belongs to the
+                              selection of a winner of team!!!
+                            </p>
+                          </div>
+                        )}
                         <Grid
-                          container
                           display={"flex"}
-                          justifyContent={"end"}
+                          justifyContent={"center"}
+                          alignItems={"center"}
                         >
-                          {error && (
-                            <div>
-                              <p className={classes.error}>
-                                All fields are mandatory!!
-                              </p>
-                            </div>
-                          )}
-                          {duplicates && (
-                            <div>
-                              <p className={classes.error}>
-                                You cannot enter duplicate fields!!
-                              </p>
-                            </div>
-                          )}
-
-                          <Box
-                            sx={{
-                              display: "flex",
-                              justifyContent: "center",
-                              width: "100%",
+                          <Input
+                            required
+                            type="text"
+                            autoFocus={focused}
+                            value={championshipPoints}
+                            sx={{ width: "80%", m: 1 }}
+                            id="input-with-icon-adornment"
+                            name="championshipPoints"
+                            readOnly={!!port?.id}
+                            placeholder="Championship Points"
+                            className={classes.championshipPoints}
+                            inputProps={{
+                              maxLength: 3,
+                              inputMode: "numeric",
                             }}
-                          >
-                            <Input
-                              required
-                              type="text"
-                              autoFocus={focused}
-                              value={
-                                port?.championshipPoints >= 1
-                                  ? port?.championshipPoints
-                                  : ""
-                              }
-                              sx={{ width: "80%", m: 1 }}
-                              id="input-with-icon-adornment"
-                              name="championshipPoints"
-                              readOnly={!!port?.id}
-                              placeholder="Championship Points"
-                              className={classes.championshipPoints}
-                              startAdornment={
-                                <InputAdornment position="start">
-                                  <EmojiEventsOutlinedIcon color="white" />
-                                </InputAdornment>
-                              }
-                              onChange={(e) => handleChangeInput(e)}
-                            />
-                          </Box>
+                            startAdornment={
+                              <InputAdornment position="start">
+                                <EmojiEventsOutlinedIcon color="inherit" />
+                              </InputAdornment>
+                            }
+                            onChange={handleChangeInput}
+                          />
                         </Grid>
-                        <Grid
-                          container
-                          m={2}
-                          justifyContent={"end"}
-                        >
-                          {!!port?.id ? (
-                            <Grid
-                              item
-                              xs={4}
-                            >
+                      </Grid>
+                      <Grid
+                        container
+                        m={2}
+                        justifyContent={"end"}
+                      >
+                        {!!port?.id ? (
+                          <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                            {validTournament && (
                               <Button
                                 variant="contained"
                                 color="warning"
@@ -1204,54 +643,625 @@ const MyPortfolio = () => {
                                   if (value >= 1) {
                                     setValue(0);
                                   }
+                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                  // @ts-expect-error
                                   removeportfolioFunction(port?.id);
                                 }}
                               >
                                 Remove
                               </Button>
+                            )}
+                          </Grid>
+                        ) : (
+                          <>
+                            <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                              <Button
+                                variant="contained"
+                                color="success"
+                                className={classes.btnSubmit}
+                                onClick={() => savePortfolio()}
+                                disabled={winnerSelected}
+                              >
+                                Submit
+                              </Button>
                             </Grid>
-                          ) : (
-                            <>
-                              <Grid
-                                item
-                                xs={4}
+                            <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                              <Button
+                                variant="contained"
+                                color="error"
+                                className={classes.btnCancel}
+                                onClick={() => cancelPortfolio()}
                               >
-                                <Button
-                                  variant="contained"
-                                  color="success"
-                                  className={classes.btnSubmit}
-                                  onClick={() => savePortfolio()}
-                                >
-                                  Submit
-                                </Button>
-                              </Grid>
-                              <Grid
-                                item
-                                xs={4}
-                              >
-                                <Button
-                                  variant="contained"
-                                  color="error"
-                                  className={classes.btnCancel}
-                                  onClick={() => cancelPortfolio()}
-                                >
-                                  Cancel
-                                </Button>
-                              </Grid>
-                            </>
-                          )}
-                        </Grid>
-                      </CustomTabPanel>
-                    ))}
-                  </Box>
-                </Grid>
-              </Box>
+                                Cancel
+                              </Button>
+                            </Grid>
+                          </>
+                        )}
+                      </Grid>
+                    </CustomTabPanel>
+                  ))}
+                </Box>
+              </Grid>
             </Box>
-          </Grid>
-        )}
+          </Box>
+        </Grid>
       </Grid>
     </Grid>
   );
 };
 
-export default MyPortfolio;
+export default memo(MyPortfolio);
+
+//? ----------------- - - - - - - -  - - -  - - - -  - - - -  -
+
+// import React, { useState, useEffect } from "react";
+// import {
+//   Grid,
+//   Box,
+//   Tabs,
+//   Tab,
+//   Button,
+//   Input,
+//   InputAdornment,
+// } from "@mui/material";
+// import classes from "./MyPortfolio.module.css";
+// import { BasquetIcon, BallIcon } from "../../../assets/icons/icons";
+// import Dropdown from "../../components/Inputs/Dropdown";
+// // import PortfoliosContext from "../../../context/PortfoliosContext";
+// import Loader from "../../components/BallLoader/BallLoader";
+// import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
+// import Swal from "sweetalert2";
+// import { useParams } from "react-router-dom";
+// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+// import {
+//   getPortfolios,
+//   getTeamsMale,
+//   postNewPortfolio,
+// } from "@/api/PortfoliosAPI";
+// import { toast } from "react-toastify";
+// // import { toast } from "react-toastify";
+
+// const MyPortfolio = () => {
+//   const params = useParams();
+//   const userId = params.userId!;
+//   const queryClient = useQueryClient();
+//   const [value, setValue] = React.useState(0);
+//   const [portfolios, setPortfolios] = useState([]);
+//   const [error, setError] = useState(false);
+//   const [editing, setEditing] = useState(false);
+//   const [duplicates, setDuplicates] = useState(false);
+//   const [focused, setFocused] = useState(false);
+
+//   // const {
+//   //   portfoliosObtained,
+//   //   isLoading,
+//   //   teams,
+//   //   postNewPortfolio,
+//   //   removeportfolio,
+//   //   errorSavePortfolio,
+//   //   setErrorSavePortfolio,
+//   //   portXp,
+//   // } = useContext(PortfoliosContext);
+
+//   const { data: portfoliosObtained, isLoading } = useQuery({
+//     queryKey: ["portfoliosMale", userId],
+//     queryFn: () => getPortfolios(userId),
+//   });
+
+//   const { data: teams, isLoading: isLoadingTeams } = useQuery({
+//     queryKey: ["teamsMale", userId],
+//     queryFn: () => getTeamsMale(userId),
+//   });
+
+//   // console.log(teams);
+
+//   useEffect(() => {
+//     setPortfolios(portfoliosObtained);
+//     // eslint-disable-next-line react-hooks/exhaustive-deps
+//   }, [portfoliosObtained]);
+
+//   // useEffect(() => {
+//   //   if (errorSavePortfolio) {
+//   //     Swal.fire({
+//   //       icon: "error",
+//   //       title: "Oops...",
+//   //       text: "Can't register portfolio, tournament already started.",
+//   //     });
+//   //     setTimeout(() => setErrorSavePortfolio(false), 2000);
+//   //   }
+//   //   // eslint-disable-next-line react-hooks/exhaustive-deps
+//   // }, [errorSavePortfolio]);
+
+//   function CustomTabPanel(props) {
+//     const { children, value, index, ...other } = props;
+//     return (
+//       <div
+//         role="tabpanel"
+//         hidden={value !== index}
+//         id={`simple-tabpanel-${index}`}
+//         aria-labelledby={`simple-tab-${index}`}
+//         {...other}
+//       >
+//         {value === index && (
+//           <Box sx={{ p: 3 }}>
+//             <div>{children}</div>
+//           </Box>
+//         )}
+//       </div>
+//     );
+//   }
+
+//   function a11yProps(index) {
+//     return {
+//       id: `simple-tab-${index}`,
+//       "aria-controls": `simple-tabpanel-${index}`,
+//     };
+//   }
+
+//   const handleChange = (event, newValue) => {
+//     setValue(newValue);
+//   };
+
+//   const handleChangeInput = (e) => {
+//     const val = e.target.value;
+//     const newData = portfolios.map((el) => {
+//       if (el?.newPortfolio) {
+//         return {
+//           ...el,
+//           championshipPoints: val === "" ? "" : Number(val),
+//         };
+//       } else {
+//         return el;
+//       }
+//     });
+//     setPortfolios(newData);
+//     setFocused(true);
+//   };
+
+//   const handleChangeSelect = (port, index) => {
+//     setFocused(false);
+//     const newData = [...portfolios];
+//     const portFolioEditable = [
+//       ...newData?.filter((port) => port?.newPortfolio),
+//     ];
+//     if (portFolioEditable[0]?.teams?.includes(port)) {
+//       setDuplicates(true);
+//       port = false;
+//       toast.error("You cannot enter duplicate fields!!");
+//       setTimeout(() => setDuplicates(false), 3000);
+//     }
+//     if (portFolioEditable[0]) {
+//       const newPort = portFolioEditable[0]?.teams;
+//       newPort[index] = port;
+//       setPortfolios(newData);
+//     }
+//   };
+
+//   const addportFolio = () => {
+//     setValue(portfolios?.length);
+//     setEditing(true);
+//     const newData = [...portfolios];
+//     newData.push({
+//       newPortfolio: true,
+//       teams: [false, false, false, false, false, false, false, false],
+//       championshipPoints: 0,
+//     });
+//     setPortfolios(newData);
+//   };
+
+//   const { mutateAsync: postNewPortfolioMutation } = useMutation({
+//     mutationFn: (port) => postNewPortfolio({ port, userId, portId: null }),
+//     onSuccess: (resp) => {
+//       toast.success(resp);
+//       queryClient.invalidateQueries(["portfoliosMale", userId]);
+//     },
+//     onError: (error) => {
+//       toast.error(error.message);
+//     },
+//   });
+
+//   const savePortfolio = () => {
+//     const newData = [...portfolios];
+//     const portFolioEditable = [
+//       ...newData?.filter((port) => port?.newPortfolio),
+//     ][0];
+//     if (
+//       portFolioEditable?.championshipPoints >= 1 &&
+//       !portFolioEditable?.teams?.some((el) => el === false)
+//     ) {
+//       const teamsId = portFolioEditable?.teams?.map((el) => {
+//         return { id: el.id };
+//       });
+//       sendPortfolio({
+//         championshipPoints: portFolioEditable?.championshipPoints,
+//         teamsId,
+//       });
+//       setError(false);
+//       setEditing(false);
+//     } else if (
+//       portFolioEditable?.championshipPoints >= 1 &&
+//       portFolioEditable?.teams?.some((el) => el === false)
+//     ) {
+//       setError(true);
+//       setTimeout(() => setError(false), 1000);
+//       toast.error("You must select all Teams!");
+//     } else {
+//       setError(true);
+//       setTimeout(() => setError(false), 1000);
+//       toast.error("All fields are mandatory!!");
+//     }
+//   };
+
+//   // #238b94
+
+//   const sendPortfolio = (port) => {
+//     const swalWithBootstrapButtons = Swal.mixin({});
+//     swalWithBootstrapButtons
+//       .fire({
+//         title: "Are you sure?",
+//         text: "You won't be able to revert this!",
+//         icon: "warning",
+//         confirmButtonColor: "#238b94",
+//         showCancelButton: true,
+//         confirmButtonText: "Yes, send it to!",
+//         cancelButtonText: "No, cancel!",
+//         reverseButtons: true,
+//       })
+//       .then(async (result) => {
+//         if (result.isConfirmed) {
+//           try {
+//             const resp = await postNewPortfolioMutation(port);
+//             swalWithBootstrapButtons.fire({
+//               title: "Saved!",
+//               text: resp || "Your portfolio has been saved.",
+//               icon: "success",
+//             });
+//           } catch (error) {
+//             swalWithBootstrapButtons.fire({
+//               title: "Error!",
+//               text: error.message || "An error has occurred.",
+//               icon: "error",
+//             });
+//           }
+//         } else if (
+//           /* Read more about handling dismissals below */
+//           result.dismiss === Swal.DismissReason.cancel
+//         ) {
+//           swalWithBootstrapButtons.fire({
+//             title: "Cancelled",
+//             text: "Don't worry, you can still continue editing your portfolio :)",
+//             icon: "error",
+//           });
+//         }
+//       });
+//   };
+
+//   // console.log(portfolios);
+
+//   const removeportfolioFunction = (portId) => {
+//     const swalWithBootstrapButtons = Swal.mixin({});
+//     swalWithBootstrapButtons
+//       .fire({
+//         title: `Are you sure to delete the portfolio ${portId}`,
+//         text: "You won't be able to revert this!",
+//         icon: "warning",
+//         showCancelButton: true,
+//         confirmButtonColor: "#238b94",
+//         confirmButtonText: "Yes, delete it!",
+//         cancelButtonText: "No, cancel!",
+//         reverseButtons: true,
+//       })
+//       .then(async (result) => {
+//         if (result.isConfirmed) {
+//           setPortfolios(portfolios?.filter((el) => el?.id !== portId));
+//           await removeportfolio(portId);
+//           try {
+//             swalWithBootstrapButtons.fire({
+//               title: "Deleted!",
+//               text: "Your file has been deleted.",
+//               icon: "success",
+//             });
+//           } catch {
+//             swalWithBootstrapButtons.fire({
+//               title: "Error!",
+//               text: "an error has occurred.",
+//               icon: "error",
+//             });
+//           }
+//         } else if (
+//           /* Read more about handling dismissals below */
+//           result.dismiss === Swal.DismissReason.cancel
+//         ) {
+//           swalWithBootstrapButtons.fire({
+//             title: "Cancelled",
+//             text: "Don't worry, you can still continue editing your portfolio :)",
+//             icon: "error",
+//           });
+//         }
+//       });
+//   };
+
+//   const cancelPortfolio = () => {
+//     const swalWithBootstrapButtons = Swal.mixin({});
+//     swalWithBootstrapButtons
+//       .fire({
+//         title: "Are you sure?",
+//         text: "You won't be able to revert this!",
+//         icon: "warning",
+//         showCancelButton: true,
+//         confirmButtonText: "Yes, delete it!",
+//         cancelButtonText: "No, cancel!",
+//         reverseButtons: true,
+//       })
+//       .then(async (result) => {
+//         if (result.isConfirmed) {
+//           if (value >= 1) {
+//             setValue(0);
+//           }
+//           setPortfolios(portfoliosObtained);
+//           setEditing(false);
+//           try {
+//             swalWithBootstrapButtons.fire({
+//               title: "Deleted!",
+//               text: "Your file has been deleted.",
+//               icon: "success",
+//             });
+//           } catch {
+//             swalWithBootstrapButtons.fire({
+//               title: "Error!",
+//               text: "an error has occurred.",
+//               icon: "error",
+//             });
+//           }
+//         } else if (
+//           /* Read more about handling dismissals below */
+//           result.dismiss === Swal.DismissReason.cancel
+//         ) {
+//           swalWithBootstrapButtons.fire({
+//             title: "Cancelled",
+//             text: "Don't worry, you can still continue editing your portfolio :)",
+//             icon: "error",
+//           });
+//         }
+//       });
+//   };
+
+//   // console.log(portfolios);
+//   // console.log(teams);
+
+//   // const isLoading = false
+
+//   return (
+//     <Grid
+//       item
+//       xs={12}
+//       sx={{
+//         minHeight: "650px",
+//         height: "calc(100vh - 56px)",
+//         overflow: "scroll",
+//       }}
+//     >
+//       <Grid
+//         container
+//         spacing={2}
+//         justifyContent={"center"}
+//         alignContent={"center"}
+//         mt={4}
+//       >
+//         {isLoading ? (
+//           <Loader />
+//         ) : (
+//           <Grid
+//             item
+//             xs={6}
+//           >
+//             <Box
+//               component="section"
+//               className={classes.boxPortfolio}
+//             >
+//               <div className={classes.headerPortfolio}>
+//                 <div>
+//                   <BasquetIcon />
+//                   <h2 style={{ color: "white", fontSize: "2.4rem" }}>
+//                     Portfolio{portfolios?.length > 1 && "s"}:{" "}
+//                     {portfolios?.length > 0 && portfolios?.length}
+//                   </h2>
+//                 </div>
+//                 {/* <div>
+//                   <PodiumIcon />
+//                   <h4>Name Tournament</h4>
+//                 </div> */}
+//               </div>
+//               <Box>
+//                 <Grid
+//                   item
+//                   xs={12}
+//                 >
+//                   <Box sx={{ width: "100%" }}>
+//                     {portfolios?.length < 8 && (
+//                       <div className={classes.addPortFolio}>
+//                         <Button
+//                           variant="contained"
+//                           color="success"
+//                           disabled={editing}
+//                           onClick={() => addportFolio()}
+//                         >
+//                           Add Portfolio
+//                         </Button>
+//                       </div>
+//                     )}
+//                     <Box
+//                       sx={{
+//                         borderBottom: 1,
+//                         borderColor: "divider",
+//                       }}
+//                     >
+//                       <Tabs
+//                         value={value}
+//                         onChange={handleChange}
+//                         variant="scrollable"
+//                         scrollButtons="auto"
+//                         aria-label="scrollable auto tabs example"
+//                         indicatorColor="inherit"
+//                       >
+//                         {portfolios?.map((port, i) => (
+//                           <Tab
+//                             key={i}
+//                             label={port?.name || `New (Portfolio ${i + 1})`}
+//                             {...a11yProps(i + 1)}
+//                             className={`${classes.tabComponent} ${
+//                               i === value && classes.activeTab
+//                             }`}
+//                           />
+//                         ))}
+//                       </Tabs>
+//                     </Box>
+
+//                     {portfolios?.map((port, indexPortfolio) => (
+//                       <CustomTabPanel
+//                         key={indexPortfolio}
+//                         value={value}
+//                         index={indexPortfolio}
+//                       >
+//                         {port.teams?.map((team, indexTeam) => (
+//                           <div
+//                             key={indexTeam}
+//                             className={classes.containerDropdown}
+//                           >
+//                             <BallIcon />
+//                             <Dropdown
+//                               disabled={!!port?.id}
+//                               indexPortfolio={indexPortfolio}
+//                               indexTeam={indexTeam}
+//                               name={`name`}
+//                               readOnly={!!port?.id}
+//                               label={`Selection ${indexTeam + 1}`}
+//                               value={
+//                                 portfolios[indexPortfolio]?.teams[indexTeam]
+//                                   ?.name
+//                               }
+//                               options={!!port?.id ? port?.teams : teams}
+//                               handleChange={handleChangeSelect}
+//                             />
+//                           </div>
+//                         ))}
+//                         <Grid
+//                           container
+//                           display={"flex"}
+//                           justifyContent={"end"}
+//                         >
+//                           {error && (
+//                             <div>
+//                               <p className={classes.error}>
+//                                 All fields are mandatory!!
+//                               </p>
+//                             </div>
+//                           )}
+//                           {duplicates && (
+//                             <div>
+//                               <p className={classes.error}>
+//                                 You cannot enter duplicate fields!!
+//                               </p>
+//                             </div>
+//                           )}
+
+//                           <Box
+//                             sx={{
+//                               display: "flex",
+//                               justifyContent: "center",
+//                               width: "100%",
+//                             }}
+//                           >
+//                             <Input
+//                               required
+//                               type="text"
+//                               autoFocus={focused}
+//                               value={
+//                                 port?.championshipPoints >= 1
+//                                   ? port?.championshipPoints
+//                                   : ""
+//                               }
+//                               sx={{ width: "80%", m: 1 }}
+//                               id="input-with-icon-adornment"
+//                               name="championshipPoints"
+//                               readOnly={!!port?.id}
+//                               placeholder="Championship Points"
+//                               className={classes.championshipPoints}
+//                               startAdornment={
+//                                 <InputAdornment position="start">
+//                                   <EmojiEventsOutlinedIcon color="white" />
+//                                 </InputAdornment>
+//                               }
+//                               onChange={(e) => handleChangeInput(e)}
+//                             />
+//                           </Box>
+//                         </Grid>
+//                         <Grid
+//                           container
+//                           m={2}
+//                           justifyContent={"end"}
+//                         >
+//                           {!!port?.id ? (
+//                             <Grid
+//                               item
+//                               xs={4}
+//                             >
+//                               <Button
+//                                 variant="contained"
+//                                 color="warning"
+//                                 className={classes.btnRemove}
+//                                 onClick={() => {
+//                                   if (value >= 1) {
+//                                     setValue(0);
+//                                   }
+//                                   removeportfolioFunction(port?.id);
+//                                 }}
+//                               >
+//                                 Remove
+//                               </Button>
+//                             </Grid>
+//                           ) : (
+//                             <>
+//                               <Grid
+//                                 item
+//                                 xs={4}
+//                               >
+//                                 <Button
+//                                   variant="contained"
+//                                   color="success"
+//                                   className={classes.btnSubmit}
+//                                   onClick={() => savePortfolio()}
+//                                 >
+//                                   Submit
+//                                 </Button>
+//                               </Grid>
+//                               <Grid
+//                                 item
+//                                 xs={4}
+//                               >
+//                                 <Button
+//                                   variant="contained"
+//                                   color="error"
+//                                   className={classes.btnCancel}
+//                                   onClick={() => cancelPortfolio()}
+//                                 >
+//                                   Cancel
+//                                 </Button>
+//                               </Grid>
+//                             </>
+//                           )}
+//                         </Grid>
+//                       </CustomTabPanel>
+//                     ))}
+//                   </Box>
+//                 </Grid>
+//               </Box>
+//             </Box>
+//           </Grid>
+//         )}
+//       </Grid>
+//     </Grid>
+//   );
+// };
+
+// export default MyPortfolio;

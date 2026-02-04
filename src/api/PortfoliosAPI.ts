@@ -75,16 +75,18 @@ export const getTeamsAvailable = async (
 
 export const postNewPortfolio = async ({
   port,
-  userId,
+  // userId,
   portId,
 }: {
   port: CreatePortfolio;
   userId: string;
   portId?: string | number | null;
 }) => {
-  const url = portId
-    ? `/portfolios/${portId}`
-    : `/participants/${userId}/portfolios?tournament_id=3`;
+  console.log("postNewPortfolio called with:", { port, portId });
+  // const url = portId
+  //   ? `/portfolios/${portId}`
+  //   : `/participants/${userId}/portfolios?tournament_id=3`;
+  const url = "/portfolios";
 
   const teamsFormatted = (port.teams || port.teamsId || []).map((t) => {
     const id = typeof t === "object" ? t.id : t;
@@ -285,3 +287,51 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
     return;
   }
 };
+
+// {
+//     "tournament_id": 1,
+//     "participant_id": "2",
+//     "championship_points": 2,
+//     "teams": [
+//         {
+//             "id": 7,
+//             "seed": 1,
+//             "streak_multiplier": 1
+//         },
+//         {
+//             "id": 9,
+//             "seed": 1,
+//             "streak_multiplier": 1
+//         },
+//         {
+//             "id": 11,
+//             "seed": 1,
+//             "streak_multiplier": 1
+//         },
+//         {
+//             "id": 13,
+//             "seed": 1,
+//             "streak_multiplier": 1
+//         },
+//         {
+//             "id": 14,
+//             "seed": 1,
+//             "streak_multiplier": 1
+//         },
+//         {
+//             "id": 16,
+//             "seed": 1,
+//             "streak_multiplier": 1
+//         },
+//         {
+//             "id": 18,
+//             "seed": 1,
+//             "streak_multiplier": 1
+//         },
+//         {
+//             "id": 20,
+//             "seed": 1,
+//             "streak_multiplier": 1
+//         }
+//     ]
+// }
