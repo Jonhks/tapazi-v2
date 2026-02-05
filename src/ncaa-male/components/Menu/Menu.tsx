@@ -31,6 +31,7 @@ import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
 import { messagemodalInstall } from "@/utils/app";
 import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
 import Basket from "@/assets/icons/basket.png";
+import AltRouteIcon from "@mui/icons-material/AltRoute";
 
 const drawerWidth = 240;
 
@@ -157,12 +158,12 @@ export default function MiniDrawer() {
 
   const Icons = [
     <SportsBasketballOutlinedIcon key="ball" />,
-    <img 
-    key="basquet" 
-    src={Basket} 
-    alt="Basketball Hoop" 
-    style={{ width: 24, height: 24 }}
-  />,
+    <img
+      key="basquet"
+      src={Basket}
+      alt="Basketball Hoop"
+      style={{ width: 24, height: 24 }}
+    />,
     <ReceiptLongIcon key="receipt" />,
     // <PodiumIcon key="stats" />,
     <HistoryIcon key="history" />,
@@ -203,6 +204,20 @@ export default function MiniDrawer() {
                 textAlign: "right",
               }}
             >
+              <Tooltip
+                title="Go to sports selection"
+                placement="bottom"
+              >
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={() => navigate(`/sports/${userId}`)}
+                  edge="end"
+                  sx={{ marginRight: 5 }}
+                >
+                  <AltRouteIcon />
+                </IconButton>
+              </Tooltip>
               <Tooltip
                 title="¿How to Install The Portfolio Pool?"
                 placement="bottom"
