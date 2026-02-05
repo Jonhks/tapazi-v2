@@ -115,13 +115,13 @@ export const createPortfolioSchema = z.object({
   teamsId: z.array(
     z.object({
       id: z.number(),
-    })
+    }),
   ),
   teams: z
     .array(
       z.object({
         id: z.number(),
-      })
+      }),
     )
     .optional(),
 });
@@ -276,5 +276,45 @@ export const ScorePortfoliosTableSchema = z.array(ScorePortfolioTableSchema);
 
 export type ScorePortfoliosTable = z.infer<typeof ScorePortfoliosTableSchema>;
 export const ScorePortfolioTableArraySchema = z.array(
-  ScorePortfolioTableSchema
+  ScorePortfolioTableSchema,
 );
+
+// Tipos para el Portfolio
+
+// export interface Team {
+//   id: number;
+//   name: string;
+//   // Agrega otros campos que tenga tu Team
+// }
+
+export interface PortfolioTeam {
+  id: number;
+  seed: number;
+  streak_multiplier: number;
+}
+
+export interface Portfolio {
+  id?: number;
+  name?: string;
+  newPortfolio?: boolean;
+  teams: (Team | false)[];
+  championship_points: string | number;
+}
+
+export interface PortfolioToSave {
+  tournament_id: number;
+  participant_id: number;
+  championship_points: number;
+  teams: PortfolioTeam[];
+}
+
+export interface WinnerTeamValidation {
+  winnerOfTeam: number;
+  winnerOfTeamHasTeam: number[];
+}
+
+export interface RemovePortfolioData {
+  portId: number;
+  portfolios: Portfolio[];
+  userId: string;
+}

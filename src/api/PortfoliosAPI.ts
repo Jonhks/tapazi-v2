@@ -4,7 +4,7 @@ import { CreatePortfolio, PortfolioComplete, Portfolios, User } from "../types";
 
 export const getPortfolios = async (id: User["id"]) => {
   try {
-    const url = `/participants/${id}/portfolios?tournament_id=2`;
+    const url = `/participants/${id}/portfolios?tournament_id=1`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -73,67 +73,15 @@ export const getTeamsAvailable = async (
   }
 };
 
-export const postNewPortfolio = async ({
-  port,
-  // userId,
-  portId,
-}: {
-  port: CreatePortfolio;
-  userId: string;
-  portId?: string | number | null;
-}) => {
-  console.log("postNewPortfolio called with:", { port, portId });
-  // const url = portId
-  //   ? `/portfolios/${portId}`
-  //   : `/participants/${userId}/portfolios?tournament_id=3`;
+export const postNewPortfolio = async (data: CreatePortfolio) => {
+  console.log("postNewPortfolio called with:", data);
   const url = "/portfolios";
 
-  const teamsFormatted = (port.teams || port.teamsId || []).map((t) => {
-    const id = typeof t === "object" ? t.id : t;
-    return { id: Number(id) };
+  const response = await apiEnv.post(url, data, {
+    headers: { "Content-Type": "application/json;charset=utf-8" },
   });
 
-  const payload = {
-    championshipPoints: Number(port.championshipPoints || 0),
-    teams: teamsFormatted,
-    teamsId: teamsFormatted, // Include both just in case
-  };
-
-  try {
-    const { data } = portId
-      ? await apiEnv.put(url, payload, {
-          headers: { "Content-Type": "application/json;charset=utf-8" },
-        })
-      : await apiEnv.post(url, payload, {
-          headers: { "Content-Type": "application/json;charset=utf-8" },
-        });
-
-    if (
-      data.id ||
-      data.success ||
-      data.message === "success" ||
-      data.portfolios
-    ) {
-      return "Successfully saved portfolio";
-    }
-
-    if (data.error && typeof data.error === "object") {
-      throw new Error(
-        data.error.description || data.error.message || "Unknown API error",
-      );
-    }
-
-    return "Successfully processed request";
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw new Error(
-        error.response.data.error ||
-          error.response.data.message ||
-          "Request failed",
-      );
-    }
-    throw error;
-  }
+  return response.data?.message || "Successfully saved portfolio";
 };
 
 export const removeportfolio = async ({

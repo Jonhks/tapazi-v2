@@ -1,10 +1,11 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 
-export const getSports = async (id: string) => {
+export const getSports = async () => {
   try {
-    const url = `/participants/${id}/sports`;
+    // const url = `/participants/${id}/sports`;
     // const url = "/participants/login";
+    const url = "/sports";
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
