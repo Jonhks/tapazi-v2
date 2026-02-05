@@ -14,8 +14,9 @@ body {
 }
 
 .css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
-  background-color: #380f65 !important;
+  background-color: #000 !important;
   color: white !important;
+  opacity: 0.9 !important;
 }
 
 .css-d1xm6m {
