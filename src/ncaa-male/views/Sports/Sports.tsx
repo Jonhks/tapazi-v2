@@ -18,7 +18,9 @@ export default function Sports() {
 
   const { data: dataSports, isLoading } = useQuery({
     queryKey: ["sports"],
-    queryFn: () => getSports(params.userId || ""),
+    queryFn: () =>
+      getSports(),
+      // params.userId || ""
   });
 
   const { data: dataSportsDisponible, isLoading: isLoadingDisponible } =
