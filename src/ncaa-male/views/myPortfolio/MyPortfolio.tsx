@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { Box, Tabs, Tab } from "@mui/material";
+import { Box, Tabs, Tab, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useParams } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -151,13 +151,25 @@ const MyPortfolio = () => {
             <div className={classes.headerPortfolio}>
               <div>
                 <BasquetIcon />
-                <h2 style={{ color: "white", fontSize: "2.4rem" }}>
-                  Portfolio{portfolios?.length > 1 && "s"}:{" "}
-                  {portfolios?.length > 0 && portfolios?.length}
+                <h2 style={{ color: "#05fa87", fontSize: "2.4rem" }}>
+                  {/* Portfolio{portfolios?.length > 1 && "s"}:{" "} */}
+                  MY PORTFOLIO ({portfolios?.length > 0 && portfolios?.length})
                 </h2>
               </div>
             </div>
-
+            <div>
+              <h2 style={{ color: "white", textAlign: "center" }}>
+                Tournament: {params.tournamentName?.replace(/-/g, " ")}
+              </h2>
+              <Divider
+                sx={{
+                  borderColor: "white",
+                  mb: 2,
+                  width: "70%",
+                  margin: "0 auto",
+                }}
+              />
+            </div>
             <Box>
               <Grid size={12}>
                 <Box sx={{ width: "100%" }}>

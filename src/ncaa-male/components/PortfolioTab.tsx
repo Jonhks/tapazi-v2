@@ -135,10 +135,10 @@ const PortfolioTab: React.FC<PortfolioTabProps> = ({
         ) : (
           // Portfolio nuevo - mostrar botones de guardar y cancelar
           <>
-            <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+            <Grid size={{ lg: 4, md: 4, xs: 12, backgroundColor: "#05fa87" }}>
               <Button
                 variant="contained"
-                color="success"
+                // color="success"
                 fullWidth
                 className={classes.btnSubmit}
                 onClick={onSave}
