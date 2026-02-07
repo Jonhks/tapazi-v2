@@ -31,7 +31,9 @@
   background-size: cover;
   border-radius: 50%;
   animation: bounce 2s infinite;
-  animation: bounce 1s infinite linear, spin 10s infinite linear;
+  animation:
+    bounce 1s infinite linear,
+    spin 10s infinite linear;
 }
 .ballWC {
   position: absolute;
@@ -44,7 +46,9 @@
   border-radius: 50%;
   background-position: center;
   animation: bounce 2s infinite;
-  animation: bounceEpl 1s infinite linear, spin 10s infinite linear;
+  animation:
+    bounceEpl 1s infinite linear,
+    spin 10s infinite linear;
 }
 
 .ballEpl {
@@ -57,12 +61,14 @@
   background-size: cover;
   border-radius: 50%;
   animation: bounce 2s infinite;
-  animation: bounceEpl 1s infinite linear, spin 10s infinite linear;
+  animation:
+    bounceEpl 1s infinite linear,
+    spin 10s infinite linear;
 }
 
 .shadow {
   position: absolute;
-  bottom: 280px; /* Posición inicial */
+  bottom: 27%; /* Posición inicial */
   left: 35%;
   width: 60px;
   height: 20px;
@@ -74,7 +80,7 @@
 
 .shadowEpl {
   position: absolute;
-  bottom: 280px; /* Posición inicial */
+  bottom: 27%; /* Posición inicial */
   left: 65%;
   width: 60px;
   height: 20px;
@@ -86,7 +92,7 @@
 
 .shadowWC {
   position: absolute;
-  bottom: 280px; /* Posición inicial */
+  bottom: 27%; /* Posición inicial */
   left: 50%;
   width: 60px;
   height: 20px;
