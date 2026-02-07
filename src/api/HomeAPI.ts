@@ -1,10 +1,14 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
-import { User } from "../types";
+// import { User } from "../types";
 
-export const getScores = async (id: User["id"]) => {
+export const getScores = async (
+  tournamentId: string,
+  participantId: string,
+) => {
   try {
-    const url = `/score/home?api-key=TESTAPIKEY&participant-id=${id}`;
+    // const url = `/score/home?api-key=TESTAPIKEY&participant-id=${id}`;
+    const url = `/tournaments/${tournamentId}/score/home?participant_id=${participantId}&sport=ncaa`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",

@@ -29,18 +29,18 @@ export type State = z.infer<typeof stateSchema>;
 // ? Table
 
 export const otherSchema = z.object({
-  portfolioName: z.string(),
-  portfolioWeight: z.string(),
-  team1Name: z.string(),
-  team2Name: z.string(),
-  team3Name: z.string(),
-  team4Name: z.string(),
-  team5Name: z.string(),
-  team6Name: z.string(),
-  team7Name: z.string(),
-  team8Name: z.string(),
+  portfolio_name: z.string(),
+  portfolio_weight: z.string(),
+  team1_name: z.string(),
+  team2_name: z.string(),
+  team3_name: z.string(),
+  team4_name: z.string(),
+  team5_name: z.string(),
+  team6_name: z.string(),
+  team7_name: z.string(),
+  team8_name: z.string(),
   score: z.number(),
-  championshipPoints: z.number(),
+  championship_points: z.number(),
   paid: z.boolean(),
 });
 

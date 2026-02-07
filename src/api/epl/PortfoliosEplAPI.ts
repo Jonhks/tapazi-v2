@@ -11,8 +11,8 @@ export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
   try {
     const url =
       portfolioId !== "0"
-        ? `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`
-        : `/participants/${id}/portfolios?tournament_id=3`;
+        ? `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}&epl`
+        : `/participants/${id}/portfolios?tournament_id=3&epl`;
     // const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
     const { data } = await apiEnv(url, {
       headers: {
@@ -103,7 +103,7 @@ export const getTournamentsId = async () => {
 
 export const getTeamsDynamic = async (
   sport: User["id"],
-  portfolioId: string
+  portfolioId: string,
 ) => {
   portfolioId = portfolioId || "0";
   try {
@@ -128,7 +128,7 @@ export const getTeamsDynamic = async (
 
 export const getTeamsNotAvailable = async (
   sport: User["id"],
-  tournamentId: User["id"]
+  tournamentId: User["id"],
 ) => {
   try {
     // const url = `/sports/${sport}/teams`;
@@ -201,7 +201,7 @@ export const postEditPortfolio = async ({
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
-      }
+      },
     );
     console.log(data);
     if (
@@ -272,7 +272,7 @@ export const removeportfolio = async ({
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
-      }
+      },
     );
     console.log(data);
   } catch (error) {

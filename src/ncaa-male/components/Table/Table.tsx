@@ -86,33 +86,33 @@ export default function CustomizedTables({
   othersParticipants: OtherScores;
 }) {
   function createData(
-    portfolioName: OtherScores["portfolioName"],
-    portfolioWeight: OtherScores["portfolioWeight"],
-    team1Name: OtherScores["team1Name"],
-    team2Name: OtherScores["team2Name"],
-    team3Name: OtherScores["team3Name"],
-    team4Name: OtherScores["team4Name"],
-    team5Name: OtherScores["team5Name"],
-    team6Name: OtherScores["team6Name"],
-    team7Name: OtherScores["team7Name"],
-    team8Name: OtherScores["team8Name"],
+    portfolio_name: OtherScores["portfolio_name"],
+    portfolio_weight: OtherScores["portfolio_weight"],
+    team1_name: OtherScores["team1_name"],
+    team2_name: OtherScores["team2_name"],
+    team3_name: OtherScores["team3_name"],
+    team4_name: OtherScores["team4_name"],
+    team5_name: OtherScores["team5_name"],
+    team6_name: OtherScores["team6_name"],
+    team7_name: OtherScores["team7_name"],
+    team8_name: OtherScores["team8_name"],
     score: OtherScores["score"],
-    champGamePoint: OtherScores["championshipPoints"],
-    paid: OtherScores["paid"]
+    championship_points: OtherScores["championship_points"],
+    paid: OtherScores["paid"],
   ) {
     return {
-      portfolioName,
-      portfolioWeight,
-      team1Name,
-      team2Name,
-      team3Name,
-      team4Name,
-      team5Name,
-      team6Name,
-      team7Name,
-      team8Name,
+      portfolio_name,
+      portfolio_weight,
+      team1_name,
+      team2_name,
+      team3_name,
+      team4_name,
+      team5_name,
+      team6_name,
+      team7_name,
+      team8_name,
       score,
-      champGamePoint,
+      championship_points,
       paid,
     };
   }
@@ -124,39 +124,40 @@ export default function CustomizedTables({
   const rows = [
     participant?.map((row: OtherScores) =>
       createData(
-        row?.portfolioName,
-        row?.portfolioWeight,
-        row?.team1Name,
-        row?.team2Name,
-        row?.team3Name,
-        row?.team4Name,
-        row?.team5Name,
-        row?.team6Name,
-        row?.team7Name,
-        row?.team8Name,
+        row?.portfolio_name,
+        row?.portfolio_weight,
+        row?.team1_name,
+        row?.team2_name,
+        row?.team3_name,
+        row?.team4_name,
+        row?.team5_name,
+        row?.team6_name,
+        row?.team7_name,
+        row?.team8_name,
         row?.score,
-        row?.championshipPoints,
-        row?.paid
-      )
+        row?.championship_points,
+        row?.paid,
+      ),
     ),
     others?.map((row) =>
       createData(
-        row?.portfolioName,
-        row?.portfolioWeight,
-        row?.team1Name,
-        row?.team2Name,
-        row?.team3Name,
-        row?.team4Name,
-        row?.team5Name,
-        row?.team6Name,
-        row?.team7Name,
-        row?.team8Name,
+        row?.portfolio_name,
+        row?.portfolio_weight,
+        row?.team1_name,
+        row?.team2_name,
+        row?.team3_name,
+        row?.team4_name,
+        row?.team5_name,
+        row?.team6_name,
+        row?.team7_name,
+        row?.team8_name,
         row?.score,
-        row?.championshipPoints,
-        row?.paid
-      )
+        row?.championship_points,
+        row?.paid,
+      ),
     ),
   ];
+  // console.log(rows);
 
   return (
     <TableContainer
@@ -193,24 +194,24 @@ export default function CustomizedTables({
                 scope="row"
                 className="fixed"
               >
-                {row?.portfolioName}
+                {row?.portfolio_name}
               </StyledTableCell>
               <StyledTableCell className="fixed">
-                {row?.portfolioWeight}
+                {row?.portfolio_weight}
               </StyledTableCell>
-              <StyledTableCell>{row?.team1Name}</StyledTableCell>
-              <StyledTableCell>{row?.team2Name}</StyledTableCell>
-              <StyledTableCell>{row?.team3Name}</StyledTableCell>
-              <StyledTableCell>{row?.team4Name}</StyledTableCell>
-              <StyledTableCell>{row?.team5Name}</StyledTableCell>
-              <StyledTableCell>{row?.team6Name}</StyledTableCell>
-              <StyledTableCell>{row?.team7Name}</StyledTableCell>
-              <StyledTableCell>{row?.team8Name}</StyledTableCell>
+              <StyledTableCell>{row?.team1_name}</StyledTableCell>
+              <StyledTableCell>{row?.team2_name}</StyledTableCell>
+              <StyledTableCell>{row?.team3_name}</StyledTableCell>
+              <StyledTableCell>{row?.team4_name}</StyledTableCell>
+              <StyledTableCell>{row?.team5_name}</StyledTableCell>
+              <StyledTableCell>{row?.team6_name}</StyledTableCell>
+              <StyledTableCell>{row?.team7_name}</StyledTableCell>
+              <StyledTableCell>{row?.team8_name}</StyledTableCell>
               <StyledTableCell>{row?.score}</StyledTableCell>
               <StyledTableCell
                 className={`${row?.paid ? classes.green : classes.red} `}
               >
-                {row?.champGamePoint}
+                {row?.championship_points}
               </StyledTableCell>
             </StyledTableRow>
           ))}

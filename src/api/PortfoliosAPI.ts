@@ -4,7 +4,7 @@ import { CreatePortfolio, PortfolioComplete, User } from "../types";
 
 export const getPortfolios = async (id: User["id"]) => {
   try {
-    const url = `/participants/${id}/portfolios?tournament_id=1`;
+    const url = `/participants/${id}/portfolios?tournament_id=1&sport=ncaa`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
