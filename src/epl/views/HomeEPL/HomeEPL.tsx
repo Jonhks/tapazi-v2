@@ -51,13 +51,13 @@ const HomeEPL = () => {
     {
       queryKey: ["portfoliosHome", userId, tournamentId],
       queryFn: () => getPortfoliosEpl(userId, tournamentId[0]?.id || "0"),
-    }
+    },
   );
 
   const { data: scoreHomeEpl, isLoading: isLoadingScoreHomeEpl } = useQuery({
     queryKey: ["scoreHomeEpl", userId, tournamentId, portfoliosHome],
-    queryFn: () => getScoreHomeEpl("3", "0"),
-    retry: false,
+    queryFn: () => getScoreHomeEpl("3", portfoliosHome && portfoliosHome[0].id),
+    // retry: false,|
   });
 
   const { data: payout, isLoading: isLoadingPayout } = useQuery({

@@ -30,6 +30,7 @@ import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 const drawerWidth = 240;
+import AltRouteIcon from "@mui/icons-material/AltRoute";
 
 const openedMixin = (theme: Theme) => ({
   width: drawerWidth,
@@ -198,6 +199,20 @@ export default function MenuEPL() {
                 textAlign: "right",
               }}
             >
+              <Tooltip
+                title="Go to sports selection"
+                placement="bottom"
+              >
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={() => navigate(`/sports/${userId}`)}
+                  edge="end"
+                  sx={{ marginRight: 5, color: "#4bf589" }}
+                >
+                  <AltRouteIcon />
+                </IconButton>
+              </Tooltip>
               <Tooltip
                 title="¿How to Install The Portfolio Pool?"
                 placement="bottom"

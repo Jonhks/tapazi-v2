@@ -9,7 +9,7 @@ import {
 
 export const getPayoutEpl = async (
   tournamentId: User["id"],
-  portfolioCount: number
+  portfolioCount: number,
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/payouts?portfolios=${portfolioCount}`;
@@ -126,10 +126,11 @@ export const getAllPortfoliosEpl = async () => {
 
 export const getScoreHomeEpl = async (
   tournamentId: User["id"],
-  portfolioId: string
+  portfolioId: string,
 ) => {
   try {
-    const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}`;
+    const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}&epl`;
+    // console.log(url);
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -152,7 +153,7 @@ export const getScoreHomeEpl = async (
 
 export const getScorePeerWeekHomeEpl = async (
   week: string,
-  portfolioId: string
+  portfolioId: string,
 ) => {
   try {
     const url = `/portfolios/${portfolioId}/per-week?week=${week}`;
