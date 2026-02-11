@@ -1,5 +1,5 @@
 .containerAppFemale {
-  background-image: url("./female-bg.png");
+  background-image: url("../../assets/img/NCAA-FEMALE-HOME-BACK.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -21,4 +21,3 @@
   /* display: flex; */
   /* justify-content: center; */
 }
-

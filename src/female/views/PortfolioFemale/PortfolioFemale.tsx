@@ -51,7 +51,7 @@ const MyPortfolio = () => {
   }, [portfolios, value]);
 
   const { data: portfoliosObtained, isLoading } = useQuery({
-    queryKey: ["portfolios", userId],
+    queryKey: ["portfoliosFEMALE", userId],
     queryFn: () => getPortfolios(userId),
   });
   console.log(portfoliosObtained);
@@ -163,7 +163,7 @@ const MyPortfolio = () => {
   }, []);
 
   const handleChangeInput = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const newValue = event.target.value;
     const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
@@ -195,11 +195,11 @@ const MyPortfolio = () => {
           const exists = arr.some(
             (item) =>
               item.winnerOfTeam === winnerOfTeam &&
-              item.winnerOfTeamHasTeam.includes(teamId)
+              item.winnerOfTeamHasTeam.includes(teamId),
           );
           if (exists) {
             toast.error(
-              "You cannot select a team that also belongs to the selection of a winner of team!!"
+              "You cannot select a team that also belongs to the selection of a winner of team!!",
             );
             setWinnerSelected(true);
             return true;
@@ -242,7 +242,7 @@ const MyPortfolio = () => {
         setPortfolios(newData);
       }
     },
-    [portfolios]
+    [portfolios],
   );
 
   const addportFolio = useCallback(() => {
@@ -348,13 +348,13 @@ const MyPortfolio = () => {
           }
         });
     },
-    [portfolios, mutate, userId]
+    [portfolios, mutate, userId],
   );
 
   const removeportfolioFunction = useCallback(
     (portId: number) => {
       const index = portfolios.findIndex(
-        (portfolio) => portfolio.id === portId
+        (portfolio) => portfolio.id === portId,
       );
       setValue(index);
       const swalWithBootstrapButtons = Swal.mixin({});
@@ -409,7 +409,7 @@ const MyPortfolio = () => {
           }
         });
     },
-    [portfolios, removeportfolioMutate, userId]
+    [portfolios, removeportfolioMutate, userId],
   );
 
   const cancelPortfolio = useCallback(() => {
@@ -485,204 +485,202 @@ const MyPortfolio = () => {
 
   if (isLoading) return <Loader />;
 
-  
-
   // if ((portfolios, portfoliosObtained))
-    return (
+  return (
+    <Grid
+      size={12}
+      sx={{
+        minHeight: "650px",
+        height: "calc(100vh - 56px)",
+        overflow: "scroll",
+      }}
+    >
       <Grid
-        size={12}
-        sx={{
-          minHeight: "650px",
-          height: "calc(100vh - 56px)",
-          overflow: "scroll",
-        }}
+        container
+        spacing={2}
+        justifyContent={"center"}
+        alignContent={"center"}
       >
-        <Grid
-          container
-          spacing={2}
-          justifyContent={"center"}
-          alignContent={"center"}
-        >
-          <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
-            <Box
-              component="section"
-              className={classes.boxPortfolio}
-              m={3}
-            >
-              <div className={classes.headerPortfolio}>
-                <div style={{color: "#DC903B"}}>
-                  <BasquetIcon />
-                  <h2 style={{ color: "#df2af9", fontSize: "2.4rem" }}>
-                    MY PORTFOLIO {portfolios?.length > 1 && "s"}{" "}
-                    {portfolios?.length > 0 && portfolios?.length}
-                  </h2>
-                </div>
+        <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
+          <Box
+            component="section"
+            className={classes.boxPortfolio}
+            m={3}
+          >
+            <div className={classes.headerPortfolio}>
+              <div style={{ color: "#DC903B" }}>
+                <BasquetIcon />
+                <h2 style={{ color: "#df2af9", fontSize: "2.4rem" }}>
+                  MY PORTFOLIO {portfolios?.length > 1 && "s"}{" "}
+                  {portfolios?.length > 0 && portfolios?.length}
+                </h2>
               </div>
-              <Box>
-                <Grid size={12}>
-                  <Box sx={{ width: "100%" }}>
-                    {portfolios?.length < 8 && validTournament && (
-                      <div className={classes.addPortFolio}>
-                        <Button
-                          variant="contained"
-                          color="success"
-                          disabled={editing}
-                          onClick={() => addportFolio()}
-                        >
-                          Add Portfolio
-                        </Button>
-                      </div>
-                    )}
-                    <Box
-                      sx={{
-                        borderBottom: 1,
-                        borderColor: "divider",
-                      }}
+            </div>
+            <Box>
+              <Grid size={12}>
+                <Box sx={{ width: "100%" }}>
+                  {portfolios?.length < 8 && validTournament && (
+                    <div className={classes.addPortFolio}>
+                      <Button
+                        variant="contained"
+                        color="success"
+                        disabled={editing}
+                        onClick={() => addportFolio()}
+                      >
+                        Add Portfolio
+                      </Button>
+                    </div>
+                  )}
+                  <Box
+                    sx={{
+                      borderBottom: 1,
+                      borderColor: "divider",
+                    }}
+                  >
+                    <Tabs
+                      value={value}
+                      onChange={handleChange}
+                      variant="scrollable"
+                      scrollButtons="auto"
+                      aria-label="scrollable auto tabs example"
+                      indicatorColor="primary"
                     >
-                      <Tabs
-                        value={value}
-                        onChange={handleChange}
-                        variant="scrollable"
-                        scrollButtons="auto"
-                        aria-label="scrollable auto tabs example"
-                        indicatorColor="primary"
-                      >
-                        {portfolios?.map((port, i) => (
-                          <Tab
-                            key={i}
-                            label={port?.name || `New (Portfolio ${i + 1})`}
-                            {...a11yProps(i + 1)}
-                            className={`${classes.tabComponent} ${
-                              i === value && classes.activeTab
-                            }`}
-                          />
-                        ))}
-                      </Tabs>
-                    </Box>
-                    {portfolios?.map((port, indexPortfolio) => (
-                      <CustomTabPanel
-                        index={indexPortfolio}
-                        key={indexPortfolio}
-                        value={value}
-                      >
-                        {renderTeams(indexPortfolio)}
-                        <Grid
-                          container
-                          display={"flex"}
-                          justifyContent={"end"}
-                        >
-                          {error && (
-                            <div>
-                              <p className={classes.error}>
-                                All fields are mandatory!!
-                              </p>
-                            </div>
-                          )}
-                          {duplicates && (
-                            <div>
-                              <p className={classes.error}>
-                                You cannot enter duplicate fields!!
-                              </p>
-                            </div>
-                          )}
-                          {winnerSelected && (
-                            <div>
-                              <p className={classes.error}>
-                                You cannot select a team that also belongs to
-                                the selection of a winner of team!!!
-                              </p>
-                            </div>
-                          )}
-                          <Grid
-                            display={"flex"}
-                            justifyContent={"center"}
-                            alignItems={"center"}
-                          >
-                            <Input
-                              required
-                              type="text"
-                              autoFocus={focused}
-                              value={championshipPoints}
-                              sx={{ width: "80%", m: 1 }}
-                              id="input-with-icon-adornment"
-                              name="championshipPoints"
-                              readOnly={!!port?.id}
-                              placeholder="Championship Points"
-                              className={classes.championshipPoints}
-                              inputProps={{
-                                maxLength: 3,
-                                inputMode: "numeric",
-                              }}
-                              startAdornment={
-                                <InputAdornment position="start">
-                                  <EmojiEventsOutlinedIcon color="inherit" />
-                                </InputAdornment>
-                              }
-                              onChange={handleChangeInput}
-                            />
-                          </Grid>
-                        </Grid>
-                        <Grid
-                          container
-                          m={2}
-                          justifyContent={"end"}
-                        >
-                          {!!port?.id ? (
-                            <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                              {validTournament && (
-                                <Button
-                                  variant="contained"
-                                  color="warning"
-                                  className={classes.btnRemove}
-                                  onClick={() => {
-                                    if (value >= 1) {
-                                      setValue(0);
-                                    }
-                                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                                    // @ts-expect-error
-                                    removeportfolioFunction(port?.id);
-                                  }}
-                                >
-                                  Remove
-                                </Button>
-                              )}
-                            </Grid>
-                          ) : (
-                            <>
-                              <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                                <Button
-                                  variant="contained"
-                                  color="success"
-                                  className={classes.btnSubmit}
-                                  onClick={() => savePortfolio()}
-                                  disabled={winnerSelected}
-                                >
-                                  Submit
-                                </Button>
-                              </Grid>
-                              <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                                <Button
-                                  variant="contained"
-                                  color="error"
-                                  className={classes.btnCancel}
-                                  onClick={() => cancelPortfolio()}
-                                >
-                                  Cancel
-                                </Button>
-                              </Grid>
-                            </>
-                          )}
-                        </Grid>
-                      </CustomTabPanel>
-                    ))}
+                      {portfolios?.map((port, i) => (
+                        <Tab
+                          key={i}
+                          label={port?.name || `New (Portfolio ${i + 1})`}
+                          {...a11yProps(i + 1)}
+                          className={`${classes.tabComponent} ${
+                            i === value && classes.activeTab
+                          }`}
+                        />
+                      ))}
+                    </Tabs>
                   </Box>
-                </Grid>
-              </Box>
+                  {portfolios?.map((port, indexPortfolio) => (
+                    <CustomTabPanel
+                      index={indexPortfolio}
+                      key={indexPortfolio}
+                      value={value}
+                    >
+                      {renderTeams(indexPortfolio)}
+                      <Grid
+                        container
+                        display={"flex"}
+                        justifyContent={"end"}
+                      >
+                        {error && (
+                          <div>
+                            <p className={classes.error}>
+                              All fields are mandatory!!
+                            </p>
+                          </div>
+                        )}
+                        {duplicates && (
+                          <div>
+                            <p className={classes.error}>
+                              You cannot enter duplicate fields!!
+                            </p>
+                          </div>
+                        )}
+                        {winnerSelected && (
+                          <div>
+                            <p className={classes.error}>
+                              You cannot select a team that also belongs to the
+                              selection of a winner of team!!!
+                            </p>
+                          </div>
+                        )}
+                        <Grid
+                          display={"flex"}
+                          justifyContent={"center"}
+                          alignItems={"center"}
+                        >
+                          <Input
+                            required
+                            type="text"
+                            autoFocus={focused}
+                            value={championshipPoints}
+                            sx={{ width: "80%", m: 1 }}
+                            id="input-with-icon-adornment"
+                            name="championshipPoints"
+                            readOnly={!!port?.id}
+                            placeholder="Championship Points"
+                            className={classes.championshipPoints}
+                            inputProps={{
+                              maxLength: 3,
+                              inputMode: "numeric",
+                            }}
+                            startAdornment={
+                              <InputAdornment position="start">
+                                <EmojiEventsOutlinedIcon color="inherit" />
+                              </InputAdornment>
+                            }
+                            onChange={handleChangeInput}
+                          />
+                        </Grid>
+                      </Grid>
+                      <Grid
+                        container
+                        m={2}
+                        justifyContent={"end"}
+                      >
+                        {!!port?.id ? (
+                          <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                            {validTournament && (
+                              <Button
+                                variant="contained"
+                                color="warning"
+                                className={classes.btnRemove}
+                                onClick={() => {
+                                  if (value >= 1) {
+                                    setValue(0);
+                                  }
+                                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                  // @ts-expect-error
+                                  removeportfolioFunction(port?.id);
+                                }}
+                              >
+                                Remove
+                              </Button>
+                            )}
+                          </Grid>
+                        ) : (
+                          <>
+                            <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                              <Button
+                                variant="contained"
+                                color="success"
+                                className={classes.btnSubmit}
+                                onClick={() => savePortfolio()}
+                                disabled={winnerSelected}
+                              >
+                                Submit
+                              </Button>
+                            </Grid>
+                            <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                              <Button
+                                variant="contained"
+                                color="error"
+                                className={classes.btnCancel}
+                                onClick={() => cancelPortfolio()}
+                              >
+                                Cancel
+                              </Button>
+                            </Grid>
+                          </>
+                        )}
+                      </Grid>
+                    </CustomTabPanel>
+                  ))}
+                </Box>
+              </Grid>
             </Box>
-          </Grid>
+          </Box>
         </Grid>
       </Grid>
-    );
+    </Grid>
+  );
 };
 
 export default memo(MyPortfolio);

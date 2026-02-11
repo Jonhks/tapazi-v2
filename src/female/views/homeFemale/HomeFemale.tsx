@@ -2,20 +2,20 @@ import { useState } from "react";
 import Grid from "@mui/material/Grid2";
 import { Zoom } from "@mui/material";
 import classes from "./HomeFemale.module.css";
-// import Table from "../../components/Table/Table";
-// import BallLoader from "../../components/BallLoader/BallLoader";
+import Table from "../../components/Table/Table";
+import BallLoader from "../../components/BallLoader/BallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
-  gatPayout,
-  getHOINFO,
-  getParticipants,
-  getPopona,
-  getPortfoliosCount,
-  // getScores,
-} from "@/api/HomeAPI";
+  // gatPayout,
+  // getHOINFO,
+  // getParticipants,
+  // getPopona,
+  // getPortfoliosCount,
+  getScoresFemale,
+} from "@/api/female/HomeAPIFemale";
 import useMediaQuery from "@mui/material/useMediaQuery";
-import { PayOut } from "@/types/index";
+// import { PayOut } from "@/types/index";
 
 const Home = () => {
   const isMobile = useMediaQuery("(max-width:900px)");
@@ -24,169 +24,180 @@ const Home = () => {
   const userId = params.userId!;
 
   const [selected, setSelected] = useState("first");
-  // const { data, isLoading } = useQuery({
-  //   queryKey: ["scores", userId],
-  //   queryFn: () => getScores(userId),
+
+  const { data: scoresFemale, isLoading: isloadingScoreFemale } = useQuery({
+    queryKey: ["scoresFemale", userId],
+    queryFn: () => getScoresFemale("1", userId),
+  });
+  console.log(scoresFemale);
+
+  // const { data: DataPopona } = useQuery({
+  //   queryKey: ["popona", userId],
+  //   queryFn: () => getPopona(),
   // });
 
-  const { data: DataPopona } = useQuery({
-    queryKey: ["popona", userId],
-    queryFn: () => getPopona(),
-  });
+  // const { data: dataHOINFO } = useQuery({
+  //   queryKey: ["HOINFO", userId],
+  //   queryFn: () => getHOINFO(),
+  // });
 
-  const { data: dataHOINFO } = useQuery({
-    queryKey: ["HOINFO", userId],
-    queryFn: () => getHOINFO(),
-  });
+  // const { data: participants } = useQuery({
+  //   queryKey: ["participants", userId],
+  //   queryFn: () => getParticipants(),
+  // });
 
-  const { data: participants } = useQuery({
-    queryKey: ["participants", userId],
-    queryFn: () => getParticipants(),
-  });
+  // const { data: portfoliosHome } = useQuery({
+  //   queryKey: ["portfoliosHome", userId],
+  //   queryFn: () => getPortfoliosCount(),
+  // });
 
-  const { data: portfoliosHome } = useQuery({
-    queryKey: ["portfoliosHome", userId],
-    queryFn: () => getPortfoliosCount(),
-  });
+  // const { data: payout } = useQuery({
+  //   queryKey: ["payout", userId],
+  //   queryFn: () => gatPayout(portfoliosHome.count),
+  //   retry: true,
+  // });
 
-  const { data: payout } = useQuery({
-    queryKey: ["payout", userId],
-    queryFn: () => gatPayout(portfoliosHome.count),
-    retry: true,
-  });
-
-  const renderDescription = (dataHOINFO: string) => {
-    return dataHOINFO.split("\n").map((line, index) => (
-      <p
-        key={index}
-        style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
-      >
-        {line}
-      </p>
-    ));
-  };
-  console.log(payout);
+  // const renderDescription = (dataHOINFO: string) => {
+  //   return dataHOINFO.split("\n").map((line, index) => (
+  //     <p
+  //       key={index}
+  //       style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
+  //     >
+  //       {line}
+  //     </p>
+  //   ));
+  // };
+  // console.log(payout);
 
   return (
     <>
-    {/* <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", color: "white", fontSize: "2rem" }}>
-      HomeFemale
-    </div> */}
-      {/* {isLoading ? (
+      {/* <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+          color: "white",
+          fontSize: "2rem",
+        }}
+      >
+        HomeFemale
+      </div> */}
+      {isloadingScoreFemale ? (
         <BallLoader />
-      ) : ( */}
-      <>
-        <Grid
-          container
-          flexWrap={"wrap"}
-          justifyContent={"center"}
-          ml={!isMobile ? "25px" : 0}
-          style={{
-            minHeight: "700px",
-            height: "calc(100vh - 56px)",
-            overflow: "scroll",
-          }}
-        >
+      ) : (
+        <>
           <Grid
-            size={11}
-            display={"flex"}
-            flexWrap={isMobile ? "wrap" : "nowrap"}
-            justifyContent={"space-around"}
-            flexDirection={"row"}
+            container
+            flexWrap={"wrap"}
+            justifyContent={"center"}
+            ml={!isMobile ? "25px" : 0}
             style={{
-              maxHeight: "50%",
+              minHeight: "700px",
+              height: "calc(100vh - 56px)",
+              overflow: "scroll",
             }}
           >
             <Grid
-              size={{ xs: 12, md: 5 }}
-              m={1}
-              className={`${classes.boxHome} ${
-                selected === "first" && classes.active
-              }`}
-              id="first"
-              onClick={() => setSelected("first")}
+              size={11}
+              display={"flex"}
+              flexWrap={isMobile ? "wrap" : "nowrap"}
+              justifyContent={"space-around"}
+              flexDirection={"row"}
+              style={{
+                maxHeight: "50%",
+              }}
             >
-              <p className={classes.titleBox}>
-                {DataPopona?.value?.toUpperCase()} IS HERE!!!
-              </p>
-              <div className={classes.subBox}>
-                {dataHOINFO && renderDescription(dataHOINFO.value)}
-              </div>
-            </Grid>
-            <Grid
-              size={{ xs: 11.4, md: 3 }}
-              m={1}
-              className={`${classes.boxHome} ${
-                selected === "second" && classes.active
-              }`}
-              id="second"
-              onClick={() => setSelected("second")}
-            >
-              <p className={classes.titleBox}>Payouts</p>
-              <div className={classes.subBoxTwo}>
-                <p>Total Contestants: {participants?.count}</p>
-                <p>Total Entries: {portfoliosHome?.count}</p>
-                <br />
-                {payout?.payout?.map((pay: PayOut, i: number) => (
+              <Grid
+                size={{ xs: 12, md: 5 }}
+                m={1}
+                className={`${classes.boxHome} ${
+                  selected === "first" && classes.active
+                }`}
+                id="first"
+                onClick={() => setSelected("first")}
+              >
+                <p className={classes.titleBox}>
+                  {/* {DataPopona?.value?.toUpperCase()} IS HERE!!! */}
+                </p>
+                <div className={classes.subBox}>
+                  {/* {dataHOINFO && renderDescription(dataHOINFO.value)} */}
+                </div>
+              </Grid>
+              <Grid
+                size={{ xs: 11.4, md: 3 }}
+                m={1}
+                className={`${classes.boxHome} ${
+                  selected === "second" && classes.active
+                }`}
+                id="second"
+                onClick={() => setSelected("second")}
+              >
+                <p className={classes.titleBox}>Payouts</p>
+                <div className={classes.subBoxTwo}>
+                  {/* <p>Total Contestants: {participants?.count}</p> */}
+                  {/* <p>Total Entries: {portfoliosHome?.count}</p> */}
+                  <br />
+                  {/* {payout?.payout?.map((pay: PayOut, i: number) => (
                   <p key={i}>
                     Place {pay?.place}: <span>{pay?.percentage}%</span>
                   </p>
-                ))}
-              </div>
-            </Grid>
-            <Grid
-              size={{ xs: 11.4, md: 3 }}
-              m={1}
-              className={`${classes.boxHome} ${
-                selected === "third" && classes.active
-              }`}
-              id="third"
-              onClick={() => setSelected("third")}
-            >
-              <p className={classes.titleBox}>Payment Methods </p>
-              <div className={classes.subBoxTwo}>
-                <p>Paypal</p>
-                <p>adingo8yourbaby@gmail.com</p>
-                <p>
-                  <a
-                    href="https://www.paypal.com/mx/home"
-                    target="blank"
-                    rel="noopener noreferrer"
-                    style={{ color: "white" }}
-                  >
-                    www.paypal.com
-                  </a>
-                </p>
-                <p>Venmo name:</p>
-                <p>Paul-Tapaszi</p>
-              </div>
-            </Grid>
-          </Grid>
-
-          <Grid
-            container
-            spacing={2}
-            mb={3}
-          >
-            <Grid
-              size={12}
-              className={classes.containerBtn}
-            ></Grid>
-            <Zoom in={true}>
-              <Grid
-                size={11}
-                offset={0.5}
-              >
-                {/* <Table
-                    participantScore={data?.data?.participant}
-                    othersParticipants={data?.data?.others}
-                  /> */}
+                ))} */}
+                </div>
               </Grid>
-            </Zoom>
+              <Grid
+                size={{ xs: 11.4, md: 3 }}
+                m={1}
+                className={`${classes.boxHome} ${
+                  selected === "third" && classes.active
+                }`}
+                id="third"
+                onClick={() => setSelected("third")}
+              >
+                <p className={classes.titleBox}>Payment Methods </p>
+                <div className={classes.subBoxTwo}>
+                  <p>Paypal</p>
+                  <p>adingo8yourbaby@gmail.com</p>
+                  <p>
+                    <a
+                      href="https://www.paypal.com/mx/home"
+                      target="blank"
+                      rel="noopener noreferrer"
+                      style={{ color: "white" }}
+                    >
+                      www.paypal.com
+                    </a>
+                  </p>
+                  <p>Venmo name:</p>
+                  <p>Paul-Tapaszi</p>
+                </div>
+              </Grid>
+            </Grid>
+
+            <Grid
+              container
+              spacing={2}
+              mb={3}
+            >
+              <Grid
+                size={12}
+                className={classes.containerBtn}
+              ></Grid>
+              <Zoom in={true}>
+                <Grid
+                  size={11}
+                  offset={0.5}
+                >
+                  <Table
+                    participantScore={scoresFemale?.participant}
+                    othersParticipants={scoresFemale?.data?.others}
+                  />
+                </Grid>
+              </Zoom>
+            </Grid>
           </Grid>
-        </Grid>
-      </>
-      {/* )} */}
+        </>
+      )}
     </>
   );
 };

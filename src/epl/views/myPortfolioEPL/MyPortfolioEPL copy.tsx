@@ -37,7 +37,10 @@ const MyPortfolioEPL = () => {
   const userId = params.userId!;
   const queryClient = useQueryClient();
 
-  const [value, setValue] = React.useState(0);
+  const [
+    value,
+    // setValue
+  ] = React.useState(0);
   const [portfolios, setPortfolios] = useState<Portfolios>([]);
   const [portExist, setPortExist] = useState(false);
 
@@ -45,6 +48,8 @@ const MyPortfolioEPL = () => {
   const [validTournament, setValidTournament] = useState(false);
 
   const [selectedTeams, setSelectedTeams] = useState(Array(5).fill(""));
+
+  console.log(championshipPoints);
 
   useEffect(() => {
     if (portfolios) {
@@ -81,7 +86,7 @@ const MyPortfolioEPL = () => {
     mutationFn: postNewPortfolio,
     onSuccess: (resp) => {
       toast.success(resp);
-      queryClient.invalidateQueries(["portfolios", userId]);
+      queryClient.invalidateQueries(["portfoliosEPL", userId]);
     },
     onError: (error) => {
       toast.error(error.message);
@@ -103,10 +108,10 @@ const MyPortfolioEPL = () => {
             return found ? found.name : "";
           }
           return "";
-        })
+        }),
       );
       setChampionshipPoints(
-        portfoliosObtained[0].championshipPoints?.toString() ?? ""
+        portfoliosObtained[0].championshipPoints?.toString() ?? "",
       );
       setPortfolios(portfoliosObtained);
     } else {
@@ -123,7 +128,7 @@ const MyPortfolioEPL = () => {
       newSelectedTeams[index] = team;
       setSelectedTeams(newSelectedTeams);
     },
-    [selectedTeams]
+    [selectedTeams],
   );
 
   const addportFolio = useCallback(() => {
@@ -164,11 +169,11 @@ const MyPortfolioEPL = () => {
       // Opciones disponibles para este select (excluye las ya seleccionadas en otros selects)
       const availableOptions = teamsEPL?.filter(
         (opt) =>
-          !selectedTeams.includes(opt.name) || selectedTeams[idx] === opt.name
+          !selectedTeams.includes(opt.name) || selectedTeams[idx] === opt.name,
       );
-      const teamDetails = teamsEPL?.find(
-        (team) => team.name === selectedTeams[idx]
-      );
+      // const teamDetails = teamsEPL?.find(
+      //   (team) => team.name === selectedTeams[idx],
+      // );
       // return (
       //   <FormControl
       //     key={idx}

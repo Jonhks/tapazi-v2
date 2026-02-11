@@ -283,7 +283,7 @@ const TableHomeEpl = ({
                       ? "Current Round"
                       : flexRender(
                           header.column.columnDef.header,
-                          header.getContext()
+                          header.getContext(),
                         )
                   }`}
                 >
@@ -323,7 +323,7 @@ const TableHomeEpl = ({
                         <p>
                           {flexRender(
                             header.column.columnDef.header,
-                            header.getContext()
+                            header.getContext(),
                           )}
                         </p>
                         {{
