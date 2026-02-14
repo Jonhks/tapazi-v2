@@ -348,8 +348,6 @@ const MyPortfolio = () => {
                 }
               }),
             }
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-expect-error
             mutate(sendData);
             // console.log(sendData);
             try {

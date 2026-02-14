@@ -1,10 +1,10 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import {
-  CreatePortfolio,
   PortfolioComplete,
   Portfolios,
   User,
+  PortfolioToSave,
 } from "../../types";
 
 export const getPortfoliosFemale = async (id: User["id"], tournamentId: User["id"]) => {
@@ -72,53 +72,29 @@ export const getTeamsAvailable = async (
   }
 };
 
-export const postNewPortfolio = async ({
-  port,
-  portId,
-}: // portfolios,
-// userId,
-{
-  port: CreatePortfolio;
-  // portfolios: Portfolios;
-  portId: User["id"];
-}) => {
-  // if (portfolios?.length > 8) return;
-  // console.log(port, userId);
-
-  const payload = { ...port };
-  if (portId && Array.isArray(port.teamsId)) {
-    payload.teamsId = port.teamsId.map((team) =>
-      typeof team === "object" && "id" in team ? { id: team.id } : { id: team }
-    );
-  }
-
-  const url = `/portfolios${portId ? `/${portId}` : ""}`;
+export const postNewPortfolio = async (data: PortfolioToSave) => {
+  const url = "/portfolios";
   try {
-    const { data } = portId
-      ? await apiEnv.put(url, portId ? { teams: payload.teams } : payload, {
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-        })
-      : await apiEnv.post(url, portId ? { teams: payload.teams } : payload, {
-          headers: {
-            "Content-Type": "application/json;charset=utf-8",
-          },
-        });
+    const { data: responseData } = await apiEnv.post(url, data, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
     if (
-      !data.message &&
-      data?.error?.description ===
+      !responseData.message &&
+      responseData?.error?.description ===
         "Can't register portfolio, tournament already started."
     ) {
       return "Can't register portfolio, tournament already started.";
     }
 
-    if (data.message === "success") {
+    if (responseData.message === "success") {
       return "Successfully created portfolio";
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
+      throw new Error(error.response.data.error || error.response.data.message);
     return;
   }
 };
