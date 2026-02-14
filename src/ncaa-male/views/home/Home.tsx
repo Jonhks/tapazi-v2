@@ -13,6 +13,7 @@ import {
   getPopona,
   getPortfoliosCount,
   getScores,
+  getTournamentMale
 } from "@/api/HomeAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { PayOut } from "@/types/index";
@@ -24,40 +25,54 @@ const Home = () => {
   const userId = params.userId!;
 
   const [selected, setSelected] = useState("first");
+
+  const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
+    queryKey: ["tournamentMale", userId],
+    queryFn: () => getTournamentMale("1"),
+  });
+
+  const tournamentId = tournamentMale?.[0]?.id;
+
   const { data: dataScores, isLoading: isLoadingScores } = useQuery({
-    queryKey: ["scores", userId],
-    queryFn: () => getScores("2", userId),
+    queryKey: ["scores", userId, tournamentMale],
+    queryFn: () => getScores(tournamentId, userId),
+    enabled: !!tournamentId,
   });
 
   // console.log(dataScores);
 
-  const { data: DataPopona } = useQuery({
+  const { data: DataPopona , isLoading: isLoadingPopona} = useQuery({
     queryKey: ["popona", userId],
-    queryFn: () => getPopona(),
+    queryFn: () => getPopona(tournamentId),
+    enabled: !!tournamentId,
   });
 
-  const { data: dataHOINFO } = useQuery({
+  const { data: dataHOINFO , isLoading: isLoadingHOINFO} = useQuery({
     queryKey: ["HOINFO", userId],
-    queryFn: () => getHOINFO(),
+    queryFn: () => getHOINFO(tournamentId),
+    enabled: !!tournamentId,
   });
 
-  const { data: participants } = useQuery({
+  const { data: participants , isLoading: isLoadingParticipants} = useQuery({
     queryKey: ["participants", userId],
-    queryFn: () => getParticipants(),
+    queryFn: () => getParticipants(tournamentId),
+    enabled: !!tournamentId,
   });
 
-  const { data: portfoliosHome } = useQuery({
+  const { data: portfoliosHome , isLoading: isLoadingPortfoliosHome} = useQuery({
     queryKey: ["portfoliosHome", userId],
-    queryFn: () => getPortfoliosCount(),
+    queryFn: () => getPortfoliosCount(tournamentId),
+    enabled: !!tournamentId,
   });
 
-  const { data: payout } = useQuery({
+  const { data: payout , isLoading: isLoadingPayout} = useQuery({
     queryKey: ["payout", userId],
-    queryFn: () => gatPayout(portfoliosHome.count),
+    queryFn: () => gatPayout(tournamentId),
     retry: true,
+    enabled: !!tournamentId,
   });
 
-  // console.log(payout);
+  console.log(payout);
 
   const renderDescription = (dataHOINFO: string) => {
     return dataHOINFO.split("\n").map((line, index) => (
@@ -69,11 +84,13 @@ const Home = () => {
       </p>
     ));
   };
-  // console.log(payout);
+  // console.log(participants);
+
+  const isLoading = isLoadingScores || isLoadingTournamentMale || isLoadingPopona || isLoadingHOINFO || isLoadingParticipants || isLoadingPortfoliosHome || isLoadingPayout;
 
   return (
     <>
-      {isLoadingScores ? (
+      {isLoading ? (
         <BallLoader />
       ) : (
         <>
@@ -108,10 +125,10 @@ const Home = () => {
                 onClick={() => setSelected("first")}
               >
                 <p className={classes.titleBox}>
-                  {DataPopona?.value?.toUpperCase()} IS HERE!!!
+                  {DataPopona?.toUpperCase()} IS HERE!!!
                 </p>
                 <div className={classes.subBox}>
-                  {dataHOINFO && renderDescription(dataHOINFO.value)}
+                  {dataHOINFO && renderDescription(dataHOINFO)}
                 </div>
               </Grid>
               <Grid
@@ -125,10 +142,10 @@ const Home = () => {
               >
                 <p className={classes.titleBox}>Payouts</p>
                 <div className={classes.subBoxTwo}>
-                  <p>Total Contestants: {participants?.count}</p>
-                  <p>Total Entries: {portfoliosHome?.count}</p>
+                  <p>Total Contestants: {participants?.participants}</p>
+                  <p>Total Entries: {portfoliosHome?.portfolios}</p>
                   <br />
-                  {payout?.payout?.map((pay: PayOut, i: number) => (
+                  {payout?.map((pay: PayOut, i: number) => (
                     <p key={i}>
                       Place {pay?.place}: <span>{pay?.percentage}%</span>
                     </p>

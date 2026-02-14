@@ -7,21 +7,20 @@ import {
   User,
 } from "../../types";
 
-export const getPortfolios = async (id: User["id"]) => {
+export const getPortfoliosFemale = async (id: User["id"], tournamentId: User["id"]) => {
   try {
-    const url = `/participants/${id}/portfolios?tournament_id=3`;
+    const url = `/participants/${id}/portfolios?tournament_id=${tournamentId}&sport=ncaa`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+// console.log(data);
 
-    if (data.success === false) {
+    if (!data.portfolios) {
       return [];
     }
-    if (data.success) {
-      return data?.data?.portfolios;
-    }
+    return data.portfolios;
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -29,20 +28,20 @@ export const getPortfolios = async (id: User["id"]) => {
   }
 };
 
-export const getTeams = async () => { 
+export const getTeamsFemale = async (tournamentId: User["id"]) => {
   try {    
-    // const url = `/sports/${sport}/teams`;
-    const url = `/sports/2/teams/dynamics?tournament_id=3&portfolio_id=566`;
+    const url = `/sports/3/teams?sport=ncaa&tournament_id=${tournamentId}`;
     const { data } = await apiEnv.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
     // console.log(data);
-
-    if (data.teams) {
-      return data.teams;
+    if(!data.teams){
+      return [];
     }
+
+    return data.teams;
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -207,21 +206,21 @@ export const getDATTOU = async () => {
   }
 };
 
-export const getHOUTOU = async () => {
+export const getHOUTOUFemale = async (tournamentId: User["id"]) => {
   try {
-    const url = `/tournaments/0/parameters?key=HOUTOU`;
+    const url = `/tournaments/${tournamentId}/parameters?key=HOUTOU`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.value) {
       return "Error";
     }
 
-    if (data.success) {
-      return data.data.value;
+    if (data.value) {
+      return data.value;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)

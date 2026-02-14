@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Tabs, Tab, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useParams } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 import classes from "./MyPortfolio.module.css";
@@ -19,6 +19,7 @@ import { usePortfolioValidation } from "../../../hooks/usePortfolioValidation";
 // Componentes
 import PortfolioTab from "../../components/PortfolioTab";
 import AddPortfolioButton from "../../components/AddPortfolioButton";
+// import { getTournamentMale } from "@/api/HomeAPI";
 
 const MyPortfolio = () => {
   const params = useParams();
@@ -37,6 +38,7 @@ const MyPortfolio = () => {
     isLoading,
     isValidTournament,
     winnerTeamValidation,
+    currenttournamentMale
   } = usePortfolioData(userId);
 
   // Acciones del portfolio
@@ -53,6 +55,7 @@ const MyPortfolio = () => {
     setIsEditing,
     isValidTournament,
     queryClient,
+    // tournamentMale
   });
 
   // Validaciones
@@ -122,6 +125,12 @@ const MyPortfolio = () => {
     }
   };
 
+  // const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
+  //   queryKey: ["tournamentMale"],
+  //   queryFn: () => getTournamentMale('1'),
+  //   retry: true,
+  // });
+
   if (isLoading) {
     return <Loader />;
   }
@@ -160,6 +169,7 @@ const MyPortfolio = () => {
             <div>
               <h2 style={{ color: "white", textAlign: "center" }}>
                 Tournament: {params.tournamentName?.replace(/-/g, " ")}
+                {currenttournamentMale && currenttournamentMale?.name || ''}
               </h2>
               <Divider
                 sx={{

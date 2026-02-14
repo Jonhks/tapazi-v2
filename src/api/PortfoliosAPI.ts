@@ -2,9 +2,9 @@ import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { CreatePortfolio, PortfolioComplete, User } from "../types";
 
-export const getPortfolios = async (id: User["id"]) => {
+export const getPortfolios = async (id: User["id"], tournamentId: User["id"]) => {
   try {
-    const url = `/participants/${id}/portfolios?tournament_id=1&sport=ncaa`;
+    const url = `/participants/${id}/portfolios?tournament_id=${tournamentId}&sport=ncaa`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -107,7 +107,7 @@ export const removeportfolio = async ({
 
 export const getDATTOU = async () => {
   try {
-    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=DATTOU`;
+    const url = `/tournaments/1/parameters?key=DATTOU`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -130,7 +130,7 @@ export const getDATTOU = async () => {
 
 export const getHOUTOU = async () => {
   try {
-    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOUTOU`;
+    const url = `/tournaments/1/parameters?key=HOUTOU`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -196,51 +196,3 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
     return;
   }
 };
-
-// {
-//     "tournament_id": 1,
-//     "participant_id": "2",
-//     "championship_points": 2,
-//     "teams": [
-//         {
-//             "id": 7,
-//             "seed": 1,
-//             "streak_multiplier": 1
-//         },
-//         {
-//             "id": 9,
-//             "seed": 1,
-//             "streak_multiplier": 1
-//         },
-//         {
-//             "id": 11,
-//             "seed": 1,
-//             "streak_multiplier": 1
-//         },
-//         {
-//             "id": 13,
-//             "seed": 1,
-//             "streak_multiplier": 1
-//         },
-//         {
-//             "id": 14,
-//             "seed": 1,
-//             "streak_multiplier": 1
-//         },
-//         {
-//             "id": 16,
-//             "seed": 1,
-//             "streak_multiplier": 1
-//         },
-//         {
-//             "id": 18,
-//             "seed": 1,
-//             "streak_multiplier": 1
-//         },
-//         {
-//             "id": 20,
-//             "seed": 1,
-//             "streak_multiplier": 1
-//         }
-//     ]
-// }

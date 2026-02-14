@@ -15,9 +15,9 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
   getDATTOU,
-  getHOUTOU,
-  getPortfolios,
-  getTeams,
+  getHOUTOUFemale,
+  getPortfoliosFemale,
+  getTeamsFemale,
   getWinnerOfTeam,
   getWinnerOfTeamHasTeam,
   postNewPortfolio,
@@ -27,6 +27,7 @@ import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import { isDateTimeReached } from "@/utils/getDaysLeft";
+import { getTournamentFemale } from "@/api/female/HomeAPIFemale";
 
 const MyPortfolio = () => {
   const params = useParams();
@@ -50,20 +51,34 @@ const MyPortfolio = () => {
     }
   }, [portfolios, value]);
 
+  const { data: tournamentFemale } = useQuery({
+    queryKey: ["tournamentFemale", userId],
+    queryFn: () => getTournamentFemale('3'),
+    enabled: !!userId,
+  });
+  const currentTournamentFemale = tournamentFemale?.[0];
+
+
+  // console.log(currentTournamentFemale);
+
   const { data: portfoliosObtained, isLoading } = useQuery({
     queryKey: ["portfoliosFEMALE", userId],
-    queryFn: () => getPortfolios(userId),
+    queryFn: () => getPortfoliosFemale(userId, currentTournamentFemale?.id),
+    enabled: !!currentTournamentFemale?.id,
+    retry: true,
   });
-  console.log(portfoliosObtained);
+  // console.log(portfoliosObtained);
 
   const { data: dataDATTOU } = useQuery({
     queryKey: ["dattou", userId],
     queryFn: () => getDATTOU(userId),
   });
 
-  const { data: dataHOUTOU } = useQuery({
-    queryKey: ["houtou", userId],
-    queryFn: () => getHOUTOU(userId),
+  const { data: dataHOUTOUFemale } = useQuery({
+    queryKey: ["houtouFemale", userId],
+    queryFn: () => getHOUTOUFemale(currentTournamentFemale?.id),
+    enabled: !!currentTournamentFemale?.id,
+    retry: true,
   });
 
   const { data: winnerOfTeam } = useQuery({
@@ -87,16 +102,17 @@ const MyPortfolio = () => {
   // }
   // }, [winnerOfTeam]);
 
-  useEffect(() => {
-    if (dataDATTOU && dataHOUTOU) {
-      const isValid = isDateTimeReached(dataDATTOU, dataHOUTOU);
-      setValidTournament(isValid);
-    }
-  }, [dataDATTOU, dataHOUTOU, portfolios]);
+  // useEffect(() => {
+  //   if (dataDATTOU && dataHOUTOUFemale) {
+  //     const isValid = isDateTimeReached(dataDATTOU, dataHOUTOUFemale);
+  //     setValidTournament(isValid);
+  //   }
+  // }, [dataDATTOU, dataHOUTOUFemale, portfolios]);
 
-  const { data: teams } = useQuery({
-    queryKey: ["teams", userId],
-    queryFn: () => getTeams(),
+  const { data: teamsFemale } = useQuery({
+    queryKey: ["teamsFemale", userId],
+    queryFn: () => getTeamsFemale(currentTournamentFemale?.id),
+    enabled: !!currentTournamentFemale?.id,
     cacheTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,
   });
@@ -315,14 +331,27 @@ const MyPortfolio = () => {
         })
         .then(async (result) => {
           if (result.isConfirmed) {
+            // const sendData = {
+            //   port,
+            //   portfolios,
+            //   userId,
+            // };
             const sendData = {
-              port,
-              portfolios,
-              userId,
-            };
+              tournament_id: currentTournamentFemale?.id,
+              participant_id: userId,
+              championship_points: port.championshipPoints,
+              teams: port.teamsId.map((team) => {
+                return {
+                  ...team,
+                  seed: 0,
+                  streak_multiplier: 0
+                }
+              }),
+            }
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-expect-error
             mutate(sendData);
+            // console.log(sendData);
             try {
               swalWithBootstrapButtons.fire({
                 title: "Saved!",
@@ -453,6 +482,7 @@ const MyPortfolio = () => {
         }
       });
   }, [portfoliosObtained, value]);
+// console.log(teamsFemale);
 
   const renderTeams = (indexPortfolio) => {
     return portfolios[indexPortfolio]?.teams.map((team, indexTeam) => (
@@ -474,7 +504,7 @@ const MyPortfolio = () => {
           options={
             !!portfolios[indexPortfolio]?.id
               ? portfolios[indexPortfolio]?.teams
-              : teams
+              : teamsFemale
           }
           handleChange={handleChangeSelect}
         />
@@ -511,7 +541,7 @@ const MyPortfolio = () => {
               <div style={{ color: "#DC903B" }}>
                 <BasquetIcon />
                 <h2 style={{ color: "#df2af9", fontSize: "2.4rem" }}>
-                  MY PORTFOLIO {portfolios?.length > 1 && "s"}{" "}
+                  MY PORTFOLIO{portfolios?.length > 1 && "S"}{" "}
                   {portfolios?.length > 0 && portfolios?.length}
                 </h2>
               </div>

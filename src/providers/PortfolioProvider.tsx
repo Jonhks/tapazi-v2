@@ -100,6 +100,12 @@ export const PortfolioProvider = ({
       // enabled: Boolean(userId && portfolios?.length > 0),
     });
 
+    // const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
+    //   queryKey: ["tournamentMale"],
+    //   queryFn: () => getTournamentMale('1'),
+    //   retry: true,
+    // });
+
   // console.log(weekParameter, "weekParameter");
 
   // Actualiza los estados locales cuando las consultas cambien
@@ -220,6 +226,7 @@ export const PortfolioProvider = ({
     setSelectedTeams,
     teamsDynamics,
     weekParameter,
+    // tournamentMale
   };
 
   return (

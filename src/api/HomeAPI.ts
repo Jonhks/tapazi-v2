@@ -2,6 +2,29 @@ import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 // import { User } from "../types";
 
+
+export const getTournamentMale = async (id: string) => {
+  try {
+    const url = `/sports/${id}/tournaments`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if(!data.tournaments) {
+      return [];
+    }
+    if(data.tournaments) {
+      return data.tournaments;
+    }
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }  
+}
+
 export const getScores = async (
   tournamentId: string,
   participantId: string,
@@ -22,16 +45,16 @@ export const getScores = async (
   }
 };
 
-export const getPopona = async () => {
+export const getPopona = async (tournamentId: string) => {
   try {
-    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=POPONA`;
+    const url = `/tournaments/${tournamentId}/parameters?key=POPONA`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    if (data.success) {
-      return data.data;
+    if (data.value) {
+      return data.value;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -40,21 +63,21 @@ export const getPopona = async () => {
   }
 };
 
-export const getHOINFO = async () => {
+export const getHOINFO = async (tournamentId: string) => {
   try {
-    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOINFO`;
+    const url = `/tournaments/${tournamentId}/parameters?key=HOINFO`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.value) {
       return [{ value: 0 }];
     }
 
-    if (data.success) {
-      return data.data;
+    if (data.value) {
+      return data.value;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -63,20 +86,20 @@ export const getHOINFO = async () => {
   }
 };
 
-export const getParticipants = async () => {
+export const getParticipants = async (tournamentId: string) => {
   try {
-    const url = `/participants/count?api-key=TESTAPIKEY`;
+    const url = `/tournaments/${tournamentId}/stats`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.data) {
       return "Error";
     }
 
-    if (data.success) {
+    if (data.data) {
       return data.data;
     }
   } catch (error) {
@@ -86,20 +109,20 @@ export const getParticipants = async () => {
   }
 };
 
-export const getPortfoliosCount = async () => {
+export const getPortfoliosCount = async (tournamentId: string) => {
   try {
-    const url = `/portfolios/count?api-key=TESTAPIKEY`;
+    const url = `/tournaments/${tournamentId}/stats`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.data) {
       return "Error";
     }
 
-    if (data.success) {
+    if (data.data) {
       return data.data;
     }
   } catch (error) {
@@ -109,21 +132,21 @@ export const getPortfoliosCount = async () => {
   }
 };
 
-export const gatPayout = async (portfFoliosCount: number) => {
+export const gatPayout = async (tournamentId: string) => {
   try {
-    const url = `/payout?api-key=TESTAPIKEY&portfolios=${portfFoliosCount}`;
+    const url = `/tournaments/${tournamentId}/payouts?portfolios=99`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
     // console.log(data, "payouyt data");
-    if (!data.success) {
-      return [{ payout: 0 }];
+    if (!data.payouts) {
+      return [{ payouts: 0 }];
     }
 
-    if (data.success) {
-      return data.data;
+    if (data.payouts) {
+      return data.payouts;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -133,7 +156,6 @@ export const gatPayout = async (portfFoliosCount: number) => {
 };
 
 export const getInstructions = async () => {
-  // console.log(apiEnv, 'apiEnv');
 
   try {
     const url = `tournaments/4/instructions`;

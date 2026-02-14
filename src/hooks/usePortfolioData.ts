@@ -11,15 +11,27 @@ import {
   getWinnerOfTeamHasTeam,
 } from "@/api/PortfoliosAPI";
 import { isDateTimeReached } from "@/utils/getDaysLeft";
+import { getTournamentMale } from "@/api/HomeAPI";
 
 export const usePortfolioData = (userId: string) => {
   const [isValidTournament, setIsValidTournament] = useState(true);
   const [winnerTeamValidation, setWinnerTeamValidation] = useState([]);
 
+  const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
+    queryKey: ["tournamentMale"],
+    queryFn: () => getTournamentMale('1'),
+    retry: true,
+  });
+
+  const currenttournamentMale = tournamentMale &&  tournamentMale?.[0];
+  // console.log(currenttournamentMale); 
+
   // Obtener portfolios
   const { data: portfoliosData, isLoading: isLoadingPortfolios } = useQuery({
     queryKey: ["portfolios", userId],
-    queryFn: () => getPortfolios(userId),
+    queryFn: () => getPortfolios(userId, currenttournamentMale?.id),
+    enabled: !!currenttournamentMale,
+    retry: true,
   });
 
   // Obtener equipos
@@ -76,5 +88,6 @@ export const usePortfolioData = (userId: string) => {
     isLoading: isLoadingPortfolios || isLoadingTeams,
     isValidTournament,
     winnerTeamValidation,
+    currenttournamentMale
   };
 };

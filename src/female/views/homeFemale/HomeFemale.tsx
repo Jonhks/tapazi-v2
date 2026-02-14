@@ -7,15 +7,16 @@ import BallLoader from "../../components/BallLoader/BallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import {
-  // gatPayout,
-  // getHOINFO,
-  // getParticipants,
-  // getPopona,
-  // getPortfoliosCount,
+  gatPayoutFemale,
+  getHOINFOFemale,
+  getParticipantsFemale,
+  getPoponaFemale,
+  // getPortfoliosCountFemale,
   getScoresFemale,
+  getTournamentFemale
 } from "@/api/female/HomeAPIFemale";
 import useMediaQuery from "@mui/material/useMediaQuery";
-// import { PayOut } from "@/types/index";
+import { PayOut } from "@/types/index";
 
 const Home = () => {
   const isMobile = useMediaQuery("(max-width:900px)");
@@ -25,49 +26,69 @@ const Home = () => {
 
   const [selected, setSelected] = useState("first");
 
+    const { data: tournamentFelame, isLoading: isLoadingTournamentFemale } = useQuery({
+      queryKey: ["tournamentFemale", userId],
+      queryFn: () => getTournamentFemale("3"),
+    });
+
+    // console.log(tournamentFelame);
+    const tournament = tournamentFelame?.length > 0 ? tournamentFelame[0] : null;
+
   const { data: scoresFemale, isLoading: isloadingScoreFemale } = useQuery({
     queryKey: ["scoresFemale", userId],
-    queryFn: () => getScoresFemale("1", userId),
+    queryFn: () => getScoresFemale(tournament?.id, userId),
+    enabled: !!tournament?.id,
   });
-  console.log(scoresFemale);
+  // console.log(scoresFemale);
 
-  // const { data: DataPopona } = useQuery({
-  //   queryKey: ["popona", userId],
-  //   queryFn: () => getPopona(),
+  const { data: DataPoponaFemale, isLoading: isLoadingPoponaFemale } = useQuery({
+    queryKey: ["poponaFemale", userId],
+    queryFn: () => getPoponaFemale(tournament?.id),
+    enabled: !!tournament?.id,
+  });
+
+  const { data: dataHOINFOFemale, isLoading: isLoadingHOINFOFemale } = useQuery({
+    queryKey: ["HOINFOFemale", userId],
+    queryFn: () => getHOINFOFemale(tournament?.id),
+    enabled: !!tournament?.id,
+  });
+
+  const { data: participantsFemale, isLoading: isLoadingParticipantsFemale } = useQuery({
+    queryKey: ["participantsFemale", userId],
+    queryFn: () => getParticipantsFemale(tournament?.id),
+    enabled: !!tournament?.id,
+  });
+
+  // const { data: portfoliosFemale } = useQuery({
+  //   queryKey: ["portfoliosFemale", userId],
+  //   queryFn: () => getPortfoliosCountFemale(tournament?.id),
+  //   enabled: !!tournament?.id,
   // });
 
-  // const { data: dataHOINFO } = useQuery({
-  //   queryKey: ["HOINFO", userId],
-  //   queryFn: () => getHOINFO(),
-  // });
+  const { data: payoutFemale } = useQuery({
+    queryKey: ["payoutFemale", userId],
+    queryFn: () => gatPayoutFemale(tournament?.id),
+    enabled: !!tournament?.id,
+  });
 
-  // const { data: participants } = useQuery({
-  //   queryKey: ["participants", userId],
-  //   queryFn: () => getParticipants(),
-  // });
+  const renderDescription = (dataHOINFOFemale: string) => {
+    return dataHOINFOFemale?.split("\n").map((line, index) => (
+      <p
+        key={index}
+        style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
+      >
+        {line}
+      </p>
+    ));
+  };
+  console.log(dataHOINFOFemale);
 
-  // const { data: portfoliosHome } = useQuery({
-  //   queryKey: ["portfoliosHome", userId],
-  //   queryFn: () => getPortfoliosCount(),
-  // });
-
-  // const { data: payout } = useQuery({
-  //   queryKey: ["payout", userId],
-  //   queryFn: () => gatPayout(portfoliosHome.count),
-  //   retry: true,
-  // });
-
-  // const renderDescription = (dataHOINFO: string) => {
-  //   return dataHOINFO.split("\n").map((line, index) => (
-  //     <p
-  //       key={index}
-  //       style={{ margin: 8, textTransform: "capitalize", fontSize: 12 }}
-  //     >
-  //       {line}
-  //     </p>
-  //   ));
-  // };
-  // console.log(payout);
+  const isLoading = 
+  isloadingScoreFemale || 
+  isLoadingPoponaFemale ||
+   isLoadingHOINFOFemale || 
+   isLoadingTournamentFemale || 
+   isLoadingParticipantsFemale;
 
   return (
     <>
@@ -83,7 +104,7 @@ const Home = () => {
       >
         HomeFemale
       </div> */}
-      {isloadingScoreFemale ? (
+      {isLoading ? (
         <BallLoader />
       ) : (
         <>
@@ -118,10 +139,10 @@ const Home = () => {
                 onClick={() => setSelected("first")}
               >
                 <p className={classes.titleBox}>
-                  {/* {DataPopona?.value?.toUpperCase()} IS HERE!!! */}
+                  {DataPoponaFemale?.toUpperCase()} IS HERE!!!
                 </p>
                 <div className={classes.subBox}>
-                  {/* {dataHOINFO && renderDescription(dataHOINFO.value)} */}
+                  {dataHOINFOFemale && renderDescription(dataHOINFOFemale)}
                 </div>
               </Grid>
               <Grid
@@ -135,14 +156,14 @@ const Home = () => {
               >
                 <p className={classes.titleBox}>Payouts</p>
                 <div className={classes.subBoxTwo}>
-                  {/* <p>Total Contestants: {participants?.count}</p> */}
-                  {/* <p>Total Entries: {portfoliosHome?.count}</p> */}
+                  <p>Total Contestants: {participantsFemale?.participants}</p>
+                  <p>Total Entries: {participantsFemale?.portfolios}</p>
                   <br />
-                  {/* {payout?.payout?.map((pay: PayOut, i: number) => (
+                  {payoutFemale?.map((pay: PayOut, i: number) => (
                   <p key={i}>
                     Place {pay?.place}: <span>{pay?.percentage}%</span>
                   </p>
-                ))} */}
+                ))}
                 </div>
               </Grid>
               <Grid
