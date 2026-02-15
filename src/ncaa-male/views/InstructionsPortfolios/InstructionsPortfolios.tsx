@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./InstructionsPortfolios.module.css";
 import { useQuery } from "@tanstack/react-query";
-import { getInstructions } from "@/api/HomeAPI";
+import { getInstructions, getTournamentMale } from "@/api/HomeAPI";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/BallLoader/BallLoader";
 import type { Instructions } from "@/types/index";
@@ -11,12 +11,22 @@ const Instructions = () => {
   const params = useParams();
   const userId = params.userId!;
 
+  const { data: tournamentData, isLoading: isLoadingTournament } = useQuery({
+    queryKey: ["tournametMaleInstruccions", userId],
+    queryFn: () => getTournamentMale(userId),
+  });
+  
+  const currentTournament = tournamentData && tournamentData[0]
+  
+  console.log(currentTournament);
+
   const { data: instructionsData, isLoading } = useQuery({
-    queryKey: ["instructions", userId],
-    queryFn: () => getInstructions(),
+    queryKey: ["instructions", userId, currentTournament],
+    queryFn: () => getInstructions(currentTournament?.id),
+    enabled: !!currentTournament?.id,
   });
 
-  if (isLoading) return <Loader />;
+  if (isLoading || isLoadingTournament) return <Loader />;
 
   const renderDescription = (description: string) => {
     return description

@@ -112,7 +112,7 @@ const Home = () => {
               justifyContent={"space-around"}
               flexDirection={"row"}
               style={{
-                maxHeight: "50%",
+                maxHeight: isMobile ? "" : "50%",
               }}
             >
               <Grid

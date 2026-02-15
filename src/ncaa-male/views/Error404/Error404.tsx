@@ -2,7 +2,7 @@ import { Box, Button, Container, Typography } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import { useNavigate } from "react-router-dom";
 
-export default function Error() {
+export default function Error({ sports }: { sports?: string }) {
   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
 
   const navigate = useNavigate();
@@ -39,6 +39,23 @@ export default function Error() {
             >
               The page you’re looking for doesn’t exist.
             </Typography>
+            {
+              sports ? (
+
+                  <Button
+              variant="contained"
+              style={{
+                backgroundColor: "var(--secondary)",
+              }}
+              onClick={() =>
+                navigate(`/sports/${user.id}`, {
+                  replace: true,
+                })
+              }
+            >
+              Back Sports Section
+            </Button>
+              ) : (
             <Button
               variant="contained"
               style={{
@@ -52,6 +69,9 @@ export default function Error() {
             >
               Back Home
             </Button>
+
+              )
+            }
           </Grid>
           {/* <Grid
             size={{ xs: 12, md: 6 }}

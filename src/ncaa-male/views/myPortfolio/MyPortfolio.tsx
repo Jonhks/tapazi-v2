@@ -38,7 +38,7 @@ const MyPortfolio = () => {
     isLoading,
     isValidTournament,
     winnerTeamValidation,
-    currenttournamentMale
+    currenttournamentMale,
   } = usePortfolioData(userId);
 
   // Acciones del portfolio
@@ -115,7 +115,7 @@ const MyPortfolio = () => {
         if (portfolio.newPortfolio) {
           return {
             ...portfolio,
-            championship_points: value,
+            points: value,
           };
         }
         return portfolio;
@@ -168,8 +168,10 @@ const MyPortfolio = () => {
             </div>
             <div>
               <h2 style={{ color: "white", textAlign: "center" }}>
-                Tournament: {params.tournamentName?.replace(/-/g, " ")}
-                {currenttournamentMale && currenttournamentMale?.name || ''}
+                Tournament:
+                <p style={{ color: "#05fa87" }}>
+                  {(currenttournamentMale && currenttournamentMale?.name) || ""}
+                </p>
               </h2>
               <Divider
                 sx={{
@@ -185,7 +187,7 @@ const MyPortfolio = () => {
                 <Box sx={{ width: "100%" }}>
                   {/* Botón para agregar portfolio */}
                   <AddPortfolioButton
-                    canAdd={portfolios?.length < 8 && isValidTournament}
+                    canAdd={portfolios?.length < 8}
                     isDisabled={isEditing}
                     onClick={handleAddPortfolio}
                   />
@@ -199,6 +201,17 @@ const MyPortfolio = () => {
                       scrollButtons="auto"
                       aria-label="portfolio tabs"
                       indicatorColor="primary"
+                      sx={{
+                        "& .MuiTabs-scrollButtons": {
+                          color: "#05fa87",
+                          "& svg": {
+                            fontSize: "2rem",
+                          },
+                        },
+                        "& .MuiTabs-scrollButtons.Mui-disabled": {
+                          opacity: 0.3,
+                        },
+                      }}
                     >
                       {portfolios?.map((portfolio, index) => (
                         <Tab

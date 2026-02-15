@@ -4,7 +4,7 @@
 /* eslint-disable no-unsafe-optional-chaining */
 
 import React, { useCallback, useEffect, useState, memo } from "react";
-import { Box, Tabs, Tab, Button, Input, InputAdornment } from "@mui/material";
+import { Box, Tabs, Tab, Button, Input, InputAdornment, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./PortfolioFemale.module.css";
 import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
@@ -66,7 +66,7 @@ const MyPortfolio = () => {
   // Sincronizar puntos de campeonato cuando cambia el portafolio seleccionado
   useEffect(() => {
     if (portfolios) {
-      setChampionshipPoints(portfolios[value]?.championshipPoints || "");
+      setChampionshipPoints(portfolios[value]?.points || portfolios[value]?.championshipPoints || "");
     }
   }, [portfolios, value]);
 
@@ -130,7 +130,7 @@ const MyPortfolio = () => {
       if (el?.newPortfolio) {
         return {
           ...el,
-          championshipPoints: newValue === "" ? "" : +newValue,
+          points: newValue === "" ? "" : +newValue,
         };
       } else {
         return el;
@@ -216,16 +216,31 @@ const MyPortfolio = () => {
                 <BasquetIcon />
                 <h2 style={{ color: "#df2af9", fontSize: "2.4rem" }}>
                   MY PORTFOLIO{portfolios?.length > 1 && "S"}{" "}
-                  {portfolios?.length > 0 && portfolios?.length}
+                 ({portfolios?.length > 0 && portfolios?.length})
                 </h2>
               </div>
             </div>
-
+            <div>
+              <h2 style={{ color: "white", textAlign: "center" }}>
+                Tournament: 
+                <p>
+                  {currentTournamentFemale?.name?.replace(/-/g, " ")}
+                </p>
+              </h2>
+               <Divider
+                  sx={{
+                    borderColor: "white",
+                    mb: 2,
+                    width: "70%",
+                    margin: "0 auto",
+                  }}
+                />
+            </div>
             <Box>
               <Grid size={12}>
                 <Box sx={{ width: "100%" }}>
                   {/* Botón para añadir nuevo portafolio */}
-                  {portfolios?.length < 8 && isValidTournament && (
+                  {portfolios?.length < 8  && (
                     <div className={classes.addPortFolio}>
                       <Button
                         variant="contained"
@@ -252,6 +267,17 @@ const MyPortfolio = () => {
                       scrollButtons="auto"
                       aria-label="scrollable auto tabs example"
                       indicatorColor="primary"
+                      sx={{
+                        "& .MuiTabs-scrollButtons": {
+                          color: "#df2af9",
+                          "& svg": {
+                            fontSize: "2rem",
+                          },
+                        },
+                        "& .MuiTabs-scrollButtons.Mui-disabled": {
+                          opacity: 0.3,
+                        },
+                      }}
                     >
                       {portfolios?.map((port, i) => (
                         <Tab

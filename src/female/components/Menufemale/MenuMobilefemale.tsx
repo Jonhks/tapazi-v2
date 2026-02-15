@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
-// import { BasquetIcon, BallIcon, PodiumIcon } from "@/assets/icons/icons";
+import { PodiumIcon } from "@/assets/icons/icons";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,34 +17,35 @@ import InstallMobileIcon from "@mui/icons-material/InstallMobile";
 import { messagemodalInstallmobile } from "@/utils/app";
 import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
 import Basket from "@/assets/icons/basket.png";
+import AltRouteIcon from "@mui/icons-material/AltRoute";
 
 const Icons = [
   <SportsBasketballOutlinedIcon key="ball" />,
-      <img 
-    key="basquet" 
-    src={Basket} 
-    alt="Basketball Hoop" 
+  <img
+    key="basquet"
+    src={Basket}
+    alt="Basketball Hoop"
     style={{ width: 24, height: 24 }}
   />,
   <ReceiptLongIcon key="receipt" />,
-  // <PodiumIcon key="stats" />,
+  <PodiumIcon key="stats" />,
   <HistoryIcon key="history" />,
   <MoreIcon key="more" />,
 ];
 
-  // const Icons = [
-  //   <SportsBasketballOutlinedIcon key="ball" />,
-  //   <img 
-  //   key="basquet" 
-  //   src={Basket} 
-  //   alt="Basketball Hoop" 
-  //   style={{ width: 24, height: 24 }}
-  // />,
-  //   <ReceiptLongIcon key="receipt" />,
-  //   // <PodiumIcon key="stats" />,
-  //   <HistoryIcon key="history" />,
-  //   <LogoutIcon key="logout" />,
-  // ];
+// const Icons = [
+//   <SportsBasketballOutlinedIcon key="ball" />,
+//   <img
+//   key="basquet"
+//   src={Basket}
+//   alt="Basketball Hoop"
+//   style={{ width: 24, height: 24 }}
+// />,
+//   <ReceiptLongIcon key="receipt" />,
+// <PodiumIcon key="stats" />,
+//   <HistoryIcon key="history" />,
+//   <LogoutIcon key="logout" />,
+// ];
 
 function ResponsiveAppBar() {
   const params = useParams();
@@ -59,9 +60,15 @@ function ResponsiveAppBar() {
 
   const pages = [
     { text: "Home", id: `/ncaa-female/home/${userId}/${sportId}` },
-    { text: "My Portfolios", id: `/ncaa-female/myPortfolio/${userId}/${sportId}` },
-    { text: "Instructions", id: `/ncaa-female/instructions/${userId}/${sportId}` },
-    // { text: "Stats", id: `stats/${userId}` },
+    {
+      text: "My Portfolios",
+      id: `/ncaa-female/myPortfolio/${userId}/${sportId}`,
+    },
+    {
+      text: "Instructions",
+      id: `/ncaa-female/instructions/${userId}/${sportId}`,
+    },
+    { text: "Stats", id: `/ncaa-female/stats/${userId}/${sportId}` },
     { text: "History", id: `/ncaa-female/history/${userId}/${sportId}` },
     { text: "More", id: "more" },
   ];
@@ -128,6 +135,18 @@ function ResponsiveAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AltRouteIcon />
+        </IconButton>
+        <p>Sports Section</p>
+      </MenuItem>
       <MenuItem onClick={showInstructions}>
         <IconButton
           size="large"
@@ -183,7 +202,12 @@ function ResponsiveAppBar() {
                 key={icon.key}
                 sx={{
                   flexGrow: 1,
-                  display: { xs: "flex", md: "none", justifyContent: "center", color: "#DC903B" },
+                  display: {
+                    xs: "flex",
+                    md: "none",
+                    justifyContent: "center",
+                    color: "#DC903B",
+                  },
                 }}
               >
                 <IconButton

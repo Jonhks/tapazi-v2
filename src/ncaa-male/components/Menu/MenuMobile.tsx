@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
-// import { BasquetIcon, BallIcon, PodiumIcon } from "@/assets/icons/icons";
+import { PodiumIcon } from "@/assets/icons/icons";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,6 +17,7 @@ import InstallMobileIcon from "@mui/icons-material/InstallMobile";
 import { messagemodalInstallmobile } from "@/utils/app";
 import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
 import Basket from "@/assets/icons/basket.png";
+import AltRouteIcon from "@mui/icons-material/AltRoute";
 
 const Icons = [
   <SportsBasketballOutlinedIcon key="ball" />,
@@ -27,7 +28,7 @@ const Icons = [
     style={{ width: 24, height: 24 }}
   />,
   <ReceiptLongIcon key="receipt" />,
-  // <PodiumIcon key="stats" />,
+  <PodiumIcon key="stats" />,
   <HistoryIcon key="history" />,
   <MoreIcon key="more" />,
 ];
@@ -60,7 +61,7 @@ function ResponsiveAppBar() {
     { text: "Home", id: `home/${userId}` },
     { text: "My Portfolios", id: `myPortfolio/${userId}` },
     { text: "Instructions", id: `instructions/${userId}` },
-    // { text: "Stats", id: `stats/${userId}` },
+    { text: "Stats", id: `stats/${userId}` },
     { text: "History", id: `history/${userId}` },
     { text: "More", id: "more" },
   ];
@@ -127,6 +128,18 @@ function ResponsiveAppBar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AltRouteIcon />
+        </IconButton>
+        <p>Sports Selection</p>
+      </MenuItem>
       <MenuItem onClick={showInstructions}>
         <IconButton
           size="large"

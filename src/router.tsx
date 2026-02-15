@@ -11,21 +11,23 @@ const AppLayout = lazy(() => import("./ncaa-male/layouts/AppLayout"));
 const Home = lazy(() => import("./ncaa-male/views/home/Home"));
 const Sports = lazy(() => import("./ncaa-male/views/Sports/Sports"));
 const PrivateRoute = lazy(
-  () => import("./ncaa-male/components/PrivateRoute/PrivateRoute")
+  () => import("./ncaa-male/components/PrivateRoute/PrivateRoute"),
 );
 const MyPortfolio = lazy(
-  () => import("./ncaa-male/views/myPortfolio/MyPortfolio")
+  () => import("./ncaa-male/views/myPortfolio/MyPortfolio"),
 );
 const HistoryLayout = lazy(() => import("./ncaa-male/layouts/HistoryLayout"));
-const InstructionsLayout = lazy(() => import("./ncaa-male/layouts/InstructionsLayout"));
+const InstructionsLayout = lazy(
+  () => import("./ncaa-male/layouts/InstructionsLayout"),
+);
 const StatsLayout = lazy(() => import("./ncaa-male/layouts/StatsLayout"));
 const Stats = lazy(() => import("./ncaa-male/views/Stats/Stats"));
 const Instructions = lazy(
   () =>
-    import("./ncaa-male/views/InstructionsPortfolios/InstructionsPortfolios")
+    import("./ncaa-male/views/InstructionsPortfolios/InstructionsPortfolios"),
 );
 const History = lazy(
-  () => import("./ncaa-male/views/HistoryPortfolios/HistoryPortfolios")
+  () => import("./ncaa-male/views/HistoryPortfolios/HistoryPortfolios"),
 );
 const Error404 = lazy(() => import("./ncaa-male/views/Error404/Error404"));
 // fondos
@@ -48,18 +50,22 @@ const AppLayoutEPL = lazy(() => import("./epl/layouts/AppLayoutEPL"));
 const StatsLayoutEpl = lazy(() => import("./epl/layouts/StatsLayoutEpl"));
 const HomeEPL = lazy(() => import("./epl/views/HomeEPL/HomeEPL"));
 const InstructionsEPL = lazy(
-  () => import("./epl/views/InstructionsEpl/InstructionsEpl")
+  () => import("./epl/views/InstructionsEpl/InstructionsEpl"),
 );
 const StatsEpl = lazy(() => import("./epl/views/StatsEpl/StatsEpl"));
-
 
 // ? --------------------------  Female Router -------------------------- ? //
 const AppLayoutFemale = lazy(() => import("./female/layouts/AppLayoutFemale"));
 const HomeFemale = lazy(() => import("./female/views/homeFemale/HomeFemale"));
-const InstructionsFemale = lazy(() => import("./female/views/InstructionsFemale/InstructionsFemale"));
-const InstructionsFemaleLayout = lazy(() => import("./female/layouts/InstructionsFemaleLayout"));
-const PortfolioFemale = lazy(() => import("./female/views/PortfolioFemale/PortfolioFemale"));
-
+const InstructionsFemale = lazy(
+  () => import("./female/views/InstructionsFemale/InstructionsFemale"),
+);
+const InstructionsFemaleLayout = lazy(
+  () => import("./female/layouts/InstructionsFemaleLayout"),
+);
+const PortfolioFemale = lazy(
+  () => import("./female/views/PortfolioFemale/PortfolioFemale"),
+);
 
 // ? --------------------------  URL Parameter Handler -------------------------- ? //
 
@@ -97,15 +103,15 @@ const Router = () => {
             />
           </Route>
           <Route element={<AppLayoutFemale />}>
-             <Route
+            <Route
               path="/ncaa-female/home/:userId/:sportId"
               element={
                 <PrivateRoute>
-                <HomeFemale />
+                  <HomeFemale />
                 </PrivateRoute>
               }
             />
-             <Route
+            <Route
               path="/ncaa-female/myPortfolio/:userId/:sportId"
               element={
                 <PrivateRoute>
@@ -115,7 +121,7 @@ const Router = () => {
             />
           </Route>
           <Route element={<InstructionsFemaleLayout />}>
-             <Route
+            <Route
               path="/ncaa-female/instructions/:userId/:sportId"
               element={
                 <PrivateRoute>
@@ -123,7 +129,18 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
-             <Route
+            <Route
+              path="/ncaa-female/stats/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <WIP
+                    NCAAFemaleImg={NCAAFemaleImg}
+                    NCAAMaleImg={NCAAMaleImg}
+                  />
+                </PrivateRoute>
+              }
+            />
+            <Route
               path="/ncaa-female/history/:userId/:sportId"
               element={
                 <PrivateRoute>
@@ -153,7 +170,9 @@ const Router = () => {
               }
             />
           </Route>
-          <Route element={<InstructionsLayout ImgInstructions={ImgInstructions} />}>
+          <Route
+            element={<InstructionsLayout ImgInstructions={ImgInstructions} />}
+          >
             <Route
               path="/instructions/:userId"
               element={
@@ -209,8 +228,8 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
-          {/* </Route> */}
-          {/* <Route element={<AppLayoutEPL />}> */}
+            {/* </Route> */}
+            {/* <Route element={<AppLayoutEPL />}> */}
             <Route
               path="/epl/instructions/:userId/:sportId"
               element={
@@ -227,6 +246,19 @@ const Router = () => {
                 <PrivateRoute>
                   <StatsEpl />
                 </PrivateRoute>
+              }
+            />
+          </Route>
+          {/* mundial */}
+          <Route element={<AuthLayout />}>
+            <Route
+              path="/worldcup/wip/:userId/:sportId"
+              element={
+                // <WIP
+                //   NCAAFemaleImg={NCAAFemaleImg}
+                //   NCAAMaleImg={NCAAMaleImg}
+                // />
+                <Error404 sports={"sports"} />
               }
             />
           </Route>

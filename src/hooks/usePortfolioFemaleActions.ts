@@ -53,7 +53,7 @@ export const usePortfolioFemaleActions = ({
     newData.push({
       newPortfolio: true,
       teams: [false, false, false, false, false, false, false, false],
-      championshipPoints: "",
+      points: "",
     });
     setPortfolios(newData);
   };
@@ -68,7 +68,7 @@ export const usePortfolioFemaleActions = ({
     const portFolioEditable = [...portfolios?.filter((p) => p?.newPortfolio)][0];
     const portfoliExist = portFolioEditable?.teams?.some((el) => el === false);
 
-    if (portFolioEditable?.championshipPoints >= 1 && !portfoliExist) {
+    if (portFolioEditable?.points >= 1 && !portfoliExist) {
       const teamsId = portFolioEditable?.teams?.map((el) => {
         if (typeof el === "object") {
           return { id: el.id };
@@ -90,7 +90,7 @@ export const usePortfolioFemaleActions = ({
         const sendData = {
           tournament_id: currentTournamentFemale?.id,
           participant_id: userId,
-          championship_points: portFolioEditable.championshipPoints,
+          championship_points: portFolioEditable.points,
           teams: teamsId.map((team) => ({
             ...team,
             seed: 0,
@@ -117,7 +117,7 @@ export const usePortfolioFemaleActions = ({
         });
       }
     } else if (
-      portFolioEditable?.championshipPoints >= 1 &&
+      portFolioEditable?.points >= 1 &&
       portFolioEditable?.teams?.some((el) => el === false)
     ) {
       setError(true);

@@ -168,7 +168,7 @@ export default function Sports() {
                           navigate(
                             sport.id === 2
                               ? `/epl/home/${params.userId}/${sport.id}?data=${encodedData}`
-                              : `/wip/${params.userId}/${sport.id}`,
+                              : `/worldcup/wip/${params.userId}/${sport.id}`,
                           );
                         } else {
                           toast.info("This sport is currently unavailable.");

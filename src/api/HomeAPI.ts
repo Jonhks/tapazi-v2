@@ -155,10 +155,10 @@ export const gatPayout = async (tournamentId: string) => {
   }
 };
 
-export const getInstructions = async () => {
+export const getInstructions = async (tournamentId: string) => {
 
   try {
-    const url = `tournaments/4/instructions`;
+    const url = `tournaments/${tournamentId}/instructions`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",

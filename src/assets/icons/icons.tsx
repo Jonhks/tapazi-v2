@@ -30,7 +30,7 @@ export const BasquetIcon = () => {
 
 export const PodiumIcon = () => (
   <svg
-    fill="#000000"
+    fill="currentColor"
     viewBox="0 0 24 24"
     id="podium"
     data-name="Flat Color"
@@ -51,12 +51,12 @@ export const PodiumIcon = () => (
       <path
         id="secondary"
         d="M12.93,6.81a1,1,0,0,1-.47-.12L12,6.45l-.46.24a1,1,0,0,1-1.45-1.05l.09-.52L9.8,4.76a1,1,0,0,1,.56-1.7L10.87,3l.23-.47a1,1,0,0,1,1.8,0l.23.47.51.08a1,1,0,0,1,.56,1.7l-.38.36.09.52a1,1,0,0,1-.39,1A1.09,1.09,0,0,1,12.93,6.81Z"
-        fill="#ffffff"
+        fill="currentColor"
       ></path>
       <path
         id="primary"
         d="M8,16v5a1,1,0,0,1-1,1H3a1,1,0,0,1-1-1V16a1,1,0,0,1,1-1H7A1,1,0,0,1,8,16Zm6-7H10a1,1,0,0,0-1,1V21a1,1,0,0,0,1,1h4a1,1,0,0,0,1-1V10A1,1,0,0,0,14,9Zm7,4H17a1,1,0,0,0-1,1v7a1,1,0,0,0,1,1h4a1,1,0,0,0,1-1V14A1,1,0,0,0,21,13Z"
-        fill="#ffffff"
+        fill="currentColor"
       ></path>
     </g>
   </svg>

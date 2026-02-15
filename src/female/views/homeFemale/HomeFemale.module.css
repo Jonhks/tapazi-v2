@@ -71,6 +71,6 @@
     font-size: 12px;
   }
   .boxHome {
-    min-height: max-content;
+    /* min-height: max-content; */
   }
 }

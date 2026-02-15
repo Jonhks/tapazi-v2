@@ -41,6 +41,7 @@ export const otherSchema = z.object({
   team8_name: z.string(),
   score: z.number(),
   championship_points: z.number(),
+  points: z.union([z.number(), z.string()]).optional(),
   paid: z.boolean(),
 });
 
@@ -298,7 +299,8 @@ export interface Portfolio {
   name?: string;
   newPortfolio?: boolean;
   teams: (Team | false)[];
-  championship_points: string | number;
+  championship_points?: string | number;
+  points?: string | number;
 }
 
 export interface PortfolioToSave {

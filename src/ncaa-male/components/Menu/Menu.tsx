@@ -25,7 +25,7 @@ import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
 // import { BasquetIcon } from "@/assets/icons/icons";
 import classes from "./Menu.module.css";
-// import { PodiumIcon } from "@/assets/icons/icons";
+import { PodiumIcon } from "@/assets/icons/icons";
 import Swal from "sweetalert2";
 import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
 import { messagemodalInstall } from "@/utils/app";
@@ -165,7 +165,7 @@ export default function MiniDrawer() {
       style={{ width: 24, height: 24 }}
     />,
     <ReceiptLongIcon key="receipt" />,
-    // <PodiumIcon key="stats" />,
+    <PodiumIcon key="stats" />,
     <HistoryIcon key="history" />,
     <LogoutIcon key="logout" />,
   ];
@@ -261,7 +261,7 @@ export default function MiniDrawer() {
               { text: "Home", id: `home/${userId}` },
               { text: "My Portfolios", id: `myPortfolio/${userId}` },
               { text: "Instructions", id: `instructions/${userId}` },
-              // { text: "Stats", id: `stats/${userId}` },
+              { text: "Stats", id: `stats/${userId}` },
               { text: "History", id: `history/${userId}` },
               { text: "LogOut", id: "logOut" },
             ].map((el, index) => (

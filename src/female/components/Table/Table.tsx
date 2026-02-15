@@ -13,7 +13,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { Input, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import classes from "./Table.module.css";
-
+import useMediaQuery from "@mui/material/useMediaQuery";
 import { OtherScores, ParticipantsScores } from "@/types/index";
 
 interface Props {
@@ -24,6 +24,7 @@ interface Props {
 const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [filtered, setFiltered] = useState("");
+  const isMobile = useMediaQuery("(max-width: 600px)");
 
   // 🔥 Merge de data como en tu primera tabla
   const mergedData: OtherScores[] = useMemo(() => {
@@ -126,12 +127,12 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
           zIndex: 3,
           backgroundColor: "#d6cfcfff",
           color: "black",
-          width: 250,
+          width: isMobile ? 150 : 250,
           borderRadius: 5,
           display: "flex",
           alignItems: "center",
           padding: "4px",
-          height: 30,
+          height: isMobile ? 20 : 30,
         }}
       >
         <Input
@@ -170,7 +171,7 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
                     style={{
                       position:
                         index === 0 ||
-                        index === 1 ||
+                        (!isMobile && index === 1) ||
                         index === columns.length - 1
                           ? "sticky"
                           : "static",
@@ -179,9 +180,9 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
                       backgroundColor: index % 2 === 0 ? "black" : "#6e6e6e",
                       color: index === 0 ? "05fa87" : "white",
                       fontWeight: "bold",
-                      fontSize: "14px",
+                      fontSize: isMobile ? "10px" : "12px",
                       textAlign: "center",
-                      padding: "12px",
+                      padding: isMobile ? "4px" : "12px",
                       cursor: "pointer",
                       zIndex: 3,
                       opacity: 0.8,
@@ -247,9 +248,9 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
                         backgroundColor: index % 2 === 0 ? "black" : color2,
                         color: isPortfolioName ? "#05fa87" : "white",
                         fontWeight: "bold",
-                        fontSize: "12px",
+                        fontSize: isMobile ? "10px" : "12px",
                         textAlign: "center",
-                        padding: "8px",
+                        padding: isMobile ? "4px" : "8px",
                         zIndex: 1,
                         opacity: 0.8,
                       }}
