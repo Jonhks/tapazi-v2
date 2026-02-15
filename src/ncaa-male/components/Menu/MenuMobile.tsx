@@ -21,10 +21,10 @@ import AltRouteIcon from "@mui/icons-material/AltRoute";
 
 const Icons = [
   <SportsBasketballOutlinedIcon key="ball" />,
-      <img 
-    key="basquet" 
-    src={Basket} 
-    alt="Basketball Hoop" 
+  <img
+    key="basquet"
+    src={Basket}
+    alt="Basketball Hoop"
     style={{ width: 24, height: 24 }}
   />,
   <ReceiptLongIcon key="receipt" />,
@@ -33,19 +33,19 @@ const Icons = [
   <MoreIcon key="more" />,
 ];
 
-  // const Icons = [
-  //   <SportsBasketballOutlinedIcon key="ball" />,
-  //   <img 
-  //   key="basquet" 
-  //   src={Basket} 
-  //   alt="Basketball Hoop" 
-  //   style={{ width: 24, height: 24 }}
-  // />,
-  //   <ReceiptLongIcon key="receipt" />,
-  //   // <PodiumIcon key="stats" />,
-  //   <HistoryIcon key="history" />,
-  //   <LogoutIcon key="logout" />,
-  // ];
+// const Icons = [
+//   <SportsBasketballOutlinedIcon key="ball" />,
+//   <img
+//   key="basquet"
+//   src={Basket}
+//   alt="Basketball Hoop"
+//   style={{ width: 24, height: 24 }}
+// />,
+//   <ReceiptLongIcon key="receipt" />,
+//   // <PodiumIcon key="stats" />,
+//   <HistoryIcon key="history" />,
+//   <LogoutIcon key="logout" />,
+// ];
 
 function ResponsiveAppBar() {
   const params = useParams();
@@ -127,6 +127,14 @@ function ResponsiveAppBar() {
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      slotProps={{
+        paper: {
+          sx: {
+            backgroundColor: "rgba(0, 0, 0, 0.8)",
+            color: "#fff",
+          },
+        },
+      }}
     >
       <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
         <IconButton
@@ -195,7 +203,12 @@ function ResponsiveAppBar() {
                 key={icon.key}
                 sx={{
                   flexGrow: 1,
-                  display: { xs: "flex", md: "none", justifyContent: "center", color: "#DC903B" },
+                  display: {
+                    xs: "flex",
+                    md: "none",
+                    justifyContent: "center",
+                    color: "#DC903B",
+                  },
                 }}
               >
                 <IconButton
