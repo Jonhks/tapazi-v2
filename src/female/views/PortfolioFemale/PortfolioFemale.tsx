@@ -4,7 +4,15 @@
 /* eslint-disable no-unsafe-optional-chaining */
 
 import React, { useCallback, useEffect, useState, memo } from "react";
-import { Box, Tabs, Tab, Button, Input, InputAdornment, Divider } from "@mui/material";
+import {
+  Box,
+  Tabs,
+  Tab,
+  Button,
+  Input,
+  InputAdornment,
+  Divider,
+} from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./PortfolioFemale.module.css";
 import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
@@ -66,7 +74,11 @@ const MyPortfolio = () => {
   // Sincronizar puntos de campeonato cuando cambia el portafolio seleccionado
   useEffect(() => {
     if (portfolios) {
-      setChampionshipPoints(portfolios[value]?.points || portfolios[value]?.championshipPoints || "");
+      setChampionshipPoints(
+        portfolios[value]?.points ||
+          portfolios[value]?.championshipPoints ||
+          "",
+      );
     }
   }, [portfolios, value]);
 
@@ -185,7 +197,7 @@ const MyPortfolio = () => {
       </div>
     ));
   };
-  // console.log(portfolios);
+  // console.log(isValidTournament);
 
   if (isLoading) return <Loader />;
 
@@ -215,32 +227,30 @@ const MyPortfolio = () => {
               <div style={{ color: "#DC903B" }}>
                 <BasquetIcon />
                 <h2 style={{ color: "#df2af9", fontSize: "2.4rem" }}>
-                  MY PORTFOLIO{portfolios?.length > 1 && "S"}{" "}
-                 ({portfolios?.length > 0 && portfolios?.length})
+                  MY PORTFOLIO{portfolios?.length > 1 && "S"} (
+                  {portfolios?.length > 0 && portfolios?.length})
                 </h2>
               </div>
             </div>
             <div>
               <h2 style={{ color: "white", textAlign: "center" }}>
-                Tournament: 
-                <p>
-                  {currentTournamentFemale?.name?.replace(/-/g, " ")}
-                </p>
+                Tournament:
+                <p>{currentTournamentFemale?.name?.replace(/-/g, " ")}</p>
               </h2>
-               <Divider
-                  sx={{
-                    borderColor: "white",
-                    mb: 2,
-                    width: "70%",
-                    margin: "0 auto",
-                  }}
-                />
+              <Divider
+                sx={{
+                  borderColor: "white",
+                  mb: 2,
+                  width: "70%",
+                  margin: "0 auto",
+                }}
+              />
             </div>
             <Box>
               <Grid size={12}>
                 <Box sx={{ width: "100%" }}>
                   {/* Botón para añadir nuevo portafolio */}
-                  {portfolios?.length < 8  && (
+                  {portfolios?.length < 8 && isValidTournament && (
                     <div className={classes.addPortFolio}>
                       <Button
                         variant="contained"
@@ -301,7 +311,7 @@ const MyPortfolio = () => {
                       {value === indexPortfolio && (
                         <Box sx={{ p: 3 }}>
                           {renderTeams(indexPortfolio)}
-                          
+
                           {/* Sección de Puntos y Errores */}
                           <Grid
                             container
@@ -309,17 +319,22 @@ const MyPortfolio = () => {
                             justifyContent={"end"}
                           >
                             {error && (
-                              <p className={classes.error}>All fields are mandatory!!</p>
+                              <p className={classes.error}>
+                                All fields are mandatory!!
+                              </p>
                             )}
                             {duplicates && (
-                              <p className={classes.error}>You cannot enter duplicate fields!!</p>
+                              <p className={classes.error}>
+                                You cannot enter duplicate fields!!
+                              </p>
                             )}
                             {winnerSelected && (
                               <p className={classes.error}>
-                                You cannot select a team that also belongs to the selection of a winner of team!!!
+                                You cannot select a team that also belongs to
+                                the selection of a winner of team!!!
                               </p>
                             )}
-                            
+
                             <Grid
                               display={"flex"}
                               justifyContent={"center"}
@@ -365,7 +380,9 @@ const MyPortfolio = () => {
                                     color="warning"
                                     fullWidth
                                     className={classes.btnRemove}
-                                    onClick={() => removeportfolioFunction(port.id)}
+                                    onClick={() =>
+                                      removeportfolioFunction(port.id)
+                                    }
                                   >
                                     Remove
                                   </Button>
@@ -391,7 +408,9 @@ const MyPortfolio = () => {
                                     color="error"
                                     fullWidth
                                     className={classes.btnCancel}
-                                    onClick={() => cancelPortfolio(portfoliosObtained)}
+                                    onClick={() =>
+                                      cancelPortfolio(portfoliosObtained)
+                                    }
                                   >
                                     Cancel
                                   </Button>

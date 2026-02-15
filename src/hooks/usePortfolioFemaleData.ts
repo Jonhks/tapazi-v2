@@ -3,7 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import {
-  getDATTOU,
+  getDATTOUFemale,
   getHOUTOUFemale,
   getPortfoliosFemale,
   getTeamsFemale,
@@ -30,12 +30,14 @@ export const usePortfolioFemaleData = (userId: string) => {
   const currentTournamentFemale = tournamentFemale?.[0];
 
   // Obtener portfolios de la usuaria
-  const { data: portfoliosObtained, isLoading: isLoadingPortfolios } = useQuery({
-    queryKey: ["portfoliosFEMALE", userId],
-    queryFn: () => getPortfoliosFemale(userId, currentTournamentFemale?.id),
-    enabled: !!currentTournamentFemale?.id,
-    retry: true,
-  });
+  const { data: portfoliosObtained, isLoading: isLoadingPortfolios } = useQuery(
+    {
+      queryKey: ["portfoliosFEMALE", userId],
+      queryFn: () => getPortfoliosFemale(userId, currentTournamentFemale?.id),
+      enabled: !!currentTournamentFemale?.id,
+      retry: true,
+    },
+  );
 
   // Obtener equipos femeninos
   const { data: teamsFemale, isLoading: isLoadingTeams } = useQuery({
@@ -48,8 +50,9 @@ export const usePortfolioFemaleData = (userId: string) => {
 
   // Obtener parámetros del torneo (fechas límite)
   const { data: dataDATTOU } = useQuery({
-    queryKey: ["dattou", userId],
-    queryFn: () => getDATTOU(userId),
+    queryKey: ["dattouFemale", userId],
+    queryFn: () => getDATTOUFemale(currentTournamentFemale?.id),
+    enabled: !!currentTournamentFemale?.id,
   });
 
   const { data: dataHOUTOUFemale } = useQuery({
@@ -63,11 +66,13 @@ export const usePortfolioFemaleData = (userId: string) => {
   const { data: winnerOfTeamData } = useQuery({
     queryKey: ["winnerOfTeam", userId],
     queryFn: () => getWinnerOfTeam(),
+    retry: false,
   });
 
   // Validar si el torneo ya empezó (mantenemos lógica comentada si estaba así, pero organizada)
   useEffect(() => {
     if (dataDATTOU && dataHOUTOUFemale) {
+      // console.log(dataDATTOU, dataHOUTOUFemale);
       const isValid = isDateTimeReached(dataDATTOU, dataHOUTOUFemale);
       setIsValidTournament(isValid);
     }
@@ -77,7 +82,7 @@ export const usePortfolioFemaleData = (userId: string) => {
   useEffect(() => {
     if (winnerOfTeamData) {
       Promise.all(
-        winnerOfTeamData.map((el) => getWinnerOfTeamHasTeam(el.id))
+        winnerOfTeamData.map((el) => getWinnerOfTeamHasTeam(el.id)),
       ).then((resp) => {
         const formattedData = winnerOfTeamData.map((winner, index) => ({
           winnerOfTeam: winner.id,

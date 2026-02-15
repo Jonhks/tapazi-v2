@@ -7,7 +7,10 @@ import {
   PortfolioToSave,
 } from "../../types";
 
-export const getPortfoliosFemale = async (id: User["id"], tournamentId: User["id"]) => {
+export const getPortfoliosFemale = async (
+  id: User["id"],
+  tournamentId: User["id"],
+) => {
   try {
     const url = `/participants/${id}/portfolios?tournament_id=${tournamentId}&sport=ncaa`;
     const { data } = await apiEnv(url, {
@@ -15,7 +18,7 @@ export const getPortfoliosFemale = async (id: User["id"], tournamentId: User["id
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-// console.log(data);
+    // console.log(data);
 
     if (!data.portfolios) {
       return [];
@@ -29,15 +32,16 @@ export const getPortfoliosFemale = async (id: User["id"], tournamentId: User["id
 };
 
 export const getTeamsFemale = async (tournamentId: User["id"]) => {
-  try {    
-    const url = `/sports/3/teams?sport=ncaa&tournament_id=${tournamentId}`;
+  try {
+    const url = `/tournaments/${tournamentId}/teams?sport=ncaa&show_all=false`;
+    // const url = `/sports/3/teams?sport=ncaa&tournament_id=${tournamentId}`;
     const { data } = await apiEnv.get(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
     // console.log(data);
-    if(!data.teams){
+    if (!data.teams) {
       return [];
     }
 
@@ -51,7 +55,7 @@ export const getTeamsFemale = async (tournamentId: User["id"]) => {
 
 export const getTeamsAvailable = async (
   sport: User["id"],
-  tournamentId: User["id"]
+  tournamentId: User["id"],
 ) => {
   try {
     const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
@@ -149,7 +153,7 @@ export const removeportfolio = async ({
         headers: {
           "Content-Type": "application/json;charset=utf-8",
         },
-      }
+      },
     );
     console.log(data);
   } catch (error) {
@@ -159,21 +163,20 @@ export const removeportfolio = async ({
   }
 };
 
-export const getDATTOU = async () => {
+export const getDATTOUFemale = async (tournamentId: User["id"]) => {
   try {
-    const url = `/tournaments/0/parameters?key=RECODE`;
+    const url = `/tournaments/${tournamentId}/parameters?key=DATTOU`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-
-    if (!data.success) {
+    if (!data.value) {
       return "Error";
     }
 
-    if (data.success) {
-      return data.data.value;
+    if (data.value) {
+      return data.value;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)

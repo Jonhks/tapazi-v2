@@ -187,7 +187,7 @@ const MyPortfolio = () => {
                 <Box sx={{ width: "100%" }}>
                   {/* Botón para agregar portfolio */}
                   <AddPortfolioButton
-                    canAdd={portfolios?.length < 8}
+                    canAdd={portfolios?.length < 8 && isValidTournament}
                     isDisabled={isEditing}
                     onClick={handleAddPortfolio}
                   />

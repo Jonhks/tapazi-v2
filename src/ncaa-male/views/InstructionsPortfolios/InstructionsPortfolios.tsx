@@ -15,10 +15,10 @@ const Instructions = () => {
     queryKey: ["tournametMaleInstruccions", userId],
     queryFn: () => getTournamentMale(userId),
   });
-  
-  const currentTournament = tournamentData && tournamentData[0]
-  
-  console.log(currentTournament);
+
+  const currentTournament = tournamentData && tournamentData[0];
+
+  // console.log(currentTournament);
 
   const { data: instructionsData, isLoading } = useQuery({
     queryKey: ["instructions", userId, currentTournament],

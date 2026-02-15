@@ -65,7 +65,9 @@ export const usePortfolioFemaleActions = ({
       return;
     }
 
-    const portFolioEditable = [...portfolios?.filter((p) => p?.newPortfolio)][0];
+    const portFolioEditable = [
+      ...portfolios?.filter((p) => p?.newPortfolio),
+    ][0];
     const portfoliExist = portFolioEditable?.teams?.some((el) => el === false);
 
     if (portFolioEditable?.points >= 1 && !portfoliExist) {
