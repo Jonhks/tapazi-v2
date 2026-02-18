@@ -31,7 +31,7 @@ const History = lazy(
 );
 const Error404 = lazy(() => import("./ncaa-male/views/Error404/Error404"));
 // fondos
-import ImgStats from "@/assets/img/doing-sport-concept.jpg";
+import ImgStats from "@/assets/img/NCAA-STATS_Male_backup.png";
 import ImgHistory from "@/assets/img/details-ball-sport.jpg";
 import ImgInstructions from "@/assets/img/NCAA-MALE-INSTRUCTIONS-BACK.png";
 import WIP from "./ncaa-male/views/WIP/WIP";
@@ -60,8 +60,14 @@ const HomeFemale = lazy(() => import("./female/views/homeFemale/HomeFemale"));
 const InstructionsFemale = lazy(
   () => import("./female/views/InstructionsFemale/InstructionsFemale"),
 );
+const StatsFemale = lazy(
+  () => import("./female/views/StatsFemale/StatsFemale"),
+);
 const InstructionsFemaleLayout = lazy(
   () => import("./female/layouts/InstructionsFemaleLayout"),
+);
+const StatsFemaleLayout = lazy(
+  () => import("./female/layouts/StatsFemaleLayout"),
 );
 const PortfolioFemale = lazy(
   () => import("./female/views/PortfolioFemale/PortfolioFemale"),
@@ -129,7 +135,7 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
-            <Route
+            {/* <Route
               path="/ncaa-female/stats/:userId/:sportId"
               element={
                 <PrivateRoute>
@@ -139,7 +145,7 @@ const Router = () => {
                   />
                 </PrivateRoute>
               }
-            />
+            /> */}
             <Route
               path="/ncaa-female/history/:userId/:sportId"
               element={
@@ -148,6 +154,16 @@ const Router = () => {
                     NCAAFemaleImg={NCAAFemaleImg}
                     NCAAMaleImg={NCAAMaleImg}
                   />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<StatsFemaleLayout />}>
+            <Route
+              path="/ncaa-female/stats/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <StatsFemale />
                 </PrivateRoute>
               }
             />

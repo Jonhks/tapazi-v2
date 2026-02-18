@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import classes from "./Stats.module.css";
+import classes from "./StatsFemale.module.css";
 import {
   Zoom,
   // Button,
@@ -34,12 +34,12 @@ import TableHistoryMostPickedTeams from "../../components/Table/TableHistoryMost
 import TableTeamsPickedLog from "../../components/Table/TableTeamsPickedLog";
 import TableHistoryTeamsNotPicked from "../../components/Table/TableHistoryTeamsNotPicked";
 import TableSeedPickTotal from "../../components/Table/TableSeedPickTotal";
-import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
+// import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
 import SortIcon from "@mui/icons-material/Sort";
-import StatsGraphics from "../../components/Graphics/StatsGraphic";
-import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
-import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
-import StatsPortfoliosSelectionsGraphicPercentLeast from "../../components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
+// import StatsGraphics from "../../components/Graphics/StatsGraphic";
+// import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
+// import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
+// import StatsPortfoliosSelectionsGraphicPercentLeast from "../../components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
 
 const Stats = () => {
   const params = useParams();
@@ -225,6 +225,8 @@ const Stats = () => {
     retry: false,
   });
 
+  console.log(portfolioSeedSelections);
+
   if (
     isLoading ||
     isLoadingTeamsPicked ||
@@ -329,7 +331,7 @@ const Stats = () => {
             <Grid
               container
               size={{ xs: 12, md: 6 }}
-              style={{ border: "1px solid #05fa05", padding: 16 }}
+              style={{ border: "1px solid #df2af9", padding: 16 }}
             >
               <Grid
                 size={12}
@@ -472,13 +474,13 @@ const Stats = () => {
                   )}
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  {portfolioSeedSelections &&
+                  {/* {portfolioSeedSelections &&
                     typeof portfolioSeedSelections !== "string" && (
                       <TablePortfolioSeedSelections
                         arrHistory={portfolioSeedSelections}
                         score={"Seed Picked in Portfolio \n (at least once)"}
                       />
-                    )}
+                    )} */}
                 </Grid>
               </Grid>
               <Grid
@@ -488,51 +490,51 @@ const Stats = () => {
                 justifyContent={"space-around"}
               >
                 <Grid size={12}>
-                  {seedPickTotal && typeof seedPickTotal !== "string" && (
+                  {/* {seedPickTotal && typeof seedPickTotal !== "string" && (
                     <StatsGraphics
                       graphType={"ColumnChart"}
                       data={seedPickTotal}
                       title={"Number of Picks by Seed"}
                     />
-                  )}
+                  )} */}
                 </Grid>
                 <Grid
                   size={12}
                   mt={1}
                 >
-                  {seedPickTotal && typeof seedPickTotal !== "string" && (
+                  {/* {seedPickTotal && typeof seedPickTotal !== "string" && (
                     <StatsPortfoliosSelectionsGraphic
                       graphType={"ColumnChart"}
                       data={seedPickTotal}
                       title={"Percentage of Picks by Seed"}
                     />
-                  )}
+                  )} */}
                 </Grid>
                 <Grid
                   size={12}
                   mt={1}
                 >
-                  {portfolioSeedSelections &&
+                  {/* {portfolioSeedSelections &&
                     typeof portfolioSeedSelections !== "string" && (
                       <StatsPortfoliosSelectionsGraphicTeamsleastOnce
                         graphType={"ColumnChart"}
                         data={portfolioSeedSelections}
                         title={"Teams Seed Picked at Least Once"}
                       />
-                    )}
+                    )} */}
                 </Grid>
                 <Grid
                   size={12}
                   mt={1}
                 >
-                  {portfolioSeedSelections &&
+                  {/* {portfolioSeedSelections &&
                     typeof portfolioSeedSelections !== "string" && (
                       <StatsPortfoliosSelectionsGraphicPercentLeast
                         graphType={"ColumnChart"}
                         data={portfolioSeedSelections}
                         title={"Percentage Seed Picked at Least Once)"}
                       />
-                    )}
+                    )} */}
                 </Grid>
               </Grid>
             </Grid>

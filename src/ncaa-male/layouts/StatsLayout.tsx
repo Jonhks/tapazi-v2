@@ -4,7 +4,7 @@ import Menu from "../components/Menu/Menu";
 import { useMediaQuery } from "@mui/material";
 import MenuMobile from "../components/Menu/MenuMobile";
 
-const HistoryLayout = ({ ImgStats }: { ImgStats: string }) => {
+const StatsLayout = ({ ImgStats }: { ImgStats: string }) => {
   const isMobile = useMediaQuery("(max-width:900px)");
 
   return (
@@ -19,4 +19,4 @@ const HistoryLayout = ({ ImgStats }: { ImgStats: string }) => {
   );
 };
 
-export default HistoryLayout;
+export default StatsLayout;

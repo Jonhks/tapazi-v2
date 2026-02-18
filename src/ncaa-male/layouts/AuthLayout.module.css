@@ -30,7 +30,7 @@
 }
 
 .containerStats {
-  background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_back.png");
+  /* background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/login/log_in_back.png"); */
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

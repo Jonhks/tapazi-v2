@@ -33,9 +33,9 @@ export default function ControlledRadioButtonsGroup({
           control={
             <Radio
               sx={{
-                color: "white",
+                color: "#df2af9",
                 "&.Mui-checked": {
-                  color: "white",
+                  color: "#df2af9",
                 },
               }}
             />
@@ -47,9 +47,9 @@ export default function ControlledRadioButtonsGroup({
           control={
             <Radio
               sx={{
-                color: "white",
+                color: "#df2af9",
                 "&.Mui-checked": {
-                  color: "white",
+                  color: "#df2af9",
                 },
               }}
             />
@@ -61,9 +61,9 @@ export default function ControlledRadioButtonsGroup({
           control={
             <Radio
               sx={{
-                color: "white",
+                color: "#df2af9",
                 "&.Mui-checked": {
-                  color: "white",
+                  color: "#df2af9",
                 },
               }}
             />
@@ -75,9 +75,9 @@ export default function ControlledRadioButtonsGroup({
           control={
             <Radio
               sx={{
-                color: "white",
+                color: "#df2af9",
                 "&.Mui-checked": {
-                  color: "white",
+                  color: "#df2af9",
                 },
               }}
             />

@@ -1,16 +1,10 @@
 export const dataDropdowndata = [
-  // {
-  //   name: "Score",
-  //   id: "1",
-  //   option: "Score",
-  //   placeholder: "Current Score",
-  // },
-  // {
-  //   name: "Teams",
-  //   id: "2",
-  //   option: "Teams",
-  //   placeholder: "Teams Picked",
-  // },
+  {
+    name: "Score",
+    id: "1",
+    option: "Score",
+    placeholder: "Current Score",
+  },
   {
     name: "Teams",
     id: "2",

@@ -25,7 +25,8 @@ import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
 // import { BasquetIcon } from "@/assets/icons/icons";
 import classes from "./Menu.module.css";
-import { PodiumIcon } from "@/assets/icons/icons";
+// import { PodiumIcon } from "@/assets/icons/icons";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 import Swal from "sweetalert2";
 import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
 import { messagemodalInstall } from "@/utils/app";
@@ -165,7 +166,7 @@ export default function MiniDrawer() {
       style={{ width: 24, height: 24 }}
     />,
     <ReceiptLongIcon key="receipt" />,
-    <PodiumIcon key="stats" />,
+    <TextSnippetIcon key="stats" />,
     <HistoryIcon key="history" />,
     <LogoutIcon key="logout" />,
   ];
