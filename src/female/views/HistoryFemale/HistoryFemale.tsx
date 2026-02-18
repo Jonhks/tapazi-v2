@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo, useState } from "react";
-import classes from "./HistoryPortfolios.module.css";
+import classes from "./HistoryFemale.module.css";
 import { Zoom } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
@@ -9,39 +9,43 @@ import { useQuery } from "@tanstack/react-query";
 import {
   getHistoricalPerfectPortfoliosHistory,
   getTeamsHistoricAllRounds,
-  getTeamsPerfectPortfolios,
+  // getTeamsPerfectPortfolios,
   getTeamsPerYearLog,
   getTeamsPickedLogHistory,
   // getTournaments,
 } from "@/api/HistoryAPI";
 // import { Tournament } from "@/types/index";
 import Loader from "../../components/BallLoader/BallLoader";
-import TableHistoryTeamsPerYearLog from "../../components/Table/TableHistoryTeamsPerYearLog";
+// import TableHistoryTeamsPerYearLog from "../../components/Table/TableHistoryTeamsPerYearLog";
 import TableHistoryTeamsPerYearLogSelected from "../../components/Table/TableHistoryTeamsPerYearLogSelected";
-import TableHistoryPerfectPortfolios from "../../components/Table/TableHistoryPerfectPortfolios";
+// import TableHistoryPerfectPortfolios from "../../components/Table/TableHistoryPerfectPortfolios";
 import TableHistoryPerfectPortfoliosSelected from "../../components/Table/TableHistoryPerfectPortfoliosSelected";
 import TableHistoryAllRounds from "../../components/Table/TableHistoryAllRounds";
 // import DescriptionIcon from "@mui/icons-material/Description";
-import TeamPerYearlogGraphic from "../../components/Graphics/TeamPerYearLogGraphic";
-import AutoGraphIcon from "@mui/icons-material/AutoGraph";
-import { typeGraphs } from "@/utils/typeGraphs";
-import TeamPerfectPortfoliosGraphic from "../../components/Graphics/TeamPerfectPortfoliosGraphic";
-import NotRecordFounds from "../../components/NotRecordsFound/NotRecordFounds";
+// import TeamPerYearlogGraphic from "../../components/Graphics/TeamPerYearLogGraphic";
+// import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+// import { typeGraphs } from "@/utils/typeGraphs";
+// import TeamPerfectPortfoliosGraphic from "../../components/Graphics/TeamPerfectPortfoliosGraphic";
+// import NotRecordFounds from "../../components/NotRecordsFound/NotRecordFounds";
 
-type dataDropdowndataType = {
-  name: string;
-  id: string;
-};
+// type dataDropdowndataType = {
+//   name: string;
+//   id: string;
+// };
 
-const History = () => {
+const HistoryFemale = () => {
   const params = useParams();
   const userId = params.userId!;
 
-  const [graphType, setGraphType] = useState(typeGraphs[0]);
-  const [TeamPerfectPortfoliosSelected, SeteamPerfectPortfoliosSelected] =
-    useState<number>(0);
-  const [teamsPerYearLogSelected, setTeamsPerYearLogSelected] =
-    useState<number>(0);
+  // const [graphType, setGraphType] = useState(typeGraphs[0]);
+  const [
+    TeamPerfectPortfoliosSelected,
+    // SeteamPerfectPortfoliosSelected
+  ] = useState<number>(0);
+  const [
+    teamsPerYearLogSelected,
+    // setTeamsPerYearLogSelected
+  ] = useState<number>(0);
 
   const [selectedScore, setSelectedScore] = useState<{
     name: string;
@@ -91,18 +95,18 @@ const History = () => {
     [],
   );
 
-  const handleChangeGraph = useCallback(
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    (e) => {
-      const optionSelect = typeGraphs.filter(
-        (el: dataDropdowndataType) => el?.name === e.target.value,
-      )[0];
-      setGraphType(optionSelect);
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [typeGraphs],
-  );
+  // const handleChangeGraph = useCallback(
+  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  //   // @ts-ignore
+  //   (e) => {
+  //     const optionSelect = typeGraphs.filter(
+  //       (el: dataDropdowndataType) => el?.name === e.target.value,
+  //     )[0];
+  //     setGraphType(optionSelect);
+  //   },
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [typeGraphs],
+  // );
 
   const { data: teamsPerYearLog, isLoading: loadingTeamsPerYearLog } = useQuery(
     {
@@ -111,11 +115,11 @@ const History = () => {
     },
   );
 
-  const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
-    useQuery({
-      queryKey: ["teamsPerfectPortfolios", userId],
-      queryFn: () => getTeamsPerfectPortfolios(),
-    });
+  // const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
+  //   useQuery({
+  //     queryKey: ["teamsPerfectPortfolios", userId],
+  //     queryFn: () => getTeamsPerfectPortfolios(),
+  //   });
 
   const { data: teamsHistoricAllRounds, isLoading: loadingHistoryAllRounds } =
     useQuery({
@@ -179,7 +183,7 @@ const History = () => {
   if (
     // isLoading ||
     loadingTeamsPerYearLog ||
-    loadingPerfectPortfolios ||
+    // loadingPerfectPortfolios ||
     loadingHistoryAllRounds
   )
     return <Loader />;
@@ -259,7 +263,7 @@ const History = () => {
                     </div>
                   </Grid>
                 )}
-                {selectedScore.id !== "1" && (
+                {/* {selectedScore.id !== "1" && (
                   <Grid size={12}>
                     <span>Chart:</span>
                     <div className={classes.containerDrop}>
@@ -274,7 +278,7 @@ const History = () => {
                       />
                     </div>
                   </Grid>
-                )}
+                )} */}
               </Grid>
             </Grid>
           </Grid>
@@ -306,7 +310,7 @@ const History = () => {
               </Grid>
             </Zoom>
           )}
-
+          {/* 
           {selectedScore.id === "2" && graphType.name === "Table" && (
             <Zoom
               in={true}
@@ -321,8 +325,8 @@ const History = () => {
                 )}
               </Grid>
             </Zoom>
-          )}
-          {selectedScore.id === "2" && graphType.name !== "Table" && (
+          )} */}
+          {/* {selectedScore.id === "2" && graphType.name !== "Table" && (
             <Zoom
               in={true}
               style={{ marginBottom: "20px" }}
@@ -339,7 +343,7 @@ const History = () => {
                 )}
               </Grid>
             </Zoom>
-          )}
+          )} */}
 
           {TeamPerfectPortfoliosSelected > 0 &&
             selectedScore.id === "2" &&
@@ -361,12 +365,12 @@ const History = () => {
               </Zoom>
             )}
 
-          {selectedScore.id === "2" &&
+          {/* {selectedScore.id === "2" &&
             TeamPerfectPortfoliosSelected > 0 &&
             typeof historicalPerfectPortfoliosHistory === "string" &&
-            !loadingHistoricalPerfectPortfoliosHistory && <NotRecordFounds />}
+            !loadingHistoricalPerfectPortfoliosHistory && <NotRecordFounds />} */}
 
-          {selectedScore.id === "3" && graphType.name === "Table" && (
+          {/* {selectedScore.id === "3" && graphType.name === "Table" && (
             <Zoom
               in={true}
               style={{ marginBottom: "20px" }}
@@ -380,8 +384,8 @@ const History = () => {
                 )}
               </Grid>
             </Zoom>
-          )}
-          {selectedScore.id === "3" && graphType.name !== "Table" && (
+          )} */}
+          {/* {selectedScore.id === "3" && graphType.name !== "Table" && (
             <Zoom
               in={true}
               style={{ marginBottom: "20px" }}
@@ -396,7 +400,7 @@ const History = () => {
                 )}
               </Grid>
             </Zoom>
-          )}
+          )} */}
 
           {selectedScore.id === "3" &&
             teamsPerYearLogSelected > 0 &&
@@ -417,14 +421,14 @@ const History = () => {
                 </Grid>
               </Zoom>
             )}
-          {selectedScore.id === "3" &&
+          {/* {selectedScore.id === "3" &&
             teamsPerYearLogSelected > 0 &&
             typeof teamsPickedLogHistory === "string" &&
-            !loadingTeamsPickedLogHistory && <NotRecordFounds />}
+            !loadingTeamsPickedLogHistory && <NotRecordFounds />} */}
         </Grid>
       </Grid>
     </>
   );
 };
 
-export default React.memo(History);
+export default React.memo(HistoryFemale);

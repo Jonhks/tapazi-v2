@@ -25,13 +25,14 @@ import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
 // import { BasquetIcon } from "@/assets/icons/icons";
 import classes from "./MenuFemale.module.css";
-import { PodiumIcon } from "@/assets/icons/icons";
+// import { PodiumIcon } from "@/assets/icons/icons";
 import Swal from "sweetalert2";
 import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
 import { messagemodalInstall } from "@/utils/app";
 import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
 import Basket from "@/assets/icons/basket.png";
 import AltRouteIcon from "@mui/icons-material/AltRoute";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
 
 const drawerWidth = 240;
 
@@ -166,7 +167,7 @@ export default function MiniDrawer() {
       style={{ width: 24, height: 24 }}
     />,
     <ReceiptLongIcon key="receipt" />,
-    <PodiumIcon key="stats" />,
+    <TextSnippetIcon key="stats" />,
     <HistoryIcon key="history" />,
     <LogoutIcon key="logout" />,
   ];

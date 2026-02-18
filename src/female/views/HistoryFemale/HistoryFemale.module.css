@@ -22,10 +22,11 @@
   align-items: center;
   padding: 10px 15px;
   margin: 0 0 10px 0;
-  border: 1px solid #05fa05;
+  border: 1px solid #df2af9;
   text-align: center;
   display: flex;
   justify-content: center;
+  color: #df2af9;
 }
 
 .titleBox svg {
@@ -59,7 +60,7 @@
 }
 
 .DropDownHistory div div {
-  border: 1px solid #05fa05;
+  border: 1px solid #df2af9;
   text-align: center;
 }
 

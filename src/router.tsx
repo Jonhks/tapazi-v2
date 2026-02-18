@@ -32,18 +32,18 @@ const History = lazy(
 const Error404 = lazy(() => import("./ncaa-male/views/Error404/Error404"));
 // fondos
 import ImgStats from "@/assets/img/NCAA-STATS_Male_backup.png";
-import ImgHistory from "@/assets/img/details-ball-sport.jpg";
+import ImgHistory from "@/assets/img/NCAA-HISTORY_Male_Back.png";
 import ImgInstructions from "@/assets/img/NCAA-MALE-INSTRUCTIONS-BACK.png";
-import WIP from "./ncaa-male/views/WIP/WIP";
+// import WIP from "./ncaa-male/views/WIP/WIP";
 import MyPortfolioEPL from "./epl/views/myPortfolioEPL/MyPortfolioEPL";
 const ImgSports =
   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/sports/epl/stats/back_stats.png?quality=5&format=webp";
 
 // ? --------------------------  EPL Imagenes -------------------------- ? //
-const NCAAFemaleImg =
-  "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_rose.png?quality=80&format=webp";
-const NCAAMaleImg =
-  "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_orange.png?quality=80&format=webp";
+// const NCAAFemaleImg =
+//   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_rose.png?quality=80&format=webp";
+// const NCAAMaleImg =
+//   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_orange.png?quality=80&format=webp";
 
 // ? --------------------------  EPL Router -------------------------- ? //
 const AppLayoutEPL = lazy(() => import("./epl/layouts/AppLayoutEPL"));
@@ -63,11 +63,17 @@ const InstructionsFemale = lazy(
 const StatsFemale = lazy(
   () => import("./female/views/StatsFemale/StatsFemale"),
 );
+const HistoryFemale = lazy(
+  () => import("./female/views/HistoryFemale/HistoryFemale"),
+);
 const InstructionsFemaleLayout = lazy(
   () => import("./female/layouts/InstructionsFemaleLayout"),
 );
 const StatsFemaleLayout = lazy(
   () => import("./female/layouts/StatsFemaleLayout"),
+);
+const HistoryFemaleLayout = lazy(
+  () => import("./female/layouts/HistoryFemaleLayout"),
 );
 const PortfolioFemale = lazy(
   () => import("./female/views/PortfolioFemale/PortfolioFemale"),
@@ -135,28 +141,6 @@ const Router = () => {
                 </PrivateRoute>
               }
             />
-            {/* <Route
-              path="/ncaa-female/stats/:userId/:sportId"
-              element={
-                <PrivateRoute>
-                  <WIP
-                    NCAAFemaleImg={NCAAFemaleImg}
-                    NCAAMaleImg={NCAAMaleImg}
-                  />
-                </PrivateRoute>
-              }
-            /> */}
-            <Route
-              path="/ncaa-female/history/:userId/:sportId"
-              element={
-                <PrivateRoute>
-                  <WIP
-                    NCAAFemaleImg={NCAAFemaleImg}
-                    NCAAMaleImg={NCAAMaleImg}
-                  />
-                </PrivateRoute>
-              }
-            />
           </Route>
           <Route element={<StatsFemaleLayout />}>
             <Route
@@ -164,6 +148,16 @@ const Router = () => {
               element={
                 <PrivateRoute>
                   <StatsFemale />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<HistoryFemaleLayout />}>
+            <Route
+              path="/ncaa-female/history/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <HistoryFemale />
                 </PrivateRoute>
               }
             />
