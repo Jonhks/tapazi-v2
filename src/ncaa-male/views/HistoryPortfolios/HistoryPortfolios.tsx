@@ -203,7 +203,7 @@ const History = () => {
           size={12}
         >
           <Grid
-            size={{ xs: 11, md: 8 }}
+            size={{ xs: 12, md: 8 }}
             m={1}
             className={`${classes.boxHistory} ${classes.active}`}
             id="first"
@@ -212,7 +212,7 @@ const History = () => {
               size={12}
               className={classes.containerHeadHistory}
             >
-              <Grid size={{ xs: 6 }}>
+              <Grid size={{ xs: 12, md: 6 }}>
                 <p className={classes.titleBox}>
                   <HistoryIcon /> History
                 </p>
@@ -227,7 +227,7 @@ const History = () => {
             >
               <Grid
                 container
-                size={{ xs: 6 }}
+                size={{ xs: 12, md: 6 }}
               >
                 <Grid size={12}>
                   <span>Data:</span>
