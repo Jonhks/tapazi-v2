@@ -19,7 +19,8 @@
 }
 .addPortFolio button:active,
 .addPortFolio button:hover {
-  background-color: #000;
+  background-color: #049f56;
+  box-sizing: border-box;
 }
 
 .removePortFolio button {

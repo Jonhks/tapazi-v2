@@ -89,7 +89,7 @@ const PortfolioTab: React.FC<PortfolioTabProps> = ({
           <Input
             required
             type="text"
-            value={portfolio.points || ""}
+            value={portfolio.championship_points || portfolio.points || ""}
             sx={{ width: "80%", m: 1 }}
             id="championship-points-input"
             name="championshipPoints"

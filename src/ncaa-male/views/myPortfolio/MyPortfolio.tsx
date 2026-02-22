@@ -116,7 +116,7 @@ const MyPortfolio = () => {
         if (portfolio.newPortfolio) {
           return {
             ...portfolio,
-            points: value,
+            championship_points: value,
           };
         }
         return portfolio;
