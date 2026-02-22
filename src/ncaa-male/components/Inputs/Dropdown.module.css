@@ -11,6 +11,14 @@
   color: red;
 }
 
+.formControl div::before {
+  border-bottom: 0.5px solid white !important;
+}
+
+.formControl div:hover:not(.Mui-disabled)::before {
+  border-bottom: 0.5px solid white !important;
+}
+
 .formControl div::after {
-  border-bottom: 2px solid white;
+  border-bottom: 0.5px solid white;
 }

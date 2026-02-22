@@ -57,6 +57,7 @@ const MyPortfolio = () => {
     isValidTournament,
     queryClient,
     refetchTeams,
+    tournamentId: currenttournamentMale?.id,
   });
 
   // Validaciones
@@ -195,59 +196,71 @@ const MyPortfolio = () => {
                     onClick={handleAddPortfolio}
                   />
 
-                  {/* Tabs */}
-                  <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                    <Tabs
-                      value={activeTab}
-                      onChange={handleTabChange}
-                      variant="scrollable"
-                      scrollButtons="auto"
-                      aria-label="portfolio tabs"
-                      indicatorColor="primary"
-                      sx={{
-                        "& .MuiTabs-scrollButtons": {
-                          color: "#05fa87",
-                          "& svg": {
-                            fontSize: "2rem",
-                          },
-                        },
-                        "& .MuiTabs-scrollButtons.Mui-disabled": {
-                          opacity: 0.3,
-                        },
-                      }}
-                    >
+                  {portfolios?.length === 0 ? (
+                    <Box sx={{ mt: 4, mb: 4, textAlign: "center" }}>
+                      <h3 style={{ color: "white" }}>
+                        You don't have any portfolios yet. Click on "Add
+                        Portfolio" to create one.
+                      </h3>
+                    </Box>
+                  ) : (
+                    <>
+                      {/* Tabs */}
+                      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                        <Tabs
+                          value={activeTab}
+                          onChange={handleTabChange}
+                          variant="scrollable"
+                          scrollButtons="auto"
+                          aria-label="portfolio tabs"
+                          indicatorColor="primary"
+                          sx={{
+                            "& .MuiTabs-scrollButtons": {
+                              color: "#05fa87",
+                              "& svg": {
+                                fontSize: "2rem",
+                              },
+                            },
+                            "& .MuiTabs-scrollButtons.Mui-disabled": {
+                              opacity: 0.3,
+                            },
+                          }}
+                        >
+                          {portfolios?.map((portfolio, index) => (
+                            <Tab
+                              key={index}
+                              label={
+                                portfolio?.name ||
+                                `New (Portfolio ${index + 1})`
+                              }
+                              className={`${classes.tabComponent} ${
+                                index === activeTab && classes.activeTab
+                              }`}
+                            />
+                          ))}
+                        </Tabs>
+                      </Box>
+
+                      {/* Contenido de los tabs */}
                       {portfolios?.map((portfolio, index) => (
-                        <Tab
+                        <PortfolioTab
                           key={index}
-                          label={
-                            portfolio?.name || `New (Portfolio ${index + 1})`
+                          portfolio={portfolio}
+                          portfolioIndex={index}
+                          isActive={activeTab === index}
+                          teams={teamsData}
+                          isValidTournament={isValidTournament}
+                          onTeamSelect={handleTeamSelection}
+                          onChampionshipPointsChange={
+                            handleChampionshipPointsChange
                           }
-                          className={`${classes.tabComponent} ${
-                            index === activeTab && classes.activeTab
-                          }`}
+                          onSave={handleSavePortfolio}
+                          onRemove={handleRemovePortfolio}
+                          onCancel={handleCancelPortfolio}
                         />
                       ))}
-                    </Tabs>
-                  </Box>
-
-                  {/* Contenido de los tabs */}
-                  {portfolios?.map((portfolio, index) => (
-                    <PortfolioTab
-                      key={index}
-                      portfolio={portfolio}
-                      portfolioIndex={index}
-                      isActive={activeTab === index}
-                      teams={teamsData}
-                      isValidTournament={isValidTournament}
-                      onTeamSelect={handleTeamSelection}
-                      onChampionshipPointsChange={
-                        handleChampionshipPointsChange
-                      }
-                      onSave={handleSavePortfolio}
-                      onRemove={handleRemovePortfolio}
-                      onCancel={handleCancelPortfolio}
-                    />
-                  ))}
+                    </>
+                  )}
                 </Box>
               </Grid>
             </Box>

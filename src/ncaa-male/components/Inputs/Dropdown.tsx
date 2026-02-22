@@ -35,10 +35,20 @@ export default function SelectVariants({
         onChange={(e) => {
           handleChange(
             options.filter((el) => el?.name === e?.target?.value)[0],
-            indexTeam
+            indexTeam,
           );
         }}
         label="Age"
+        MenuProps={{
+          slotProps: {
+            paper: {
+              sx: {
+                backgroundColor: "#000",
+                color: "#fff",
+              },
+            },
+          },
+        }}
       >
         {options?.map((option, index) => (
           <MenuItem

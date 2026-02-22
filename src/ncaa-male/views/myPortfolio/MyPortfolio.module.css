@@ -69,6 +69,14 @@
   align-items: center;
 }
 
+.championshipPoints::before {
+  border-bottom: 0.5px solid white !important;
+}
+
+.championshipPoints:hover:not(.Mui-disabled)::before {
+  border-bottom: 0.5px solid white !important;
+}
+
 .championshipPoints::after {
   border-bottom: 2px solid white;
   font-size: 18px;

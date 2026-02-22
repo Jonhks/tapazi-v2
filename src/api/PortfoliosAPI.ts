@@ -14,16 +14,15 @@ export const getPortfolios = async (
       },
     });
 
-    if (data.portfolios === false) {
+    if (!data.portfolios) {
       return [];
     }
     if (data.portfolios) {
       return data?.portfolios;
     }
   } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
+    console.error("Error fetching portfolios:", error);
+    return [];
   }
 };
 

@@ -14,6 +14,7 @@ interface UsePortfolioActionsProps {
   isValidTournament: boolean;
   queryClient;
   refetchTeams: () => void;
+  tournamentId?: number;
 }
 
 export const usePortfolioActions = ({
@@ -25,6 +26,7 @@ export const usePortfolioActions = ({
   isValidTournament,
   queryClient,
   refetchTeams,
+  tournamentId,
 }: UsePortfolioActionsProps) => {
   // Mutation para crear portfolio
   const { mutate: createPortfolio } = useMutation({
@@ -127,7 +129,7 @@ export const usePortfolioActions = ({
 
     if (result.isConfirmed) {
       const portfolioData = {
-        tournament_id: 1,
+        tournament_id: tournamentId || 1,
         participant_id: Number(userId),
         championship_points: championshipPoints,
         teams: teamsToSend,
