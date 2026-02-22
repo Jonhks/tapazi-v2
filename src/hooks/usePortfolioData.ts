@@ -17,14 +17,16 @@ export const usePortfolioData = (userId: string) => {
   const [isValidTournament, setIsValidTournament] = useState(true);
   const [winnerTeamValidation, setWinnerTeamValidation] = useState([]);
 
-  const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
-    queryKey: ["tournamentMale"],
-    queryFn: () => getTournamentMale('1'),
-    retry: true,
-  });
+  const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery(
+    {
+      queryKey: ["tournamentMale"],
+      queryFn: () => getTournamentMale("1"),
+      retry: true,
+    },
+  );
 
-  const currenttournamentMale = tournamentMale &&  tournamentMale?.[0];
-  // console.log(currenttournamentMale); 
+  const currenttournamentMale = tournamentMale && tournamentMale?.[0];
+  // console.log(currenttournamentMale);
 
   // Obtener portfolios
   const { data: portfoliosData, isLoading: isLoadingPortfolios } = useQuery({
@@ -45,18 +47,23 @@ export const usePortfolioData = (userId: string) => {
   // Obtener fechas del torneo
   const { data: dataDATTOU } = useQuery({
     queryKey: ["dattou", userId],
-    queryFn: () => getDATTOU(userId),
+    queryFn: () => getDATTOU(currenttournamentMale?.id),
+    enabled: !!currenttournamentMale,
+    retry: true,
   });
 
   const { data: dataHOUTOU } = useQuery({
     queryKey: ["houtou", userId],
-    queryFn: () => getHOUTOU(userId),
+    queryFn: () => getHOUTOU(currenttournamentMale?.id),
+    enabled: !!currenttournamentMale,
+    retry: true,
   });
 
   // Obtener ganadores de equipo
   const { data: winnerOfTeam } = useQuery({
     queryKey: ["winnerOfTeam", userId],
     queryFn: () => getWinnerOfTeam(),
+    retry: false,
   });
 
   // Validar fechas del torneo
@@ -88,6 +95,6 @@ export const usePortfolioData = (userId: string) => {
     isLoading: isLoadingPortfolios || isLoadingTeams,
     isValidTournament,
     winnerTeamValidation,
-    currenttournamentMale
+    currenttournamentMale,
   };
 };

@@ -2,7 +2,10 @@ import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { CreatePortfolio, PortfolioComplete, User } from "../types";
 
-export const getPortfolios = async (id: User["id"], tournamentId: User["id"]) => {
+export const getPortfolios = async (
+  id: User["id"],
+  tournamentId: User["id"],
+) => {
   try {
     const url = `/participants/${id}/portfolios?tournament_id=${tournamentId}&sport=ncaa`;
     const { data } = await apiEnv(url, {
@@ -30,7 +33,9 @@ export const getTeamsMale = async () =>
   {
     try {
       // const url = `/sports/${sport}/teams`;
-      const url = `/sports/1/teams`;
+      // const url = `/sports/1/teams`;
+      const url = `/tournaments/1/teams?sport=ncaa&show_all=false`;
+
       // const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
       const { data } = await apiEnv.get(url, {
         headers: {
@@ -105,9 +110,9 @@ export const removeportfolio = async ({
   }
 };
 
-export const getDATTOU = async () => {
+export const getDATTOU = async (tournamentId: User["id"]) => {
   try {
-    const url = `/tournaments/1/parameters?key=DATTOU`;
+    const url = `/tournaments/${tournamentId}/parameters?key=DATTOU`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -128,9 +133,9 @@ export const getDATTOU = async () => {
   }
 };
 
-export const getHOUTOU = async () => {
+export const getHOUTOU = async (tournamentId: User["id"]) => {
   try {
-    const url = `/tournaments/1/parameters?key=HOUTOU`;
+    const url = `/tournaments/${tournamentId}/parameters?key=HOUTOU`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -153,7 +158,8 @@ export const getHOUTOU = async () => {
 
 export const getWinnerOfTeam = async () => {
   try {
-    const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
+    // const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
+    const url = `/reports/winner-of-teams?limit=99`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
