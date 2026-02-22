@@ -9,7 +9,7 @@ import {
   getTeamsFemale,
   getWinnerOfTeam,
   getWinnerOfTeamHasTeam,
-} from "@/api/female/PortfoliosAPI";
+} from "@/api/female/PortfoliosAPIFemale";
 import { getTournamentFemale } from "@/api/female/HomeAPIFemale";
 import { isDateTimeReached } from "@/utils/getDaysLeft";
 
@@ -40,11 +40,15 @@ export const usePortfolioFemaleData = (userId: string) => {
   );
 
   // Obtener equipos femeninos
-  const { data: teamsFemale, isLoading: isLoadingTeams } = useQuery({
+  const {
+    data: teamsFemale,
+    isLoading: isLoadingTeams,
+    refetch: refetchTeams,
+  } = useQuery({
     queryKey: ["teamsFemale", userId],
     queryFn: () => getTeamsFemale(currentTournamentFemale?.id),
     enabled: !!currentTournamentFemale?.id,
-    cacheTime: 30 * 60 * 1000, // 30 minutos
+    refetchInterval: 60 * 1000, // Refetch cada 1 minuto
     refetchOnWindowFocus: false,
   });
 
@@ -97,6 +101,7 @@ export const usePortfolioFemaleData = (userId: string) => {
     currentTournamentFemale,
     portfoliosObtained,
     teamsFemale,
+    refetchTeams,
     isValidTournament,
     winnerTeamValidation,
     isLoading: isLoadingTournament || isLoadingPortfolios || isLoadingTeams,

@@ -35,6 +35,7 @@ const MyPortfolio = () => {
   const {
     portfoliosData,
     teamsData,
+    refetchTeams,
     isLoading,
     isValidTournament,
     winnerTeamValidation,
@@ -55,7 +56,7 @@ const MyPortfolio = () => {
     setIsEditing,
     isValidTournament,
     queryClient,
-    // tournamentMale
+    refetchTeams,
   });
 
   // Validaciones
@@ -130,6 +131,8 @@ const MyPortfolio = () => {
   //   queryFn: () => getTournamentMale('1'),
   //   retry: true,
   // });
+
+  // console.log(isValidTournament);
 
   if (isLoading) {
     return <Loader />;

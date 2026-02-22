@@ -3,7 +3,10 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { postNewPortfolio, removeportfolio } from "@/api/female/PortfoliosAPI";
+import {
+  postNewPortfolio,
+  removeportfolio,
+} from "@/api/female/PortfoliosAPIFemale";
 
 /**
  * Hook para manejar las acciones de los portafolios femeninos.
@@ -20,6 +23,7 @@ export const usePortfolioFemaleActions = ({
   isValidTournament,
   currentTournamentFemale,
   queryClient,
+  refetchTeams,
 }) => {
   // Mutación para crear un nuevo portafolio
   const { mutate } = useMutation({
@@ -47,6 +51,9 @@ export const usePortfolioFemaleActions = ({
 
   // Agregar una nueva pestaña de portafolio
   const addportFolio = () => {
+    // Refetchear equipos disponibles al abrir el formulario
+    refetchTeams();
+
     setValue(portfolios?.length);
     setEditing(true);
     const newData = [...portfolios];

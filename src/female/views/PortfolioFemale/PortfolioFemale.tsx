@@ -46,6 +46,7 @@ const MyPortfolio = () => {
     currentTournamentFemale,
     portfoliosObtained,
     teamsFemale,
+    refetchTeams,
     isValidTournament,
     winnerTeamValidation,
     isLoading,
@@ -69,6 +70,7 @@ const MyPortfolio = () => {
     isValidTournament,
     currentTournamentFemale,
     queryClient,
+    refetchTeams,
   });
 
   // Sincronizar puntos de campeonato cuando cambia el portafolio seleccionado

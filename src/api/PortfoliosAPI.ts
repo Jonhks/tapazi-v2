@@ -119,12 +119,12 @@ export const getDATTOU = async (tournamentId: User["id"]) => {
       },
     });
 
-    if (!data.success) {
+    if (!data.value) {
       return "Error";
     }
 
-    if (data.success) {
-      return data.data.value;
+    if (data.value) {
+      return data.value;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -141,13 +141,12 @@ export const getHOUTOU = async (tournamentId: User["id"]) => {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-
-    if (!data.success) {
+    if (!data.value) {
       return "Error";
     }
 
-    if (data.success) {
-      return data.data.value;
+    if (data.value) {
+      return data.value;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -156,22 +155,22 @@ export const getHOUTOU = async (tournamentId: User["id"]) => {
   }
 };
 
-export const getWinnerOfTeam = async () => {
+export const getWinnerOfTeam = async (tournamentId: User["id"]) => {
   try {
     // const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
-    const url = `/reports/winner-of-teams?limit=99`;
+    const url = `/tournaments/${tournamentId}/winner-of-team?sport=ncaa&limit=99`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.teams) {
       return "Error";
     }
 
-    if (data.success) {
-      return data.data.winnerOfTeam;
+    if (data.teams) {
+      return data.teams;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -180,25 +179,30 @@ export const getWinnerOfTeam = async () => {
   }
 };
 
-export const getWinnerOfTeamHasTeam = async (id: string) => {
+export const getWinnerOfTeamHasTeam = async (
+  tournamentId: User["id"],
+  id: string,
+) => {
   try {
-    const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
+    // const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
+    const url = `/tournaments/${tournamentId}/winner-of-team-has-team?sport=ncaa&winner_of_team_id=${id}`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
+    console.log(data);
 
-    if (!data.success) {
+    if (!data.teams) {
       return "Error";
     }
 
-    if (data.success) {
-      return data.data.winnerOfTeamHasTeam;
+    if (data.teams) {
+      return data.teams;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
+      console.error("getWinnerOfTeamHasTeam error:", error.response.data.error);
+    return [];
   }
 };

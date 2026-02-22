@@ -30,7 +30,7 @@ export function timeUntil(targetTimeStr: string): TimeRemaining {
     currentDate.getDate(),
     targetHours,
     targetMinutes,
-    targetSeconds
+    targetSeconds,
   );
 
   // Calcular la diferencia en milisegundos
@@ -48,7 +48,7 @@ export function timeUntil(targetTimeStr: string): TimeRemaining {
 // Función para verificar si la fecha y hora actuales han alcanzado o superado una fecha y hora específicas teniendo en cuenta la zona horaria
 export function isDateTimeReached(
   targetDateStr: string,
-  targetTimeStr: string
+  targetTimeStr: string,
 ): boolean {
   // const timeZone = "UTC";
   // Fecha y hora actuales en la zona horaria especificada
@@ -67,9 +67,9 @@ export function isDateTimeReached(
     targetDay,
     targetHours,
     targetMinutes,
-    targetSeconds
+    targetSeconds,
   );
-
+  // console.log(targetDate, currentDate);
   // Comparar las fechas
   return targetDate >= currentDate;
 }

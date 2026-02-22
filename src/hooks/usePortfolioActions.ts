@@ -13,6 +13,7 @@ interface UsePortfolioActionsProps {
   setIsEditing: (editing: boolean) => void;
   isValidTournament: boolean;
   queryClient;
+  refetchTeams: () => void;
 }
 
 export const usePortfolioActions = ({
@@ -23,6 +24,7 @@ export const usePortfolioActions = ({
   setIsEditing,
   isValidTournament,
   queryClient,
+  refetchTeams,
 }: UsePortfolioActionsProps) => {
   // Mutation para crear portfolio
   const { mutate: createPortfolio } = useMutation({
@@ -50,6 +52,9 @@ export const usePortfolioActions = ({
 
   // Agregar nuevo portfolio
   const handleAddPortfolio = () => {
+    // Refetchear equipos disponibles al abrir el formulario
+    refetchTeams();
+
     const newPortfolio = {
       newPortfolio: true,
       teams: Array(8).fill(false),

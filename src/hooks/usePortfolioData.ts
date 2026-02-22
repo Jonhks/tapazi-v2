@@ -37,10 +37,14 @@ export const usePortfolioData = (userId: string) => {
   });
 
   // Obtener equipos
-  const { data: teamsData, isLoading: isLoadingTeams } = useQuery({
+  const {
+    data: teamsData,
+    isLoading: isLoadingTeams,
+    refetch: refetchTeams,
+  } = useQuery({
     queryKey: ["teams", userId],
     queryFn: () => getTeams(),
-    staleTime: 30 * 60 * 1000, // 30 minutos
+    refetchInterval: 60 * 1000, // Refetch cada 1 minuto
     refetchOnWindowFocus: false,
   });
 
@@ -59,10 +63,13 @@ export const usePortfolioData = (userId: string) => {
     retry: true,
   });
 
+  // console.log("asdmakñsdaksk", dataHOUTOU, dataDATTOU, "api");
+
   // Obtener ganadores de equipo
   const { data: winnerOfTeam } = useQuery({
     queryKey: ["winnerOfTeam", userId],
-    queryFn: () => getWinnerOfTeam(),
+    queryFn: () => getWinnerOfTeam(currenttournamentMale?.id),
+    enabled: !!currenttournamentMale,
     retry: false,
   });
 
@@ -70,6 +77,8 @@ export const usePortfolioData = (userId: string) => {
   useEffect(() => {
     if (dataDATTOU && dataHOUTOU) {
       const isValid = isDateTimeReached(dataDATTOU, dataHOUTOU);
+      // console.log("isValid", isValid);
+
       setIsValidTournament(isValid);
     }
   }, [dataDATTOU, dataHOUTOU]);
@@ -78,10 +87,12 @@ export const usePortfolioData = (userId: string) => {
   useEffect(() => {
     if (winnerOfTeam) {
       Promise.all(
-        winnerOfTeam.map((winner) => getWinnerOfTeamHasTeam(winner.id)),
+        winnerOfTeam.map((winner) =>
+          getWinnerOfTeamHasTeam(currenttournamentMale?.id, winner.team_id),
+        ),
       ).then((responses) => {
         const formattedData = winnerOfTeam.map((winner, index) => ({
-          winnerOfTeam: winner.id,
+          winnerOfTeam: winner.team_id,
           winnerOfTeamHasTeam: responses[index].map((team) => team.teamId),
         }));
         setWinnerTeamValidation(formattedData);
@@ -92,6 +103,7 @@ export const usePortfolioData = (userId: string) => {
   return {
     portfoliosData,
     teamsData,
+    refetchTeams,
     isLoading: isLoadingPortfolios || isLoadingTeams,
     isValidTournament,
     winnerTeamValidation,
