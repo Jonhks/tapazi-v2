@@ -2,7 +2,7 @@ import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import {
   PortfolioComplete,
-  Portfolios,
+  // Portfolios,
   User,
   PortfolioToSave,
 } from "../../types";
