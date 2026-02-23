@@ -42,8 +42,9 @@ export const usePortfolioData = (userId: string) => {
     isLoading: isLoadingTeams,
     refetch: refetchTeams,
   } = useQuery({
-    queryKey: ["teams", userId],
-    queryFn: () => getTeams(),
+    queryKey: ["teamsMale", userId],
+    queryFn: () => getTeams(currenttournamentMale?.id),
+    enabled: !!currenttournamentMale,
     refetchInterval: 60 * 1000, // Refetch cada 1 minuto
     refetchOnWindowFocus: false,
   });

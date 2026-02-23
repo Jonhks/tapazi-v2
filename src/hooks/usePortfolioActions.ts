@@ -129,7 +129,7 @@ export const usePortfolioActions = ({
 
     if (result.isConfirmed) {
       const portfolioData = {
-        tournament_id: tournamentId || 1,
+        tournament_id: tournamentId,
         participant_id: Number(userId),
         championship_points: championshipPoints,
         teams: teamsToSend,
