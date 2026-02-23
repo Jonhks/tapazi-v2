@@ -25,6 +25,7 @@ import { usePortfolioFemaleData } from "@/hooks/usePortfolioFemaleData";
 import { usePortfolioFemaleActions } from "@/hooks/usePortfolioFemaleActions";
 import { getTournamentFemale } from "@/api/female/HomeAPIFemale";
 import { Portfolios } from "@/types/index";
+import { toast } from "react-toastify";
 
 const MyPortfolio = () => {
   const params = useParams();
@@ -161,9 +162,7 @@ const MyPortfolio = () => {
       const portFolioEditable = newData.find((port) => port?.newPortfolio);
 
       if (portFolioEditable?.teams?.some((t) => t?.id === port?.id)) {
-        setDuplicates(true);
         toast.error("You cannot enter duplicate fields!!");
-        setTimeout(() => setDuplicates(false), 3000);
         return;
       }
 
