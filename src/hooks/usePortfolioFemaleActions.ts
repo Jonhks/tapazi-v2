@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import {
   postNewPortfolio,
-  removeportfolio,
+  removeportfolioFemale,
 } from "@/api/female/PortfoliosAPIFemale";
 
 /**
@@ -39,7 +39,7 @@ export const usePortfolioFemaleActions = ({
 
   // Mutación para eliminar un portafolio
   const { mutate: removeportfolioMutate } = useMutation({
-    mutationFn: removeportfolio,
+    mutationFn: removeportfolioFemale,
     onSuccess: (resp) => {
       toast.success(resp);
       queryClient.invalidateQueries(["portfoliosFEMALE", userId]);

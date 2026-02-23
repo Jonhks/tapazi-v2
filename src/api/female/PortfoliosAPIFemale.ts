@@ -103,58 +103,19 @@ export const postNewPortfolio = async (data: PortfolioToSave) => {
   }
 };
 
-export const removeportfolio = async ({
+export const removeportfolioFemale = async ({
   portId,
-  portfolios,
-  userId,
 }: {
   portId: PortfolioComplete["id"];
-  portfolios: Portfolios;
-  userId: User["id"];
 }) => {
-  const urlRemovePortfolio = `/portfolios/remove?api-key=TESTAPIKEY&portfolio-id=${portId}&participant-id=${userId}`;
-  const newData = [...portfolios];
+  const urlRemovePortfolio = `/portfolios/${portId}`;
 
-  newData.filter((el) => el?.id !== portId);
-  const postPortfolio = {
-    championshipPoints: 123,
-    teams: [
-      {
-        id: 1,
-      },
-      {
-        id: 12,
-      },
-      {
-        id: 13,
-      },
-      {
-        id: 14,
-      },
-      {
-        id: 15,
-      },
-      {
-        id: 16,
-      },
-      {
-        id: 17,
-      },
-      {
-        id: 18,
-      },
-    ],
-  };
   try {
-    const { data } = await apiEnv.post(
-      urlRemovePortfolio,
-      JSON.stringify(postPortfolio),
-      {
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
+    const { data } = await apiEnv.delete(urlRemovePortfolio, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
       },
-    );
+    });
     console.log(data);
   } catch (error) {
     if (isAxiosError(error) && error.response)
