@@ -133,7 +133,7 @@ const MyPortfolio = () => {
   //   retry: true,
   // });
 
-  // console.log(isValidTournament);
+  // console.log(currenttournamentMale.name);
 
   if (isLoading) {
     return <Loader />;

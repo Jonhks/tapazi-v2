@@ -69,7 +69,8 @@ export const usePortfolioFemaleData = (userId: string) => {
   // Obtener reglas de equipos ganadores
   const { data: winnerOfTeamData } = useQuery({
     queryKey: ["winnerOfTeam", userId],
-    queryFn: () => getWinnerOfTeam(),
+    queryFn: () => getWinnerOfTeam(currentTournamentFemale?.id),
+    enabled: !!currentTournamentFemale?.id,
     retry: false,
   });
 

@@ -3,6 +3,8 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import classes from "./Dropdown.module.css";
+import { BallIcon } from "@/assets/icons/icons";
+
 export default function SelectVariants({
   disabled,
   indexTeam,
@@ -39,11 +41,13 @@ export default function SelectVariants({
           );
         }}
         label="Age"
+        renderValue={(selected) => selected as string}
         MenuProps={{
           slotProps: {
             paper: {
               sx: {
-                backgroundColor: "#000",
+                backgroundColor:
+                  "rgba(0, 0, 0, 0.9)" /* Black with 70% opacity */,
                 color: "#fff",
               },
             },
@@ -54,7 +58,9 @@ export default function SelectVariants({
           <MenuItem
             key={index}
             value={option?.name}
+            sx={{ display: "flex", alignItems: "center", gap: 1 }}
           >
+            <BallIcon />
             {option.name}
           </MenuItem>
         ))}

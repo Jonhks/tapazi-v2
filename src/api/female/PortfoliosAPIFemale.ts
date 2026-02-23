@@ -208,21 +208,21 @@ export const getHOUTOUFemale = async (tournamentId: User["id"]) => {
   }
 };
 
-export const getWinnerOfTeam = async () => {
+export const getWinnerOfTeam = async (tournamentId: User["id"]) => {
   try {
-    const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
+    const url = `/tournaments/${tournamentId}/winner-of-team?sport=ncaa&limit=99`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
-      return "Error";
+    if (!data.teams) {
+      return [];
     }
 
-    if (data.success) {
-      return data.data.winnerOfTeam;
+    if (data.teams) {
+      return data.teams;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
