@@ -130,8 +130,10 @@ export default function MiniDrawer() {
       text: "You want to log out",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#238b94",
-      cancelButtonColor: "#c7630b",
+      confirmButtonColor: "rgba(5, 250, 5, .8)",
+      cancelButtonColor: "#e18331ff",
+      background: "rgba(0, 0, 0, 0.8)",
+      color: "#fff",
       confirmButtonText: "Yes, I want to log out!!",
     }).then((result) => {
       if (result.isConfirmed) {
@@ -141,6 +143,9 @@ export default function MiniDrawer() {
           title: "Logged out!",
           text: "You have logged out.",
           icon: "success",
+          confirmButtonColor: "rgba(5, 250, 5, .8)",
+          background: "rgba(0, 0, 0, 0.8)",
+          color: "#fff",
         });
       }
     });
@@ -153,7 +158,9 @@ export default function MiniDrawer() {
       icon: "question",
       heightAuto: false,
       scrollbarPadding: true,
-      confirmButtonColor: "#238b94",
+      confirmButtonColor: "rgba(5, 250, 5, .8)",
+      background: "rgba(0, 0, 0, 0.8)",
+      color: "#fff",
     });
   };
 

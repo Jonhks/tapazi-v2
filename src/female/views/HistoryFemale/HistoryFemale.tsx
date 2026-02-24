@@ -15,7 +15,7 @@ import {
   // getTournaments,
 } from "@/api/HistoryAPI";
 // import { Tournament } from "@/types/index";
-import Loader from "../../components/BallLoader/BallLoader";
+// import Loader from "../../components/BallLoader/BallLoader";
 // import TableHistoryTeamsPerYearLog from "../../components/Table/TableHistoryTeamsPerYearLog";
 import TableHistoryTeamsPerYearLogSelected from "../../components/Table/TableHistoryTeamsPerYearLogSelected";
 // import TableHistoryPerfectPortfolios from "../../components/Table/TableHistoryPerfectPortfolios";
@@ -108,12 +108,13 @@ const HistoryFemale = () => {
   //   [typeGraphs],
   // );
 
-  const { data: teamsPerYearLog, isLoading: loadingTeamsPerYearLog } = useQuery(
-    {
-      queryKey: ["teamsPerYearLog", userId],
-      queryFn: () => getTeamsPerYearLog(),
-    },
-  );
+  const {
+    data: teamsPerYearLog,
+    //  isLoading: loadingTeamsPerYearLog
+  } = useQuery({
+    queryKey: ["teamsPerYearLog", userId],
+    queryFn: () => getTeamsPerYearLog(),
+  });
 
   // const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
   //   useQuery({
@@ -121,11 +122,13 @@ const HistoryFemale = () => {
   //     queryFn: () => getTeamsPerfectPortfolios(),
   //   });
 
-  const { data: teamsHistoricAllRounds, isLoading: loadingHistoryAllRounds } =
-    useQuery({
-      queryKey: ["teamsHistoricAllRounds", orderHistorySelected],
-      queryFn: () => getTeamsHistoricAllRounds(orderHistorySelected.value),
-    });
+  const {
+    data: teamsHistoricAllRounds,
+    //  isLoading: loadingHistoryAllRounds
+  } = useQuery({
+    queryKey: ["teamsHistoricAllRounds", orderHistorySelected],
+    queryFn: () => getTeamsHistoricAllRounds(orderHistorySelected.value),
+  });
 
   const {
     data: historicalPerfectPortfoliosHistory,
@@ -180,13 +183,13 @@ const HistoryFemale = () => {
   );
   // console.log(selectedScore);
 
-  if (
-    // isLoading ||
-    loadingTeamsPerYearLog ||
-    // loadingPerfectPortfolios ||
-    loadingHistoryAllRounds
-  )
-    return <Loader />;
+  // if (
+  // isLoading ||
+  // loadingTeamsPerYearLog ||
+  // loadingPerfectPortfolios ||
+  // loadingHistoryAllRounds
+  // )
+  // return <Loader />;
 
   return (
     <>

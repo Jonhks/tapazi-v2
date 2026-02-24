@@ -86,8 +86,10 @@ function ResponsiveAppBar() {
       text: "You want to log out",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#238b94",
-      cancelButtonColor: "#c7630b",
+      confirmButtonColor: "rgba(223, 42, 249, .8)",
+      cancelButtonColor: "#e18331ff",
+      background: "rgba(36, 37, 62, .8)",
+      color: "#fff",
       confirmButtonText: "Yes, I want to log out!!!",
     }).then((result) => {
       if (result.isConfirmed) {
@@ -97,6 +99,9 @@ function ResponsiveAppBar() {
           title: "Logged out!",
           text: "You have logged out.",
           icon: "success",
+          confirmButtonColor: "rgba(223, 42, 249, .8)",
+          background: "rgba(36, 37, 62, .8)",
+          color: "#fff",
         });
       }
     });
@@ -110,7 +115,9 @@ function ResponsiveAppBar() {
       icon: "question",
       heightAuto: false,
       scrollbarPadding: false,
-      confirmButtonColor: "#238b94",
+      confirmButtonColor: " rgba(223, 42, 249, .8)",
+      background: "rgba(36, 37, 62, .8)",
+      color: "#fff",
     });
   };
 
@@ -192,8 +199,15 @@ function ResponsiveAppBar() {
   return (
     <Box>
       <AppBar
-        position="sticky"
-        sx={{ bottom: 0, backgroundColor: "#000" }}
+        position="fixed"
+        sx={{
+          top: "auto",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "#000",
+          zIndex: 1100,
+        }}
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>

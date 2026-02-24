@@ -13,7 +13,7 @@ import {
   getPoponaFemale,
   // getPortfoliosCountFemale,
   getScoresFemale,
-  getTournamentFemale
+  getTournamentFemale,
 } from "@/api/female/HomeAPIFemale";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { PayOut } from "@/types/index";
@@ -26,13 +26,14 @@ const Home = () => {
 
   const [selected, setSelected] = useState("first");
 
-    const { data: tournamentFelame, isLoading: isLoadingTournamentFemale } = useQuery({
+  const { data: tournamentFelame, isLoading: isLoadingTournamentFemale } =
+    useQuery({
       queryKey: ["tournamentFemale", userId],
       queryFn: () => getTournamentFemale("3"),
     });
 
-    // console.log(tournamentFelame);
-    const tournament = tournamentFelame?.length > 0 ? tournamentFelame[0] : null;
+  // console.log(tournamentFelame);
+  const tournament = tournamentFelame?.length > 0 ? tournamentFelame[0] : null;
 
   const { data: scoresFemale, isLoading: isloadingScoreFemale } = useQuery({
     queryKey: ["scoresFemale", userId],
@@ -41,23 +42,28 @@ const Home = () => {
   });
   // console.log(scoresFemale);
 
-  const { data: DataPoponaFemale, isLoading: isLoadingPoponaFemale } = useQuery({
-    queryKey: ["poponaFemale", userId],
-    queryFn: () => getPoponaFemale(tournament?.id),
-    enabled: !!tournament?.id,
-  });
+  const { data: DataPoponaFemale, isLoading: isLoadingPoponaFemale } = useQuery(
+    {
+      queryKey: ["poponaFemale", userId],
+      queryFn: () => getPoponaFemale(tournament?.id),
+      enabled: !!tournament?.id,
+    },
+  );
 
-  const { data: dataHOINFOFemale, isLoading: isLoadingHOINFOFemale } = useQuery({
-    queryKey: ["HOINFOFemale", userId],
-    queryFn: () => getHOINFOFemale(tournament?.id),
-    enabled: !!tournament?.id,
-  });
+  const { data: dataHOINFOFemale, isLoading: isLoadingHOINFOFemale } = useQuery(
+    {
+      queryKey: ["HOINFOFemale", userId],
+      queryFn: () => getHOINFOFemale(tournament?.id),
+      enabled: !!tournament?.id,
+    },
+  );
 
-  const { data: participantsFemale, isLoading: isLoadingParticipantsFemale } = useQuery({
-    queryKey: ["participantsFemale", userId],
-    queryFn: () => getParticipantsFemale(tournament?.id),
-    enabled: !!tournament?.id,
-  });
+  const { data: participantsFemale, isLoading: isLoadingParticipantsFemale } =
+    useQuery({
+      queryKey: ["participantsFemale", userId],
+      queryFn: () => getParticipantsFemale(tournament?.id),
+      enabled: !!tournament?.id,
+    });
 
   // const { data: portfoliosFemale } = useQuery({
   //   queryKey: ["portfoliosFemale", userId],
@@ -83,12 +89,12 @@ const Home = () => {
   };
   // console.log(dataHOINFOFemale);
 
-  const isLoading = 
-  isloadingScoreFemale || 
-  isLoadingPoponaFemale ||
-   isLoadingHOINFOFemale || 
-   isLoadingTournamentFemale || 
-   isLoadingParticipantsFemale;
+  const isLoading =
+    isloadingScoreFemale ||
+    isLoadingPoponaFemale ||
+    isLoadingHOINFOFemale ||
+    isLoadingTournamentFemale ||
+    isLoadingParticipantsFemale;
 
   return (
     <>
@@ -160,10 +166,10 @@ const Home = () => {
                   <p>Total Entries: {participantsFemale?.portfolios}</p>
                   <br />
                   {payoutFemale?.map((pay: PayOut, i: number) => (
-                  <p key={i}>
-                    Place {pay?.place}: <span>{pay?.percentage}%</span>
-                  </p>
-                ))}
+                    <p key={i}>
+                      Place {pay?.place}: <span>{pay?.percentage}%</span>
+                    </p>
+                  ))}
                 </div>
               </Grid>
               <Grid
@@ -209,10 +215,13 @@ const Home = () => {
                   size={11}
                   offset={0.5}
                 >
-                  <Table
-                    participantScore={scoresFemale?.participant}
-                    othersParticipants={scoresFemale?.data?.others}
-                  />
+                  {(scoresFemale?.participant ||
+                    scoresFemale?.data?.others) && (
+                    <Table
+                      participantScore={scoresFemale?.participant}
+                      othersParticipants={scoresFemale?.others}
+                    />
+                  )}
                 </Grid>
               </Zoom>
             </Grid>

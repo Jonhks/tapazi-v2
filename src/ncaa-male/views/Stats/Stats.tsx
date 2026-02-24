@@ -16,7 +16,7 @@ import {
 } from "@tanstack/react-query";
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
-import Loader from "../../components/BallLoader/BallLoader";
+// import Loader from "../../components/BallLoader/BallLoader";
 import TableHistory from "../../components/Table/TableHistory";
 // import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
@@ -234,8 +234,10 @@ const Stats = () => {
     isLoadinTeamsNotPickedLog ||
     isLoadinSeedPickTotal ||
     isLoadinPortfolioSeedSelections
-  )
-    return <Loader />;
+  ) {
+    console.log("loading");
+  }
+  // return <Loader />;
 
   return (
     <Grid

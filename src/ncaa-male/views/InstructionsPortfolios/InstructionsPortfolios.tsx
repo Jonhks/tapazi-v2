@@ -44,7 +44,8 @@ const Instructions = () => {
         style={{
           minHeight: "700px",
           height: "calc(100vh - 56px)",
-          overflow: "scroll",
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
         className={classes.gridInstructions}
       >

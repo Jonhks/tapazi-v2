@@ -25,9 +25,8 @@ export const getPortfoliosFemale = async (
     }
     return data.portfolios;
   } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
+    console.error("Error fetching female portfolios:", error);
+    return [];
   }
 };
 

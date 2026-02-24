@@ -13,7 +13,7 @@ import {
   getPopona,
   getPortfoliosCount,
   getScores,
-  getTournamentMale
+  getTournamentMale,
 } from "@/api/HomeAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { PayOut } from "@/types/index";
@@ -26,10 +26,12 @@ const Home = () => {
 
   const [selected, setSelected] = useState("first");
 
-  const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
-    queryKey: ["tournamentMale", userId],
-    queryFn: () => getTournamentMale("1"),
-  });
+  const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery(
+    {
+      queryKey: ["tournamentMale", userId],
+      queryFn: () => getTournamentMale("1"),
+    },
+  );
 
   const tournamentId = tournamentMale?.[0]?.id;
 
@@ -41,31 +43,33 @@ const Home = () => {
 
   // console.log(dataScores);
 
-  const { data: DataPopona , isLoading: isLoadingPopona} = useQuery({
+  const { data: DataPopona, isLoading: isLoadingPopona } = useQuery({
     queryKey: ["popona", userId],
     queryFn: () => getPopona(tournamentId),
     enabled: !!tournamentId,
   });
 
-  const { data: dataHOINFO , isLoading: isLoadingHOINFO} = useQuery({
+  const { data: dataHOINFO, isLoading: isLoadingHOINFO } = useQuery({
     queryKey: ["HOINFO", userId],
     queryFn: () => getHOINFO(tournamentId),
     enabled: !!tournamentId,
   });
 
-  const { data: participants , isLoading: isLoadingParticipants} = useQuery({
+  const { data: participants, isLoading: isLoadingParticipants } = useQuery({
     queryKey: ["participants", userId],
     queryFn: () => getParticipants(tournamentId),
     enabled: !!tournamentId,
   });
 
-  const { data: portfoliosHome , isLoading: isLoadingPortfoliosHome} = useQuery({
-    queryKey: ["portfoliosHome", userId],
-    queryFn: () => getPortfoliosCount(tournamentId),
-    enabled: !!tournamentId,
-  });
+  const { data: portfoliosHome, isLoading: isLoadingPortfoliosHome } = useQuery(
+    {
+      queryKey: ["portfoliosHome", userId],
+      queryFn: () => getPortfoliosCount(tournamentId),
+      enabled: !!tournamentId,
+    },
+  );
 
-  const { data: payout , isLoading: isLoadingPayout} = useQuery({
+  const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payout", userId],
     queryFn: () => gatPayout(tournamentId),
     retry: true,
@@ -86,7 +90,14 @@ const Home = () => {
   };
   // console.log(participants);
 
-  const isLoading = isLoadingScores || isLoadingTournamentMale || isLoadingPopona || isLoadingHOINFO || isLoadingParticipants || isLoadingPortfoliosHome || isLoadingPayout;
+  const isLoading =
+    isLoadingScores ||
+    isLoadingTournamentMale ||
+    isLoadingPopona ||
+    isLoadingHOINFO ||
+    isLoadingParticipants ||
+    isLoadingPortfoliosHome ||
+    isLoadingPayout;
 
   return (
     <>
@@ -195,10 +206,13 @@ const Home = () => {
                   size={11}
                   offset={0.5}
                 >
-                  <Table
-                    participantScore={dataScores?.score?.participant}
-                    othersParticipants={dataScores?.score?.others}
-                  />
+                  {(dataScores?.score?.participant ||
+                    dataScores?.score?.others) && (
+                    <Table
+                      participantScore={dataScores?.score?.participant}
+                      othersParticipants={dataScores?.score?.others}
+                    />
+                  )}
                 </Grid>
               </Zoom>
             </Grid>
