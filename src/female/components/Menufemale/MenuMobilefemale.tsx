@@ -141,6 +141,14 @@ function ResponsiveAppBar() {
       }}
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
+      slotProps={{
+        paper: {
+          sx: {
+            backgroundColor: "rgba(36, 37, 62, 0.95)",
+            color: "#fff",
+          },
+        },
+      }}
     >
       <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
         <IconButton
@@ -205,7 +213,7 @@ function ResponsiveAppBar() {
           bottom: 0,
           left: 0,
           right: 0,
-          backgroundColor: "#000",
+          backgroundColor: "#24253e",
           zIndex: 1100,
         }}
       >
