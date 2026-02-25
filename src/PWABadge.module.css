@@ -4,58 +4,74 @@
   width: 0;
   height: 0;
 }
+
 .PWABadgeToast {
   position: fixed;
-  right: 0;
   top: 50%;
-  right: 38%;
-  margin: 16px;
-  padding: 12px;
-  border: 1px solid #8885;
-  border-radius: 20px;
-  z-index: 1;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  padding: 24px 32px;
+  border-radius: 12px;
   text-align: center;
-  box-shadow: 3px 4px 5px 0 #8885;
-  background-color: #3f1567;
+  background-color: rgba(0, 0, 0, 0.92);
   color: white;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+  min-width: 280px;
+  max-width: 90vw;
 }
 
 #toastMessage,
 .toastMessage {
   color: white !important;
-  padding: 5px;
+  padding: 8px 0 16px;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
-.PWABadgeToastMessage {
+.PWABadgeMessage {
   margin-bottom: 8px;
 }
 
+.PWABadgeButtons {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
 .PWABadgeToastButton {
-  border: 1px solid #8885;
   outline: none;
-  margin-right: 5%;
-  background: #3ed076;
+  background: rgba(5, 250, 5, 0.8);
   color: white;
-  padding: 5px 10px;
-  border-radius: 10px;
-  width: 40%;
-  border-color: #4b0d6a;
-  color: white;
-  margin-top: 5px;
-  box-shadow: 3px 4px 5px 0 #343333;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  min-width: 100px;
+  transition: opacity 0.2s;
+}
+
+.PWABadgeToastButton:hover {
+  opacity: 0.85;
 }
 
 .PWABadgeToastButtonCancel {
-  border: 1px solid #8885;
   outline: none;
-  margin-right: 5%;
-  background: #3ed076;
+  background: #e18331;
   color: white;
-  padding: 5px 10px;
-  border-radius: 10px;
-  width: 40%;
-  border-color: #c7630b;
-  color: white;
-  margin-top: 5px;
-  box-shadow: 3px 4px 5px 0 #343333;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: bold;
+  font-size: 13px;
+  cursor: pointer;
+  min-width: 100px;
+  transition: opacity 0.2s;
+}
+
+.PWABadgeToastButtonCancel:hover {
+  opacity: 0.85;
 }
