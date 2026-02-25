@@ -127,14 +127,6 @@ const MyPortfolio = () => {
     }
   };
 
-  // const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
-  //   queryKey: ["tournamentMale"],
-  //   queryFn: () => getTournamentMale('1'),
-  //   retry: true,
-  // });
-
-  // console.log(currenttournamentMale.name);
-
   if (isLoading) {
     return <Loader />;
   }

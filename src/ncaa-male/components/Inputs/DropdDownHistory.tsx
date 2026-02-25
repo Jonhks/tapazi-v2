@@ -40,6 +40,16 @@ export default function BasicSelect({
           value={value}
           label={label}
           onChange={handleChange}
+          MenuProps={{
+            slotProps: {
+              paper: {
+                sx: {
+                  backgroundColor: "rgba(0, 0, 0, 0.9)",
+                  color: "#fff",
+                },
+              },
+            },
+          }}
         >
           {options?.map((option, index) => (
             <MenuItem
