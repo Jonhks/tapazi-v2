@@ -15,6 +15,7 @@ import { messagemodalInstallmobile } from "@/utils/app";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
+import AltRouteIcon from "@mui/icons-material/AltRoute";
 import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 const Icons = [
   <SportsSoccerIcon key="ball" />,
@@ -145,6 +146,18 @@ function MenuMobileEpl() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
+        <IconButton
+          size="large"
+          aria-label="account of current user"
+          aria-controls="primary-search-account-menu"
+          aria-haspopup="true"
+          color="inherit"
+        >
+          <AltRouteIcon />
+        </IconButton>
+        <p>Sports Selection</p>
+      </MenuItem>
       <MenuItem onClick={showInstructions}>
         <IconButton
           size="large"

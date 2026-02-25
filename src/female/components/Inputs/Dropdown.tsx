@@ -46,10 +46,8 @@ export default function SelectVariants({
           slotProps: {
             paper: {
               sx: {
-                backgroundColor: "#24253e",
-                // "rgba(110, 63, 109, 0.9)" /* Purple matching the UI with 90% opacity */,
+                backgroundColor: "rgba(36, 37, 62, 0.9)",
                 color: "#fff",
-                opacity: 0.8,
               },
             },
           },
