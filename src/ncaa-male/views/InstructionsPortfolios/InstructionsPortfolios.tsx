@@ -13,12 +13,12 @@ const Instructions = () => {
 
   const { data: tournamentData, isLoading: isLoadingTournament } = useQuery({
     queryKey: ["tournametMaleInstruccions", userId],
-    queryFn: () => getTournamentMale(userId),
+    queryFn: () => getTournamentMale("1"),
   });
 
   const currentTournament = tournamentData && tournamentData[0];
 
-  // console.log(currentTournament);
+  console.log(currentTournament);
 
   const { data: instructionsData, isLoading } = useQuery({
     queryKey: ["instructions", userId, currentTournament],
