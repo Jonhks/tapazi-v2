@@ -53,7 +53,7 @@ const PortfolioTab: React.FC<PortfolioTabProps> = ({
   return (
     <Box sx={{ p: 3 }}>
       {/* Selección de equipos */}
-      {portfolio.teams.map((team, teamIndex: number) => (
+      {portfolio?.teams?.map((team, teamIndex: number) => (
         <div
           key={teamIndex}
           className={classes.containerDropdown}
