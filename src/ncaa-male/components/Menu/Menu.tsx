@@ -18,7 +18,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Grid from "@mui/material/Grid2";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import HistoryIcon from "@mui/icons-material/History";
@@ -115,6 +115,16 @@ export default function MiniDrawer() {
   const [open, setOpen] = useState(false);
   const params = useParams();
   const userId = params.userId!;
+  const location = useLocation();
+
+  const ACTIVE_COLOR = "#05fa87";
+  const DEFAULT_COLOR = "#DC903B";
+
+  const isActive = (id: string) => {
+    if (id === "logOut") return false;
+    const segment = id.split("/")[0];
+    return location.pathname.includes(segment);
+  };
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -287,6 +297,15 @@ export default function MiniDrawer() {
                         minHeight: 48,
                         justifyContent: open ? "initial" : "center",
                         px: 2.5,
+                        transition: "all 0.2s ease-in-out",
+                        "&:hover": {
+                          backgroundColor: "rgba(255, 255, 255, 0.1)",
+                          transform: "translateX(4px)",
+                        },
+                        ...(isActive(el.id) && {
+                          backgroundColor: "rgba(255, 255, 255, 0.05)",
+                          borderRight: `4px solid ${ACTIVE_COLOR}`,
+                        }),
                       }}
                       onClick={() =>
                         el?.id !== "logOut" ? navigate(el?.id) : removeUser()
@@ -297,14 +316,20 @@ export default function MiniDrawer() {
                           minWidth: 0,
                           mr: open ? 3 : "auto",
                           justifyContent: "center",
-                          color: "#DC903B",
+                          color: isActive(el.id) ? ACTIVE_COLOR : DEFAULT_COLOR,
                         }}
                       >
                         {Icons[index]}
                       </ListItemIcon>
                       <ListItemText
                         primary={el?.text}
-                        sx={{ opacity: open ? 1 : 0 }}
+                        sx={{
+                          opacity: open ? 1 : 0,
+                          "& .MuiTypography-root": {
+                            color: isActive(el.id) ? ACTIVE_COLOR : "inherit",
+                            fontWeight: isActive(el.id) ? 700 : 400,
+                          },
+                        }}
                       />
                     </ListItemButton>
                   </ListItem>

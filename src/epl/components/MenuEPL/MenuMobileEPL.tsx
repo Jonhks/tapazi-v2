@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import LogoutIcon from "@mui/icons-material/Logout";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Badge, Menu, MenuItem } from "@mui/material";
 import Swal from "sweetalert2";
 import InstallMobileIcon from "@mui/icons-material/InstallMobile";
@@ -31,6 +31,19 @@ function MenuMobileEpl() {
   const userId = params.userId!;
   const navigate = useNavigate();
   const sportId = params.sportId || "1"; // Default to 1 if sportId is not provided
+  const location = useLocation();
+
+  const ACTIVE_COLOR = "#4BF589";
+  const DEFAULT_COLOR = "inherit";
+
+  const isActive = (id: string) => {
+    if (id === "more" || id === "logOut") return false;
+    const parts = id.split("/");
+    const segment = parts.find((p) =>
+      ["home", "myPortfolio", "instructions", "stats", "history"].includes(p),
+    );
+    return segment ? location.pathname.includes(segment) : false;
+  };
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
@@ -241,7 +254,17 @@ function MenuMobileEpl() {
                       navigate(pages[index].id);
                     }
                   }}
-                  color="inherit"
+                  color={isActive(pages[index].id) ? "success" : "inherit"}
+                  sx={{
+                    color: isActive(pages[index].id)
+                      ? ACTIVE_COLOR
+                      : DEFAULT_COLOR,
+                    transition: "all 0.2s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      color: ACTIVE_COLOR,
+                    },
+                  }}
                 >
                   {icon}
                 </IconButton>

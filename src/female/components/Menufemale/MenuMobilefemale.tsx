@@ -10,7 +10,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { PodiumIcon } from "@/assets/icons/icons";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import AccountCircle from "@mui/icons-material/AccountCircle";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { Badge, Menu, MenuItem } from "@mui/material";
 import Swal from "sweetalert2";
 import InstallMobileIcon from "@mui/icons-material/InstallMobile";
@@ -52,6 +52,19 @@ function ResponsiveAppBar() {
   const userId = params.userId!;
   const sportId = params.sportId || "1";
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const ACTIVE_COLOR = "#e040fb";
+  const DEFAULT_COLOR = "inherit";
+
+  const isActive = (id: string) => {
+    if (id === "more") return false;
+    const parts = id.split("/");
+    const segment = parts.find((p) =>
+      ["home", "myPortfolio", "instructions", "stats", "history"].includes(p),
+    );
+    return segment ? location.pathname.includes(segment) : false;
+  };
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
@@ -242,7 +255,17 @@ function ResponsiveAppBar() {
                       ? navigate(pages[index].id)
                       : openMenuMobile(e)
                   }
-                  color="inherit"
+                  color={isActive(pages[index].id) ? "secondary" : "inherit"}
+                  sx={{
+                    color: isActive(pages[index].id)
+                      ? ACTIVE_COLOR
+                      : DEFAULT_COLOR,
+                    transition: "all 0.2s ease-in-out",
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      color: ACTIVE_COLOR,
+                    },
+                  }}
                 >
                   {icon}
                 </IconButton>

@@ -18,7 +18,7 @@ const Instructions = () => {
 
   const currentTournament = tournamentData && tournamentData[0];
 
-  console.log(currentTournament);
+  // console.log(currentTournament);
 
   const { data: instructionsData, isLoading } = useQuery({
     queryKey: ["instructions", userId, currentTournament],
