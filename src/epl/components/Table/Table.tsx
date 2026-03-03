@@ -163,6 +163,7 @@ export default function CustomizedTables({
     <TableContainer
       component={Paper}
       sx={{ backgroundColor: "transparent", maxHeight: "580px" }}
+      className="enable-horizontal-scroll"
     >
       <Table
         sx={{ minWidth: 100, opacity: "1" }}

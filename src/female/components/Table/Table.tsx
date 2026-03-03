@@ -270,7 +270,10 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
       </div>
 
       {/* ── Table ── */}
-      <div style={{ overflow: "auto", maxHeight: "600px" }}>
+      <div
+        style={{ overflow: "auto", maxHeight: "600px" }}
+        className="enable-horizontal-scroll"
+      >
         <table
           style={{
             width: "100%",

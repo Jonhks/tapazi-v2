@@ -37,7 +37,7 @@ const Instructions = () => {
           height: "calc(100vh - 56px)",
           overflow: "scroll",
         }}
-        className={classes.gridInstructions}
+        className={`${classes.gridInstructions} enable-vertical-scroll`}
       >
         <Grid size={{ xs: 11, md: 8 }}>
           <Box
