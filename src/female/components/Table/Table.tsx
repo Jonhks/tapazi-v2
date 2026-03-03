@@ -202,7 +202,7 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
   const isLast = (i: number) => i === totalCols - 1;
   const isSticky = (i: number) =>
     isFirst(i) || (!isMobile && isSecond(i)) || isLast(i);
-  const secondColLeft = isMobile ? 80 : 120;
+  const secondColLeft = isMobile ? 80 : 100;
 
   const getHeaderBg = (i: number) => {
     if (isFirst(i)) return "#0d0d1a";

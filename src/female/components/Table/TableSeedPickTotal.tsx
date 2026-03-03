@@ -83,7 +83,7 @@ export default function CustomizedTables({ arrHistory, score }) {
       return createData(
         row,
         arrHistory[0][`teams_seed${i + 1}`],
-        arrHistory[0][`prcnt_teams_seed${i + 1}`]
+        arrHistory[0][`prcnt_teams_seed${i + 1}`],
       );
     }),
   ];
