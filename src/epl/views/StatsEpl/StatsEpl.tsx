@@ -14,7 +14,11 @@ import {
   TableHead,
   TableRow,
   Box,
+  Input,
+  InputAdornment,
 } from "@mui/material";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import SearchIcon from "@mui/icons-material/Search";
 import { styled } from "@mui/material/styles";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
@@ -28,6 +32,7 @@ import {
   useReactTable,
   getCoreRowModel,
   getSortedRowModel,
+  getFilteredRowModel,
   flexRender,
   SortingState,
   ColumnDef,
@@ -152,6 +157,7 @@ const StatsEpl = () => {
   const userId = params.userId!;
 
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [filtered, setFiltered] = useState<string>("");
 
   const { data: statsEplData, isLoading } = useQuery({
     queryKey: ["statsEpl", userId],
@@ -225,10 +231,12 @@ const StatsEpl = () => {
   const table = useReactTable({
     data: statsWithCrests || [],
     columns,
-    state: { sorting },
+    state: { sorting, globalFilter: filtered },
     onSortingChange: setSorting,
+    onGlobalFilterChange: setFiltered,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
   });
 
   const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -442,6 +450,44 @@ const StatsEpl = () => {
             <Box
               sx={{ width: "100%", overflow: "hidden", borderRadius: "4px" }}
             >
+              <div
+                style={{
+                  backgroundColor: "#d6cfcfff",
+                  color: "black",
+                  width: 200,
+                  borderRadius: 5,
+                  margin: "0 0 10px 0",
+                  padding: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Input
+                  type={"search"}
+                  sx={{
+                    width: "100%",
+                    height: "",
+                    padding: "0",
+                  }}
+                  placeholder="Search..."
+                  color={"warning"}
+                  value={filtered ?? ""}
+                  onChange={(e) => setFiltered(String(e.target.value))}
+                  startAdornment={
+                    <InputAdornment
+                      position="start"
+                      sx={{ pl: 1 }}
+                    >
+                      <SearchIcon color="inherit" />
+                    </InputAdornment>
+                  }
+                  inputProps={{
+                    style: { textTransform: "lowercase", padding: "5px" },
+                    autoCapitalize: "none",
+                  }}
+                />
+              </div>
               <StyledTableContainer sx={{ maxHeight: "60vh" }}>
                 <Table
                   stickyHeader
@@ -526,9 +572,57 @@ const StatsEpl = () => {
                               zIndex: 4,
                             }}
                           >
-                            {flexRender(
-                              header.column.columnDef.header,
-                              header.getContext(),
+                            {header.isPlaceholder ? null : (
+                              <div
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                              >
+                                <div>
+                                  {flexRender(
+                                    header.column.columnDef.header,
+                                    header.getContext(),
+                                  )}
+                                </div>
+                                {{
+                                  asc: (
+                                    <ArrowUpwardIcon
+                                      style={{
+                                        fontSize: "20px",
+                                        marginLeft: "4px",
+                                      }}
+                                    />
+                                  ),
+                                  desc: (
+                                    <ArrowUpwardIcon
+                                      style={{
+                                        transform: "rotate(180deg)",
+                                        fontSize: "20px",
+                                        marginLeft: "4px",
+                                      }}
+                                    />
+                                  ),
+                                  undefined: (
+                                    <ArrowUpwardIcon
+                                      style={{
+                                        color: "gray",
+                                        fontSize: "20px",
+                                        marginLeft: "4px",
+                                      }}
+                                    />
+                                  ),
+                                }[header.column.getIsSorted() as string] || (
+                                  <ArrowUpwardIcon
+                                    style={{
+                                      color: "gray",
+                                      fontSize: "20px",
+                                      marginLeft: "4px",
+                                    }}
+                                  />
+                                )}
+                              </div>
                             )}
                           </StyledHeaderCell>
                         ))}
