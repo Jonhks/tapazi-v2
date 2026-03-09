@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import classes from "./StatsEpl.module.css";
 import {
   FormControl,
@@ -23,6 +23,15 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import { getTeamsEpl } from "@/api/epl/PortfoliosEplAPI";
+
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  flexRender,
+  SortingState,
+  ColumnDef,
+} from "@tanstack/react-table";
 
 type TeamStat = {
   id: number;
@@ -76,7 +85,7 @@ const StyledHeaderCell = styled(TableCell)(() => ({
   fontWeight: "bold",
   textAlign: "center",
   border: "none",
-  padding: "16px 8px",
+  padding: "8px 4px",
   fontSize: "0.85rem",
   textTransform: "uppercase",
 }));
@@ -142,12 +151,14 @@ const StatsEpl = () => {
   const params = useParams();
   const userId = params.userId!;
 
+  const [sorting, setSorting] = useState<SortingState>([]);
+
   const { data: statsEplData, isLoading } = useQuery({
     queryKey: ["statsEpl", userId],
     queryFn: () => getStatsEpl(),
   });
 
-  const { data: teamsEplStats, isLoading: teamsEplStatsLoading } = useQuery({
+  const { data: teamsEplStats } = useQuery({
     queryKey: ["teamsEplStats", userId],
     queryFn: () => getTeamsEpl("2"),
   });
@@ -178,6 +189,47 @@ const StatsEpl = () => {
       };
     },
   );
+
+  const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
+    () => [
+      {
+        header: "Portfolio",
+        accessorKey: "portfolio",
+      },
+
+      ...Array.from({ length: 7 }, (_, i) => ({
+        header: `Team ${i + 1}`,
+        accessorFn: (row: PortfolioWithCrests) => row.teams?.[i],
+        id: `team_${i}`,
+      })),
+
+      {
+        header: () => (
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              lineHeight: 1,
+            }}
+          >
+            <span>W</span>
+            <span>SCORE</span>
+          </Box>
+        ),
+        accessorKey: "week_score",
+      },
+    ],
+    [],
+  );
+
+  const table = useReactTable({
+    data: statsWithCrests || [],
+    columns,
+    state: { sorting },
+    onSortingChange: setSorting,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+  });
 
   const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSortOrder((event.target as HTMLInputElement).value);
@@ -396,9 +448,9 @@ const StatsEpl = () => {
                   aria-label="stats table"
                   sx={{ borderCollapse: "separate", borderSpacing: 0 }}
                 >
-                  <TableHead>
+                  {/* <TableHead>
                     <TableRow>
-                      {/* Left Sticky Headers */}
+                      Left Sticky Headers
                       <StyledHeaderCell
                         sx={{
                           color: "#05fa87",
@@ -412,9 +464,9 @@ const StatsEpl = () => {
                       >
                         Portfolio
                       </StyledHeaderCell>
-                      {/* <StyledHeaderCell sx={{ position: "sticky", left: "100px", zIndex: 3, width: "80px", padding: "16px 4px" }}>Weight</StyledHeaderCell> */}
+                      <StyledHeaderCell sx={{ position: "sticky", left: "100px", zIndex: 3, width: "80px", padding: "16px 4px" }}>Weight</StyledHeaderCell>
 
-                      {/* Scrollable Team Headers */}
+                      Scrollable Team Headers
                       {[1, 2, 3, 4, 5, 6, 7].map((n) => (
                         <StyledHeaderCell
                           key={n}
@@ -424,7 +476,7 @@ const StatsEpl = () => {
                         </StyledHeaderCell>
                       ))}
 
-                      {/* Right Sticky Headers */}
+                      Right Sticky Headers
                       <StyledHeaderCell
                         sx={{
                           position: "sticky",
@@ -438,11 +490,55 @@ const StatsEpl = () => {
                         week score
                       </StyledHeaderCell>
                     </TableRow>
+                  </TableHead> */}
+                  <TableHead>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <TableRow key={headerGroup.id}>
+                        {headerGroup.headers.map((header, index) => (
+                          <StyledHeaderCell
+                            key={header.id}
+                            onClick={header.column.getToggleSortingHandler()}
+                            sx={{
+                              cursor: "pointer",
+                              minWidth:
+                                index === 0
+                                  ? "120px"
+                                  : index === headerGroup.headers.length - 1
+                                    ? "40px"
+                                    : "150px",
+
+                              position:
+                                index === 0 ||
+                                index === headerGroup.headers.length - 1
+                                  ? "sticky"
+                                  : "static",
+
+                              left: index === 0 ? 0 : undefined,
+                              right:
+                                index === headerGroup.headers.length - 1
+                                  ? 0
+                                  : undefined,
+                              padding:
+                                index === headerGroup.headers.length - 1
+                                  ? "8px 2px"
+                                  : "8px 4px",
+
+                              zIndex: 4,
+                            }}
+                          >
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                          </StyledHeaderCell>
+                        ))}
+                      </TableRow>
+                    ))}
                   </TableHead>
-                  <TableBody>
+                  {/* <TableBody>
                     {(statsWithCrests || []).map((row: any, index: number) => (
                       <StyledTableRow key={index}>
-                        {/* Left Sticky Cells */}
+                        Left Sticky Cells
                         <StyledBodyCell
                           sx={{
                             color: "#05fa87",
@@ -459,11 +555,6 @@ const StatsEpl = () => {
                         >
                           {row.portfolio}
                         </StyledBodyCell>
-                        {/* {
-                          console.log(row.teams)
-                        } */}
-
-                        {/* Scrollable Team Cells */}
                         {row?.teams?.map((team: TeamWithCrest) => (
                           <StyledBodyCell key={team.name || " "}>
                             <TeamDisplay
@@ -472,8 +563,6 @@ const StatsEpl = () => {
                             />
                           </StyledBodyCell>
                         ))}
-
-                        {/* Right Sticky Cells */}
                         <StyledBodyCell
                           sx={{
                             position: "sticky",
@@ -488,12 +577,74 @@ const StatsEpl = () => {
                         >
                           {row.week_score}
                         </StyledBodyCell>
-                        {/* <StyledBodyCell sx={{ position: "sticky", right: "140px", zIndex: 1, width: "60px", padding: "12px 4px", backgroundColor: index % 2 === 0 ? "#15051a" : "#22092c" }}>
+                        <StyledBodyCell sx={{ position: "sticky", right: "140px", zIndex: 1, width: "60px", padding: "12px 4px", backgroundColor: index % 2 === 0 ? "#15051a" : "#22092c" }}>
                           {row.score}
                         </StyledBodyCell>
                         <StyledBodyCell sx={{ position: "sticky", right: 0, zIndex: 1, width: "140px", padding: "12px 4px", backgroundColor: index % 2 === 0 ? "#15051a" : "#22092c" }}>
                           {row.championshipPoints || row.points}
-                        </StyledBodyCell> */}
+                        </StyledBodyCell>
+                      </StyledTableRow>
+                    ))}
+                  </TableBody> */}
+                  <TableBody>
+                    {table.getRowModel().rows.map((row, index) => (
+                      <StyledTableRow key={row.id}>
+                        {row.getVisibleCells().map((cell) => {
+                          const value = cell.getValue();
+
+                          if (cell.column.id === "portfolio") {
+                            return (
+                              <StyledBodyCell
+                                key={cell.id}
+                                sx={{
+                                  color: "#05fa87",
+                                  fontWeight: "bold",
+                                  fontSize: "12px",
+                                  position: "sticky",
+                                  left: 0,
+                                  zIndex: 3,
+                                  backgroundColor:
+                                    index % 2 === 0 ? "#15051a" : "#22092c",
+                                }}
+                              >
+                                {value as string}
+                              </StyledBodyCell>
+                            );
+                          }
+
+                          if (cell.column.id === "week_score") {
+                            return (
+                              <StyledBodyCell
+                                key={cell.id}
+                                sx={{
+                                  position: "sticky",
+                                  right: 0,
+                                  zIndex: 3,
+                                  width: "30px",
+                                  backgroundColor:
+                                    index % 2 === 0 ? "#15051a" : "#22092c",
+
+                                  fontSize: "12px",
+                                }}
+                              >
+                                {value as number}
+                              </StyledBodyCell>
+                            );
+                          }
+
+                          const team = value as TeamWithCrest;
+
+                          return (
+                            <StyledBodyCell key={cell.id}>
+                              {team && (
+                                <TeamDisplay
+                                  name={team.name}
+                                  crest={team.crest || ""}
+                                />
+                              )}
+                            </StyledBodyCell>
+                          );
+                        })}
                       </StyledTableRow>
                     ))}
                   </TableBody>
