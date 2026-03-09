@@ -1,11 +1,11 @@
 import { useState } from "react";
 import classes from "./StatsEpl.module.css";
-import { 
-  FormControl, 
-  FormControlLabel, 
-  Radio, 
-  RadioGroup, 
-  Typography, 
+import {
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
   Zoom,
   Table,
   TableBody,
@@ -13,7 +13,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Box
+  Box,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
@@ -22,8 +22,33 @@ import { getStatsEpl } from "@/api/epl/StatsEplAPI";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
+import { getTeamsEpl } from "@/api/epl/PortfoliosEplAPI";
 
+type TeamStat = {
+  id: number;
+  name: string;
+  description: string;
+  key: string;
+  seed: number;
+  crest_url: string;
+};
 
+type PortfolioStat = {
+  portfolio: string;
+  teams: string;
+  week_score: number;
+};
+
+type TeamWithCrest = {
+  name: string;
+  crest: string | null;
+};
+
+type PortfolioWithCrests = {
+  portfolio: string;
+  week_score: number;
+  teams: TeamWithCrest[];
+};
 
 // Custom styled components for the table to match the UI in the image
 const StyledTableContainer = styled(TableContainer)(() => ({
@@ -76,11 +101,31 @@ const StyledTableRow = styled(TableRow)(() => ({
   },
 }));
 
-const TeamDisplay = ({ name }: { name: string }) => (
-  <Box display="flex" alignItems="center" justifyContent="center" gap={1}>
+const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
+  <Box
+    display="flex"
+    alignItems="center"
+    justifyContent="start"
+    gap={1}
+  >
     {/* Placeholder for team logo - in a real app these would be assets */}
-    <Box sx={{ width: 24, height: 24, backgroundColor: "rgba(255,255,255,0.1)", borderRadius: "50%" }} />
-    <Typography variant="body2" sx={{ fontSize: "0.8rem", whiteSpace: "nowrap" }}>{name}</Typography>
+    <Box
+      sx={{
+        width: 24,
+        height: 24,
+        backgroundColor: "rgba(255,255,255,0.1)",
+        backgroundImage: `url(${crest})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        borderRadius: "50%",
+      }}
+    />
+    <Typography
+      variant="body2"
+      sx={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}
+    >
+      {name}
+    </Typography>
   </Box>
 );
 
@@ -94,19 +139,45 @@ const StatsEpl = () => {
   const tournaments = [{ id: "1", name: "MEN'S BB TOURNAMENT 2025" }];
   const dataTypes = [{ id: "1", name: "SCORE" }];
   const scoreTypes = [{ id: "1", name: "CURRENT SCORE" }];
-   const params = useParams();
-    const userId = params.userId!;
+  const params = useParams();
+  const userId = params.userId!;
 
-
-  
   const { data: statsEplData, isLoading } = useQuery({
     queryKey: ["statsEpl", userId],
     queryFn: () => getStatsEpl(),
   });
 
-  console.log(statsEplData);
+  const { data: teamsEplStats, isLoading: teamsEplStatsLoading } = useQuery({
+    queryKey: ["teamsEplStats", userId],
+    queryFn: () => getTeamsEpl("2"),
+  });
 
+  const teamsMap: Record<string, string> = teamsEplStats?.reduce(
+    (acc: Record<string, string>, team: TeamStat) => {
+      acc[team.name] = team.crest_url;
+      return acc;
+    },
+    {},
+  );
 
+  const statsWithCrests: PortfolioWithCrests[] = statsEplData?.map(
+    (item: PortfolioStat) => {
+      const teams: string[] = JSON.parse(item.teams);
+
+      const teamsWithCrests: TeamWithCrest[] = teams.map(
+        (teamName: string) => ({
+          name: teamName,
+          crest: teamsMap[teamName] ?? null,
+        }),
+      );
+
+      return {
+        portfolio: item.portfolio,
+        week_score: item.week_score,
+        teams: teamsWithCrests,
+      };
+    },
+  );
 
   const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSortOrder((event.target as HTMLInputElement).value);
@@ -133,17 +204,29 @@ const StatsEpl = () => {
         sx={{ width: "100%", maxWidth: "100%" }}
       >
         <div className={`${classes.boxHistory} ${classes.active}`}>
-          <div className={classes.titleBox} style={{ justifyContent: "center" }}>
+          <div
+            className={classes.titleBox}
+            style={{ justifyContent: "center" }}
+          >
             STATS
           </div>
           <div className={classes.subBoxHistory}>
-            <Grid container spacing={4}>
+            <Grid
+              container
+              spacing={4}
+            >
               {/* Left Column: Dropdowns */}
               <Grid size={{ xs: 12, md: 7 }}>
-                <Grid container spacing={2} alignItems="center">
+                <Grid
+                  container
+                  spacing={2}
+                  alignItems="center"
+                >
                   {/* Tournament Row */}
                   <Grid size={4}>
-                    <Typography sx={{ color: "white", textAlign: "right", pr: 2 }}>
+                    <Typography
+                      sx={{ color: "white", textAlign: "right", pr: 2 }}
+                    >
                       Tournament:
                     </Typography>
                   </Grid>
@@ -153,14 +236,18 @@ const StatsEpl = () => {
                       label=""
                       className={classes.DropDownHistory}
                       value={tournament}
-                      handleChange={(e) => setTournament(e.target.value as string)}
+                      handleChange={(e) =>
+                        setTournament(e.target.value as string)
+                      }
                       options={tournaments}
                     />
                   </Grid>
 
                   {/* Data Row */}
                   <Grid size={4}>
-                    <Typography sx={{ color: "white", textAlign: "right", pr: 2 }}>
+                    <Typography
+                      sx={{ color: "white", textAlign: "right", pr: 2 }}
+                    >
                       Data:
                     </Typography>
                   </Grid>
@@ -170,14 +257,18 @@ const StatsEpl = () => {
                       label=""
                       className={classes.DropDownHistory}
                       value={dataType}
-                      handleChange={(e) => setDataType(e.target.value as string)}
+                      handleChange={(e) =>
+                        setDataType(e.target.value as string)
+                      }
                       options={dataTypes}
                     />
                   </Grid>
 
                   {/* Score Row */}
                   <Grid size={4}>
-                    <Typography sx={{ color: "white", textAlign: "right", pr: 2 }}>
+                    <Typography
+                      sx={{ color: "white", textAlign: "right", pr: 2 }}
+                    >
                       Score:
                     </Typography>
                   </Grid>
@@ -187,7 +278,9 @@ const StatsEpl = () => {
                       label=""
                       className={classes.DropDownHistory}
                       value={scoreType}
-                      handleChange={(e) => setScoreType(e.target.value as string)}
+                      handleChange={(e) =>
+                        setScoreType(e.target.value as string)
+                      }
                       options={scoreTypes}
                     />
                   </Grid>
@@ -222,7 +315,7 @@ const StatsEpl = () => {
                       }
                     />
                     <FormControlLabel
-                      value="Portfolio (Asc)"
+                      value="gap (Asc)"
                       control={
                         <Radio
                           sx={{
@@ -270,7 +363,7 @@ const StatsEpl = () => {
           </div>
         </div>
       </Grid>
-      
+
       <Grid
         container
         spacing={2}
@@ -283,48 +376,116 @@ const StatsEpl = () => {
         <Zoom in={true}>
           <Grid size={11.5}>
             <Box sx={{ width: "100%", textAlign: "center", mb: 2 }}>
-              <Typography variant="h5" sx={{ color: "white", fontWeight: "bold", textTransform: "uppercase" }}>
+              <Typography
+                variant="h5"
+                sx={{
+                  color: "white",
+                  fontWeight: "bold",
+                  textTransform: "uppercase",
+                }}
+              >
                 Score
               </Typography>
             </Box>
-            <Box sx={{ width: "100%", overflow: "hidden", borderRadius: "4px" }}>
+            <Box
+              sx={{ width: "100%", overflow: "hidden", borderRadius: "4px" }}
+            >
               <StyledTableContainer sx={{ maxHeight: "60vh" }}>
-                <Table stickyHeader aria-label="stats table" sx={{ borderCollapse: "separate", borderSpacing: 0 }}>
+                <Table
+                  stickyHeader
+                  aria-label="stats table"
+                  sx={{ borderCollapse: "separate", borderSpacing: 0 }}
+                >
                   <TableHead>
                     <TableRow>
                       {/* Left Sticky Headers */}
-                      <StyledHeaderCell sx={{ color: "#05fa87", position: "sticky", left: 0, zIndex: 3, width: "100px", padding: "16px 4px" }}>Portfolio</StyledHeaderCell>
+                      <StyledHeaderCell
+                        sx={{
+                          color: "#05fa87",
+                          position: "sticky",
+                          left: 0,
+                          zIndex: 3,
+                          width: "100px",
+                          padding: "16px 4px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        Portfolio
+                      </StyledHeaderCell>
                       {/* <StyledHeaderCell sx={{ position: "sticky", left: "100px", zIndex: 3, width: "80px", padding: "16px 4px" }}>Weight</StyledHeaderCell> */}
-                      
+
                       {/* Scrollable Team Headers */}
-                      {[1, 2, 3, 4, 5, 6, 7, ].map((n) => (
-                        <StyledHeaderCell key={n} sx={{ minWidth: "150px" }}>Team {n}</StyledHeaderCell>
+                      {[1, 2, 3, 4, 5, 6, 7].map((n) => (
+                        <StyledHeaderCell
+                          key={n}
+                          sx={{ minWidth: "150px", fontSize: "14px" }}
+                        >
+                          Team {n}
+                        </StyledHeaderCell>
                       ))}
-                      
+
                       {/* Right Sticky Headers */}
-                      <StyledHeaderCell sx={{ position: "sticky", right: "0px", zIndex: 3, width: "60px", padding: "16px 4px" }}>week score</StyledHeaderCell>
+                      <StyledHeaderCell
+                        sx={{
+                          position: "sticky",
+                          right: "0px",
+                          zIndex: 3,
+                          width: "60px",
+                          padding: "8px 4px",
+                          fontSize: "14px",
+                        }}
+                      >
+                        week score
+                      </StyledHeaderCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {(statsEplData || []).map((row: any, index: number) => (
+                    {(statsWithCrests || []).map((row: any, index: number) => (
                       <StyledTableRow key={index}>
                         {/* Left Sticky Cells */}
-                        <StyledBodyCell sx={{ color: "#05fa87", fontWeight: "bold", position: "sticky", left: 0, zIndex: 1, width: "", padding: "12px 4px", backgroundColor: index % 2 === 0 ? "#15051a" : "#22092c" }}>
+                        <StyledBodyCell
+                          sx={{
+                            color: "#05fa87",
+                            fontWeight: "bold",
+                            fontSize: "12px",
+                            position: "sticky",
+                            left: 0,
+                            zIndex: 1,
+                            width: "",
+                            padding: "12px 4px",
+                            backgroundColor:
+                              index % 2 === 0 ? "#15051a" : "#22092c",
+                          }}
+                        >
                           {row.portfolio}
                         </StyledBodyCell>
                         {/* {
                           console.log(row.teams)
                         } */}
-                        
+
                         {/* Scrollable Team Cells */}
-                        {JSON.parse(row?.teams)?.map((team: string) => (
-                          <StyledBodyCell key={team || ' '}>
-                            <TeamDisplay name={team || ' ' } />
+                        {row?.teams?.map((team: TeamWithCrest) => (
+                          <StyledBodyCell key={team.name || " "}>
+                            <TeamDisplay
+                              name={team.name || " "}
+                              crest={team.crest || " "}
+                            />
                           </StyledBodyCell>
                         ))}
-                        
+
                         {/* Right Sticky Cells */}
-                        <StyledBodyCell sx={{ position: "sticky", right: "0px", zIndex: 1, width: "60px", padding: "12px 4px", backgroundColor: index % 2 === 0 ? "#15051a" : "#22092c" }}>
+                        <StyledBodyCell
+                          sx={{
+                            position: "sticky",
+                            right: "0px",
+                            zIndex: 1,
+                            width: "60px",
+                            padding: "12px 4px",
+                            backgroundColor:
+                              index % 2 === 0 ? "#15051a" : "#22092c",
+                            fontSize: "12px",
+                          }}
+                        >
                           {row.week_score}
                         </StyledBodyCell>
                         {/* <StyledBodyCell sx={{ position: "sticky", right: "140px", zIndex: 1, width: "60px", padding: "12px 4px", backgroundColor: index % 2 === 0 ? "#15051a" : "#22092c" }}>
@@ -347,4 +508,3 @@ const StatsEpl = () => {
 };
 
 export default StatsEpl;
-

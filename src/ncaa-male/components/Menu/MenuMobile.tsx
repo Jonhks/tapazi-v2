@@ -7,7 +7,7 @@ import Container from "@mui/material/Container";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
 import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { PodiumIcon } from "@/assets/icons/icons";
+import { BasquetIcon, PodiumIcon } from "@/assets/icons/icons";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
@@ -16,17 +16,19 @@ import Swal from "sweetalert2";
 import InstallMobileIcon from "@mui/icons-material/InstallMobile";
 import { messagemodalInstallmobile } from "@/utils/app";
 import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
-import Basket from "@/assets/icons/basket.png";
+// import Basket from "@/assets/icons/basket.png";
 import AltRouteIcon from "@mui/icons-material/AltRoute";
 
 const Icons = [
   <SportsBasketballOutlinedIcon key="ball" />,
-  <img
-    key="basquet"
-    src={Basket}
-    alt="Basketball Hoop"
-    style={{ width: 24, height: 24 }}
-  />,
+  // <img
+  //   key="basquet"
+  //   src={Basket}
+  //   alt="Basketball Hoop"
+  //   style={{ width: 24, height: 24 }}
+  // />,
+  <BasquetIcon key="basquet" />,
+
   <ReceiptLongIcon key="receipt" />,
   <PodiumIcon key="stats" />,
   <HistoryIcon key="history" />,

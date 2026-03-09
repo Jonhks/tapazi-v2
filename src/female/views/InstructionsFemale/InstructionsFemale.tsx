@@ -49,7 +49,7 @@ const Instructions = () => {
             </p>
             <Grid
               size={12}
-              className={classes.subBoxInstructions}
+              className={`${classes.subBoxInstructions} enable-vertical-scroll enable-horizontal-scroll`}
             >
               {instructionsData.map((paragrpah: Instructions, i: number) => (
                 <div
