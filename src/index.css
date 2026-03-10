@@ -65,7 +65,7 @@ tr:nth-child(odd) {
 }
 
 /* Enable specific scrolls */
-/* .enable-horizontal-scroll {
+.enable-horizontal-scroll {
   scrollbar-width: auto;
   -ms-overflow-style: auto;
 }
@@ -95,4 +95,4 @@ tr:nth-child(odd) {
 }
 .enable-vertical-scroll::-webkit-scrollbar-track {
   background: transparent;
-} */
+}
