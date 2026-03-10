@@ -7,12 +7,19 @@ import {
   RadioGroup,
   Typography,
   Zoom,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Box,
   Input,
   InputAdornment,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SearchIcon from "@mui/icons-material/Search";
+import { styled } from "@mui/material/styles";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
 import { getStatsEpl } from "@/api/epl/StatsEplAPI";
@@ -20,6 +27,7 @@ import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import { getTeamsEpl } from "@/api/epl/PortfoliosEplAPI";
+
 import {
   useReactTable,
   getCoreRowModel,
@@ -56,6 +64,57 @@ type PortfolioWithCrests = {
   teams: TeamWithCrest[];
 };
 
+// Custom styled components for the table to match the UI in the image
+const StyledTableContainer = styled(TableContainer)(() => ({
+  backgroundColor: "transparent",
+  boxShadow: "none",
+  overflow: "auto",
+  "&::-webkit-scrollbar": {
+    width: "8px",
+  },
+  "&::-webkit-scrollbar-track": {
+    background: "#0d0211",
+  },
+  "&::-webkit-scrollbar-thumb": {
+    background: "#333",
+    borderRadius: "10px",
+  },
+  "&::-webkit-scrollbar-thumb:hover": {
+    background: "#555",
+  },
+}));
+
+const StyledHeaderCell = styled(TableCell)(() => ({
+  backgroundColor: "#22092c",
+  color: "#ffffff",
+  fontWeight: "bold",
+  textAlign: "center",
+  border: "none",
+  padding: "8px 4px",
+  fontSize: "0.85rem",
+  textTransform: "uppercase",
+}));
+
+const StyledBodyCell = styled(TableCell)(() => ({
+  color: "#ffffff",
+  textAlign: "center",
+  border: "none",
+  padding: "12px 8px",
+  fontSize: "0.9rem",
+}));
+
+const StyledTableRow = styled(TableRow)(() => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: "#15051a",
+  },
+  "&:nth-of-type(even)": {
+    backgroundColor: "#22092c",
+  },
+  "&:hover": {
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+  },
+}));
+
 const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
   <Box
     display="flex"
@@ -63,6 +122,7 @@ const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
     justifyContent="start"
     gap={1}
   >
+    {/* Placeholder for team logo - in a real app these would be assets */}
     <Box
       sx={{
         width: 24,
@@ -89,18 +149,14 @@ const StatsEpl = () => {
   const [scoreType, setScoreType] = useState("CURRENT SCORE");
   const [sortOrder, setSortOrder] = useState("Score (Desc)");
 
+  // Mock data that matches the image provided by the user
   const tournaments = [{ id: "1", name: "MEN'S BB TOURNAMENT 2025" }];
   const dataTypes = [{ id: "1", name: "SCORE" }];
   const scoreTypes = [{ id: "1", name: "CURRENT SCORE" }];
-
   const params = useParams();
   const userId = params.userId!;
 
-  // ✅ FIX 1: SortingState inicializado con el valor por defecto correcto
-  // ANTES: useState([]) — la tabla no sabía que debía ordenar por score al inicio
-  const [sorting, setSorting] = useState<SortingState>([
-    { id: "week_score", desc: true },
-  ]);
+  const [sorting, setSorting] = useState<SortingState>([]);
   const [filtered, setFiltered] = useState<string>("");
 
   const { data: statsEplData, isLoading } = useQuery({
@@ -113,32 +169,16 @@ const StatsEpl = () => {
     queryFn: () => getTeamsEpl("2"),
   });
 
-  // ✅ FIX 2: teamsMap con useMemo
-  // ANTES: se recalculaba en cada render → nuevo objeto en memoria → re-render → loop infinito
-  // AHORA: solo se recalcula cuando cambia teamsEplStats (dato real de la API)
-  const teamsMap: Record<string, string> = useMemo(() => {
-    return (
-      teamsEplStats?.reduce(
-        (acc: Record<string, string>, team: TeamStat) => {
-          acc[team.name] = team.crest_url;
-          return acc;
-        },
-        {} as Record<string, string>,
-      ) ?? {}
-    );
-  }, [teamsEplStats]);
-  // ⚠️ Sin useMemo: cada render crea un {} nuevo → React lo detecta como cambio
-  //    → vuelve a renderizar → {} nuevo → render → {} nuevo → LOOP SILENCIOSO
+  const teamsMap: Record<string, string> = teamsEplStats?.reduce(
+    (acc: Record<string, string>, team: TeamStat) => {
+      acc[team.name] = team.crest_url;
+      return acc;
+    },
+    {},
+  );
 
-  // ✅ FIX 3: statsWithCrests con useMemo
-  // ANTES: se calculaba directamente en el cuerpo del componente
-  //        → nuevo array en cada render → useReactTable detecta nueva data
-  //        → re-render → nuevo array → re-render → LOOP INFINITO
-  // AHORA: solo se recalcula cuando cambian los datos reales de la API
-  const statsWithCrests: PortfolioWithCrests[] = useMemo(() => {
-    if (!statsEplData || !teamsMap) return [];
-
-    return statsEplData.map((item: PortfolioStat) => {
+  const statsWithCrests: PortfolioWithCrests[] = statsEplData?.map(
+    (item: PortfolioStat) => {
       const teams: string[] = JSON.parse(item.teams);
 
       const teamsWithCrests: TeamWithCrest[] = teams.map(
@@ -153,15 +193,9 @@ const StatsEpl = () => {
         week_score: item.week_score,
         teams: teamsWithCrests,
       };
-    });
-  }, [statsEplData, teamsMap]);
-  // ⚠️ Nota: usamos teamsMap (ya memoizado) como dependencia, NO teamsEplStats directamente
-  //    Si usáramos teamsEplStats aquí y no estuviera memoizado el teamsMap,
-  //    igualmente tendríamos el problema
+    },
+  );
 
-  // ✅ FIX 4: columns con useMemo (ya estaba, pero era incompleto)
-  // ANTES: useMemo sin dependencias [] está bien para columnas estáticas
-  // AHORA: igual, sin cambios necesarios aquí
   const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
     () => [
       {
@@ -171,12 +205,15 @@ const StatsEpl = () => {
           <span style={{ color: "#05fa87" }}>{info.getValue() as string}</span>
         ),
       },
+
       ...Array.from({ length: 7 }, (_, i) => ({
         header: `Team ${i + 1}`,
+        // Flatten the search functionality directly into the accessor
         accessorFn: (row: PortfolioWithCrests) => row.teams?.[i]?.name || "",
         id: `team_${i}`,
         cell: (info: any) => {
           const teamName = info.getValue() as string;
+          // Look up original team object to get crest since accessor now only holds string name
           const originalRow = info.row.original as PortfolioWithCrests;
           const fullTeam = originalRow.teams?.[i];
 
@@ -188,9 +225,16 @@ const StatsEpl = () => {
           ) : null;
         },
       })),
+
       {
         header: () => (
-          <Box sx={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              lineHeight: 1,
+            }}
+          >
             <span>W</span>
             <span>SCORE</span>
           </Box>
@@ -201,41 +245,20 @@ const StatsEpl = () => {
     [],
   );
 
-  // ✅ FIX 5: handleSortChange conectado al sorting de useReactTable
-  // ANTES: solo actualizaba sortOrder (estado local del radio button)
-  //        pero NUNCA llamaba a setSorting → la tabla nunca ordenaba nada
-  //        Había DOS sistemas de sorting completamente desconectados entre sí
-  // AHORA: sortOrder controla la UI del radio, setSorting controla la tabla
-  const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSortOrder(value);
-
-    // Conectamos el radio button con el sorting real de TanStack Table
-    if (value === "Score (Desc)") {
-      setSorting([{ id: "week_score", desc: true }]);
-    } else if (value === "gap (Asc)") {
-      // "Portfolio (Asc)" en la UI
-      setSorting([{ id: "portfolio", desc: false }]);
-    } else if (value === "Weight (Desc)") {
-      setSorting([{ id: "week_score", desc: true }]);
-    } else if (value === "Weight (Asc)") {
-      setSorting([{ id: "week_score", desc: false }]);
-    }
-  };
-
   const table = useReactTable({
-    data: statsWithCrests, // ✅ Ahora es estable gracias a useMemo
-    columns, // ✅ Ya era estable
-    state: {
-      sorting, // ✅ Ahora sorting se actualiza desde los radio buttons
-      globalFilter: filtered,
-    },
+    data: statsWithCrests || [],
+    columns,
+    state: { sorting, globalFilter: filtered },
     onSortingChange: setSorting,
     onGlobalFilterChange: setFiltered,
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
+
+  const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSortOrder((event.target as HTMLInputElement).value);
+  };
 
   if (isLoading) return <Loader />;
 
@@ -276,6 +299,7 @@ const StatsEpl = () => {
                   spacing={2}
                   alignItems="center"
                 >
+                  {/* Tournament Row */}
                   <Grid size={4}>
                     <Typography
                       sx={{ color: "white", textAlign: "right", pr: 2 }}
@@ -296,6 +320,7 @@ const StatsEpl = () => {
                     />
                   </Grid>
 
+                  {/* Data Row */}
                   <Grid size={4}>
                     <Typography
                       sx={{ color: "white", textAlign: "right", pr: 2 }}
@@ -316,6 +341,7 @@ const StatsEpl = () => {
                     />
                   </Grid>
 
+                  {/* Score Row */}
                   <Grid size={4}>
                     <Typography
                       sx={{ color: "white", textAlign: "right", pr: 2 }}
@@ -349,7 +375,7 @@ const StatsEpl = () => {
                     aria-labelledby="demo-radio-buttons-group-label"
                     name="radio-buttons-group"
                     value={sortOrder}
-                    onChange={handleSortChange} // ✅ Ahora sí actualiza la tabla
+                    onChange={handleSortChange}
                   >
                     <FormControlLabel
                       value="Score (Desc)"
@@ -438,7 +464,12 @@ const StatsEpl = () => {
                 Score
               </Typography>
             </Box>
-            <Box sx={{ width: "100%", borderRadius: "4px" }}>
+            <Box
+              sx={{
+                width: "100%",
+                borderRadius: "4px",
+              }}
+            >
               <div
                 style={{
                   position: "sticky",
@@ -458,7 +489,10 @@ const StatsEpl = () => {
               >
                 <Input
                   type={"search"}
-                  sx={{ width: "100%", padding: "0" }}
+                  sx={{
+                    width: "100%",
+                    padding: "0",
+                  }}
                   placeholder="Search..."
                   color={"warning"}
                   value={filtered ?? ""}
@@ -478,7 +512,12 @@ const StatsEpl = () => {
                 />
               </div>
               <div style={{ width: "100%", overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                  }}
+                >
                   <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                       <tr key={headerGroup.id}>
@@ -565,10 +604,7 @@ const StatsEpl = () => {
                   </thead>
                   <tbody>
                     {table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className={classes.tableRow}
-                      >
+                      <tr key={row.id}>
                         {row.getVisibleCells().map((cell, index) => (
                           <td
                             key={cell.id}
