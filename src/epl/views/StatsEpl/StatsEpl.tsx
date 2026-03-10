@@ -506,7 +506,13 @@ const StatsEpl = () => {
                 />
               </div>
               <div style={{ width: "100%", overflowX: "auto" }}>
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
+                <table
+                  style={{
+                    width: "100%",
+                    borderCollapse: "collapse",
+                    minWidth: "max-content",
+                  }}
+                >
                   <thead>
                     {table.getHeaderGroups().map((headerGroup) => (
                       <tr key={headerGroup.id}>
