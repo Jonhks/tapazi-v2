@@ -1,0 +1,58 @@
+name: Version Bump
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - dev
+      - master
+
+jobs:
+  bump-version:
+    # Solo ejecutar si el PR fue "merged" (fusionado) y no solo cerrado sin cambios
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Necesario para poder hacer push de regreso al repo
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          # Importante: traemos todo el historial para poder hacer el commit
+          fetch-depth: 0
+          # Usamos un token para poder evadir protecciones si las hay (opcional, en repos simples no hace falta si no hay reglas)
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Configure Git User
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Determine Version Bump
+        id: bump
+        run: |
+          # Checamos hacia que rama se hizo el merge
+          if [[ "${{ github.base_ref }}" == "dev" ]]; then
+            echo "type=patch" >> $GITHUB_OUTPUT
+            echo "Bumping PATCH version (e.g. 2.0.0 -> 2.0.1)"
+          elif [[ "${{ github.base_ref }}" == "master" ]]; then
+            echo "type=minor" >> $GITHUB_OUTPUT
+            echo "Bumping MINOR version (e.g. 2.0.1 -> 2.1.0)"
+          fi
+
+      - name: Apply Version Bump
+        run: |
+          # npm version <type> actualiza el package.json y crea un commit local automático
+          npm version ${{ steps.bump.outputs.type }} -m "chore(release): bump version to %s [skip ci]"
+
+      - name: Push changes
+        run: |
+          # Empujamos el nuevo commit con el package.json actualizado a la rama correspondiente
+          git push origin HEAD:${{ github.base_ref }}
