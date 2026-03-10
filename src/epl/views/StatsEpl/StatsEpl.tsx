@@ -1,10 +1,10 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import classes from "./StatsEpl.module.css";
 import {
-  FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
+  // FormControl,
+  // FormControlLabel,
+  // Radio,
+  // RadioGroup,
   Typography,
   Zoom,
   Box,
@@ -15,7 +15,7 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SearchIcon from "@mui/icons-material/Search";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
-import { getStatsEpl } from "@/api/epl/StatsEplAPI";
+import { getScoreWeeksEpl, getStatsEpl } from "@/api/epl/StatsEplAPI";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
@@ -29,6 +29,7 @@ import {
   SortingState,
   ColumnDef,
 } from "@tanstack/react-table";
+import { getTournaments } from "@/api/epl/HistoryEPLAPI";
 
 type TeamStat = {
   id: number;
@@ -84,14 +85,14 @@ const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
 );
 
 const StatsEpl = () => {
-  const [tournament, setTournament] = useState("MEN'S BB TOURNAMENT 2025");
-  const [dataType, setDataType] = useState("SCORE");
-  const [scoreType, setScoreType] = useState("CURRENT SCORE");
-  const [sortOrder, setSortOrder] = useState("Score (Desc)");
+  const [tournament, setTournament] = useState("EPL TOURNAMENT 2025");
+  const [dataType, setDataType] = useState("PORTFOLIO");
+  const [weekType, setWeekType] = useState<string>("");
 
-  const tournaments = [{ id: "1", name: "MEN'S BB TOURNAMENT 2025" }];
-  const dataTypes = [{ id: "1", name: "SCORE" }];
-  const scoreTypes = [{ id: "1", name: "CURRENT SCORE" }];
+  // const [sortOrder, setSortOrder] = useState("Score (Desc)");
+
+  const dataTypes = [{ id: "1", name: "PORTFOLIO" }];
+  // const weekTypes = [{ id: "1", name: "WEEK" }];
 
   const params = useParams();
   const userId = params.userId!;
@@ -104,8 +105,9 @@ const StatsEpl = () => {
   const [filtered, setFiltered] = useState<string>("");
 
   const { data: statsEplData, isLoading } = useQuery({
-    queryKey: ["statsEpl", userId],
-    queryFn: () => getStatsEpl(),
+    queryKey: ["statsEpl", userId, weekType],
+    queryFn: () => getStatsEpl({ week: weekType }),
+    enabled: !!weekType,
   });
 
   const { data: teamsEplStats } = useQuery({
@@ -113,6 +115,26 @@ const StatsEpl = () => {
     queryFn: () => getTeamsEpl("2"),
   });
 
+  const { data: tournamentsEpl } = useQuery({
+    queryKey: ["tournamentsEpl", userId],
+    queryFn: () => getTournaments("2"),
+  });
+
+  const { data: getScoreWeeks } = useQuery({
+    queryKey: ["getScoreWeeksEpl", userId],
+    queryFn: () => getScoreWeeksEpl({ tournamentId: "3" }),
+    enabled: !!tournamentsEpl,
+  });
+
+  useEffect(() => {
+    // Si tenemos semanas cargadas y el tipo de score (semana) no está definido
+    if (getScoreWeeks && getScoreWeeks.length > 0 && !weekType) {
+      // Tomamos la primera semana por defecto (el valor del value del option)
+      setWeekType(String(getScoreWeeks[0].week));
+    }
+  }, [getScoreWeeks, weekType]);
+
+  console.log(getScoreWeeks);
   // ✅ FIX 2: teamsMap con useMemo
   // ANTES: se recalculaba en cada render → nuevo objeto en memoria → re-render → loop infinito
   // AHORA: solo se recalcula cuando cambia teamsEplStats (dato real de la API)
@@ -206,22 +228,22 @@ const StatsEpl = () => {
   //        pero NUNCA llamaba a setSorting → la tabla nunca ordenaba nada
   //        Había DOS sistemas de sorting completamente desconectados entre sí
   // AHORA: sortOrder controla la UI del radio, setSorting controla la tabla
-  const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSortOrder(value);
+  // const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   // setSortOrder(value);
 
-    // Conectamos el radio button con el sorting real de TanStack Table
-    if (value === "Score (Desc)") {
-      setSorting([{ id: "week_score", desc: true }]);
-    } else if (value === "gap (Asc)") {
-      // "Portfolio (Asc)" en la UI
-      setSorting([{ id: "portfolio", desc: false }]);
-    } else if (value === "Weight (Desc)") {
-      setSorting([{ id: "week_score", desc: true }]);
-    } else if (value === "Weight (Asc)") {
-      setSorting([{ id: "week_score", desc: false }]);
-    }
-  };
+  //   // Conectamos el radio button con el sorting real de TanStack Table
+  //   if (value === "Score (Desc)") {
+  //     setSorting([{ id: "week_score", desc: true }]);
+  //   } else if (value === "gap (Asc)") {
+  //     // "Portfolio (Asc)" en la UI
+  //     setSorting([{ id: "portfolio", desc: false }]);
+  //   } else if (value === "Weight (Desc)") {
+  //     setSorting([{ id: "week_score", desc: true }]);
+  //   } else if (value === "Weight (Asc)") {
+  //     setSorting([{ id: "week_score", desc: false }]);
+  //   }
+  // };
 
   const table = useReactTable({
     data: statsWithCrests, // ✅ Ahora es estable gracias a useMemo
@@ -270,7 +292,7 @@ const StatsEpl = () => {
               spacing={4}
             >
               {/* Left Column: Dropdowns */}
-              <Grid size={{ xs: 12, md: 7 }}>
+              <Grid size={{ xs: 12, md: 10 }}>
                 <Grid
                   container
                   spacing={2}
@@ -292,7 +314,7 @@ const StatsEpl = () => {
                       handleChange={(e) =>
                         setTournament(e.target.value as string)
                       }
-                      options={tournaments}
+                      options={tournamentsEpl}
                     />
                   </Grid>
 
@@ -320,26 +342,32 @@ const StatsEpl = () => {
                     <Typography
                       sx={{ color: "white", textAlign: "right", pr: 2 }}
                     >
-                      Score:
+                      Week:
                     </Typography>
                   </Grid>
                   <Grid size={8}>
                     <DropDownHistory
-                      name="score"
+                      name="week"
                       label=""
                       className={classes.DropDownHistory}
-                      value={scoreType}
+                      value={weekType || ""}
                       handleChange={(e) =>
-                        setScoreType(e.target.value as string)
+                        setWeekType(e.target.value as string)
                       }
-                      options={scoreTypes}
+                      options={getScoreWeeks?.map((week: any) => {
+                        return {
+                          ...week,
+                          name: week.label,
+                          value: String(week.week),
+                        };
+                      })}
                     />
                   </Grid>
                 </Grid>
               </Grid>
 
               {/* Right Column: Radio Buttons */}
-              <Grid
+              {/* <Grid
                 size={{ xs: 12, md: 5 }}
                 display="flex"
                 justifyContent="center"
@@ -409,7 +437,7 @@ const StatsEpl = () => {
                     />
                   </RadioGroup>
                 </FormControl>
-              </Grid>
+              </Grid> */}
             </Grid>
           </div>
         </div>
@@ -435,7 +463,7 @@ const StatsEpl = () => {
                   textTransform: "uppercase",
                 }}
               >
-                Score
+                Portfolios - Week: {weekType}
               </Typography>
             </Box>
             <Box sx={{ width: "100%", borderRadius: "4px" }}>
