@@ -4,7 +4,7 @@
 # respetando la exclusión de axios.ts usando el driver local de Git.
 
 echo "================================================"
-echo "🚀 INICIANDO DESPLIEGUE SEGURO A MASTER (PROD)"
+echo "🚀 INICIANDO DESPLIEGUE SEGURO A MAIN (PROD)"
 echo "================================================"
 
 # Asegurándonos que el árbol de trabajo actual esté limpio
@@ -17,16 +17,16 @@ fi
 echo "🔄 Descargando últimos cambios del servidor..."
 git fetch origin
 
-echo "🔀 Cambiando a rama master..."
-git checkout master
-git pull origin master
+echo "🔀 Cambiando a rama main..."
+git checkout main
+git pull origin main
 
-echo "🤝 Fusionando dev en master de forma segura..."
+echo "🤝 Fusionando dev en main de forma segura..."
 echo "(Git ignorará automáticamente src/lib/axios.ts)"
-git merge dev -m "Merge branch 'dev' into master - Seguro (Ignora axios.ts)"
+git merge dev -m "Merge branch 'dev' into main - Seguro (Ignora axios.ts)"
 
 echo "⬆️ Subiendo cambios a producción (GitHub)..."
-git push origin master
+git push origin main
 
 echo "✅ DESPLIEGUE A PRODUCCIÓN COMPLETADO CON ÉXITO."
 echo "🔄 Volviendo a tu rama de desarrollo..."

@@ -6,7 +6,7 @@ on:
       - closed
     branches:
       - dev
-      - master
+      - main
 
 jobs:
   bump-version:
@@ -42,7 +42,7 @@ jobs:
           if [[ "${{ github.base_ref }}" == "dev" ]]; then
             echo "type=patch" >> $GITHUB_OUTPUT
             echo "Bumping PATCH version (e.g. 2.0.0 -> 2.0.1)"
-          elif [[ "${{ github.base_ref }}" == "master" ]]; then
+          elif [[ "${{ github.base_ref }}" == "main" ]]; then
             echo "type=minor" >> $GITHUB_OUTPUT
             echo "Bumping MINOR version (e.g. 2.0.1 -> 2.1.0)"
           fi
