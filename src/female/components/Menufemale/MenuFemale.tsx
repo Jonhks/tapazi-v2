@@ -30,9 +30,10 @@ import Swal from "sweetalert2";
 import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
 import { messagemodalInstall } from "@/utils/app";
 import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
-import Basket from "@/assets/icons/basket.png";
+// import Basket from "@/assets/icons/basket.png";
 import AltRouteIcon from "@mui/icons-material/AltRoute";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import { BasquetIcon } from "@/assets/icons/icons";
 
 const drawerWidth = 240;
 
@@ -180,12 +181,13 @@ export default function MiniDrawer() {
 
   const Icons = [
     <SportsBasketballOutlinedIcon key="ball" />,
-    <img
-      key="basquet"
-      src={Basket}
-      alt="Basketball Hoop"
-      style={{ width: 24, height: 24 }}
-    />,
+    // <img
+    //   key="basquet"
+    //   src={Basket}
+    //   alt="Basketball Hoop"
+    //   style={{ width: 24, height: 24 }}
+    // />,
+    <BasquetIcon key="basquet" />,
     <ReceiptLongIcon key="receipt" />,
     <TextSnippetIcon key="stats" />,
     <HistoryIcon key="history" />,

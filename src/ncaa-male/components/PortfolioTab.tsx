@@ -67,13 +67,15 @@ const PortfolioTab: React.FC<PortfolioTabProps> = ({
             label={`Selection ${teamIndex + 1}`}
             value={typeof team === "object" && team ? team.name : ""}
             options={isReadOnly ? portfolio.teams : teams}
+            style={{
+              enableVerticalScroll: true,
+            }}
             handleChange={(selectedTeam) =>
               handleTeamChange(selectedTeam, teamIndex)
             }
           />
         </div>
       ))}
-
       {/* Championship Points Input */}
       <Grid
         container

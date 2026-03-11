@@ -46,9 +46,10 @@ export default function SelectVariants({
           slotProps: {
             paper: {
               sx: {
-                backgroundColor:
-                  "rgba(0, 0, 0, 0.9)" /* Black with 70% opacity */,
+                backgroundColor: "rgba(0, 0, 0, 0.9)",
                 color: "#fff",
+                // maxHeight: 250,
+                overflowY: "auto",
               },
             },
           },

@@ -21,7 +21,7 @@ export default function BasicSelect({
   value: unknown;
   handleChange: ChangeHandler;
   name: string;
-  options: { id: string; name: string }[] | undefined;
+  options: { id: string; name: string; value?: string | number }[] | undefined;
 }) {
   return (
     <Box
@@ -45,7 +45,7 @@ export default function BasicSelect({
             <MenuItem
               key={index}
               id={option?.id}
-              value={option?.name}
+              value={option?.value ?? option?.name}
             >
               {option?.name}
             </MenuItem>

@@ -50,8 +50,6 @@ const Login = () => {
     mutate(formData);
   };
 
-
-
   return (
     <Grid
       container
@@ -180,7 +178,11 @@ const Login = () => {
                   Sign up
                 </div>
               </div>
+              <p className={classes.subtitle}>PortfolioPaul, LLC (2025)</p>
             </Box>
+            <p className={classes.version}>
+              Version {import.meta.env.VITE_APP_VERSION}
+            </p>
           </Container>
         </Grid>
       </Slide>
