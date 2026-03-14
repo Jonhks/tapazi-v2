@@ -122,11 +122,11 @@ const Stats = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleChange = (e) => {
-    if (e?.target?.name === "tournament") {
+    if (e?.target?.name === "tournament" && tournaments) {
       const optionSelect = tournaments.filter(
         (el: Tournament) => el?.name === e?.target?.value,
       )[0];
-      setTournament(e?.target?.value);
+      setTournament(e?.target?.value as string);
       setSelectedTournament(optionSelect);
       setIdSubDataSelected(0);
     } else if (e?.target?.name === "dataDropdowndata") {
@@ -289,9 +289,9 @@ const Stats = () => {
                     className={classes.DropDownHistory}
                     value={tournament}
                     handleChange={handleChange}
-                    options={tournaments?.filter(
-                      (el: Tournament) => el.current,
-                    )}
+                    options={tournaments
+                      ?.filter((el: Tournament) => el.current)
+                      .map((el) => ({ ...el, id: el.id.toString() }))}
                   />
                 </div>
               </Grid>
@@ -370,13 +370,13 @@ const Stats = () => {
         alignContent={"center"}
         mb={3}
       >
-        {teamsPicked &&
-          typeof teamsPicked !== "string" &&
+        {!!teamsPicked &&
+          Array.isArray(teamsPicked) &&
           score === "Score" && (
             <Zoom in={true}>
               <Grid size={11}>
                 <TableHistory
-                  arrHistory={teamsPicked}
+                  arrHistory={teamsPicked as any}
                   score={score}
                 />
               </Grid>
@@ -418,7 +418,7 @@ const Stats = () => {
                   )}
                 </Grid>
 
-                {teamsNotPickedLog && typeof teamsNotPickedLog !== "string" && (
+                {teamsNotPickedLog && Array.isArray(teamsNotPickedLog) && (
                   <Grid>
                     <TableHistoryTeamsNotPicked
                       arrHistory={teamsNotPickedLog}
@@ -433,7 +433,7 @@ const Stats = () => {
                 spacing={1}
               >
                 <Grid>
-                  {TeamsPickedLog && typeof TeamsPickedLog !== "string" && (
+                  {TeamsPickedLog && Array.isArray(TeamsPickedLog) && (
                     <TableTeamsPickedLog
                       arrHistory={TeamsPickedLog}
                       score={"Frequency of Teams Picked"}

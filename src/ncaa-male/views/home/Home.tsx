@@ -33,15 +33,13 @@ const Home = () => {
     },
   );
 
-  const tournamentId = tournamentMale?.[0]?.id;
+  const tournamentId = tournamentMale?.[0]?.id.toString() ?? "";
 
   const { data: dataScores, isLoading: isLoadingScores } = useQuery({
     queryKey: ["scores", userId, tournamentMale],
     queryFn: () => getScores(tournamentId, userId),
     enabled: !!tournamentId,
   });
-
-  // console.log(dataScores);
 
   const { data: DataPopona, isLoading: isLoadingPopona } = useQuery({
     queryKey: ["popona", userId],
@@ -75,7 +73,6 @@ const Home = () => {
     retry: true,
     enabled: !!tournamentId,
   });
-
 
   const renderDescription = (dataHOINFO: string) => {
     return dataHOINFO.split("\n").map((line, index) => (
@@ -205,11 +202,11 @@ const Home = () => {
                   size={11}
                   offset={0.5}
                 >
-                  {(dataScores?.score?.participant ||
-                    dataScores?.score?.others) && (
+                  {(dataScores?.score?.participant?.length ||
+                    dataScores?.score?.others?.length) && (
                     <Table
-                      participantScore={dataScores?.score?.participant}
-                      othersParticipants={dataScores?.score?.others}
+                      participantScore={dataScores.score.participant}
+                      othersParticipants={dataScores.score.others}
                     />
                   )}
                 </Grid>

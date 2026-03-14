@@ -1,4 +1,10 @@
 import { apiGet } from "@/lib/apiClient";
+import { Tournament } from "@/types/index";
+
+export const getTournaments = (): Promise<Tournament[]> =>
+  apiGet<{ tournaments: Tournament[] }>(`/sports/1/tournaments`).then(
+    (d) => d.tournaments ?? [],
+  );
 
 export const getTeamsPerYearLog = () =>
   apiGet<{ data: { teamsPerYearLog: unknown[] } }>(`/teams-per-year-log`).then(
