@@ -74,9 +74,9 @@ const MyPortfolio = () => {
   // Validar selección de equipos cuando cambie el portfolio activo
   useEffect(() => {
     if (portfolios[activeTab]) {
-      const teamIds = portfolios[activeTab].teams
-        .filter((team) => typeof team === "object" && team?.id)
-        .map((team) => team.id);
+      const teamIds = portfolios[activeTab]?.teams
+        ?.filter((team) => typeof team === "object" && team?.id)
+        ?.map((team) => team.id);
       validateTeamSelection(teamIds);
     }
   }, [portfolios, activeTab, validateTeamSelection]);
