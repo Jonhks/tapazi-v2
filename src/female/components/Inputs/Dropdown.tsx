@@ -45,6 +45,7 @@ export default function SelectVariants({
         MenuProps={{
           slotProps: {
             paper: {
+              className: "enable-vertical-scroll",
               sx: {
                 backgroundColor: "rgba(36, 37, 62, 0.9)",
                 color: "#fff",
