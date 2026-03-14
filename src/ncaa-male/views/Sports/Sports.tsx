@@ -74,9 +74,9 @@ export default function Sports() {
               padding: 4,
             }}
           >
-            {dataSports
-              .filter((sport: Sport) => sport?.name?.includes("NCAA"))
-              .map((sport: Sport, i: number) => {
+            {(dataSports as Sport[])
+              ?.filter((sport: Sport) => sport?.name?.includes("NCAA"))
+              ?.map((sport: Sport, i: number) => {
                 return (
                   <Tooltip
                     key={i}
@@ -130,13 +130,13 @@ export default function Sports() {
               padding: 4,
             }}
           >
-            {dataSports
-              .filter(
+            {(dataSports as Sport[])
+              ?.filter(
                 (sport: Sport) =>
                   sport?.name?.includes("EPL") ||
                   sport?.name?.includes("WORLDCUP"),
               )
-              .map((sport: Sport, i: number) => {
+              ?.map((sport: Sport, i: number) => {
                 return (
                   <Tooltip
                     key={i}

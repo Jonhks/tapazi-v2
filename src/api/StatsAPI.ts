@@ -9,11 +9,11 @@ export const getTeamsPicked = (
   id: string,
   round: string,
   order: string,
-): Promise<unknown> => {
+): Promise<any[]> => {
   if (round === "0") round = "1";
-  return apiGet<{ data: { stats: unknown } }>(
+  return apiGet<{ data: { stats: any[] } }>(
     `/score/stats?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`,
-  ).then((d) => d.data?.stats);
+  ).then((d) => d.data?.stats ?? []);
 };
 
 export const getMostPickedTeams = (id: number): Promise<MostPickedTeams[]> =>

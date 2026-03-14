@@ -33,48 +33,42 @@ const Home = () => {
     });
 
   // console.log(tournamentFelame);
-  const tournament = tournamentFelame?.length > 0 ? tournamentFelame[0] : null;
+  const tournamentId = tournamentFelame?.[0]?.id.toString() ?? "";
 
-  const { data: scoresFemale, isLoading: isloadingScoreFemale } = useQuery({
+  const { data: scoresFemale } = useQuery({
     queryKey: ["scoresFemale", userId],
-    queryFn: () => getScoresFemale(tournament?.id, userId),
-    enabled: !!tournament?.id,
+    queryFn: () => getScoresFemale(tournamentId, userId),
+    enabled: !!tournamentId,
   });
   // console.log(scoresFemale);
 
   const { data: DataPoponaFemale, isLoading: isLoadingPoponaFemale } = useQuery(
     {
-      queryKey: ["poponaFemale", userId],
-      queryFn: () => getPoponaFemale(tournament?.id),
-      enabled: !!tournament?.id,
+      queryKey: ["poponaFemale", userId, tournamentId],
+      queryFn: () => getPoponaFemale(tournamentId),
+      enabled: !!tournamentId,
     },
   );
 
   const { data: dataHOINFOFemale, isLoading: isLoadingHOINFOFemale } = useQuery(
     {
-      queryKey: ["HOINFOFemale", userId],
-      queryFn: () => getHOINFOFemale(tournament?.id),
-      enabled: !!tournament?.id,
+      queryKey: ["HOINFOFemale", userId, tournamentId],
+      queryFn: () => getHOINFOFemale(tournamentId),
+      enabled: !!tournamentId,
     },
   );
 
   const { data: participantsFemale, isLoading: isLoadingParticipantsFemale } =
     useQuery({
-      queryKey: ["participantsFemale", userId],
-      queryFn: () => getParticipantsFemale(tournament?.id),
-      enabled: !!tournament?.id,
+      queryKey: ["participantsFemale", userId, tournamentId],
+      queryFn: () => getParticipantsFemale(tournamentId),
+      enabled: !!tournamentId,
     });
 
-  // const { data: portfoliosFemale } = useQuery({
-  //   queryKey: ["portfoliosFemale", userId],
-  //   queryFn: () => getPortfoliosCountFemale(tournament?.id),
-  //   enabled: !!tournament?.id,
-  // });
-
-  const { data: payoutFemale } = useQuery({
-    queryKey: ["payoutFemale", userId],
-    queryFn: () => gatPayoutFemale(tournament?.id),
-    enabled: !!tournament?.id,
+  const { data: payoutFemale, isLoading: isLoadingPayoutFemale } = useQuery({
+    queryKey: ["payoutFemale", userId, tournamentId],
+    queryFn: () => gatPayoutFemale(tournamentId),
+    enabled: !!tournamentId,
   });
 
   const renderDescription = (dataHOINFOFemale: string) => {
@@ -90,11 +84,11 @@ const Home = () => {
   // console.log(dataHOINFOFemale);
 
   const isLoading =
-    isloadingScoreFemale ||
     isLoadingPoponaFemale ||
     isLoadingHOINFOFemale ||
     isLoadingTournamentFemale ||
-    isLoadingParticipantsFemale;
+    isLoadingParticipantsFemale ||
+    isLoadingPayoutFemale;
 
   return (
     <>
@@ -215,11 +209,11 @@ const Home = () => {
                   size={11}
                   offset={0.5}
                 >
-                  {(scoresFemale?.participant ||
-                    scoresFemale?.data?.others) && (
+                  {(scoresFemale?.participant?.length ||
+                    scoresFemale?.data?.others?.length) && (
                     <Table
-                      participantScore={scoresFemale?.participant}
-                      othersParticipants={scoresFemale?.others}
+                      participantScore={scoresFemale.participant}
+                      othersParticipants={scoresFemale.data.others}
                     />
                   )}
                 </Grid>

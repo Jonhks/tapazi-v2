@@ -329,15 +329,13 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={10}>
-                {typeof teamsPerfectPortfolios !== "string" && (
                   <TeamPerfectPortfoliosGraphic
-                    teamsPerYearLog={teamsPerfectPortfolios}
+                    teamsPerYearLog={teamsPerfectPortfolios as any || []}
                     graphType={graphType.name}
                     SeteamPerfectPortfoliosSelected={
                       SeteamPerfectPortfoliosSelected
                     }
                   />
-                )}
               </Grid>
             </Zoom>
           )}
@@ -388,13 +386,11 @@ const History = () => {
               style={{ marginBottom: "20px" }}
             >
               <Grid size={10}>
-                {typeof teamsPerYearLog !== "string" && (
                   <TeamPerYearlogGraphic
-                    teamsPerYearLog={teamsPerYearLog}
+                    teamsPerYearLog={teamsPerYearLog as any || []}
                     graphType={graphType.name}
                     setTeamsPerYearLogSelected={setTeamsPerYearLogSelected}
                   />
-                )}
               </Grid>
             </Zoom>
           )}

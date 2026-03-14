@@ -16,6 +16,7 @@ import {
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 import TableHistory from "../../components/Table/TableHistory";
+import BallLoader from "../../components/BallLoader/BallLoader";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
 import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
 import {
@@ -117,8 +118,8 @@ const Stats = () => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleChange = (e) => {
-    if (e?.target?.name === "tournament") {
-      const optionSelect = tournaments.filter(
+    if (e?.target?.name === "tournament" && tournaments) {
+      const optionSelect = (tournaments as Tournament[]).filter(
         (el: Tournament) => el?.name === e?.target?.value,
       )[0];
       setTournament(e?.target?.value);
@@ -163,57 +164,57 @@ const Stats = () => {
   };
 
   const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
-    queryKey: ["teamsPicked", selectedOrderBy, round, selectedTournament.id],
+    queryKey: ["teamsPicked", selectedOrderBy, round, selectedTournament?.id],
     queryFn: () =>
-      getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
+      getTeamsPicked(`${selectedTournament?.id ?? ""}`, `${round}`, selectedOrderBy),
     retry: false,
+    enabled: !!selectedTournament?.id,
   });
 
   const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
     useQuery({
-      queryKey: ["mostPickedTeams", userId],
-      queryFn: () => getMostPickedTeams(selectedTournament.id),
-      enabled: runMostTeamsPicked,
+      queryKey: ["mostPickedTeams", userId, selectedTournament?.id],
+      queryFn: () => getMostPickedTeams(selectedTournament?.id ?? 0),
+      enabled: runMostTeamsPicked && !!selectedTournament?.id,
       retry: false,
     });
 
   const { data: TeamsPickedLog, isLoading: isLoadinTeamsPickedLog } = useQuery({
-    queryKey: ["TeamsPickedLog", userId],
-    queryFn: () => getTeamsPickedLog(selectedTournament.id),
-    enabled: runMostTeamsPicked,
+    queryKey: ["TeamsPickedLog", userId, selectedTournament?.id],
+    queryFn: () => getTeamsPickedLog(selectedTournament?.id ?? 0),
+    enabled: runMostTeamsPicked && !!selectedTournament?.id,
     retry: false,
   });
 
   const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
     useQuery({
-      queryKey: ["leastPickedTeams", userId],
-      queryFn: () => getLeastPickedTeams(selectedTournament.id),
-      enabled: runMostTeamsPicked,
+      queryKey: ["leastPickedTeams", userId, selectedTournament?.id],
+      queryFn: () => getLeastPickedTeams(selectedTournament?.id ?? 0),
+      enabled: runMostTeamsPicked && !!selectedTournament?.id,
       retry: false,
     });
 
   const { data: teamsNotPickedLog, isLoading: isLoadinTeamsNotPickedLog } =
     useQuery({
-      queryKey: ["teamsNotPickedLog", userId],
-      queryFn: () => getTeamsNotPickedLog(selectedTournament.id),
-      enabled: runMostTeamsPicked,
+      queryKey: ["teamsNotPickedLog", userId, selectedTournament?.id],
+      queryFn: () => getTeamsNotPickedLog(selectedTournament?.id ?? 0),
+      enabled: runMostTeamsPicked && !!selectedTournament?.id,
       retry: false,
     });
 
   const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
-    queryKey: ["seedPickTotal", userId],
-    queryFn: () => getSeedPickTotal(selectedTournament.id),
-    enabled: runSubDataPortfolios,
+    queryKey: ["seedPickTotal", userId, selectedTournament?.id],
+    queryFn: () => getSeedPickTotal(selectedTournament?.id ?? 0),
+    enabled: runSubDataPortfolios && !!selectedTournament?.id,
     retry: false,
   });
 
   const {
-    data: portfolioSeedSelections,
     isLoading: isLoadinPortfolioSeedSelections,
   } = useQuery({
-    queryKey: ["portfolioSeedSelections", userId],
-    queryFn: () => getPortfolioSeedSelections(selectedTournament.id),
-    enabled: runSubDataPortfolios,
+    queryKey: ["portfolioSeedSelections", userId, selectedTournament?.id],
+    queryFn: () => getPortfolioSeedSelections(selectedTournament?.id ?? 0),
+    enabled: runSubDataPortfolios && !!selectedTournament?.id,
     retry: false,
   });
 
@@ -228,8 +229,8 @@ const Stats = () => {
     isLoadinSeedPickTotal ||
     isLoadinPortfolioSeedSelections
   ) {
+    return <BallLoader />;
   }
-  // return <Loader />;
 
   return (
     <Grid
@@ -287,7 +288,7 @@ const Stats = () => {
                     handleChange={handleChange}
                     options={tournaments?.filter(
                       (el: Tournament) => el.current,
-                    )}
+                    ).map(t => ({ ...t, id: String(t.id) }))}
                   />
                 </div>
               </Grid>
@@ -367,7 +368,7 @@ const Stats = () => {
         mb={3}
       >
         {teamsPicked &&
-          typeof teamsPicked !== "string" &&
+          Array.isArray(teamsPicked) &&
           score === "Score" && (
             <Zoom in={true}>
               <Grid size={11}>

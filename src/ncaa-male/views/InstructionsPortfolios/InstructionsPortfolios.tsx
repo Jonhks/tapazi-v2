@@ -22,7 +22,7 @@ const Instructions = () => {
 
   const { data: instructionsData, isLoading } = useQuery({
     queryKey: ["instructions", userId, currentTournament],
-    queryFn: () => getInstructions(currentTournament?.id),
+    queryFn: () => getInstructions(currentTournament?.id.toString() ?? ""),
     enabled: !!currentTournament?.id,
   });
 
@@ -55,7 +55,7 @@ const Instructions = () => {
             className={classes.boxInstructions}
           >
             <p className={classes.titleInstructions}>
-              {instructionsData[0].description}
+              {instructionsData?.[0]?.description}
             </p>
             <Grid
               size={12}

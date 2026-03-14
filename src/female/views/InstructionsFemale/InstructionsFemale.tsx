@@ -44,7 +44,7 @@ const Instructions = () => {
             className={classes.boxInstructions}
           >
             <p className={classes.titleInstructions}>
-              {instructionsData[0].description}
+              {instructionsData?.[0]?.description}
             </p>
             <Grid
               size={12}

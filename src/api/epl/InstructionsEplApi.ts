@@ -1,7 +1,7 @@
 import { apiGet } from "@/lib/apiClient";
-import { User } from "../../types";
+import { Instructions } from "@/types/index";
 
-export const getInstructionsEpl = (id: User["id"]) =>
-  apiGet<{ instructions: unknown[] }>(`/tournaments/${id}/instructions`).then(
+export const getInstructionsEpl = (id: string): Promise<Instructions[]> =>
+  apiGet<{ instructions: Instructions[] }>(`/tournaments/${id}/instructions`).then(
     (d) => d.instructions ?? [],
   );

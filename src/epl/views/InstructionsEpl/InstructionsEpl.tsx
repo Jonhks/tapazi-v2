@@ -38,7 +38,7 @@ const InstructionsEpl = () => {
             className={classes.boxInstructions}
           >
             <p className={classes.titleInstructions}>
-              {instructionsData[0].description || "Sin información disponible"}
+              {instructionsData?.[0]?.description || "Sin información disponible"}
             </p>
             <Grid
               size={12}

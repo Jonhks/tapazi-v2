@@ -1,12 +1,12 @@
 import { apiGet, apiPost, apiPut } from "@/lib/apiClient";
 import { CreatePortfolio, PortfolioComplete, Portfolios, User } from "../../types";
 
-export const getPortfoliosEpl = (id: User["id"], portfolioId: string) => {
+export const getPortfoliosEpl = (id: User["id"], portfolioId: string): Promise<{ id: number; [key: string]: any }[]> => {
   const url =
     portfolioId !== "0"
       ? `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}&epl`
       : `/participants/${id}/portfolios?tournament_id=3&epl`;
-  return apiGet<{ portfolios: unknown[] }>(url).then((d) => d.portfolios ?? []);
+  return apiGet<{ portfolios: { id: number; [key: string]: any }[] }>(url).then((d) => d.portfolios ?? []);
 };
 
 export const getTeamsEpl = (sport: User["id"]) =>

@@ -45,22 +45,25 @@ const HomeEPL = () => {
     queryFn: () => getTournamentsId(),
   });
 
-  const { data: portfoliosHome, isLoading: isLoadingPortfoliosHome } = useQuery(
-    {
-      queryKey: ["portfoliosHome", userId, tournamentId],
-      queryFn: () => getPortfoliosEpl(userId, tournamentId[0]?.id || "0"),
-    },
-  );
+  const tournamentIdVal = tournamentId?.[0]?.id.toString() ?? "0";
+
+  const { data: portfoliosHome, isLoading: isLoadingPortfoliosHome } = useQuery({
+    queryKey: ["portfoliosHome", userId, tournamentIdVal],
+    queryFn: () => getPortfoliosEpl(userId, tournamentIdVal),
+    enabled: !!tournamentIdVal,
+  });
+
+  const portfolioId = portfoliosHome?.[0]?.id.toString() ?? "";
 
   const { data: scoreHomeEpl, isLoading: isLoadingScoreHomeEpl } = useQuery({
-    queryKey: ["scoreHomeEpl", userId, tournamentId, portfoliosHome],
-    queryFn: () => getScoreHomeEpl("3", portfoliosHome && portfoliosHome[0].id),
-    // retry: false,|
+    queryKey: ["scoreHomeEpl", userId, tournamentIdVal, portfolioId],
+    queryFn: () => getScoreHomeEpl("3", portfolioId),
+    enabled: !!portfolioId,
   });
 
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payoutEpl", userId, dataGetAllPortfoliosEpl],
-    queryFn: () => getPayoutEpl("3", dataGetAllPortfoliosEpl?.participants),
+    queryFn: () => getPayoutEpl("3", dataGetAllPortfoliosEpl?.participants ?? 0),
     enabled: !!dataGetAllPortfoliosEpl?.participants,
     retry: false,
   });
@@ -214,7 +217,7 @@ const HomeEPL = () => {
             {scoreHomeEpl && (
               <TableHomeEpl
                 data={scoreHomeEpl}
-                tournament={tournamentId[0]}
+                tournament={tournamentId?.[0] as any}
               />
             )}
           </div>

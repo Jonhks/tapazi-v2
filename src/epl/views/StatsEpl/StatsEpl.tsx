@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState } from "react";
 import classes from "./StatsEpl.module.css";
 import {
   // FormControl,
@@ -126,20 +126,16 @@ const StatsEpl = () => {
     enabled: !!tournamentsEpl,
   });
 
-  useEffect(() => {
-    // Si tenemos semanas cargadas y el tipo de score (semana) no está definido
     if (getScoreWeeks && getScoreWeeks.length > 0 && !weekType) {
-      // Tomamos la primera semana por defecto (el valor del value del option)
       setWeekType(String(getScoreWeeks[0].week));
     }
-  }, [getScoreWeeks, weekType]);
 
   // ✅ FIX 2: teamsMap con useMemo
   // ANTES: se recalculaba en cada render → nuevo objeto en memoria → re-render → loop infinito
   // AHORA: solo se recalcula cuando cambia teamsEplStats (dato real de la API)
   const teamsMap: Record<string, string> = useMemo(() => {
     return (
-      teamsEplStats?.reduce(
+      (teamsEplStats as TeamStat[])?.reduce(
         (acc: Record<string, string>, team: TeamStat) => {
           acc[team.name] = team.crest_url;
           return acc;
@@ -313,7 +309,7 @@ const StatsEpl = () => {
                       handleChange={(e) =>
                         setTournament(e.target.value as string)
                       }
-                      options={tournamentsEpl}
+                      options={tournamentsEpl?.map(t => ({ ...t, name: (t as any).tournament_name || (t as any).name }))}
                     />
                   </Grid>
 

@@ -35,16 +35,28 @@ export default function SportsMenu() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "rgba(0, 0, 0, 0.85)", backdropFilter: "blur(5px)" }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: "rgba(0, 0, 0, 0.85)",
+        backdropFilter: "blur(5px)",
+      }}
+    >
       <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Typography variant="h6" sx={{ fontWeight: "bold", color: "#05fa87" }}>
+        <Typography
+          variant="h6"
+          sx={{ fontWeight: "bold", color: "#05fa87" }}
+        >
           {user.name || "Username"}
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-          <Typography variant="body1" sx={{ color: "#fff", fontWeight: 600 }}>
+          {/* <Typography variant="body1" sx={{ color: "#fff", fontWeight: 600 }}>
             Balance: <span style={{ color: "#dc903b" }}>$45Dlls</span>
-          </Typography>
-          <IconButton color="inherit" onClick={handleLogout}>
+          </Typography> */}
+          <IconButton
+            color="inherit"
+            onClick={handleLogout}
+          >
             <LogoutIcon sx={{ color: "#dc903b" }} />
           </IconButton>
         </Box>

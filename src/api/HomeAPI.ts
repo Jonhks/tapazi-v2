@@ -1,5 +1,5 @@
 import { apiGet } from "@/lib/apiClient";
-import { PayOut, OtherScores, ParticipantsScores, Tournament } from "@/types/index";
+import { PayOut, OtherScores, ParticipantsScores, Tournament, Instructions } from "@/types/index";
 
 export type ScoresResponse = {
   score: {
@@ -43,7 +43,7 @@ export const gatPayout = (tournamentId: string): Promise<PayOut[]> =>
     `/tournaments/${tournamentId}/payouts?portfolios=99`,
   ).then((d) => d.payouts ?? []);
 
-export const getInstructions = (tournamentId: string): Promise<unknown[]> =>
-  apiGet<{ instructions: unknown[] }>(
+export const getInstructions = (tournamentId: string): Promise<Instructions[]> =>
+  apiGet<{ instructions: Instructions[] }>(
     `tournaments/${tournamentId}/instructions`,
   ).then((d) => d.instructions ?? []);
