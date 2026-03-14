@@ -12,6 +12,7 @@ import {
 } from "@/api/PortfoliosAPI";
 import { isDateTimeReached } from "@/utils/getDaysLeft";
 import { getTournamentMale } from "@/api/HomeAPI";
+import { log } from "console";
 
 export const usePortfolioData = (userId: string) => {
   const [isValidTournament, setIsValidTournament] = useState(true);
@@ -88,18 +89,21 @@ export const usePortfolioData = (userId: string) => {
   useEffect(() => {
     if (winnerOfTeam) {
       Promise.all(
-        winnerOfTeam.map((winner) =>
+        winnerOfTeam?.map((winner) =>
           getWinnerOfTeamHasTeam(currenttournamentMale?.id, winner.team_id),
         ),
       ).then((responses) => {
-        const formattedData = winnerOfTeam.map((winner, index) => ({
+        console.log("responses", responses[0]);
+        const formattedData = winnerOfTeam?.map((winner, index) => ({
           winnerOfTeam: winner.team_id,
-          winnerOfTeamHasTeam: responses[index].map((team) => team.teamId),
+          winnerOfTeamHasTeam: responses[index]?.map((team) => team.team_id),
         }));
         setWinnerTeamValidation(formattedData);
       });
     }
   }, [winnerOfTeam]);
+
+  // console.log("currenttournamentMale", currenttournamentMale);
 
   return {
     portfoliosData,
