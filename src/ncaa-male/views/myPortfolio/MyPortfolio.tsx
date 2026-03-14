@@ -122,7 +122,6 @@ const MyPortfolio = () => {
         }
         return portfolio;
       });
-
       setPortfolios(updatedPortfolios);
     }
   };

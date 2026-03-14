@@ -19,7 +19,6 @@ export const usePortfolioValidation = (winnerTeamValidation) => {
           if (i !== j) {
             const winnerOfTeamId = selectedTeamIds[i];
             const teamId = selectedTeamIds[j];
-
             const conflictExists = winnerTeamValidation.some(
               (item) =>
                 item.winnerOfTeam === winnerOfTeamId &&
