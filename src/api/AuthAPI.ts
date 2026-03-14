@@ -1,5 +1,12 @@
 import { apiGet, apiPost } from "@/lib/apiClient";
-import { User, UserForgot, UserLogin } from "types";
+import { User, UserForgot, UserLogin, State } from "types";
+
+// ... (rest of imports if needed)
+
+type Country = {
+  id: string | number;
+  name: string;
+};
 
 export const getSignUp = async (user: User) => {
   user.name = user.name.toUpperCase();
@@ -23,10 +30,10 @@ export const getLogin = async (user: UserLogin) => {
 };
 
 export const getCountries = () =>
-  apiGet<{ countries: unknown[] }>("/countries").then((d) => d.countries);
+  apiGet<{ countries: Country[] }>("/countries").then((d) => d.countries);
 
 export const getStates = (countryId: User["id"]) =>
-  apiGet<{ states: unknown[] }>(`/countries/${countryId}/states`).then(
+  apiGet<{ states: State[] }>(`/countries/${countryId}/states`).then(
     (d) => d.states,
   );
 
