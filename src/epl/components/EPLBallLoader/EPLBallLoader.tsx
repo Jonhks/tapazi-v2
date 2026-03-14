@@ -1,21 +1,12 @@
-// import loader from "../../../assets/img/loader.gif";
-// import loader from "@/assets/img/loader.gif";
 import loader from "@/assets/img/ball-epl.png";
-import classes from "./EPLBallLoader.module.css";
+import BallLoader from "@/shared/components/BallLoader/BallLoader";
 
-const EPLBallLoader = () => {
-  return (
-    <div className={classes.loaderContainer}>
-      <img
-        src={loader}
-        alt="loader"
-        width={200}
-        height={200}
-        className={classes.rotatingImage}
-      />
-      <span className={classes.loader}></span>
-    </div>
-  );
-};
+const EPLBallLoader = () => (
+  <BallLoader
+    image={loader}
+    rotate
+    variant="epl"
+  />
+);
 
 export default EPLBallLoader;

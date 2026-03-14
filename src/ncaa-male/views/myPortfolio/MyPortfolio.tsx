@@ -19,7 +19,6 @@ import { usePortfolioValidation } from "../../../hooks/usePortfolioValidation";
 // Componentes
 import PortfolioTab from "../../components/PortfolioTab";
 import AddPortfolioButton from "../../components/AddPortfolioButton";
-// import { getTournamentMale } from "@/api/HomeAPI";
 
 const MyPortfolio = () => {
   const params = useParams();

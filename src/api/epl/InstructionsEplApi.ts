@@ -1,25 +1,7 @@
-import { apiEnv } from "@/lib/axios";
-import { isAxiosError } from "axios";
+import { apiGet } from "@/lib/apiClient";
 import { User } from "../../types";
 
-export const getInstructionsEpl = async (id: User["id"]) => {
-  try {
-    const url = `/tournaments/${id}/instructions`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-
-    if (!data.instructions) {
-      return [];
-    }
-    if (data.instructions) {
-      return data?.instructions;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
+export const getInstructionsEpl = (id: User["id"]) =>
+  apiGet<{ instructions: unknown[] }>(`/tournaments/${id}/instructions`).then(
+    (d) => d.instructions ?? [],
+  );

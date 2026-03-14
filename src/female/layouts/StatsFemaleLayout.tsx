@@ -1,19 +1,60 @@
-import { Outlet } from "react-router-dom";
-import classes from "./AuthLayoutFemale.module.css";
-import MenuFemale from "../components/Menufemale/MenuFemale";
-import MenuMobileFemale from "../components/Menufemale/MenuMobilefemale";
-import useMediaQuery from "@mui/material/useMediaQuery";
+import { useParams } from "react-router-dom";
+import SharedAppLayout from "@/shared/components/Layout/SharedAppLayout";
+import SharedMenu from "@/shared/components/Menu/SharedMenu";
+import SharedMenuMobile from "@/shared/components/Menu/SharedMenuMobile";
+import { leagueThemes, getNavItems } from "@/theme/leagues";
+import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
+import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
+import TextSnippetIcon from "@mui/icons-material/TextSnippet";
+import HistoryIcon from "@mui/icons-material/History";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { BasquetIcon } from "@/assets/icons/icons";
 
-const InstructionsFemaleLayout = () => {
-  const isMobile = useMediaQuery("(max-width:800px)");
+import BgStats from "@/assets/img/NCAA-STATS_Female_backup.png";
+
+const theme = leagueThemes.female;
+
+const desktopIcons = [
+  <SportsBasketballOutlinedIcon key="ball" />,
+  <BasquetIcon key="basquet" />,
+  <ReceiptLongIcon key="receipt" />,
+  <TextSnippetIcon key="stats" />,
+  <HistoryIcon key="history" />,
+  <LogoutIcon key="logout" />,
+];
+
+const mobileIcons = [
+  <SportsBasketballOutlinedIcon key="ball" />,
+  <BasquetIcon key="basquet" />,
+  <ReceiptLongIcon key="receipt" />,
+  <TextSnippetIcon key="stats" />,
+  <HistoryIcon key="history" />,
+];
+
+const StatsFemaleLayout = () => {
+  const { userId, sportId } = useParams();
+  const navItems = getNavItems("female", userId!, sportId);
+  const mobileNavItems = navItems.filter((item) => item.id !== "logOut");
 
   return (
-    <div className={classes.containerStatsFemale}>
-      {!isMobile && <MenuFemale />}
-      <Outlet />
-      {isMobile && <MenuMobileFemale />}
-    </div>
+    <SharedAppLayout
+      backgroundImage={BgStats}
+      menu={
+        <SharedMenu
+          leagueTheme={theme}
+          navItems={navItems}
+          icons={desktopIcons}
+        />
+      }
+      menuMobile={
+        <SharedMenuMobile
+          leagueTheme={theme}
+          navItems={mobileNavItems}
+          icons={mobileIcons}
+        />
+      }
+    />
   );
 };
 
-export default InstructionsFemaleLayout;
+export default StatsFemaleLayout;

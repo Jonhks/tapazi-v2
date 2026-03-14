@@ -1,0 +1,116 @@
+.loaderContainer {
+  background-color: rgb(0, 0, 0);
+  width: 100%;
+  height: 112vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.65;
+  flex-direction: column;
+}
+
+.loaderContainer img {
+  opacity: 0.8 !important;
+}
+
+/* NCAA Male / Female: bouncing "i" dot animation */
+.loaderText {
+  color: #fff;
+  position: relative;
+  display: inline-block;
+  margin-top: 20px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 48px;
+  letter-spacing: 4px;
+  box-sizing: border-box;
+}
+.loaderText::before {
+  content: "";
+  box-sizing: border-box;
+  position: absolute;
+  right: 70px;
+  bottom: 10px;
+  height: 24px;
+  width: 5.15px;
+  background: currentColor;
+}
+.loaderText::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  left: 125px;
+  top: 2px;
+  border-radius: 50%;
+  background: red;
+  box-sizing: border-box;
+  animation: animloader 1s ease-in infinite;
+}
+
+@keyframes animloader {
+  0% {
+    transform: translateY(8px) scaleY(1) scaleX(1.25);
+  }
+  25%,
+  75% {
+    transform: translateY(-5px) scaleY(1.2) scaleX(1);
+  }
+  50% {
+    transform: translateY(-10px) scaleY(1) scaleX(1);
+  }
+  100% {
+    transform: translateY(8px) scaleY(0.8) scaleX(0.8);
+  }
+}
+
+/* EPL: rotating image */
+.rotatingImage {
+  animation: rotateClockwise 2s linear infinite;
+}
+
+@keyframes rotateClockwise {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* EPL: "Loading" orbiting ball */
+.loaderEpl {
+  position: relative;
+  font-size: 48px;
+  letter-spacing: 2px;
+  margin-top: 24px;
+}
+.loaderEpl::before {
+  content: "Loading";
+  color: #fff;
+}
+.loaderEpl::after {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  top: -70px;
+  animation: motion 3s ease-in-out infinite;
+}
+
+@keyframes motion {
+  0%,
+  50%,
+  100% {
+    transform: translateX(0) scale(1);
+  }
+  25% {
+    transform: translateX(-100px) scale(0.3);
+  }
+  75% {
+    transform: translateX(100px) scale(0.3);
+  }
+}

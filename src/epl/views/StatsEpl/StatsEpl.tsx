@@ -134,7 +134,6 @@ const StatsEpl = () => {
     }
   }, [getScoreWeeks, weekType]);
 
-  console.log(getScoreWeeks);
   // ✅ FIX 2: teamsMap con useMemo
   // ANTES: se recalculaba en cada render → nuevo objeto en memoria → re-render → loop infinito
   // AHORA: solo se recalcula cuando cambia teamsEplStats (dato real de la API)

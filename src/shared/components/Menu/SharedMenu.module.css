@@ -1,0 +1,29 @@
+/* Los colores se inyectan como CSS variables desde el componente */
+.appbar,
+.appbar > button {
+  background-color: var(--league-bg) !important;
+  color: var(--league-appbar-text) !important;
+  opacity: 0.8 !important;
+}
+
+.Mydrawer > div {
+  background-color: var(--league-bg) !important;
+  height: auto !important;
+  color: white !important;
+  opacity: 0.8 !important;
+}
+
+.titleDrawerFuera {
+  font-size: 20px;
+  text-align: center;
+  padding: 0 0 0 16px;
+  color: var(--league-accent);
+}
+
+.titleDrawer {
+  font-size: 20px;
+  text-align: center;
+  padding: 16px 0 0 0;
+  color: var(--league-accent);
+  font-weight: var(--league-title-weight, 400);
+}

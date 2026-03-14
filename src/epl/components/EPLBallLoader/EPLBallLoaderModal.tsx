@@ -1,5 +1,3 @@
-// import loader from "../../../assets/img/loader.gif";
-// import loader from "@/assets/img/loader.gif";
 import loader from "@/assets/img/ball-epl.png";
 import classes from "./EPLBallLoader.module.css";
 

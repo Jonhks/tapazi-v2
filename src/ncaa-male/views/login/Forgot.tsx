@@ -13,7 +13,7 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import classes from "./Login.module.css";
 import { UserForgot } from "@/types/index";
 import { useForm } from "react-hook-form";
-import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "@/shared/components/ErrorMessage/ErrorMessage";
 import { useMutation } from "@tanstack/react-query";
 import { postForgot } from "@/api/AuthAPI";
 import { toast } from "react-toastify";

@@ -1,0 +1,14 @@
+.container {
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow: scroll;
+}
+
+@media (width < 900px) {
+  .container {
+    background-position: var(--bg-position-mobile, center);
+  }
+}

@@ -1,207 +1,58 @@
-import { apiEnv } from "@/lib/axios";
-import { isAxiosError } from "axios";
-import { CreatePortfolio, PortfolioComplete, User } from "../types";
+import { apiGet, apiPost, apiDelete } from "@/lib/apiClient";
+import { CreatePortfolio, User } from "../types";
 
-export const getPortfolios = async (
-  id: User["id"],
-  tournamentId: User["id"],
-) => {
-  try {
-    const url = `/participants/${id}/portfolios?tournament_id=${tournamentId}&sport=ncaa`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+export const getPortfolios = (id: User["id"], tournamentId: User["id"]) =>
+  apiGet<{ portfolios: unknown[] }>(
+    `/participants/${id}/portfolios?tournament_id=${tournamentId}&sport=ncaa`,
+  )
+    .then((d) => d.portfolios ?? [])
+    .catch(() => []);
 
-    if (!data.portfolios) {
-      return [];
-    }
-    if (data.portfolios) {
-      return data?.portfolios;
-    }
-  } catch (error) {
-    console.error("Error fetching portfolios:", error);
-    return [];
-  }
-};
+export const getTeamsMale = (tournamentId: User["id"]) =>
+  apiGet<{ teams: unknown[] }>(
+    `/tournaments/${tournamentId}/teams?sport=ncaa&show_all=false`,
+  ).then((d) => d.teams ?? []);
 
-export const getTeamsMale = async (tournamentId: User["id"]) =>
-  // sport: User["id"]
-
-  {
-    try {
-      // const url = `/sports/${sport}/teams`;
-      // const url = `/sports/1/teams`;
-      const url = `/tournaments/${tournamentId}/teams?sport=ncaa&show_all=false`;
-
-      // const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
-      const { data } = await apiEnv.get(url, {
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
-      // console.log(data);
-
-      if (data.teams) {
-        return data.teams;
-      }
-    } catch (error) {
-      if (isAxiosError(error) && error.response)
-        throw new Error(error.response.data.error);
-      return;
-    }
-  };
-
-export const getTeamsAvailable = async (
+export const getTeamsAvailable = (
   sport: User["id"],
   tournamentId: User["id"],
-) => {
-  // console.log(sport, tournamentId);
-  try {
-    const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv.get(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    console.log(data);
-
-    if (data.teams) {
-      return data.teams;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
+) =>
+  apiGet<{ teams: unknown[] }>(
+    `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`,
+  ).then((d) => d.teams ?? []);
 
 export const postNewPortfolio = async (data: CreatePortfolio) => {
-  console.log("postNewPortfolio called with:", data);
-  const url = "/portfolios";
-
-  const response = await apiEnv.post(url, data, {
-    headers: { "Content-Type": "application/json;charset=utf-8" },
-  });
-
-  return response.data?.message || "Successfully saved portfolio";
+  const result = await apiPost<{ message?: string }, CreatePortfolio>(
+    "/portfolios",
+    data,
+  );
+  return result?.message || "Successfully saved portfolio";
 };
 
-export const removeportfolio = async ({
-  portId,
-}: {
-  portId: PortfolioComplete["id"];
-}) => {
-  const urlRemovePortfolio = `/portfolios/${portId}`;
+export const removeportfolio = ({ portId }: { portId: number | undefined }) =>
+  apiDelete(`/portfolios/${portId}`);
 
-  try {
-    const { data } = await apiEnv.delete(urlRemovePortfolio, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    console.log(data);
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
+export const getDATTOU = (tournamentId: User["id"]) =>
+  apiGet<{ value: string }>(
+    `/tournaments/${tournamentId}/parameters?key=DATTOU`,
+  ).then((d) => d.value);
 
-export const getDATTOU = async (tournamentId: User["id"]) => {
-  try {
-    const url = `/tournaments/${tournamentId}/parameters?key=DATTOU`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+export const getHOUTOU = (tournamentId: User["id"]) =>
+  apiGet<{ value: string }>(
+    `/tournaments/${tournamentId}/parameters?key=HOUTOU`,
+  ).then((d) => d.value);
 
-    if (!data.value) {
-      return "Error";
-    }
+export const getWinnerOfTeam = (tournamentId: User["id"]) =>
+  apiGet<{ teams: unknown[] }>(
+    `/tournaments/${tournamentId}/winner-of-team?sport=ncaa&limit=99`,
+  ).then((d) => d.teams ?? []);
 
-    if (data.value) {
-      return data.value;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getHOUTOU = async (tournamentId: User["id"]) => {
-  try {
-    const url = `/tournaments/${tournamentId}/parameters?key=HOUTOU`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    if (!data.value) {
-      return "Error";
-    }
-
-    if (data.value) {
-      return data.value;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getWinnerOfTeam = async (tournamentId: User["id"]) => {
-  try {
-    // const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
-    const url = `/tournaments/${tournamentId}/winner-of-team?sport=ncaa&limit=99`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-
-    if (!data.teams) {
-      return "Error";
-    }
-
-    if (data.teams) {
-      return data.teams;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getWinnerOfTeamHasTeam = async (
+export const getWinnerOfTeamHasTeam = (
   tournamentId: User["id"],
   id: string,
-) => {
-  try {
-    // const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
-    const url = `/tournaments/${tournamentId}/winner-of-team-has-team?sport=ncaa&winner_of_team_id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    console.log(data);
-
-    if (!data.teams) {
-      return "Error";
-    }
-
-    if (data.teams) {
-      return data.teams;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      console.error("getWinnerOfTeamHasTeam error:", error.response.data.error);
-    return [];
-  }
-};
+) =>
+  apiGet<{ teams: unknown[] }>(
+    `/tournaments/${tournamentId}/winner-of-team-has-team?sport=ncaa&winner_of_team_id=${id}`,
+  )
+    .then((d) => d.teams ?? [])
+    .catch(() => []);

@@ -14,19 +14,9 @@ import {
   getTeamsPickedLogHistory,
   // getTournaments,
 } from "@/api/HistoryAPI";
-// import { Tournament } from "@/types/index";
-// import Loader from "../../components/BallLoader/BallLoader";
-// import TableHistoryTeamsPerYearLog from "../../components/Table/TableHistoryTeamsPerYearLog";
 import TableHistoryTeamsPerYearLogSelected from "../../components/Table/TableHistoryTeamsPerYearLogSelected";
-// import TableHistoryPerfectPortfolios from "../../components/Table/TableHistoryPerfectPortfolios";
 import TableHistoryPerfectPortfoliosSelected from "../../components/Table/TableHistoryPerfectPortfoliosSelected";
 import TableHistoryAllRounds from "../../components/Table/TableHistoryAllRounds";
-// import DescriptionIcon from "@mui/icons-material/Description";
-// import TeamPerYearlogGraphic from "../../components/Graphics/TeamPerYearLogGraphic";
-// import AutoGraphIcon from "@mui/icons-material/AutoGraph";
-// import { typeGraphs } from "@/utils/typeGraphs";
-// import TeamPerfectPortfoliosGraphic from "../../components/Graphics/TeamPerfectPortfoliosGraphic";
-// import NotRecordFounds from "../../components/NotRecordsFound/NotRecordFounds";
 
 // type dataDropdowndataType = {
 //   name: string;
@@ -177,7 +167,6 @@ const HistoryFemale = () => {
         (el) => el.name === e.target.value,
       );
       setOrderHistorySelected(select || { name: "", id: "", value: "" });
-      console.log(select?.value);
     },
     [orderHistoricalData],
   );

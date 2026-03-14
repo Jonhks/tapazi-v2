@@ -7,7 +7,6 @@ import {
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
-// import HistoryIcon from "@mui/icons-material/History";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import {
@@ -16,9 +15,7 @@ import {
 } from "@tanstack/react-query";
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
-// import Loader from "../../components/BallLoader/BallLoader";
 import TableHistory from "../../components/Table/TableHistory";
-// import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
 import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
 import {
@@ -235,7 +232,6 @@ const Stats = () => {
     isLoadinSeedPickTotal ||
     isLoadinPortfolioSeedSelections
   ) {
-    console.log("loading");
   }
   // return <Loader />;
 

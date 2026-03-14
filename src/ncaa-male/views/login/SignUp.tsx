@@ -38,7 +38,7 @@ type User = {
   country_id: string;
   code: string;
 };
-import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "@/shared/components/ErrorMessage/ErrorMessage";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getSignUp, getStates, getCountries } from "@/api/AuthAPI";
 import { toast } from "react-toastify";

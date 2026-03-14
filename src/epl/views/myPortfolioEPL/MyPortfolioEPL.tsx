@@ -82,7 +82,6 @@ const MyPortfolioEPL = () => {
           Swal.showLoading();
         },
       });
-      console.log("There was a problem creating the portfolio");
     },
   });
 
@@ -246,11 +245,9 @@ const MyPortfolioEPL = () => {
       return;
     }
     // console.log(AllPortfolios);
-    console.log(AllPortfolios?.length === 0 && true);
     // return;
 
     if (AllPortfolios?.length === 0) {
-      console.log("lo esta creando");
       // Crea un nuevo portfolio
       postNewPortfolioMutate({
         port: newPortfolio,
@@ -261,7 +258,6 @@ const MyPortfolioEPL = () => {
     }
     if (AllPortfolios?.length > 0) {
       // Actualiza el primer portfolio
-      console.log("lo esta editando");
       postEditPortfolioMutate({
         port: newPortfolio.teams,
         portId: AllPortfolios[0]?.id,

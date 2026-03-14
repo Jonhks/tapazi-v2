@@ -76,7 +76,6 @@ const Home = () => {
     enabled: !!tournamentId,
   });
 
-  console.log(payout);
 
   const renderDescription = (dataHOINFO: string) => {
     return dataHOINFO.split("\n").map((line, index) => (

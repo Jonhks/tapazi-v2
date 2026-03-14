@@ -1,48 +1,10 @@
-import { apiEnv } from "@/lib/axios";
-import { isAxiosError } from "axios";
+import { apiGet } from "@/lib/apiClient";
+import { Sport } from "@/types/index";
 
-export const getSports = async () => {
-  try {
-    // const url = `/participants/${id}/sports`;
-    // const url = "/participants/login";
-    const url = "/sports";
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    if (!data.sports) {
-      return "Error en sports";
-    }
+export const getSports = () =>
+  apiGet<{ sports: Sport[] }>("/sports").then((d) => d.sports ?? []);
 
-    if (data.sports) {
-      return data.sports;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getSportsDisponible = async (participant_id: string) => {
-  try {
-    const url = `/participants/${participant_id}/sports`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    if (!data.sports) {
-      return "Error en sports";
-    }
-
-    if (data.sports) {
-      return data.sports;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
+export const getSportsDisponible = (participant_id: string) =>
+  apiGet<{ sports: { id: number; enabled: boolean }[] }>(
+    `/participants/${participant_id}/sports`,
+  ).then((d) => d.sports ?? []);

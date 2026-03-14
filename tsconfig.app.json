@@ -7,6 +7,9 @@
     "skipLibCheck": true,
     "baseUrl": "src",
     "paths": {
+      // Alias general — cubre cualquier ruta bajo src/
+      "@/*": ["./*"],
+
       // Portfolio paths
       "@/components/*": ["components/*"],
       "@/views/*": ["views/*"],
@@ -16,6 +19,10 @@
       "@/epl/components/*": ["epl/components/*"],
       "@/epl/views/*": ["epl/views/*"],
       "@/epl/layouts/*": ["epl/layouts/*"],
+
+      // Shared paths
+      "@/shared/*": ["shared/*"],
+      "@/theme/*": ["theme/*"],
 
       // Global paths
       "@/assets/*": ["assets/*"],

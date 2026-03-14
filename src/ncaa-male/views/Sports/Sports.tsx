@@ -4,7 +4,6 @@ import Grid from "@mui/material/Grid2";
 import classes from "./Sports.module.css";
 import { useNavigate, useParams } from "react-router-dom";
 import BallLoader from "../../components/BallLoader/BallLoader";
-import EPLBallLoader from "../../../epl/components/EPLBallLoader/EPLBallLoader";
 import { getSports, getSportsDisponible } from "@/api/SportsAPI";
 import { useQuery } from "@tanstack/react-query";
 import { Sport } from "@/types/index";
@@ -52,9 +51,6 @@ export default function Sports() {
 
   return (
     <>
-      {!showLoader && !isLoading && !isLoadingDisponible && changeLoader && (
-        <EPLBallLoader />
-      )}
       {!showLoader && !isLoading && !isLoadingDisponible && changeLoader && (
         <BallLoader />
       )}
@@ -168,7 +164,7 @@ export default function Sports() {
                           navigate(
                             sport.id === 2
                               ? `/epl/home/${params.userId}/${sport.id}?data=${encodedData}`
-                              : `/worldcup/wip/${params.userId}/${sport.id}`,
+                              : `/worldcup/home/${params.userId}/${sport.id}`,
                           );
                         } else {
                           toast.info("This sport is currently unavailable.");

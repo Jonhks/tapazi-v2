@@ -24,7 +24,6 @@ const Instructions = () => {
       .split("\n")
       .map((line, index) => <p key={index}>{line}</p>);
   };
-  console.log(instructionsData);
   if (instructionsData)
     return (
       <Grid

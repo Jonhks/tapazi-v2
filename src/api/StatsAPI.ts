@@ -1,165 +1,43 @@
-import { apiEnv } from "@/lib/axios";
-import { isAxiosError } from "axios";
-import { User } from "../types";
+import { apiGet } from "@/lib/apiClient";
+import { User } from "@/types/index";
 
-export const getTeamsPicked = async (
+export const getTeamsPicked = (
   id: User["id"],
   round: User["id"],
-  order: User["id"]
+  order: User["id"],
 ) => {
-  if (round === "0") {
-    round = "1";
-  }
-
-  try {
-    const url = `/score/stats?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-
-    if (!data.success) {
-      return "Error";
-    }
-    if (data.success) {
-      return data.data.stats;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
+  if (round === "0") round = "1";
+  return apiGet<{ data: { stats: unknown } }>(
+    `/score/stats?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`,
+  ).then((d) => d.data?.stats);
 };
 
-export const getMostPickedTeams = async (id: number) => {
-  try {
-    const url = `/most-picked-teams?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+export const getMostPickedTeams = (id: number) =>
+  apiGet<{ data: { mostPickedTeams: unknown[] } }>(
+    `/most-picked-teams?api-key=TESTAPIKEY&tournament-id=${id}`,
+  ).then((d) => d.data?.mostPickedTeams ?? []);
 
-    if (!data.success) {
-      return "Error";
-    }
-    if (data.success) {
-      return data.data.mostPickedTeams;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
+export const getTeamsPickedLog = (id: number) =>
+  apiGet<{ data: { teamsPickedLog: unknown[] } }>(
+    `/teams-picked-log?api-key=TESTAPIKEY&tournament-id=${id}`,
+  ).then((d) => d.data?.teamsPickedLog ?? []);
 
-export const getTeamsPickedLog = async (id: number) => {
-  try {
-    const url = `/teams-picked-log?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+export const getLeastPickedTeams = (id: number) =>
+  apiGet<{ data: { leastPickedTeams: unknown[] } }>(
+    `/least-picked-teams?api-key=TESTAPIKEY&tournament-id=${id}`,
+  ).then((d) => d.data?.leastPickedTeams ?? []);
 
-    if (!data.success) {
-      return "Error";
-    }
-    if (data.success) {
-      return data.data.teamsPickedLog;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
+export const getTeamsNotPickedLog = (id: number) =>
+  apiGet<{ data: { teamsNotPickedLog: unknown[] } }>(
+    `/teams-not-picked-log?api-key=TESTAPIKEY&tournament-id=${id}`,
+  ).then((d) => d.data?.teamsNotPickedLog ?? []);
 
-export const getLeastPickedTeams = async (id: number) => {
-  try {
-    const url = `/least-picked-teams?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+export const getSeedPickTotal = (id: number) =>
+  apiGet<{ data: { seedPickTotals: unknown[] } }>(
+    `/seed-pick-totals?api-key=TESTAPIKEY&tournament-id=${id}`,
+  ).then((d) => d.data?.seedPickTotals ?? []);
 
-    if (!data.success) {
-      return "Error";
-    }
-    if (data.success) {
-      return data.data.leastPickedTeams;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getTeamsNotPickedLog = async (id: number) => {
-  try {
-    const url = `/teams-not-picked-log?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-
-    if (!data.success) {
-      return "Error";
-    }
-    if (data.success) {
-      return data.data.teamsNotPickedLog;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getSeedPickTotal = async (id: number) => {
-  try {
-    const url = `/seed-pick-totals?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-
-    if (!data.success) {
-      return "Error";
-    }
-    if (data.success) {
-      return data.data.seedPickTotals;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getPortfolioSeedSelections = async (id: number) => {
-  try {
-    const url = `/portfolio-seed-selections?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-
-    if (!data.success) {
-      return "Error";
-    }
-    if (data.success) {
-      return data.data.portfolioSeedSelections;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
+export const getPortfolioSeedSelections = (id: number) =>
+  apiGet<{ data: { portfolioSeedSelections: unknown[] } }>(
+    `/portfolio-seed-selections?api-key=TESTAPIKEY&tournament-id=${id}`,
+  ).then((d) => d.data?.portfolioSeedSelections ?? []);

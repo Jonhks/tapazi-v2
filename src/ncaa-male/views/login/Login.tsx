@@ -1,4 +1,3 @@
-// import { useEffect } from "react";
 
 import Grid from "@mui/material/Grid2";
 import {
@@ -15,7 +14,7 @@ import HttpsIcon from "@mui/icons-material/Https";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { UserLogin } from "@/types/index";
-import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";
+import ErrorMessage from "@/shared/components/ErrorMessage/ErrorMessage";
 import { useMutation } from "@tanstack/react-query";
 import { getLogin } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
