@@ -206,10 +206,9 @@ const MyPortfolio = () => {
     <Grid
       size={12}
       sx={{
-        minHeight: "100vh",
-        height: "auto",
-        overflow: "auto",
-        pb: 5,
+        height: "calc(100vh - 64px)",
+        overflowY: "auto",
+        pb: 10,
       }}
     >
       <Grid

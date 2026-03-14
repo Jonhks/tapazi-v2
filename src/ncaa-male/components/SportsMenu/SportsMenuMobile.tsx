@@ -1,4 +1,11 @@
-import { AppBar, Toolbar, Typography, IconButton, Box, Container } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Box,
+  Container,
+} from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -45,23 +52,38 @@ export default function SportsMenuMobile() {
       }}
     >
       <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ justifyContent: "space-around" }}>
+        <Toolbar
+          disableGutters
+          sx={{ justifyContent: "space-around" }}
+        >
           <Box sx={{ textAlign: "center" }}>
-            <Typography variant="caption" sx={{ display: "block", color: "#05fa87", fontWeight: "bold" }}>
+            <Typography
+              variant="caption"
+              sx={{ display: "block", color: "#05fa87", fontWeight: "bold" }}
+            >
               {user.name || "User"}
             </Typography>
           </Box>
-          <Box sx={{ textAlign: "center" }}>
+          {/* <Box sx={{ textAlign: "center" }}>
             <Typography variant="caption" sx={{ display: "block", color: "#fff" }}>
               Balance
             </Typography>
             <Typography variant="caption" sx={{ display: "block", color: "#dc903b", fontWeight: "bold" }}>
               $45Dlls
             </Typography>
-          </Box>
-          <IconButton color="inherit" onClick={handleLogout} sx={{ flexDirection: "column" }}>
+          </Box> */}
+          <IconButton
+            color="inherit"
+            onClick={handleLogout}
+            sx={{ flexDirection: "column" }}
+          >
             <LogoutIcon sx={{ color: "#dc903b" }} />
-            <Typography variant="caption" sx={{ color: "#fff" }}>Logout</Typography>
+            <Typography
+              variant="caption"
+              sx={{ color: "#fff" }}
+            >
+              Logout
+            </Typography>
           </IconButton>
         </Toolbar>
       </Container>

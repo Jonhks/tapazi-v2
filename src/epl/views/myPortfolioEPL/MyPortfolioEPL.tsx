@@ -591,9 +591,9 @@ const MyPortfolioEPL = () => {
     <Grid
       size={12}
       sx={{
-        minHeight: "650px",
-        height: "calc(100vh - 56px)",
-        overflow: "scroll",
+        height: "calc(100vh - 64px)",
+        overflowY: "auto",
+        pb: 10,
       }}
     >
       <Grid

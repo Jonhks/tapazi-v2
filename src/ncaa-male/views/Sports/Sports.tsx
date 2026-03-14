@@ -61,7 +61,7 @@ export default function Sports() {
       {showLoader && (
         <Grid
           container
-          sx={{ height: "100vh" }}
+          sx={{ minHeight: "100vh", height: "auto", overflowY: "auto", pb: 5 }}
         >
           <Grid
             size={{ xs: 12, md: 6 }}
