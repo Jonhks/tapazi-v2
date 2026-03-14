@@ -133,9 +133,10 @@ const MyPortfolio = () => {
     <Grid
       size={12}
       sx={{
-        minHeight: "650px",
-        height: "calc(100vh - 56px)",
-        overflow: "scroll",
+        minHeight: "100vh",
+        height: "auto",
+        overflow: "auto",
+        pb: 5,
       }}
     >
       <Grid

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid2";
 import { useForm } from "react-hook-form";
@@ -12,7 +13,10 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  IconButton,
 } from "@mui/material";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import HttpsIcon from "@mui/icons-material/Https";
 import FlagIcon from "@mui/icons-material/Flag";
@@ -45,6 +49,20 @@ import { toast } from "react-toastify";
 import Loader from "../../components/BallLoader/BallLoader";
 
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+  };
+
+  const [showCode, setShowCode] = useState(false);
+  const handleClickShowCode = () => setShowCode(!showCode);
+  const handleMouseDownCode = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
+
   const navigate = useNavigate();
   // const [countrySelect, setCountrySelect] = useState("");
   // const [stateSelect, setStateSelect] = useState("");
@@ -143,10 +161,10 @@ const Login = () => {
                       paddingLeft: "5px",
                     }}
                     color={"warning"}
-                    placeholder="First Name"
+                    placeholder="FIRST NAME"
                     inputProps={{
-                      style: { textTransform: "lowercase" },
-                      autoCapitalize: "none",
+                      style: { textTransform: "uppercase" },
+                      autoCapitalize: "characters",
                     }}
                     startAdornment={
                       <InputAdornment position="start">
@@ -169,10 +187,10 @@ const Login = () => {
                       borderRadius: "4px",
                       paddingLeft: "5px",
                     }}
-                    placeholder="Last Name"
+                    placeholder="LAST NAME"
                     inputProps={{
-                      style: { textTransform: "lowercase" },
-                      autoCapitalize: "none",
+                      style: { textTransform: "uppercase" },
+                      autoCapitalize: "characters",
                     }}
                     startAdornment={
                       <InputAdornment position="start">
@@ -249,6 +267,18 @@ const Login = () => {
                       {...register("country_id", {
                         required: "The country_id is required",
                       })}
+                      MenuProps={{
+                        slotProps: {
+                          paper: {
+                            className: "enable-vertical-scroll",
+                            sx: {
+                              // maxHeight: 250,
+                              backgroundColor: "rgba(0, 0, 0, 0.9)",
+                              color: "#fff",
+                            },
+                          },
+                        },
+                      }}
                     >
                       {countries &&
                         countries?.map((country: Country) => {
@@ -300,6 +330,18 @@ const Login = () => {
                       {...register("state_id", {
                         required: "The state_id is required",
                       })}
+                      MenuProps={{
+                        slotProps: {
+                          paper: {
+                            className: "enable-vertical-scroll",
+                            sx: {
+                              // maxHeight: 250,
+                              backgroundColor: "rgba(0, 0, 0, 0.9)",
+                              color: "#fff",
+                            },
+                          },
+                        },
+                      }}
                       // onChange={(e) => setStateSelect(e.target.value)}
                     >
                       {states &&
@@ -344,7 +386,7 @@ const Login = () => {
                   />
                   <Input
                     required
-                    type={"password"}
+                    type={showPassword ? "text" : "password"}
                     sx={{
                       width: "80%",
                       m: 2,
@@ -360,13 +402,26 @@ const Login = () => {
                         <HttpsIcon color="inherit" />
                       </InputAdornment>
                     }
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={handleClickShowPassword}
+                          onMouseDown={handleMouseDownPassword}
+                          edge="end"
+                          sx={{ color: "white" }}
+                        >
+                          {showPassword ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    }
                     {...register("password", {
                       required: "The passsword is required",
                     })}
                   />
                   <Input
                     required
-                    type={"password"}
+                    type={showCode ? "text" : "password"}
                     sx={{
                       width: "80%",
                       m: 2,
@@ -380,6 +435,19 @@ const Login = () => {
                     startAdornment={
                       <InputAdornment position="start">
                         <SecurityIcon color="inherit" />
+                      </InputAdornment>
+                    }
+                    endAdornment={
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle code visibility"
+                          onClick={handleClickShowCode}
+                          onMouseDown={handleMouseDownCode}
+                          edge="end"
+                          sx={{ color: "white" }}
+                        >
+                          {showCode ? <VisibilityOff /> : <Visibility />}
+                        </IconButton>
                       </InputAdornment>
                     }
                     {...register("code", {
