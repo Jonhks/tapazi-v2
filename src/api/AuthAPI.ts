@@ -1,10 +1,13 @@
-import {  apiEnv } from "@/lib/axios";
+import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User, UserForgot, UserLogin } from "types";
 
 export const getSignUp = async (user: User) => {
   user.name = user.name.toUpperCase();
   user.surname = user.surname.toUpperCase();
+  user.email = user.email.toLowerCase();
+  user.username = user.username.toLowerCase();
+  console.log(user);
   try {
     const url = "/participants/signup";
     // const url = "/participants/login";
@@ -14,8 +17,8 @@ export const getSignUp = async (user: User) => {
       },
     });
 
-    if (data.message !== "success") {
-      return data.error.description;
+    if (data.error) {
+      throw new Error(data.error);
     }
 
     if (data.message === "success") {
@@ -30,10 +33,9 @@ export const getSignUp = async (user: User) => {
 
 export const getLogin = async (user: UserLogin) => {
   const formData = {
-    user: user.email,
+    user: user.email.toLowerCase(),
     password: user.password,
   };
-  // console.log(formData);
 
   try {
     const url = "/participants/login";

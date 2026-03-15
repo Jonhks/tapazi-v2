@@ -106,12 +106,10 @@ const Login = () => {
         navigate(`/login`, {
           replace: true,
         });
-      } else {
-        toast.error(resp || "An error has occurred");
-        return;
       }
     },
-    onError: () => toast.error("An error has occurred"),
+    onError: (err: any) =>
+      toast.error(err.message || "An error has occurred"),
   });
 
   const handleRegister = (formData: User) => {
