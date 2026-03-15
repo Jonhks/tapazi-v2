@@ -5,7 +5,7 @@
   background-position: center;
   width: 100%;
   height: 100vh;
-  overflow: scroll;
+  overflow: auto;
   display: flex;
   justify-content: center;
 }
@@ -26,7 +26,7 @@
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .containerStats {
@@ -35,7 +35,7 @@
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
-  overflow: scroll;
+  overflow: auto;
   /* background-color: red; */
 }
 

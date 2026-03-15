@@ -132,131 +132,128 @@ const MyPortfolio = () => {
 
   return (
     <Grid
+      container
+      justifyContent={"center"}
+      alignContent={"start"}
       size={12}
-      sx={{
-        minHeight: "650px",
+      style={{
+        minHeight: "700px",
         height: "calc(100vh - 56px)",
-        overflow: "scroll",
+        overflowY: "auto",
+        overflowX: "hidden",
       }}
+      className={`${classes.gridInstructions} enable-vertical-scroll`}
     >
-      <Grid
-        container
-        spacing={2}
-        justifyContent="center"
-        alignContent="center"
-      >
-        <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
-          <Box
-            component="section"
-            className={classes.boxPortfolio}
-            m={3}
-          >
-            {/* Header */}
-            <div className={classes.headerPortfolio}>
-              <div>
-                <BasquetIcon />
-                <h2 style={{ color: "#05fa87", fontSize: "2.4rem" }}>
-                  {/* Portfolio{portfolios?.length > 1 && "s"}:{" "} */}
-                  MY PORTFOLIO ({portfolios?.length > 0 && portfolios?.length})
-                </h2>
-              </div>
-            </div>
+      <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
+        <Box
+          component="section"
+          className={classes.boxPortfolio}
+          m={3}
+        >
+          {/* Header */}
+          <div className={classes.headerPortfolio}>
             <div>
-              <h2 style={{ color: "white", textAlign: "center" }}>
-                Tournament:
-                <p style={{ color: "#05fa87" }}>
-                  {(currenttournamentMale && currenttournamentMale?.name) || ""}
-                </p>
+              <BasquetIcon />
+              <h2 style={{ color: "#05fa87", fontSize: "2.4rem" }}>
+                {/* Portfolio{portfolios?.length > 1 && "s"}:{" "} */}
+                MY PORTFOLIO ({portfolios?.length > 0 && portfolios?.length})
               </h2>
-              <Divider
-                sx={{
-                  borderColor: "white",
-                  mb: 2,
-                  width: "70%",
-                  margin: "0 auto",
-                }}
-              />
             </div>
-            <Box>
-              <Grid size={12}>
-                <Box sx={{ width: "100%" }}>
-                  {/* Botón para agregar portfolio */}
-                  <AddPortfolioButton
-                    canAdd={portfolios?.length < 8 && isValidTournament}
-                    isDisabled={isEditing}
-                    onClick={handleAddPortfolio}
-                  />
+          </div>
+          <div>
+            <h2 style={{ color: "white", textAlign: "center" }}>
+              Tournament:
+              <p style={{ color: "#05fa87" }}>
+                {(currenttournamentMale && currenttournamentMale?.name) || ""}
+              </p>
+            </h2>
+            <Divider
+              sx={{
+                borderColor: "white",
+                mb: 2,
+                width: "70%",
+                margin: "0 auto",
+              }}
+            />
+          </div>
+          <Box>
+            <Grid size={12}>
+              <Box sx={{ width: "100%" }}>
+                {/* Botón para agregar portfolio */}
+                <AddPortfolioButton
+                  canAdd={portfolios?.length < 8 && isValidTournament}
+                  isDisabled={isEditing}
+                  onClick={handleAddPortfolio}
+                />
 
-                  {portfolios?.length === 0 ? (
-                    <Box sx={{ mt: 4, mb: 4, textAlign: "center" }}>
-                      <h3 style={{ color: "white" }}>
-                        You don't have any portfolios yet. Click on "Add
-                        Portfolio" to create one.
-                      </h3>
+                {portfolios?.length === 0 ? (
+                  <Box sx={{ mt: 4, mb: 4, textAlign: "center" }}>
+                    <h3 style={{ color: "white" }}>
+                      You don't have any portfolios yet. Click on "Add
+                      Portfolio" to create one.
+                    </h3>
+                  </Box>
+                ) : (
+                  <>
+                    {/* Tabs */}
+                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                      <Tabs
+                        value={activeTab}
+                        onChange={handleTabChange}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        aria-label="portfolio tabs"
+                        indicatorColor="primary"
+                        sx={{
+                          "& .MuiTabs-scrollButtons": {
+                            color: "#05fa87",
+                            "& svg": {
+                              fontSize: "2rem",
+                            },
+                          },
+                          "& .MuiTabs-scrollButtons.Mui-disabled": {
+                            opacity: 0.3,
+                          },
+                        }}
+                      >
+                        {portfolios?.map((portfolio, index) => (
+                          <Tab
+                            key={index}
+                            label={
+                              portfolio?.name || `New (Portfolio ${index + 1})`
+                            }
+                            className={`${classes.tabComponent} ${
+                              index === activeTab && classes.activeTab
+                            }`}
+                          />
+                        ))}
+                      </Tabs>
                     </Box>
-                  ) : (
-                    <>
-                      {/* Tabs */}
-                      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-                        <Tabs
-                          value={activeTab}
-                          onChange={handleTabChange}
-                          variant="scrollable"
-                          scrollButtons="auto"
-                          aria-label="portfolio tabs"
-                          indicatorColor="primary"
-                          sx={{
-                            "& .MuiTabs-scrollButtons": {
-                              color: "#05fa87",
-                              "& svg": {
-                                fontSize: "2rem",
-                              },
-                            },
-                            "& .MuiTabs-scrollButtons.Mui-disabled": {
-                              opacity: 0.3,
-                            },
-                          }}
-                        >
-                          {portfolios?.map((portfolio, index) => (
-                            <Tab
-                              key={index}
-                              label={
-                                portfolio?.name ||
-                                `New (Portfolio ${index + 1})`
-                              }
-                              className={`${classes.tabComponent} ${
-                                index === activeTab && classes.activeTab
-                              }`}
-                            />
-                          ))}
-                        </Tabs>
-                      </Box>
 
-                      {/* Contenido de los tabs */}
-                      {portfolios?.map((portfolio, index) => (
-                        <PortfolioTab
-                          key={index}
-                          portfolio={portfolio}
-                          portfolioIndex={index}
-                          isActive={activeTab === index}
-                          teams={teamsData}
-                          isValidTournament={isValidTournament}
-                          onTeamSelect={handleTeamSelection}
-                          onChampionshipPointsChange={
-                            handleChampionshipPointsChange
-                          }
-                          onSave={handleSavePortfolio}
-                          onRemove={handleRemovePortfolio}
-                          onCancel={handleCancelPortfolio}
-                        />
-                      ))}
-                    </>
-                  )}
-                </Box>
-              </Grid>
-            </Box>
+                    {/* Contenido de los tabs */}
+                    {portfolios?.map((portfolio, index) => (
+                      <PortfolioTab
+                        key={index}
+                        portfolio={portfolio}
+                        portfolioIndex={index}
+                        isActive={activeTab === index}
+                        teams={teamsData}
+                        isValidTournament={isValidTournament}
+                        onTeamSelect={handleTeamSelection}
+                        onChampionshipPointsChange={
+                          handleChampionshipPointsChange
+                        }
+                        onSave={handleSavePortfolio}
+                        onRemove={handleRemovePortfolio}
+                        onCancel={handleCancelPortfolio}
+                      />
+                    ))}
+                  </>
+                )}
+              </Box>
+            </Grid>
           </Box>
-        </Grid>
+        </Box>
       </Grid>
     </Grid>
   );

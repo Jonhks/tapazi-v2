@@ -204,241 +204,239 @@ const MyPortfolio = () => {
 
   return (
     <Grid
+      container
+      justifyContent={"center"}
+      alignContent={"start"}
       size={12}
-      sx={{
-        minHeight: "650px",
+      style={{
+        minHeight: "700px",
         height: "calc(100vh - 56px)",
-        overflow: "scroll",
+        overflowY: "auto",
+        overflowX: "hidden",
       }}
+      className={`${classes.gridInstructions} enable-vertical-scroll`}
     >
-      <Grid
-        container
-        spacing={2}
-        justifyContent={"center"}
-        alignContent={"center"}
-      >
-        <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
-          <Box
-            component="section"
-            className={classes.boxPortfolio}
-            m={3}
-          >
-            {/* Cabecera del Portafolio */}
-            <div className={classes.headerPortfolio}>
-              <div style={{ color: "#DC903B" }}>
-                <BasquetIcon />
-                <h2 style={{ color: "#df2af9", fontSize: "2.4rem" }}>
-                  MY PORTFOLIO{portfolios?.length > 1 && "S"} (
-                  {portfolios?.length > 0 && portfolios?.length})
-                </h2>
-              </div>
-            </div>
-            <div>
-              <h2 style={{ color: "white", textAlign: "center" }}>
-                Tournament:
-                <p>{currentTournamentFemale?.name?.replace(/-/g, " ")}</p>
+      <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
+        <Box
+          component="section"
+          className={classes.boxPortfolio}
+          m={3}
+        >
+          {/* Cabecera del Portafolio */}
+          <div className={classes.headerPortfolio}>
+            <div style={{ color: "#DC903B" }}>
+              <BasquetIcon />
+              <h2 style={{ color: "#df2af9", fontSize: "2.4rem" }}>
+                MY PORTFOLIO{portfolios?.length > 1 && "S"} (
+                {portfolios?.length > 0 && portfolios?.length})
               </h2>
-              <Divider
-                sx={{
-                  borderColor: "white",
-                  mb: 2,
-                  width: "70%",
-                  margin: "0 auto",
-                }}
-              />
             </div>
-            <Box>
-              <Grid size={12}>
-                <Box sx={{ width: "100%" }}>
-                  {/* Botón para añadir nuevo portafolio */}
-                  {portfolios?.length < 8 && isValidTournament && (
-                    <div className={classes.addPortFolio}>
-                      <Button
-                        variant="contained"
-                        color="success"
-                        disabled={editing}
-                        onClick={addportFolio}
-                      >
-                        Add Portfolio
-                      </Button>
-                    </div>
-                  )}
+          </div>
+          <div>
+            <h2 style={{ color: "white", textAlign: "center" }}>
+              Tournament:
+              <p>{currentTournamentFemale?.name?.replace(/-/g, " ")}</p>
+            </h2>
+            <Divider
+              sx={{
+                borderColor: "white",
+                mb: 2,
+                width: "70%",
+                margin: "0 auto",
+              }}
+            />
+          </div>
+          <Box>
+            <Grid size={12}>
+              <Box sx={{ width: "100%" }}>
+                {/* Botón para añadir nuevo portafolio */}
+                {portfolios?.length < 8 && isValidTournament && (
+                  <div className={classes.addPortFolio}>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      disabled={editing}
+                      onClick={addportFolio}
+                    >
+                      Add Portfolio
+                    </Button>
+                  </div>
+                )}
 
-                  {portfolios?.length === 0 ? (
-                    <Box sx={{ mt: 4, mb: 4, textAlign: "center" }}>
-                      <h3 style={{ color: "white" }}>
-                        You don't have any portfolios yet. Click on "Add
-                        Portfolio" to create one.
-                      </h3>
-                    </Box>
-                  ) : (
-                    <>
-                      {/* Pestañas (Tabs) */}
-                      <Box
+                {portfolios?.length === 0 ? (
+                  <Box sx={{ mt: 4, mb: 4, textAlign: "center" }}>
+                    <h3 style={{ color: "white" }}>
+                      You don't have any portfolios yet. Click on "Add
+                      Portfolio" to create one.
+                    </h3>
+                  </Box>
+                ) : (
+                  <>
+                    {/* Pestañas (Tabs) */}
+                    <Box
+                      sx={{
+                        borderBottom: 1,
+                        borderColor: "divider",
+                      }}
+                    >
+                      <Tabs
+                        value={value}
+                        onChange={handleChange}
+                        variant="scrollable"
+                        scrollButtons="auto"
+                        aria-label="scrollable auto tabs example"
+                        indicatorColor="primary"
                         sx={{
-                          borderBottom: 1,
-                          borderColor: "divider",
+                          "& .MuiTabs-scrollButtons": {
+                            color: "#df2af9",
+                            "& svg": {
+                              fontSize: "2rem",
+                            },
+                          },
+                          "& .MuiTabs-scrollButtons.Mui-disabled": {
+                            opacity: 0.3,
+                          },
                         }}
                       >
-                        <Tabs
-                          value={value}
-                          onChange={handleChange}
-                          variant="scrollable"
-                          scrollButtons="auto"
-                          aria-label="scrollable auto tabs example"
-                          indicatorColor="primary"
-                          sx={{
-                            "& .MuiTabs-scrollButtons": {
-                              color: "#df2af9",
-                              "& svg": {
-                                fontSize: "2rem",
-                              },
-                            },
-                            "& .MuiTabs-scrollButtons.Mui-disabled": {
-                              opacity: 0.3,
-                            },
-                          }}
-                        >
-                          {portfolios?.map((port, i) => (
-                            <Tab
-                              key={i}
-                              label={port?.name || `New (Portfolio ${i + 1})`}
-                              className={`${classes.tabComponent} ${
-                                i === value && classes.activeTab
-                              }`}
-                            />
-                          ))}
-                        </Tabs>
-                      </Box>
+                        {portfolios?.map((port, i) => (
+                          <Tab
+                            key={i}
+                            label={port?.name || `New (Portfolio ${i + 1})`}
+                            className={`${classes.tabComponent} ${
+                              i === value && classes.activeTab
+                            }`}
+                          />
+                        ))}
+                      </Tabs>
+                    </Box>
 
-                      {/* Contenido de cada pestaña */}
-                      {portfolios?.map((port, indexPortfolio) => (
-                        <div
-                          key={indexPortfolio}
-                          hidden={value !== indexPortfolio}
-                          role="tabpanel"
-                        >
-                          {value === indexPortfolio && (
-                            <Box sx={{ p: 3 }}>
-                              {renderTeams(indexPortfolio)}
+                    {/* Contenido de cada pestaña */}
+                    {portfolios?.map((port, indexPortfolio) => (
+                      <div
+                        key={indexPortfolio}
+                        hidden={value !== indexPortfolio}
+                        role="tabpanel"
+                      >
+                        {value === indexPortfolio && (
+                          <Box sx={{ p: 3 }}>
+                            {renderTeams(indexPortfolio)}
 
-                              {/* Sección de Puntos y Errores */}
+                            {/* Sección de Puntos y Errores */}
+                            <Grid
+                              container
+                              display={"flex"}
+                              justifyContent={"end"}
+                            >
+                              {error && (
+                                <p className={classes.error}>
+                                  All fields are mandatory!!
+                                </p>
+                              )}
+                              {duplicates && (
+                                <p className={classes.error}>
+                                  You cannot enter duplicate fields!!
+                                </p>
+                              )}
+                              {winnerSelected && (
+                                <p className={classes.error}>
+                                  You cannot select a team that also belongs to
+                                  the selection of a winner of team!!!
+                                </p>
+                              )}
+
                               <Grid
-                                container
                                 display={"flex"}
-                                justifyContent={"end"}
+                                justifyContent={"center"}
+                                alignItems={"center"}
                               >
-                                {error && (
-                                  <p className={classes.error}>
-                                    All fields are mandatory!!
-                                  </p>
-                                )}
-                                {duplicates && (
-                                  <p className={classes.error}>
-                                    You cannot enter duplicate fields!!
-                                  </p>
-                                )}
-                                {winnerSelected && (
-                                  <p className={classes.error}>
-                                    You cannot select a team that also belongs
-                                    to the selection of a winner of team!!!
-                                  </p>
-                                )}
+                                <Input
+                                  required
+                                  type="text"
+                                  autoFocus={focused}
+                                  value={championshipPoints}
+                                  sx={{ width: "80%", m: 1 }}
+                                  id="input-with-icon-adornment"
+                                  name="championshipPoints"
+                                  readOnly={!!port?.id}
+                                  placeholder="Championship Points"
+                                  className={classes.championshipPoints}
+                                  inputProps={{
+                                    maxLength: 3,
+                                    inputMode: "numeric",
+                                  }}
+                                  startAdornment={
+                                    <InputAdornment position="start">
+                                      <EmojiEventsOutlinedIcon color="inherit" />
+                                    </InputAdornment>
+                                  }
+                                  onChange={handleChangeInput}
+                                />
+                              </Grid>
+                            </Grid>
 
-                                <Grid
-                                  display={"flex"}
-                                  justifyContent={"center"}
-                                  alignItems={"center"}
-                                >
-                                  <Input
-                                    required
-                                    type="text"
-                                    autoFocus={focused}
-                                    value={championshipPoints}
-                                    sx={{ width: "80%", m: 1 }}
-                                    id="input-with-icon-adornment"
-                                    name="championshipPoints"
-                                    readOnly={!!port?.id}
-                                    placeholder="Championship Points"
-                                    className={classes.championshipPoints}
-                                    inputProps={{
-                                      maxLength: 3,
-                                      inputMode: "numeric",
-                                    }}
-                                    startAdornment={
-                                      <InputAdornment position="start">
-                                        <EmojiEventsOutlinedIcon color="inherit" />
-                                      </InputAdornment>
-                                    }
-                                    onChange={handleChangeInput}
-                                  />
+                            {/* Botones de Acción */}
+                            <Grid
+                              container
+                              m={2}
+                              justifyContent={"end"}
+                              spacing={2}
+                            >
+                              {port?.id ? (
+                                <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                                  {isValidTournament && (
+                                    <Button
+                                      variant="contained"
+                                      color="warning"
+                                      fullWidth
+                                      className={classes.btnRemove}
+                                      onClick={() =>
+                                        removeportfolioFunction(port.id)
+                                      }
+                                    >
+                                      Remove
+                                    </Button>
+                                  )}
                                 </Grid>
-                              </Grid>
-
-                              {/* Botones de Acción */}
-                              <Grid
-                                container
-                                m={2}
-                                justifyContent={"end"}
-                                spacing={2}
-                              >
-                                {port?.id ? (
+                              ) : (
+                                <>
                                   <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                                    {isValidTournament && (
-                                      <Button
-                                        variant="contained"
-                                        color="warning"
-                                        fullWidth
-                                        className={classes.btnRemove}
-                                        onClick={() =>
-                                          removeportfolioFunction(port.id)
-                                        }
-                                      >
-                                        Remove
-                                      </Button>
-                                    )}
+                                    <Button
+                                      variant="contained"
+                                      color="success"
+                                      fullWidth
+                                      className={classes.btnSubmit}
+                                      onClick={savePortfolio}
+                                      disabled={winnerSelected}
+                                    >
+                                      Submit
+                                    </Button>
                                   </Grid>
-                                ) : (
-                                  <>
-                                    <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                                      <Button
-                                        variant="contained"
-                                        color="success"
-                                        fullWidth
-                                        className={classes.btnSubmit}
-                                        onClick={savePortfolio}
-                                        disabled={winnerSelected}
-                                      >
-                                        Submit
-                                      </Button>
-                                    </Grid>
-                                    <Grid size={{ lg: 4, md: 4, xs: 12 }}>
-                                      <Button
-                                        variant="contained"
-                                        color="error"
-                                        fullWidth
-                                        className={classes.btnCancel}
-                                        onClick={() =>
-                                          cancelPortfolio(portfoliosObtained)
-                                        }
-                                      >
-                                        Cancel
-                                      </Button>
-                                    </Grid>
-                                  </>
-                                )}
-                              </Grid>
-                            </Box>
-                          )}
-                        </div>
-                      ))}
-                    </>
-                  )}
-                </Box>
-              </Grid>
-            </Box>
+                                  <Grid size={{ lg: 4, md: 4, xs: 12 }}>
+                                    <Button
+                                      variant="contained"
+                                      color="error"
+                                      fullWidth
+                                      className={classes.btnCancel}
+                                      onClick={() =>
+                                        cancelPortfolio(portfoliosObtained)
+                                      }
+                                    >
+                                      Cancel
+                                    </Button>
+                                  </Grid>
+                                </>
+                              )}
+                            </Grid>
+                          </Box>
+                        )}
+                      </div>
+                    ))}
+                  </>
+                )}
+              </Box>
+            </Grid>
           </Box>
-        </Grid>
+        </Box>
       </Grid>
     </Grid>
   );

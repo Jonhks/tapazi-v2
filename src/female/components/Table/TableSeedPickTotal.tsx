@@ -43,7 +43,7 @@ const StyledTableRow = styled(TableRow)(() => ({
   },
   "&:nth-of-type(even)": {
     backgroundColor: "#e27d25",
-    color: "white",
+    color: "#000",
   },
   "&:last-child td, &:last-child th": {
     // border: 0,

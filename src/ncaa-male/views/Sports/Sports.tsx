@@ -61,7 +61,7 @@ export default function Sports() {
       {showLoader && (
         <Grid
           container
-          sx={{ height: "100vh" }}
+          sx={{ minHeight: "100vh", height: "auto", overflowY: "auto", pb: 5 }}
         >
           <Grid
             size={{ xs: 12, md: 6 }}
@@ -72,15 +72,15 @@ export default function Sports() {
               backgroundSize: "cover",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "space-around",
               alignItems: "center",
               gap: 4,
               padding: 4,
             }}
           >
             {dataSports
-              .filter((sport: Sport) => sport?.name?.includes("NCAA"))
-              .map((sport: Sport, i: number) => {
+              ?.filter((sport: Sport) => sport?.name?.includes("NCAA"))
+              ?.map((sport: Sport, i: number) => {
                 return (
                   <Tooltip
                     key={i}
@@ -128,7 +128,7 @@ export default function Sports() {
               backgroundSize: "cover",
               display: "flex",
               flexDirection: "column",
-              justifyContent: "center",
+              justifyContent: "space-around",
               alignItems: "center",
               gap: 4,
               padding: 4,

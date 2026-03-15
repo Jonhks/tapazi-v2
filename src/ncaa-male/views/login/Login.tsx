@@ -1,4 +1,4 @@
-// import { useEffect } from "react";
+import { useState } from "react";
 
 import Grid from "@mui/material/Grid2";
 import {
@@ -12,6 +12,9 @@ import {
 import classes from "./Login.module.css";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import HttpsIcon from "@mui/icons-material/Https";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { IconButton } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { UserLogin } from "@/types/index";
@@ -21,6 +24,13 @@ import { getLogin } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
 
 const Login = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const handleClickShowPassword = () => setShowPassword(!showPassword);
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    event.preventDefault();
+  };
   const navigate = useNavigate();
   const initialValues: UserLogin = {
     email: "",
@@ -115,7 +125,7 @@ const Login = () => {
                     />
                     <Input
                       required
-                      type={"password"}
+                      type={showPassword ? "text" : "password"}
                       sx={{
                         width: "80%",
                         m: 2,
@@ -135,6 +145,19 @@ const Login = () => {
                       startAdornment={
                         <InputAdornment position="start">
                           <HttpsIcon color="inherit" />
+                        </InputAdornment>
+                      }
+                      endAdornment={
+                        <InputAdornment position="end">
+                          <IconButton
+                            aria-label="toggle password visibility"
+                            onClick={handleClickShowPassword}
+                            onMouseDown={handleMouseDownPassword}
+                            edge="end"
+                            sx={{ color: "white" }}
+                          >
+                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                          </IconButton>
                         </InputAdornment>
                       }
                       {...register("password", {

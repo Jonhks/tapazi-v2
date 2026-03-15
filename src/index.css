@@ -5,9 +5,9 @@
   -ms-overflow-style: none; /* IE/Edge */
 }
 
-*::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Edge (Chromium) */
-}
+/* *::-webkit-scrollbar {
+  display: none;
+} */
 
 :root {
   --verde: #3ed076;
@@ -82,17 +82,18 @@ tr:nth-child(odd) {
 }
 
 .enable-vertical-scroll {
-  scrollbar-width: auto;
-  -ms-overflow-style: auto;
+  scrollbar-width: auto !important;
+  -ms-overflow-style: auto !important;
+  overflow-y: auto !important;
 }
 .enable-vertical-scroll::-webkit-scrollbar {
-  display: block;
-  width: 8px;
+  display: block !important;
+  width: 8px !important;
 }
 .enable-vertical-scroll::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 4px;
+  background-color: #888 !important;
+  border-radius: 4px !important;
 }
 .enable-vertical-scroll::-webkit-scrollbar-track {
-  background: transparent;
+  background: transparent !important;
 }
