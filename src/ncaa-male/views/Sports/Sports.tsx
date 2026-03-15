@@ -79,8 +79,8 @@ export default function Sports() {
             }}
           >
             {dataSports
-              .filter((sport: Sport) => sport?.name?.includes("NCAA"))
-              .map((sport: Sport, i: number) => {
+              ?.filter((sport: Sport) => sport?.name?.includes("NCAA"))
+              ?.map((sport: Sport, i: number) => {
                 return (
                   <Tooltip
                     key={i}

@@ -2,7 +2,7 @@
   background-color: black;
   height: auto;
   padding: 20px;
-  opacity: 0.51;
+  opacity: 0.75;
   height: 75vh;
   display: flex;
   flex-direction: column;
@@ -36,16 +36,17 @@
 }
 
 .highlighted {
-  background-color: #e11bf2;
-  color: black !important;
+  background-color: #dc903b;
+  color: white !important;
   border-radius: 10px;
   font-family: Arial, Helvetica, sans-serif;
-  opacity: 0.8;
+  /* opacity: 0.5; */
 }
 
 .paragraph {
   color: white;
   font-family: Arial, Helvetica, sans-serif;
+  /* opacity: 0.5; */
 }
 
 @media (width < 900px) {
