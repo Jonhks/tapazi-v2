@@ -135,7 +135,7 @@ const MyPortfolioEPL = () => {
   const handleChangeSelect = (value: string, index: number) => {
     const newSelectedTeams = [...selectedTeams];
     newSelectedTeams[index] = teamsComplete.filter(
-      (team) => team.name === value
+      (team) => team.name === value,
     )[0];
     setSelectedTeams(newSelectedTeams);
   };
@@ -279,10 +279,10 @@ const MyPortfolioEPL = () => {
   const getSeed = (team: Team) => {
     let seed = "";
     const currentTeamDynamics = teamsDynamics?.filter(
-      (t) => t?.id === team?.id
+      (t) => t?.id === team?.id,
     )[0];
     const currentTeamPortfolios = AllPortfolios[0]?.teams?.filter(
-      (t) => t?.id === team?.id
+      (t) => t?.id === team?.id,
     )[0];
     // console.log(weekParameter, validTournament?.[0]?.current_round);
 
@@ -358,10 +358,10 @@ const MyPortfolioEPL = () => {
 
     let multiplier = "";
     const currentTeamDynamics = teamsDynamics?.filter(
-      (t) => t?.id === team?.id
+      (t) => t?.id === team?.id,
     )[0];
     const currentTeamPortfolios = AllPortfolios[0]?.teams?.filter(
-      (t) => t?.id === team?.id
+      (t) => t?.id === team?.id,
     )[0];
 
     // console.log(currentTeamPortfolios);
@@ -589,162 +589,160 @@ const MyPortfolioEPL = () => {
 
   return (
     <Grid
+      container
+      justifyContent={"center"}
+      alignContent={"start"}
       size={12}
-      sx={{
-        height: "calc(100vh - 64px)",
+      style={{
+        minHeight: "700px",
+        height: "calc(100vh - 56px)",
         overflowY: "auto",
-        pb: 10,
+        overflowX: "hidden",
       }}
+      className={`${classes.gridInstructions} enable-vertical-scroll`}
     >
-      <Grid
-        container
-        spacing={2}
-        justifyContent={"center"}
-        alignContent={"center"}
-      >
-        <Grid size={{ xs: 12, sm: 10, lg: 8 }}>
-          <Box
-            component="section"
-            className={classes.boxPortfolio}
-            m={3}
+      <Grid size={{ xs: 12, sm: 10, lg: 8 }}>
+        <Box
+          component="section"
+          className={classes.boxPortfolio}
+          m={3}
+        >
+          <div
+            className={classes.headerPortfolio}
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
           >
-            <div
-              className={classes.headerPortfolio}
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <div style={{ color: "white" }}>
-                <EmojiEventsOutlinedIcon
-                  color="inherit"
-                  style={{ fontSize: "2.6rem" }}
-                />
-
-                <h2
-                  style={{
-                    color: "#05fa87",
-                    fontSize: "40px",
-                  }}
-                >
-                  My Portfolio
-                  <p
-                    style={{
-                      color: "white",
-                      fontSize: "16px",
-                      fontWeight: "normal",
-                    }}
-                  >
-                    {validTournament ? validTournament[0]?.name : "Tournament"}
-                  </p>
-                </h2>
-              </div>
-            </div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-                fontSize: "22px",
-                fontWeight: "bold",
-              }}
-            >
-              <p style={{ textAlign: "center", color: "#05fa87" }}>
-                {AllPortfolios && AllPortfolios[0]?.name}
-              </p>
-
-              <Divider
-                style={{
-                  // backgroundColor: "#05fa87",
-                  backgroundColor: "white",
-                  width: "60%",
-                }}
+            <div style={{ color: "white" }}>
+              <EmojiEventsOutlinedIcon
+                color="inherit"
+                style={{ fontSize: "2.6rem" }}
               />
-            </div>
 
-            <Grid
-              size={12}
-              style={{ marginTop: "30px" }}
-            >
-              <div style={{ width: "80%", margin: "0 auto" }}>
-                <Grid
-                  size={{ xs: 12 }}
+              <h2
+                style={{
+                  color: "#05fa87",
+                  fontSize: "40px",
+                }}
+              >
+                My Portfolio
+                <p
                   style={{
-                    marginTop: "30px",
-                    margin: "10px 0",
-                    padding: "5px 10px",
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    backgroundColor: "#200930",
+                    color: "white",
+                    fontSize: "16px",
+                    fontWeight: "normal",
                   }}
                 >
-                  <Grid size={12}>Seed</Grid>
-                  <Grid
-                    size={12}
-                    style={{ textAlign: "right", fontWeight: "bold" }}
-                  >
-                    Multiplier
-                  </Grid>
+                  {validTournament ? validTournament[0]?.name : "Tournament"}
+                </p>
+              </h2>
+            </div>
+          </div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              fontSize: "22px",
+              fontWeight: "bold",
+            }}
+          >
+            <p style={{ textAlign: "center", color: "#05fa87" }}>
+              {AllPortfolios && AllPortfolios[0]?.name}
+            </p>
+
+            <Divider
+              style={{
+                // backgroundColor: "#05fa87",
+                backgroundColor: "white",
+                width: "60%",
+              }}
+            />
+          </div>
+
+          <Grid
+            size={12}
+            style={{ marginTop: "30px" }}
+          >
+            <div style={{ width: "80%", margin: "0 auto" }}>
+              <Grid
+                size={{ xs: 12 }}
+                style={{
+                  marginTop: "30px",
+                  margin: "10px 0",
+                  padding: "5px 10px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  backgroundColor: "#200930",
+                }}
+              >
+                <Grid size={12}>Seed</Grid>
+                <Grid
+                  size={12}
+                  style={{ textAlign: "right", fontWeight: "bold" }}
+                >
+                  Multiplier
                 </Grid>
-                {renderTeams()}
-              </div>
-            </Grid>
-            <Grid
-              mt={3}
-              mb={2}
-            >
-              {/* {validTournament && (
+              </Grid>
+              {renderTeams()}
+            </div>
+          </Grid>
+          <Grid
+            mt={3}
+            mb={2}
+          >
+            {/* {validTournament && (
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <ErrorMessage>You must select all teams</ErrorMessage>
                 </div>
               )} */}
 
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <Button
-                  variant="contained"
-                  style={{
-                    // backgroundColor: "#05fa87",
-                    backgroundColor: `${
-                      areAllInputsValid() ? "#05fa87" : "#0c5031ff"
-                    }`,
-                    width: "30%",
-                    color: "black",
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    margin: 10,
-                    "&:disabled": { backgroundColor: "grey" },
-                  }}
-                  onClick={() =>
-                    // areAllInputsValid() &&
-                    addportFolioAlert()
-                  }
-                >
-                  {AllPortfolios && AllPortfolios[0]?.teams?.length > 0
-                    ? "EDIT"
-                    : "SUBMIT"}
-                </Button>
-                <Button
-                  variant="contained"
-                  color="error"
-                  style={{
-                    width: "30%",
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "14px",
-                    margin: 10,
-                  }}
-                  onClick={() => cancelAlert()}
-                  // onClick={() => removeportfolioFunction()}
-                >
-                  Cancel
-                </Button>
-              </div>
-            </Grid>
-          </Box>
-        </Grid>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Button
+                variant="contained"
+                style={{
+                  // backgroundColor: "#05fa87",
+                  backgroundColor: `${
+                    areAllInputsValid() ? "#05fa87" : "#0c5031ff"
+                  }`,
+                  width: "30%",
+                  color: "black",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                  margin: 10,
+                  "&:disabled": { backgroundColor: "grey" },
+                }}
+                onClick={() =>
+                  // areAllInputsValid() &&
+                  addportFolioAlert()
+                }
+              >
+                {AllPortfolios && AllPortfolios[0]?.teams?.length > 0
+                  ? "EDIT"
+                  : "SUBMIT"}
+              </Button>
+              <Button
+                variant="contained"
+                color="error"
+                style={{
+                  width: "30%",
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: "14px",
+                  margin: 10,
+                }}
+                onClick={() => cancelAlert()}
+                // onClick={() => removeportfolioFunction()}
+              >
+                Cancel
+              </Button>
+            </div>
+          </Grid>
+        </Box>
       </Grid>
     </Grid>
   );
