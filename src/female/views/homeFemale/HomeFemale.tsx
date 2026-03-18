@@ -116,14 +116,16 @@ const Home = () => {
         <>
           <Grid
             container
-            flexWrap={"wrap"}
             justifyContent={"center"}
-            ml={!isMobile ? "25px" : 0}
+            alignContent={"start"}
+            size={12}
             style={{
               minHeight: "700px",
               height: "calc(100vh - 56px)",
-              overflow: "scroll",
+              overflowY: "auto",
+              overflowX: "hidden",
             }}
+            className={`${classes.gridInstructions} enable-vertical-scroll`}
           >
             <Grid
               size={11}

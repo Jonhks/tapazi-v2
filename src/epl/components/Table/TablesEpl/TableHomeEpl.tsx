@@ -233,6 +233,7 @@ const TableHomeEpl = ({
           alignItems: "center",
           justifyContent: "center",
         }}
+        // className="enable-horizontal-scroll"
       >
         <ModalTableHome
           openModal={openModal}
@@ -263,157 +264,197 @@ const TableHomeEpl = ({
           }}
         />
       </div>
-      <table
-        style={{
-          width: "100%", // Asegura que la tabla ocupe el ancho completo del contenedor
-          borderCollapse: "collapse",
-          overflow: "hideden",
-        }}
+      <div
+        className="enable-horizontal-scroll"
+        style={{ width: "100%", overflowX: "auto" }}
       >
-        <thead>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header, index) => (
-                <Tooltip
-                  key={header.id}
-                  placement="top"
-                  title={`${
-                    extractWeekNumber(header.id) ===
-                    String(tournament.current_round)
-                      ? "Current Round"
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )
-                  }`}
-                >
-                  <th
+        <table
+          style={{
+            width: "100%",
+            minWidth: "1500px",
+            borderCollapse: "separate",
+            borderSpacing: 0,
+          }}
+        >
+          <thead>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header, index) => (
+                  <Tooltip
                     key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    style={{
-                      position:
-                        index === 0 || index === columns.length - 1
-                          ? "sticky"
-                          : "static", // Fija la primera y última columna
-                      left: index === 0 ? 0 : undefined, // Fija la primera columna a la izquierda
-                      right: index === columns.length - 1 ? 0 : undefined, // Fija la última columna a la derecha
-                      backgroundColor:
-                        extractWeekNumber(header.id) ===
-                        String(tournament.current_round)
-                          ? "var(--verde)" // Fondo para las columnas fijas, // Fondo para las columnas fijas
-                          : "#200930",
-                      zIndex: 2, // Asegura que las columnas fijas estén por encima de las demás
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: "14px",
-                      textAlign: "center",
-                      padding: "12px",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {/* {console.log(extractWeekNumber(header.id))} */}
-                    {header.isPlaceholder ? null : (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <p>
-                          {flexRender(
+                    placement="top"
+                    title={`${
+                      extractWeekNumber(header.id) ===
+                      String(tournament.current_round)
+                        ? "Current Round"
+                        : flexRender(
                             header.column.columnDef.header,
                             header.getContext(),
-                          )}
-                        </p>
-                        {{
-                          asc: <ArrowUpwardIcon style={{ fontSize: "20px" }} />,
-                          desc: (
-                            <ArrowUpwardIcon
-                              style={{
-                                transform: "rotate(180deg)",
-                                fontSize: "20px",
-                              }}
-                            />
-                          ),
-                          undefined: (
-                            <div>
+                          )
+                    }`}
+                  >
+                    <th
+                      key={header.id}
+                      onClick={header.column.getToggleSortingHandler()}
+                      style={{
+                        position:
+                          index === 0 ||
+                          index === 1 ||
+                          index === columns.length - 1
+                            ? "sticky"
+                            : "static", // Fija la primera y última columna
+                        left:
+                          index === 0 ? 0 : index === 1 ? "120px" : undefined, // Fija la primera columna a la izquierda
+                        right: index === columns.length - 1 ? 0 : undefined, // Fija la última columna a la derecha
+                        width:
+                          index === 0
+                            ? "120px"
+                            : index === 1
+                              ? "100px"
+                              : "auto",
+                        minWidth:
+                          index === 0
+                            ? "120px"
+                            : index === 1
+                              ? "100px"
+                              : "auto",
+                        backgroundColor:
+                          extractWeekNumber(header.id) ===
+                          String(tournament.current_round)
+                            ? "var(--verde)" // Fondo para las columnas fijas, // Fondo para las columnas fijas
+                            : "#200930",
+                        zIndex:
+                          index === 0 ||
+                          index === 1 ||
+                          index === columns.length - 1
+                            ? 4
+                            : 2, // Asegura que las columnas fijas estén por encima de las demás
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "14px",
+                        textAlign: "center",
+                        padding: "12px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      {/* {console.log(extractWeekNumber(header.id))} */}
+                      {header.isPlaceholder ? null : (
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <p>
+                            {flexRender(
+                              header.column.columnDef.header,
+                              header.getContext(),
+                            )}
+                          </p>
+                          {{
+                            asc: (
+                              <ArrowUpwardIcon style={{ fontSize: "20px" }} />
+                            ),
+                            desc: (
                               <ArrowUpwardIcon
                                 style={{
-                                  color: "gray", // Color neutro para indicar que no está ordenado
+                                  transform: "rotate(180deg)",
                                   fontSize: "20px",
                                 }}
                               />
-                            </div>
-                          ),
-                        }[header.column.getIsSorted() as string] || (
-                          <ArrowUpwardIcon
-                            style={{
-                              color: "gray", // Color neutro para indicar que no está ordenado
-                              fontSize: "18px",
-                            }}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </th>
-                </Tooltip>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell, index) => (
-                <td
-                  key={cell.id}
-                  onClick={() => {
-                    if (
-                      index === 0 ||
-                      index === 1 ||
-                      index === columns.length - 1
-                    )
-                      return;
-                    setPortfolioId(cell.row.original.portfolio_id);
-                    setWeek(extractWeekNumber(cell.id)?.toString() || "1");
-                    setOpenModal(true);
-                    setPortfolio(cell.row.original);
-                  }}
-                  className={`${
-                    index !== 0 &&
-                    index !== 1 &&
-                    index !== columns.length - 1 &&
-                    classes.cell
-                  }`}
-                  style={{
-                    position:
-                      index === 0 || index === columns.length - 1
-                        ? "sticky"
-                        : "static", // Fija la primera y última columna
-                    left: index === 0 ? 0 : undefined, // Fija la primera columna a la izquierda
-                    right: index === columns.length - 1 ? 0 : undefined, // Fija la última columna a la derecha
-                    backgroundColor:
-                      index === 0 || index === 1 || index === columns.length - 1
-                        ? "#200930"
-                        : "#380f51", // Fondo para las columnas fijas, // Fondo para las columnas fijas
-                    transition: "background-color 0.3s ease", // Transición suave
-                    zIndex: 1, // Asegura que las columnas fijas estén por encima de las demás
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "12px",
-                    textAlign: "center",
-                    padding: "8px",
-                  }}
-                  // style={{ backgroundColor: "red" }}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+                            ),
+                            undefined: (
+                              <div>
+                                <ArrowUpwardIcon
+                                  style={{
+                                    color: "gray", // Color neutro para indicar que no está ordenado
+                                    fontSize: "20px",
+                                  }}
+                                />
+                              </div>
+                            ),
+                          }[header.column.getIsSorted() as string] || (
+                            <ArrowUpwardIcon
+                              style={{
+                                color: "gray", // Color neutro para indicar que no está ordenado
+                                fontSize: "18px",
+                              }}
+                            />
+                          )}
+                        </div>
+                      )}
+                    </th>
+                  </Tooltip>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map((cell, index) => (
+                  <td
+                    key={cell.id}
+                    onClick={() => {
+                      if (
+                        index === 0 ||
+                        index === 1 ||
+                        index === columns.length - 1
+                      )
+                        return;
+                      setPortfolioId(cell.row.original.portfolio_id);
+                      setWeek(extractWeekNumber(cell.id)?.toString() || "1");
+                      setOpenModal(true);
+                      setPortfolio(cell.row.original);
+                    }}
+                    className={`${
+                      index !== 0 &&
+                      index !== 1 &&
+                      index !== columns.length - 1 &&
+                      classes.cell
+                    }`}
+                    style={{
+                      position:
+                        index === 0 ||
+                        index === 1 ||
+                        index === columns.length - 1
+                          ? "sticky"
+                          : "static",
+                      left: index === 0 ? 0 : index === 1 ? "120px" : undefined,
+                      right: index === columns.length - 1 ? 0 : undefined,
+                      width:
+                        index === 0 ? "120px" : index === 1 ? "100px" : "auto",
+                      minWidth:
+                        index === 0 ? "120px" : index === 1 ? "100px" : "auto",
+                      backgroundColor:
+                        index === 0 ||
+                        index === 1 ||
+                        index === columns.length - 1
+                          ? "#200930"
+                          : "#380f51",
+                      transition: "background-color 0.3s ease",
+                      zIndex:
+                        index === 0 ||
+                        index === 1 ||
+                        index === columns.length - 1
+                          ? 3
+                          : 1,
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: "12px",
+                      textAlign: "center",
+                      padding: "8px",
+                    }}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </>
   );
 };

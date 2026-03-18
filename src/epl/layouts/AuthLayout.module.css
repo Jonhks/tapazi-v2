@@ -19,6 +19,12 @@
   overflow: auto;
 }
 
+@media (max-width: 800px) {
+  .containerApp {
+    padding-bottom: 70px;
+  }
+}
+
 .containerHistory {
   /* background-image: url("../assets/img/details-ball-sport.jpg"); */
   background-size: cover;

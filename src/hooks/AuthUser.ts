@@ -2,10 +2,19 @@ import { User } from "../types";
 import { useParams } from "react-router-dom";
 
 export const useAuth = () => {
-  const user: User = JSON.parse(localStorage.getItem("userTapaszi") || "");
+  const userData = localStorage.getItem("userTapaszi");
   const params = useParams();
   const userId = params.userId;
-  return user.email && user.id.toString() === userId;
+
+  if (!userData) return false;
+
+  try {
+    const user: User = JSON.parse(userData);
+    return !!(user.email && user.id.toString() === userId);
+  } catch (error) {
+    console.error("Error parsing user data from localStorage", error);
+    return false;
+  }
 };
 
 // export const userExist = async () => {

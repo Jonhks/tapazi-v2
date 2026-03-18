@@ -83,10 +83,16 @@ const HomeEPL = () => {
     <>
       <Grid
         container
-        spacing={2}
-        flexWrap={"wrap"}
         justifyContent={"center"}
-        ml={!isMobile ? "25px" : 0}
+        alignContent={"start"}
+        size={12}
+        style={{
+          minHeight: "700px",
+          height: "calc(100vh - 56px)",
+          overflowY: "auto",
+          overflowX: "hidden",
+        }}
+        className={`${classes.gridInstructions} enable-vertical-scroll`}
       >
         <Grid
           size={11}
@@ -111,7 +117,7 @@ const HomeEPL = () => {
               IS HERE!!!
             </p>
             <div
-              className={classes.subBox}
+              className={`${classes.subBox} enable-vertical-scroll`}
               style={{
                 display: "flex",
                 alignItems: "start", // Centra verticalmente

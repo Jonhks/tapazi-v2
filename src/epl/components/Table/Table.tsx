@@ -47,22 +47,27 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   "&.fixed": {
     position: "sticky",
     left: 0,
-    zIndex: 1,
+    zIndex: 3,
+    minWidth: "120px",
+    width: "120px",
   },
   "&.fixed:nth-of-type(odd)": {
     backgroundColor: "#250B2E", // Color para elementos impares
     color: "#05fa87",
-    fontfamily: "Montserrat, sans-serif",
-    fontsize: 20,
-    opacity: 0.9,
+    fontFamily: "Montserrat, sans-serif",
+    fontSize: 20,
+    opacity: 1,
   },
   "&.fixed:nth-of-type(even)": {
     backgroundColor: "#2D0E35", // Color para elementos pares
-    opacity: 0.9,
+    opacity: 1,
     color: "white",
   },
   "&.fixed + &.fixed": {
-    left: "75px", // Ajusta este valor según el ancho de la columna `portfolioName`
+    left: "120px", // Ajustado para que coincida con el ancho de la primera columna
+    minWidth: "100px",
+    width: "100px",
+    zIndex: 3,
   },
 }));
 
@@ -166,7 +171,12 @@ export default function CustomizedTables({
       className="enable-horizontal-scroll"
     >
       <Table
-        sx={{ minWidth: 100, opacity: "1" }}
+        sx={{
+          minWidth: 1000,
+          opacity: "1",
+          borderCollapse: "separate",
+          borderSpacing: 0,
+        }}
         aria-label="customized table"
       >
         <TableHead sx={{ position: "sticky", top: 0, zIndex: 2 }}>
