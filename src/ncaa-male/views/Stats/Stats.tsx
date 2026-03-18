@@ -3,7 +3,7 @@ import classes from "./Stats.module.css";
 import {
   Zoom,
   // Button,
-  useMediaQuery,
+  // useMediaQuery,
 } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import TextSnippetIcon from "@mui/icons-material/TextSnippet";
@@ -17,74 +17,89 @@ import {
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 // import Loader from "../../components/BallLoader/BallLoader";
-import TableHistory from "../../components/Table/TableHistory";
+// import TableHistory from "../../components/Table/TableHistory";
 // import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
-import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
-import {
-  getLeastPickedTeams,
-  getMostPickedTeams,
-  getPortfolioSeedSelections,
-  getSeedPickTotal,
-  getTeamsNotPickedLog,
-  getTeamsPicked,
-  getTeamsPickedLog,
-} from "@/api/StatsAPI";
-import TableHistoryMostPickedTeams from "../../components/Table/TableHistoryMostPickedTeams";
-import TableTeamsPickedLog from "../../components/Table/TableTeamsPickedLog";
-import TableHistoryTeamsNotPicked from "../../components/Table/TableHistoryTeamsNotPicked";
-import TableSeedPickTotal from "../../components/Table/TableSeedPickTotal";
-import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
-import SortIcon from "@mui/icons-material/Sort";
-import StatsGraphics from "../../components/Graphics/StatsGraphic";
-import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
-import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
-import StatsPortfoliosSelectionsGraphicPercentLeast from "../../components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
+// import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
+// import {
+//   getLeastPickedTeams,
+//   getMostPickedTeams,
+//   getPortfolioSeedSelections,
+//   getSeedPickTotal,
+//   getTeamsNotPickedLog,
+//   getTeamsPicked,
+//   getTeamsPickedLog,
+// } from "@/api/StatsAPI";
+// import TableHistoryMostPickedTeams from "../../components/Table/TableHistoryMostPickedTeams";
+// import TableTeamsPickedLog from "../../components/Table/TableTeamsPickedLog";
+// import TableHistoryTeamsNotPicked from "../../components/Table/TableHistoryTeamsNotPicked";
+// import TableSeedPickTotal from "../../components/Table/TableSeedPickTotal";
+// import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
+// import SortIcon from "@mui/icons-material/Sort";
+// import StatsGraphics from "../../components/Graphics/StatsGraphic";
+// import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
+// import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
+// import StatsPortfoliosSelectionsGraphicPercentLeast from "../../components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
 
 const Stats = () => {
   const params = useParams();
   const userId = params.userId!;
   // const queryClient = useQueryClient();
-  const isMobile = useMediaQuery("(max-width:900px)");
+  // const isMobile = useMediaQuery("(max-width:900px)");
 
-  const optionsOrder = [
-    {
-      id: "1",
-      value: "Score (Desc)",
-      name: "Score (Desc)",
-    },
-    {
-      id: "2",
-      value: "Portfolio (Asc)",
-      name: "Portfolio (Asc)",
-    },
-    {
-      id: "3",
-      value: "Weight (Desc)",
-      name: "Weight (Desc)",
-    },
-    {
-      id: "4",
-      value: "Weight (Asc)",
-      name: "Weight (Asc)",
-    },
-  ];
+  // const optionsOrder = [
+  //   {
+  //     id: "1",
+  //     value: "Score (Desc)",
+  //     name: "Score (Desc)",
+  //   },
+  //   {
+  //     id: "2",
+  //     value: "Portfolio (Asc)",
+  //     name: "Portfolio (Asc)",
+  //   },
+  //   {
+  //     id: "3",
+  //     value: "Weight (Desc)",
+  //     name: "Weight (Desc)",
+  //   },
+  //   {
+  //     id: "4",
+  //     value: "Weight (Asc)",
+  //     name: "Weight (Asc)",
+  //   },
+  // ];
 
-  type dataDropdowndataType = {
-    name: string;
-    id: string;
-  };
+  // type dataDropdowndataType = {
+  //   name: string;
+  //   id: string;
+  // };
 
-  const { data: tournaments, isLoading } = useQuery({
+  const {
+    data: tournaments,
+    // isLoading
+  } = useQuery({
     queryKey: ["tournaments", userId],
     queryFn: () => getTournaments(),
   });
 
   const [tournament, setTournament] = useState("");
-  const [score, setScore] = useState("Score");
-  const [runMostTeamsPicked, setRunMostTeamsPicked] = useState(false);
-  const [runSubDataPortfolios, setRunSubDataPortfolios] = useState(false);
-  const [selectedScore, setSelectedScore] = useState({
+  const [
+    score,
+    // setScore
+  ] = useState("Score");
+  const [
+    // runMostTeamsPicked,
+    // setRunMostTeamsPicked
+  ] = useState(false);
+  const [
+    // runSubDataPortfolios,
+    // setRunSubDataPortfolios
+  ] = useState(false);
+  const [
+    selectedScore,
+    // setSelectedScore
+  ] = useState({
     name: "Score",
     id: "1",
     option: "Score",
@@ -92,24 +107,29 @@ const Stats = () => {
     round: "8",
   });
 
-  const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[0]);
+  const [
+    subDataSelected,
+    // setSubDataSelected
+  ] = useState(subDataDropDown[0]);
   const [idSubDataSelected, setIdSubDataSelected] = useState(0);
-  const [round, setRound] = useState(8);
+  const [round, setRound] = useState(1);
 
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   // const [pointsPerRound, setPointsPerRound] = useState([]);
-  const [selectedOrderBy, setSelectedOrderBy] = useState("1");
-  const [orderOptionSelected, setOrderOptionSelected] = useState(
-    optionsOrder[0],
-  );
+  // const [selectedOrderBy, setSelectedOrderBy] = useState("1");
+  // const [orderOptionSelected, setOrderOptionSelected] = useState(
+  //   optionsOrder[0],
+  // );
 
   useEffect(() => {
     if (tournaments) {
-      const current = tournaments.filter((el: Tournament) => el?.current)[0];
-      setTournament(current?.name);
+      // const current = tournaments.filter((el: Tournament) => el?.current)[0];
+      setTournament(tournaments[0]?.name);
+      // console.log(tournaments);
       // setScore("Score");
-      setSelectedTournament(current);
+      setSelectedTournament(tournaments[0]);
       setTimeout(async () => {
+        // console.log(selectedTournament);
         if (selectedTournament?.id) {
           // const responsePointsPerRound = await getScorePPR(
           //   selectedTournament?.id
@@ -133,29 +153,29 @@ const Stats = () => {
       setSelectedTournament(optionSelect);
       setIdSubDataSelected(0);
     } else if (e?.target?.name === "dataDropdowndata") {
-      const optionSelect = dataDropdowndata.filter(
-        (el: dataDropdowndataType) => el?.name === e?.target?.value,
-      )[0];
-      setScore(e?.target?.value);
+      // const optionSelect = dataDropdowndata.filter(
+      //   (el: dataDropdowndataType) => el?.name === e?.target?.value,
+      // )[0];
+      // setScore(e?.target?.value);
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      setSelectedScore(optionSelect);
-      setSubDataSelected(subDataDropDown[+optionSelect.id - 1]);
-      setIdSubDataSelected(0);
+      // setSelectedScore(optionSelect);
+      // setSubDataSelected(subDataDropDown[+optionSelect.id - 1]);
+      // setIdSubDataSelected(0);
       setRunMostTeamsPicked(true);
     }
     if (e.target.value === "Portfolios") {
-      setRunSubDataPortfolios(true);
+      // setRunSubDataPortfolios(true);
     }
   };
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleChangeOrder = (e) => {
-    const selected = optionsOrder.filter(
-      (opt) => opt.name === e.target.value,
-    )[0];
-    setOrderOptionSelected(selected);
-    setSelectedOrderBy(selected.id);
+    // const selected = optionsOrder.filter(
+    //   (opt) => opt.name === e.target.value,
+    // )[0];
+    // setOrderOptionSelected(selected);
+    // setSelectedOrderBy(e.target.value);
   };
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -166,77 +186,79 @@ const Stats = () => {
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    setRound(+selected[0].round);
-    setIdSubDataSelected(+selected[0].id - 1);
+    setRound(+selected[0].current_round);
+    // setIdSubDataSelected(+selected[0].id - 1);
   };
+  console.log(selectedTournament, round);
 
-  const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
-    queryKey: ["teamsPicked", selectedOrderBy, round, selectedTournament.id],
-    queryFn: () =>
-      getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
-    retry: false,
-  });
+  // const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
+  //   queryKey: ["teamsPicked", round, selectedTournament.id],
+  //   queryFn: () => getTeamsPicked(selectedTournament.id, round),
+  //   retry: false,
+  // });
 
-  const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
-    useQuery({
-      queryKey: ["mostPickedTeams", userId],
-      queryFn: () => getMostPickedTeams(selectedTournament.id),
-      enabled: runMostTeamsPicked,
-      retry: false,
-    });
+  // const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
+  //   useQuery({
+  //     queryKey: ["mostPickedTeams", userId],
+  //     queryFn: () => getMostPickedTeams(selectedTournament.id),
+  //     enabled: runMostTeamsPicked,
+  //     retry: false,
+  //   });
 
-  const { data: TeamsPickedLog, isLoading: isLoadinTeamsPickedLog } = useQuery({
-    queryKey: ["TeamsPickedLog", userId],
-    queryFn: () => getTeamsPickedLog(selectedTournament.id),
-    enabled: runMostTeamsPicked,
-    retry: false,
-  });
+  // const { data: TeamsPickedLog, isLoading: isLoadinTeamsPickedLog } = useQuery({
+  //   queryKey: ["TeamsPickedLog", userId],
+  //   queryFn: () => getTeamsPickedLog(selectedTournament.id),
+  //   enabled: runMostTeamsPicked,
+  //   retry: false,
+  // });
 
-  const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
-    useQuery({
-      queryKey: ["leastPickedTeams", userId],
-      queryFn: () => getLeastPickedTeams(selectedTournament.id),
-      enabled: runMostTeamsPicked,
-      retry: false,
-    });
+  // const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
+  //   useQuery({
+  //     queryKey: ["leastPickedTeams", userId],
+  //     queryFn: () => getLeastPickedTeams(selectedTournament.id),
+  //     enabled: runMostTeamsPicked,
+  //     retry: false,
+  //   });
 
-  const { data: teamsNotPickedLog, isLoading: isLoadinTeamsNotPickedLog } =
-    useQuery({
-      queryKey: ["teamsNotPickedLog", userId],
-      queryFn: () => getTeamsNotPickedLog(selectedTournament.id),
-      enabled: runMostTeamsPicked,
-      retry: false,
-    });
+  // const { data: teamsNotPickedLog, isLoading: isLoadinTeamsNotPickedLog } =
+  //   useQuery({
+  //     queryKey: ["teamsNotPickedLog", userId],
+  //     queryFn: () => getTeamsNotPickedLog(selectedTournament.id),
+  //     enabled: runMostTeamsPicked,
+  //     retry: false,
+  //   });
 
-  const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
-    queryKey: ["seedPickTotal", userId],
-    queryFn: () => getSeedPickTotal(selectedTournament.id),
-    enabled: runSubDataPortfolios,
-    retry: false,
-  });
+  // const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
+  //   queryKey: ["seedPickTotal", userId],
+  //   queryFn: () => getSeedPickTotal(selectedTournament.id),
+  //   enabled: runSubDataPortfolios,
+  //   retry: false,
+  // });
 
-  const {
-    data: portfolioSeedSelections,
-    isLoading: isLoadinPortfolioSeedSelections,
-  } = useQuery({
-    queryKey: ["portfolioSeedSelections", userId],
-    queryFn: () => getPortfolioSeedSelections(selectedTournament.id),
-    enabled: runSubDataPortfolios,
-    retry: false,
-  });
+  // console.log(seedPickTotal);
 
-  if (
-    isLoading ||
-    isLoadingTeamsPicked ||
-    isLoadingMostPickedTeams ||
-    isLoadinTeamsPickedLog ||
-    isLoadinLeastPickedTeams ||
-    isLoadinTeamsNotPickedLog ||
-    isLoadinSeedPickTotal ||
-    isLoadinPortfolioSeedSelections
-  ) {
-    console.log("loading");
-  }
+  // const {
+  //   data: portfolioSeedSelections,
+  //   isLoading: isLoadinPortfolioSeedSelections,
+  // } = useQuery({
+  //   queryKey: ["portfolioSeedSelections", userId],
+  //   queryFn: () => getPortfolioSeedSelections(selectedTournament.id),
+  //   enabled: runSubDataPortfolios,
+  //   retry: false,
+  // });
+
+  // if (
+  //   isLoading ||
+  // isLoadingTeamsPicked ||
+  // isLoadingMostPickedTeams ||
+  // isLoadinTeamsPickedLog ||
+  // isLoadinLeastPickedTeams ||
+  // isLoadinTeamsNotPickedLog ||
+  // isLoadinSeedPickTotal ||
+  // isLoadinPortfolioSeedSelections
+  // ) {
+  //   console.log("loading");
+  // }
   // return <Loader />;
 
   return (
@@ -277,10 +299,11 @@ const Stats = () => {
             className={classes.subBoxHistory}
             size={{ xs: 12, md: 12 }}
             flexWrap={"wrap"}
+            justifyContent={"center"}
           >
             <Grid
               container
-              size={{ xs: 12, md: 6 }}
+              size={{ xs: 12, md: 10 }}
               // style={{ border: "1px solid #05fa05", padding: 16 }}
             >
               <Grid size={12}>
@@ -293,9 +316,7 @@ const Stats = () => {
                     className={classes.DropDownHistory}
                     value={tournament}
                     handleChange={handleChange}
-                    options={tournaments?.filter(
-                      (el: Tournament) => el.current,
-                    )}
+                    options={tournaments}
                   />
                 </div>
               </Grid>
@@ -328,7 +349,7 @@ const Stats = () => {
                 </div>
               </Grid>
             </Grid>
-            <Grid
+            {/* <Grid
               container
               size={{ xs: 12, md: 6 }}
               style={{ border: "1px solid #05fa05", padding: 16 }}
@@ -362,7 +383,7 @@ const Stats = () => {
                   </div>
                 )}
               </Grid>
-            </Grid>
+            </Grid> */}
           </Grid>
         </Grid>
       </Grid>
@@ -374,7 +395,7 @@ const Stats = () => {
         alignContent={"center"}
         mb={3}
       >
-        {teamsPicked &&
+        {/* {teamsPicked &&
           typeof teamsPicked !== "string" &&
           score === "Score" && (
             <Zoom in={true}>
@@ -385,7 +406,7 @@ const Stats = () => {
                 />
               </Grid>
             </Zoom>
-          )}
+          )} */}
 
         {score === "Teams" && (
           <Zoom in={true}>
@@ -394,7 +415,7 @@ const Stats = () => {
               size={{ xs: 11, md: 10 }}
               spacing={1}
             >
-              <Grid
+              {/* <Grid
                 size={{ xs: 12, md: 6 }}
                 container
                 spacing={2}
@@ -430,26 +451,26 @@ const Stats = () => {
                     />
                   </Grid>
                 )}
-              </Grid>
+              </Grid> */}
               <Grid
                 container
                 size={{ xs: 12, md: 6 }}
                 spacing={1}
               >
                 <Grid>
-                  {TeamsPickedLog && typeof TeamsPickedLog !== "string" && (
+                  {/* {TeamsPickedLog && typeof TeamsPickedLog !== "string" && (
                     <TableTeamsPickedLog
                       arrHistory={TeamsPickedLog}
                       score={"Frequency of Teams Picked"}
                     />
-                  )}
+                  )} */}
                 </Grid>
               </Grid>
             </Grid>
           </Zoom>
         )}
 
-        {score === "Portfolios" && (
+        {/* {score === "Portfolios" && (
           <Zoom in={true}>
             <Grid
               size={11}
@@ -539,7 +560,7 @@ const Stats = () => {
               </Grid>
             </Grid>
           </Zoom>
-        )}
+        )} */}
       </Grid>
     </Grid>
   );

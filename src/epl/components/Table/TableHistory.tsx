@@ -30,10 +30,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     position: "sticky",
     left: 0,
     backgroundColor: "#572d03",
-    zIndex: 1,
+    zIndex: 3,
+    minWidth: "120px",
+    width: "120px",
+    opacity: 1,
   },
   "&.fixed + &.fixed": {
-    left: "75px", // Ajusta este valor según el ancho de la columna `portfolioName`
+    left: "120px", // Ajustado para que coincida con el ancho de la primera columna
+    minWidth: "100px",
+    width: "100px",
+    zIndex: 3,
   },
 }));
 
@@ -80,7 +86,7 @@ export default function CustomizedTables({ arrHistory, score }) {
     wins,
     score,
     championshipPoints,
-    eliminatedTeams
+    eliminatedTeams,
   ) {
     return {
       portfolioName,
@@ -116,8 +122,8 @@ export default function CustomizedTables({ arrHistory, score }) {
         row?.wins,
         row?.score,
         row?.championshipPoints,
-        row?.eliminatedTeams
-      )
+        row?.eliminatedTeams,
+      ),
     ),
   ];
 
@@ -130,7 +136,12 @@ export default function CustomizedTables({ arrHistory, score }) {
         {score}
       </div>
       <Table
-        sx={{ minWidth: 100, opacity: ".87" }}
+        sx={{
+          minWidth: 1000,
+          opacity: ".87",
+          borderCollapse: "separate",
+          borderSpacing: 0,
+        }}
         aria-label="customized table"
       >
         <TableHead

@@ -1,18 +1,11 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
-import { User } from "../types";
+// import { User } from "../types";
 
-export const getTeamsPicked = async (
-  id: User["id"],
-  round: User["id"],
-  order: User["id"]
-) => {
-  if (round === "0") {
-    round = "1";
-  }
-
+export const getTeamsPicked = async (tournamentId: number, round: number) => {
   try {
-    const url = `/score/stats?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`;
+    // const url = `/score/stats?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`;
+    const url = `/tournaments/${tournamentId}/score/stats?sport=ncaa&round=${round}&order=1`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",

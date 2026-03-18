@@ -3,15 +3,20 @@ import { isAxiosError } from "axios";
 import { Tournament } from "../types";
 
 export const getTournaments = async () => {
-  const urlGetTournaments = `/tournaments?api-key=TESTAPIKEY`;
+  const urlGetTournaments = `/sports/1/tournaments`;
   try {
     const { data } = await apiEnv.get(urlGetTournaments, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
-    if (data.success) {
-      return data.data.tournaments;
+
+    if (!data.tournaments) {
+      return data.error.description || "Error";
+    }
+
+    if (data.tournaments) {
+      return data.tournaments;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -23,7 +28,7 @@ export const getTournaments = async () => {
 export const getScorePPR = async (id: Tournament["id"]) => {
   if (id) {
     // const urlGetScorePPR = `/rest/points-per-round?api-key=TESTAPIKEY&tournament-id=${id}`;
-    const urlGetScorePPR = ''
+    const urlGetScorePPR = "";
     try {
       const { data } = await apiEnv.get(urlGetScorePPR, {
         headers: {

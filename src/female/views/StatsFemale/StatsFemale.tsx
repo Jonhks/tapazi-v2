@@ -17,7 +17,7 @@ import {
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
 // import Loader from "../../components/BallLoader/BallLoader";
-import TableHistory from "../../components/Table/TableHistory";
+// import TableHistory from "../../components/Table/TableHistory";
 // import DescriptionIcon from "@mui/icons-material/Description";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
 import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
@@ -27,7 +27,7 @@ import {
   getPortfolioSeedSelections,
   getSeedPickTotal,
   getTeamsNotPickedLog,
-  getTeamsPicked,
+  // getTeamsPicked,
   getTeamsPickedLog,
 } from "@/api/StatsAPI";
 import TableHistoryMostPickedTeams from "../../components/Table/TableHistoryMostPickedTeams";
@@ -94,7 +94,10 @@ const Stats = () => {
 
   const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[0]);
   const [idSubDataSelected, setIdSubDataSelected] = useState(0);
-  const [round, setRound] = useState(8);
+  const [
+    // round,
+    setRound,
+  ] = useState(8);
 
   const [selectedTournament, setSelectedTournament] = useState({ id: 1 });
   // const [pointsPerRound, setPointsPerRound] = useState([]);
@@ -170,12 +173,12 @@ const Stats = () => {
     setIdSubDataSelected(+selected[0].id - 1);
   };
 
-  const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
-    queryKey: ["teamsPicked", selectedOrderBy, round, selectedTournament.id],
-    queryFn: () =>
-      getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
-    retry: false,
-  });
+  // const { data: teamsPicked, isLoading: isLoadingTeamsPicked } = useQuery({
+  //   queryKey: ["teamsPicked", selectedOrderBy, round, selectedTournament.id],
+  //   queryFn: () =>
+  //     // getTeamsPicked(`${selectedTournament.id}`, `${round}`, selectedOrderBy),
+  //   // retry: false,
+  // });
 
   const { data: mostPickedTeams, isLoading: isLoadingMostPickedTeams } =
     useQuery({
@@ -229,7 +232,7 @@ const Stats = () => {
 
   if (
     isLoading ||
-    isLoadingTeamsPicked ||
+    // isLoadingTeamsPicked ||
     isLoadingMostPickedTeams ||
     isLoadinTeamsPickedLog ||
     isLoadinLeastPickedTeams ||
@@ -376,7 +379,7 @@ const Stats = () => {
         alignContent={"center"}
         mb={3}
       >
-        {teamsPicked &&
+        {/* {teamsPicked &&
           typeof teamsPicked !== "string" &&
           score === "Score" && (
             <Zoom in={true}>
@@ -387,7 +390,7 @@ const Stats = () => {
                 />
               </Grid>
             </Zoom>
-          )}
+          )} */}
 
         {score === "Teams" && (
           <Zoom in={true}>

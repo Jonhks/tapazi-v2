@@ -222,8 +222,14 @@ function MenuMobileEpl() {
   return (
     <Box>
       <AppBar
-        position="sticky"
-        sx={{ bottom: 0, backgroundColor: "#380f51" }}
+        position="fixed"
+        sx={{
+          top: "auto",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          backgroundColor: "#380f51",
+        }}
       >
         <Container maxWidth="xl">
           <Toolbar disableGutters>
