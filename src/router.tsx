@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy } from "react";
 // ? --------------------------  Portfolio -------------------------- ? //
 const AuthLayout = lazy(() => import("./ncaa-male/layouts/AuthLayout"));
@@ -85,7 +85,7 @@ import { PortfolioProvider } from "./providers/PortfolioProvider";
 
 const Router = () => {
   return (
-    <HashRouter>
+    <BrowserRouter>
       {/* <URLParameterHandler> */}
       <PortfolioProvider>
         <Routes>
@@ -276,7 +276,7 @@ const Router = () => {
       </PortfolioProvider>
 
       {/* </URLParameterHandler> */}
-    </HashRouter>
+    </BrowserRouter>
   );
 };
 
