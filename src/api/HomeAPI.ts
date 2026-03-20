@@ -134,7 +134,7 @@ export const getPortfoliosCount = async (tournamentId: string) => {
 
 export const gatPayout = async (tournamentId: string) => {
   try {
-    const url = `/tournaments/${tournamentId}/payouts?portfolios=99`;
+    const url = `/tournaments/${tournamentId}/payouts?portfolios=23`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
