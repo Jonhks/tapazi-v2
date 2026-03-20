@@ -138,7 +138,7 @@ export const getParticipantsFemale = async (tournamentId: string) => {
 
 export const gatPayoutFemale = async (tournamentId: string) => {
   try {
-    const url = `/tournaments/${tournamentId}/payouts?portfolios=99`;
+    const url = `/tournaments/${tournamentId}/payouts?portfolios=25`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
