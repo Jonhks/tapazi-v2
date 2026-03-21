@@ -3,6 +3,7 @@ import { isAxiosError } from "axios";
 // import { User } from "../types";
 
 export const getTeamsPicked = async (tournamentId: number, round: number) => {
+  console.log(tournamentId, round);
   try {
     const url = `/tournaments/${2}/score/stats?sport=ncaa&round=${round}&order=1`; // TODO: remove this
     const { data } = await apiEnv(url, {
@@ -22,6 +23,8 @@ export const getTeamsPicked = async (tournamentId: number, round: number) => {
 };
 
 export const getScoreWeeksMale = async (tournamentId: number) => {
+  console.log(tournamentId);
+
   try {
     const url = `/tournaments/${3}/score/weeks`; // TODO: remove this
     const { data } = await apiEnv(url, {
@@ -43,7 +46,9 @@ export const getScoreWeeksMale = async (tournamentId: number) => {
   }
 };
 
-export const getMostPickedTeams = async (id: number) => {
+export const getMostPickedTeams = async (tournamentId: number) => {
+  console.log(tournamentId);
+
   try {
     const url = `/reports/most-picked-teams?tournament_id=${2}`; // TODO: remove this
     const { data } = await apiEnv(url, {
@@ -65,7 +70,8 @@ export const getMostPickedTeams = async (id: number) => {
   }
 };
 
-export const getTeamsPickedLog = async (id: number) => {
+export const getTeamsPickedLog = async (tournamentId: number) => {
+  console.log(tournamentId);
   try {
     const url = `/reports/teams-picked-log?tournament_id=${2}`; // TODO: remove this
     const { data } = await apiEnv(url, {
@@ -87,7 +93,8 @@ export const getTeamsPickedLog = async (id: number) => {
   }
 };
 
-export const getLeastPickedTeams = async (id: number) => {
+export const getLeastPickedTeams = async (tournamentId: number) => {
+  console.log(tournamentId);
   try {
     const url = `/reports/least-picked-teams?tournament_id=${2}`; // TODO: remove this
     const { data } = await apiEnv(url, {
@@ -109,7 +116,8 @@ export const getLeastPickedTeams = async (id: number) => {
   }
 };
 
-export const getTeamsNotPickedLog = async (id: number) => {
+export const getTeamsNotPickedLog = async (tournamentId: number) => {
+  console.log(tournamentId);
   try {
     const url = `/reports/teams-not-picked-log?tournament_id=${2}`; // TODO: remove this
     const { data } = await apiEnv(url, {
@@ -131,9 +139,9 @@ export const getTeamsNotPickedLog = async (id: number) => {
   }
 };
 
-export const getSeedPickTotal = async (id: number) => {
+export const getSeedPickTotal = async (tournamentId: number) => {
   try {
-    const url = `/seed-pick-totals?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const url = `/seed-pick-totals?api-key=TESTAPIKEY&tournament-id=${tournamentId}`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -170,8 +178,10 @@ export const getPortfolioStatsWeek = async (week: number) => {
 };
 
 export const getNcaaMaleTeams = async (tournamentId: number) => {
+  console.log(tournamentId);
+
   try {
-    const url = `/sports/2/teams?sport=ncaa&tournament_id=${tournamentId}`; // TODO: remove this el sport es 1
+    const url = `/sports/2/teams?sport=ncaa&tournament_id=${3}`; // TODO: remove this el sport es 1
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
@@ -185,9 +195,9 @@ export const getNcaaMaleTeams = async (tournamentId: number) => {
   }
 };
 
-export const getPortfolioSeedSelections = async (id: number) => {
+export const getPortfolioSeedSelections = async (tournamentId: number) => {
   try {
-    const url = `/portfolio-seed-selections?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const url = `/portfolio-seed-selections?api-key=TESTAPIKEY&tournament-id=${tournamentId}`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
