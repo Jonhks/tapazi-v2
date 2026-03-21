@@ -15,9 +15,7 @@ export default function TableTeamsPicked({
       {
         header: "Portfolio",
         accessorKey: "portfolioName",
-        cell: (info) => (
-          <span style={{ color: "#05fa87" }}>{info.getValue()}</span>
-        ),
+        cell: (info) => <span>{info.getValue()}</span>,
       },
       {
         header: "Weight",

@@ -81,7 +81,7 @@ export function TableBase<T>({
           width: "100%",
           backgroundColor: "rgb(13, 13, 13)",
           padding: "4px 0",
-          opacity: ".8",
+          // opacity: ".8",
         }}
       >
         <div
@@ -127,7 +127,9 @@ export function TableBase<T>({
           ...(maxHeight ? { maxHeight } : {}),
         }}
       >
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <table
+          style={{ width: "100%", borderCollapse: "collapse", opacity: 0.9 }}
+        >
           <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>

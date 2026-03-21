@@ -28,7 +28,12 @@ type PortfolioWithCrests = {
 };
 
 const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
-  <Box display="flex" alignItems="center" justifyContent="start" gap={1}>
+  <Box
+    display="flex"
+    alignItems="center"
+    justifyContent="start"
+    gap={1}
+  >
     <Box
       sx={{
         width: 24,
@@ -93,9 +98,7 @@ export default function TablePortfolioWeekStats({
       {
         header: "Portfolio",
         accessorKey: "portfolio",
-        cell: (info) => (
-          <span style={{ color: "#05fa87" }}>{info.getValue()}</span>
-        ),
+        cell: (info) => <span>{info.getValue()}</span>,
       },
       ...Array.from({ length: maxTeams }, (_, i) => ({
         header: `Team ${i + 1}`,
@@ -105,7 +108,10 @@ export default function TablePortfolioWeekStats({
           const teamName = info.getValue();
           const fullTeam = info.row.original.teams?.[i];
           return teamName && fullTeam ? (
-            <TeamDisplay name={teamName} crest={fullTeam.crest || ""} />
+            <TeamDisplay
+              name={teamName}
+              crest={fullTeam.crest || ""}
+            />
           ) : null;
         },
       })),
