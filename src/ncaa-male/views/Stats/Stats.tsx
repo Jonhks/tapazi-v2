@@ -164,6 +164,7 @@ const Stats = () => {
   const { data: scoreWeeksMaleData } = useQuery({
     queryKey: ["scoreWeeksMale", selectedTournament?.id],
     queryFn: () => getScoreWeeksMale(selectedTournament!.id),
+    // queryFn: () => getScoreWeeksMale(3),
     enabled: !!selectedTournament?.id,
     retry: false,
   });
@@ -229,7 +230,8 @@ const Stats = () => {
 
   const { data: ncaaMaleTeams } = useQuery({
     queryKey: ["ncaaMaleTeams", selectedTournament?.id],
-    queryFn: () => getNcaaMaleTeams(selectedTournament!.id),
+    // queryFn: () => getNcaaMaleTeams(selectedTournament!.id),
+    queryFn: () => getNcaaMaleTeams(3), // TODO: remove this
     enabled: !!selectedTournament?.id && score === "Portfolios",
     retry: false,
   });
