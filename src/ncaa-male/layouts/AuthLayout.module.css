@@ -47,3 +47,26 @@
     background-position: left;
   }
 }
+
+/* ── Male table colors ───────────────────────────────────────────────────── */
+.containerApp :global(thead),
+.containerHistory :global(thead),
+.containerStats :global(thead) {
+  background-color: #572d03;
+  color: white !important;
+  opacity: 0.8;
+}
+
+.containerApp :global(tr:nth-child(even)),
+.containerHistory :global(tr:nth-child(even)),
+.containerStats :global(tr:nth-child(even)) {
+  background-color: #3d1f00;
+  color: white;
+}
+
+.containerApp :global(tr:nth-child(odd)),
+.containerHistory :global(tr:nth-child(odd)),
+.containerStats :global(tr:nth-child(odd)) {
+  background-color: #4a2500;
+  color: white;
+}

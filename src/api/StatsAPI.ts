@@ -4,7 +4,6 @@ import { isAxiosError } from "axios";
 
 export const getTeamsPicked = async (tournamentId: number, round: number) => {
   try {
-    // const url = `/score/stats?api-key=TESTAPIKEY&tournament-id=${id}&round=${round}&order=${order}`;
     const url = `/tournaments/${tournamentId}/score/stats?sport=ncaa&round=${round}&order=1`;
     const { data } = await apiEnv(url, {
       headers: {
@@ -12,11 +11,30 @@ export const getTeamsPicked = async (tournamentId: number, round: number) => {
       },
     });
 
-    if (!data.success) {
-      return "Error";
+    // console.log(data);
+
+    return data.stats ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
+  }
+};
+
+export const getScoreWeeksMale = async (week: number) => {
+  try {
+    const url = `/tournaments/${week}/score/weeks`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.weeks) {
+      return [];
     }
-    if (data.success) {
-      return data.data.stats;
+    if (data.weeks) {
+      return data.weeks;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -27,18 +45,18 @@ export const getTeamsPicked = async (tournamentId: number, round: number) => {
 
 export const getMostPickedTeams = async (id: number) => {
   try {
-    const url = `/most-picked-teams?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const url = `/reports/most-picked-teams?tournament_id=${2}`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.data) {
       return "Error";
     }
-    if (data.success) {
-      return data.data.mostPickedTeams;
+    if (data.data) {
+      return data.data;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -49,18 +67,18 @@ export const getMostPickedTeams = async (id: number) => {
 
 export const getTeamsPickedLog = async (id: number) => {
   try {
-    const url = `/teams-picked-log?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const url = `/reports/teams-picked-log?tournament_id=${2}`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.data) {
       return "Error";
     }
-    if (data.success) {
-      return data.data.teamsPickedLog;
+    if (data.data) {
+      return data.data;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -71,18 +89,18 @@ export const getTeamsPickedLog = async (id: number) => {
 
 export const getLeastPickedTeams = async (id: number) => {
   try {
-    const url = `/least-picked-teams?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const url = `/reports/least-picked-teams?tournament_id=${2}`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.data) {
       return "Error";
     }
-    if (data.success) {
-      return data.data.leastPickedTeams;
+    if (data.data) {
+      return data.data;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -93,18 +111,18 @@ export const getLeastPickedTeams = async (id: number) => {
 
 export const getTeamsNotPickedLog = async (id: number) => {
   try {
-    const url = `/teams-not-picked-log?api-key=TESTAPIKEY&tournament-id=${id}`;
+    const url = `/reports/teams-not-picked-log?tournament_id=${2}`;
     const { data } = await apiEnv(url, {
       headers: {
         "Content-Type": "application/json;charset=utf-8",
       },
     });
 
-    if (!data.success) {
+    if (!data.data) {
       return "Error";
     }
-    if (data.success) {
-      return data.data.teamsNotPickedLog;
+    if (data.data) {
+      return data.data;
     }
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -132,6 +150,38 @@ export const getSeedPickTotal = async (id: number) => {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
     return;
+  }
+};
+
+export const getPortfolioStatsWeek = async (week: number) => {
+  try {
+    const url = `/tournaments/3/score/stats/portfolio?week=${week}`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    return data.data ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
+  }
+};
+
+export const getNcaaMaleTeams = async (tournamentId: number) => {
+  try {
+    const url = `/sports/1/teams?sport=ncaa&tournament_id=${tournamentId}`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    return data.teams ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
   }
 };
 

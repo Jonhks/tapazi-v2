@@ -91,6 +91,7 @@ export default function CustomizedTables({ arrHistory, score }) {
   return (
     <TableContainer
       component={Paper}
+      className="enable-horizontal-scroll enable-vertical-scroll"
       sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "50vh" }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>

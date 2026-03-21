@@ -65,7 +65,7 @@ export default function CustomizedTables({
     percentage_portfolios,
     team_name,
     times_picked,
-    tournament_name
+    tournament_name,
     // year
   ) {
     return {
@@ -83,19 +83,21 @@ export default function CustomizedTables({
         row?.percentage_portfolios,
         row?.team_name,
         row?.times_picked,
-        row?.tournament_name
+        row?.tournament_name,
         // row?.year
-      )
+      ),
     ),
   ];
 
   return (
     <TableContainer
       component={Paper}
+      className="enable-horizontal-scroll enable-vertical-scroll"
       sx={{
-        backgroundColor: "#572d03",
+        backgroundColor: "black",
         overflowX: "auto",
         maxHeight: "40vh",
+        opacity: ".8",
       }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>

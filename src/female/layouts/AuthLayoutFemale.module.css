@@ -46,3 +46,29 @@
   /* justify-content: center; */
   background-color: red;
 }
+
+/* ── Female table colors ─────────────────────────────────────────────────── */
+.containerAppFemale :global(thead),
+.containerStatsFemale :global(thead),
+.containerHistoryFemale :global(thead),
+.containerInstructionsFemale :global(thead) {
+  background-color: #200930;
+  color: white !important;
+  opacity: 0.8;
+}
+
+.containerAppFemale :global(tr:nth-child(even)),
+.containerStatsFemale :global(tr:nth-child(even)),
+.containerHistoryFemale :global(tr:nth-child(even)),
+.containerInstructionsFemale :global(tr:nth-child(even)) {
+  background-color: #380f51;
+  color: black;
+}
+
+.containerAppFemale :global(tr:nth-child(odd)),
+.containerStatsFemale :global(tr:nth-child(odd)),
+.containerHistoryFemale :global(tr:nth-child(odd)),
+.containerInstructionsFemale :global(tr:nth-child(odd)) {
+  background-color: #380f51;
+  color: white;
+}
