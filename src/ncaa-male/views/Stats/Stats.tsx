@@ -501,14 +501,20 @@ const Stats = () => {
                 size={{ xs: 12, md: 6 }}
                 spacing={1}
               >
-                <Grid>
-                  {TeamsPickedLog && (
-                    <TableTeamsPickedLog
-                      arrHistory={TeamsPickedLog}
-                      score={"Frequency of Teams Picked"}
-                    />
-                  )}
-                </Grid>
+                {isLoadinTeamsPickedLog ? (
+                  <p style={{ color: "white", textAlign: "center" }}>
+                    Loading...
+                  </p>
+                ) : (
+                  <Grid>
+                    {TeamsPickedLog && (
+                      <TableTeamsPickedLog
+                        arrHistory={TeamsPickedLog}
+                        score={"Frequency of Teams Picked"}
+                      />
+                    )}
+                  </Grid>
+                )}
               </Grid>
             </Grid>
           </Zoom>
