@@ -24,7 +24,13 @@ export default function TableTeamsPickedLog({
         cell: ({ getValue }) => {
           const name = String(getValue() ?? "");
           return (
-            <span style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                whiteSpace: "nowrap",
+              }}
+            >
               <BallSvg />
               {name}
             </span>
@@ -53,7 +59,7 @@ export default function TableTeamsPickedLog({
       data={arrHistory ?? []}
       columns={columns}
       title={score}
-      maxHeight="500px"
+      // maxHeight="500px"
       stickyLastColumn
     />
   );

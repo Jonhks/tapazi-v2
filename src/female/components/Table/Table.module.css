@@ -11,14 +11,11 @@
   width: 100%;
   background-color: #0d0d1a;
   color: #e040fb;
-  font-size: 1.1rem;
-  font-weight: bold;
+  font-size: 1.6rem;
   text-align: center;
   padding: 12px 5px;
   border-bottom: 2px solid #e040fb;
-  letter-spacing: 1px;
   max-height: 51px;
-  /* text-transform: uppercase; */
   overflow: scroll;
 }
 

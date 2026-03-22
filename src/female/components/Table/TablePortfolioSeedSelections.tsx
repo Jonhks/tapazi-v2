@@ -3,8 +3,22 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableBase } from "./Table";
 
 const numeration = [
-  "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
-  "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
+  "Ten",
+  "Eleven",
+  "Twelve",
+  "Thirteen",
+  "Fourteen",
+  "Fifteen",
+  "Sixteen",
 ];
 
 type SeedRow = { seed: string; times: number; percentage: number };
@@ -21,7 +35,7 @@ export default function TablePortfolioSeedSelections({
     return numeration.map((seed, i) => ({
       seed,
       times: arrHistory[0][`seed${i + 1}`],
-      percentage: arrHistory[0][`prcnt_seed${i + 1}`],
+      percentage: parseFloat(String(arrHistory[0][`prnct_seed${i + 1}`])),
     }));
   }, [arrHistory]);
 

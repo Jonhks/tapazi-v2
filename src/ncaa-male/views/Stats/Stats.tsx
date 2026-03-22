@@ -84,7 +84,7 @@ const Stats = () => {
   const [selectedScore, setSelectedScore] = useState({
     name: "Score",
     id: "1",
-    option: "Data",
+    option: "Round",
     placeholder: "Data",
   });
   const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[0]);
