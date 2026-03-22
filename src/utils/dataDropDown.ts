@@ -85,31 +85,25 @@ export const subDataDropDown = [
     },
   ],
   [
-    // {
-    //   name: "Teams Picked",
-    //   id: "1",
-    //   option: "Teams Picked",
-    //   placeholder: "Teams Picked",
-    // },
     {
-      name: "Arsenal",
+      name: "Teams Picked",
       id: "1",
-      option: "Arsenal",
-      placeholder: "Arsenal",
+      option: "Teams Picked",
+      placeholder: "Teams Picked",
     },
   ],
   [
-    // {
-    //   name: "Picks by Seed's Distributi",
-    //   id: "1",
-    //   option: "Picks by Seed's Distributi",
-    //   placeholder: "Picks by Seed's Distributi",
-    // },
     {
-      name: "Week 1",
+      name: "Picks by Seed's Distribution",
       id: "1",
-      option: "Week 1",
-      placeholder: "Week 1",
+      option: "Picks by Seed's Distribution",
+      placeholder: "Picks by Seed's Distribution",
     },
+    // {
+    //   name: "Week 1",
+    //   id: "1",
+    //   option: "Week 1",
+    //   placeholder: "Week 1",
+    // },
   ],
 ];

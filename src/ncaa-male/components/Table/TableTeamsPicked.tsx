@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { useMemo } from "react";
-import { TableBase } from "./Table";
+import { TableBase, BallSvg } from "./Table";
 
 export default function TableTeamsPicked({
   arrHistory,
@@ -28,6 +28,14 @@ export default function TableTeamsPicked({
       ...Array.from({ length: 8 }, (_, i) => ({
         header: `Team ${i + 1}`,
         accessorKey: `team${i + 1}Name`,
+        cell: (info) => {
+          const name = info.getValue();
+          return name ? (
+            <span style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
+              <BallSvg />{name}
+            </span>
+          ) : null;
+        },
       })),
       { header: "Wins", accessorKey: "wins" },
       {
@@ -54,6 +62,7 @@ export default function TableTeamsPicked({
       data={arrHistory ?? []}
       columns={columns}
       title={title}
+      maxHeight="500px"
       stickyLastColumn
     />
   );

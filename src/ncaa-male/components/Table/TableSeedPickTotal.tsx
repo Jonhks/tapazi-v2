@@ -10,11 +10,12 @@ const NUMERALS = [
 
 export default function TableSeedPickTotal({ arrHistory, score }) {
   const data = useMemo(() => {
-    if (!arrHistory?.[0]) return [];
+    const item = Array.isArray(arrHistory) ? arrHistory[0] : arrHistory;
+    if (!item) return [];
     return NUMERALS.map((seed, i) => ({
       seed,
-      number: arrHistory[0][`teams_seed${i + 1}`],
-      percentage: arrHistory[0][`prcnt_teams_seed${i + 1}`],
+      number: item[`teams_seed${i + 1}`],
+      percentage: parseFloat(item[`prnct_teams_seed${i + 1}`]),
     }));
   }, [arrHistory]);
 
@@ -32,6 +33,6 @@ export default function TableSeedPickTotal({ arrHistory, score }) {
   );
 
   return (
-    <TableBase data={data} columns={columns} title={score} maxHeight="50vh" />
+    <TableBase data={data} columns={columns} title={score} maxHeight="50vh" searchWidth="100%" />
   );
 }

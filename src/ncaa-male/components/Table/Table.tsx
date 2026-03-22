@@ -39,6 +39,7 @@ interface TableBaseProps<T> {
   maxHeight?: string;
   defaultSorting?: SortingState;
   stickyLastColumn?: boolean;
+  searchWidth?: number | string;
 }
 
 export function TableBase<T>({
@@ -48,6 +49,7 @@ export function TableBase<T>({
   maxHeight,
   defaultSorting = [],
   stickyLastColumn = false,
+  searchWidth,
 }: TableBaseProps<T>) {
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [filtered, setFiltered] = useState("");
@@ -92,7 +94,7 @@ export function TableBase<T>({
             zIndex: 3,
             backgroundColor: "#d6cfcfff",
             color: "black",
-            width: isMobile ? 150 : 250,
+            width: searchWidth ?? (isMobile ? 150 : 250),
             borderRadius: 5,
             display: "flex",
             alignItems: "center",
@@ -150,7 +152,7 @@ export function TableBase<T>({
                       color: "white",
                       fontWeight: "bold",
                       fontSize: isMobile ? "9px" : "10px",
-                      textAlign: "center",
+                      textAlign: (index === 0 || index === columns.length - 1) ? "center" : "left",
                       textTransform: "uppercase",
                       padding: isMobile ? "8px 4px" : "14px 10px",
                       cursor: "pointer",
@@ -163,7 +165,7 @@ export function TableBase<T>({
                         style={{
                           display: "flex",
                           alignItems: "center",
-                          justifyContent: "center",
+                          justifyContent: (index === 0 || index === columns.length - 1) ? "center" : "flex-start",
                           gap: 4,
                         }}
                       >
@@ -220,7 +222,7 @@ export function TableBase<T>({
                       color: "white",
                       fontWeight: "bold",
                       fontSize: isMobile ? "12px" : "11px",
-                      textAlign: "center",
+                      textAlign: (index === 0 || index === columns.length - 1) ? "center" : "left",
                       padding: isMobile ? "8px 4px" : "12px 10px",
                       zIndex: isSticky(index, columns.length) ? 1 : 0,
                       whiteSpace: "nowrap",
@@ -240,7 +242,7 @@ export function TableBase<T>({
 
 // ─── Balón SVG ────────────────────────────────────────────────────────────────
 
-const BallSvg = () => (
+export const BallSvg = () => (
   <svg
     viewBox="0 0 24 24"
     fill="#ffffff"

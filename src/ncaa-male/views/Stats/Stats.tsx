@@ -30,23 +30,25 @@ import { Tournament } from "@/types/index";
 import TableHistoryMostPickedTeams from "../../components/Table/TableHistoryMostPickedTeams";
 import TableTeamsPickedLog from "../../components/Table/TableTeamsPickedLog";
 import TableHistoryTeamsNotPicked from "../../components/Table/TableHistoryTeamsNotPicked";
-// import TableSeedPickTotal from "../../components/Table/TableSeedPickTotal";
-// import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
+import TableSeedPickTotal from "../../components/Table/TableSeedPickTotal";
+import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
 // import SortIcon from "@mui/icons-material/Sort";
-// import StatsGraphics from "../../components/Graphics/StatsGraphic";
-// import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
-// import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
-// import StatsPortfoliosSelectionsGraphicPercentLeast from "../../components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
+import StatsGraphics from "../../components/Graphics/StatsGraphic";
+import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
+import StatsPortfoliosSelectionsGraphicTeamsleastOnce from "../../components/Graphics/StatsPortfoliosSelectionsGraphicTeamsleastOnce";
+import StatsPortfoliosSelectionsGraphicPercentLeast from "../../components/Graphics/StatsPortfoliosSelectionsGraphicPercentLeast";
 import { dataDropdowndata, subDataDropDown } from "@/utils/dataDropDown";
 import {
   getScoreWeeksMale,
   getTeamsPicked,
   getPortfolioStatsWeek,
-  getNcaaMaleTeams,
+  // getNcaaMaleTeams,
   getMostPickedTeams,
   getLeastPickedTeams,
   getTeamsNotPickedLog,
   getTeamsPickedLog,
+  getSeedPickTotal,
+  getPortfolioSeedSelections,
 } from "@/api/StatsAPI";
 import TablePortfolioWeekStats from "../../components/Table/TablePortfolioWeekStats";
 import TableTeamsPicked from "../../components/Table/TableTeamsPicked";
@@ -82,8 +84,8 @@ const Stats = () => {
   const [selectedScore, setSelectedScore] = useState({
     name: "Portfolios",
     id: "3",
-    option: "Weeks",
-    placeholder: "Weeks",
+    option: "Seed's",
+    placeholder: "Seed's",
   });
   const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[2]);
   const [idSubDataSelected, setIdSubDataSelected] = useState(0);
@@ -145,7 +147,7 @@ const Stats = () => {
     );
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
-    setRound(+selected[0].current_round);
+    setRound(+selected[0].round);
     setIdSubDataSelected(+selected[0].id - 1);
   };
 
@@ -228,13 +230,14 @@ const Stats = () => {
       retry: false,
     });
 
-  const { data: ncaaMaleTeams } = useQuery({
-    queryKey: ["ncaaMaleTeams", selectedTournament?.id],
-    // queryFn: () => getNcaaMaleTeams(selectedTournament!.id),
-    queryFn: () => getNcaaMaleTeams(3), // TODO: remove this
-    enabled: !!selectedTournament?.id && score === "Portfolios",
-    retry: false,
-  });
+  // const { data: ncaaMaleTeams } = useQuery({
+  //   queryKey: ["ncaaMaleTeams", selectedTournament?.id],
+  //   queryFn: () => getNcaaMaleTeams(selectedTournament!.id),
+  //   enabled: !!selectedTournament?.id && score === "Portfolios",
+  //   retry: false,
+  // });
+
+  // console.log(ncaaMaleTeams);
 
   const { data: mostPickedTeamsRaw, isLoading: isLoadingMostPickedTeams } =
     useQuery({
@@ -250,8 +253,6 @@ const Stats = () => {
     enabled: !!selectedTournament?.id && score === "Teams",
     retry: false,
   });
-
-  console.log(TeamsPickedLog);
 
   const { data: leastPickedTeams, isLoading: isLoadinLeastPickedTeams } =
     useQuery({
@@ -269,33 +270,30 @@ const Stats = () => {
       retry: false,
     });
 
-  console.log(teamsNotPickedLog);
+  const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
+    queryKey: ["seedPickTotal", selectedTournament?.id],
+    queryFn: () => getSeedPickTotal(selectedTournament!.id),
+    enabled: !!selectedTournament?.id && score === "Portfolios",
+    retry: false,
+  });
 
-  // const { data: seedPickTotal, isLoading: isLoadinSeedPickTotal } = useQuery({
-  //   queryKey: ["seedPickTotal", userId],
-  //   queryFn: () => getSeedPickTotal(selectedTournament.id),
-  //   enabled: runSubDataPortfolios,
-  //   retry: false,
-  // });
+  const {
+    data: portfolioSeedSelections,
+    isLoading: isLoadinPortfolioSeedSelections,
+  } = useQuery({
+    queryKey: ["portfolioSeedSelections", userId],
+    queryFn: () => getPortfolioSeedSelections(selectedTournament!.id),
+    enabled: !!selectedTournament?.id && score === "Portfolios",
+    retry: false,
+  });
 
-  // const {
-  //   data: portfolioSeedSelections,
-  //   isLoading: isLoadinPortfolioSeedSelections,
-  // } = useQuery({
-  //   queryKey: ["portfolioSeedSelections", userId],
-  //   queryFn: () => getPortfolioSeedSelections(selectedTournament.id),
-  //   enabled: runSubDataPortfolios,
-  //   retry: false,
-  // });
-
+  console.log(portfolioSeedSelections);
   // console.log(mostPickedTeamsRaw);
 
   return (
     <Grid
       style={{
         minHeight: "700px",
-        height: "calc(100vh - 56px)",
-        overflow: "scroll",
       }}
     >
       <Grid
@@ -425,7 +423,7 @@ const Stats = () => {
               ) : portfolioStatsData && portfolioStatsData.length > 0 ? (
                 <TablePortfolioWeekStats
                   statsData={portfolioStatsData}
-                  teamsData={ncaaMaleTeams ?? []}
+                  teamsData={[]}
                   weekLabel={selectedWeekLabel}
                 />
               ) : (
@@ -519,8 +517,7 @@ const Stats = () => {
             </Grid>
           </Zoom>
         )}
-
-        {/* {score === "Portfolios" && (
+        {score === "Portfolios" && (
           <Zoom in={true}>
             <Grid
               size={11}
@@ -537,21 +534,32 @@ const Stats = () => {
                   size={{ xs: 12, md: 6 }}
                   mb={1}
                 >
-                  {seedPickTotal && typeof seedPickTotal !== "string" && (
-                    <TableSeedPickTotal
-                      arrHistory={seedPickTotal}
-                      score={"Picks By Seed"}
-                    />
+                  {isLoadinSeedPickTotal ? (
+                    <p style={{ color: "white", textAlign: "center" }}>
+                      Loading...
+                    </p>
+                  ) : (
+                    seedPickTotal && (
+                      <TableSeedPickTotal
+                        arrHistory={seedPickTotal}
+                        score={"Picks By Seed"}
+                      />
+                    )
                   )}
                 </Grid>
                 <Grid size={{ xs: 12, md: 6 }}>
-                  {portfolioSeedSelections &&
-                    typeof portfolioSeedSelections !== "string" && (
+                  {isLoadinPortfolioSeedSelections ? (
+                    <p style={{ color: "white", textAlign: "center" }}>
+                      Loading...
+                    </p>
+                  ) : (
+                    portfolioSeedSelections && (
                       <TablePortfolioSeedSelections
                         arrHistory={portfolioSeedSelections}
                         score={"Seed Picked in Portfolio \n (at least once)"}
                       />
-                    )}
+                    )
+                  )}
                 </Grid>
               </Grid>
               <Grid
@@ -561,7 +569,7 @@ const Stats = () => {
                 justifyContent={"space-around"}
               >
                 <Grid size={12}>
-                  {seedPickTotal && typeof seedPickTotal !== "string" && (
+                  {seedPickTotal && (
                     <StatsGraphics
                       graphType={"ColumnChart"}
                       data={seedPickTotal}
@@ -573,7 +581,7 @@ const Stats = () => {
                   size={12}
                   mt={1}
                 >
-                  {seedPickTotal && typeof seedPickTotal !== "string" && (
+                  {seedPickTotal && (
                     <StatsPortfoliosSelectionsGraphic
                       graphType={"ColumnChart"}
                       data={seedPickTotal}
@@ -585,32 +593,30 @@ const Stats = () => {
                   size={12}
                   mt={1}
                 >
-                  {portfolioSeedSelections &&
-                    typeof portfolioSeedSelections !== "string" && (
-                      <StatsPortfoliosSelectionsGraphicTeamsleastOnce
-                        graphType={"ColumnChart"}
-                        data={portfolioSeedSelections}
-                        title={"Teams Seed Picked at Least Once"}
-                      />
-                    )}
+                  {portfolioSeedSelections && (
+                    <StatsPortfoliosSelectionsGraphicTeamsleastOnce
+                      graphType={"ColumnChart"}
+                      data={portfolioSeedSelections}
+                      title={"Teams Seed Picked at Least Once"}
+                    />
+                  )}
                 </Grid>
                 <Grid
                   size={12}
                   mt={1}
                 >
-                  {portfolioSeedSelections &&
-                    typeof portfolioSeedSelections !== "string" && (
-                      <StatsPortfoliosSelectionsGraphicPercentLeast
-                        graphType={"ColumnChart"}
-                        data={portfolioSeedSelections}
-                        title={"Percentage Seed Picked at Least Once)"}
-                      />
-                    )}
+                  {portfolioSeedSelections && (
+                    <StatsPortfoliosSelectionsGraphicPercentLeast
+                      graphType={"ColumnChart"}
+                      data={portfolioSeedSelections}
+                      title={"Percentage Seed Picked at Least Once)"}
+                    />
+                  )}
                 </Grid>
               </Grid>
             </Grid>
           </Zoom>
-        )} */}
+        )}
       </Grid>
     </Grid>
   );

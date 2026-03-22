@@ -2,7 +2,7 @@
 // @ts-nocheck
 import { useMemo } from "react";
 import { Box, Typography } from "@mui/material";
-import { TableBase } from "./Table";
+import { TableBase, BallSvg } from "./Table";
 
 type TeamStat = {
   id: number;
@@ -27,25 +27,14 @@ type PortfolioWithCrests = {
   teams: TeamWithCrest[];
 };
 
-const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
+const TeamDisplay = ({ name }: { name: string }) => (
   <Box
     display="flex"
     alignItems="center"
     justifyContent="start"
     gap={1}
   >
-    <Box
-      sx={{
-        width: 24,
-        height: 24,
-        backgroundColor: "rgba(255,255,255,0.1)",
-        backgroundImage: `url(${crest})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        borderRadius: "50%",
-        flexShrink: 0,
-      }}
-    />
+    <BallSvg />
     <Typography
       variant="body2"
       sx={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}
@@ -106,12 +95,8 @@ export default function TablePortfolioWeekStats({
         id: `team_${i}`,
         cell: (info) => {
           const teamName = info.getValue();
-          const fullTeam = info.row.original.teams?.[i];
-          return teamName && fullTeam ? (
-            <TeamDisplay
-              name={teamName}
-              crest={fullTeam.crest || ""}
-            />
+          return teamName ? (
+            <TeamDisplay name={teamName} />
           ) : null;
         },
       })),

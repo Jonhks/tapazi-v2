@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { useMemo } from "react";
-import { TableBase } from "./Table";
+import { TableBase, BallSvg } from "./Table";
 import { TeamsNotPicked } from "@/types/index";
 
 export default function TableHistoryTeamsNotPicked({
@@ -14,7 +14,18 @@ export default function TableHistoryTeamsNotPicked({
   const columns = useMemo(
     () => [
       { header: "Year", accessorKey: "year" },
-      { header: "Team", accessorKey: "team_name" },
+      {
+        header: "Team",
+        accessorKey: "team_name",
+        cell: (info) => {
+          const name = info.getValue();
+          return name ? (
+            <span style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
+              <BallSvg />{name}
+            </span>
+          ) : null;
+        },
+      },
       { header: "Tournament", accessorKey: "tournament_name" },
     ],
     [],

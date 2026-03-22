@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { useMemo } from "react";
-import { TableBase } from "./Table";
+import { TableBase, BallSvg } from "./Table";
 import { MostPickedTeams } from "@/types/index";
 
 export default function TableHistoryMostPickedTeams({
@@ -18,7 +18,18 @@ export default function TableHistoryMostPickedTeams({
       ...(!least
         ? [{ header: "Tournament", accessorKey: "tournament_name" }]
         : []),
-      { header: "Team name", accessorKey: "team_name" },
+      {
+        header: "Team name",
+        accessorKey: "team_name",
+        cell: (info) => {
+          const name = info.getValue();
+          return name ? (
+            <span style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
+              <BallSvg />{name}
+            </span>
+          ) : null;
+        },
+      },
       { header: "Times picked", accessorKey: "times_picked" },
       {
         header: "% Portfolios",
