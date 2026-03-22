@@ -2,6 +2,20 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Convenciones UX importantes
+
+### Scrolls en tablas
+Usar siempre `overflow: "scroll"` (no `"auto"`) en los contenedores de tabla. Los usuarios de este proyecto arrastran las barras de scroll manualmente — con `"auto"` las barras solo aparecen cuando hay desbordamiento y el usuario no sabe que puede scrollear. Con `"scroll"` las barras siempre son visibles.
+
+```css
+/* Correcto */
+overflowX: "scroll"
+overflowY: "scroll"   /* o "visible" si no hay maxHeight */
+
+/* Evitar */
+overflow: "auto"
+```
+
 ## Comandos
 
 ```bash

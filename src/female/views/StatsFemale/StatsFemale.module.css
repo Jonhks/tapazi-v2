@@ -23,12 +23,12 @@
   align-items: center;
   padding: 10px 15px;
   margin: 0 0 10px 0;
-  border: 1px solid #df2af9;
-  justify-content: center;
+  /* border: 1px solid #df2af9; */
+  justify-content: start;
 }
 
 .titleBox svg {
-  color: #dc903b;
+  color: #df2af9;
 }
 
 .titleBox svg {
@@ -36,7 +36,7 @@
 }
 
 .subBoxHistory {
-  /* border: 2px solid #e27d25; */
+  border: 2px solid #df2af9;
   padding: 12px;
   width: 100%;
   height: 100%;
@@ -62,7 +62,7 @@
 }
 
 .DropDownHistory {
-  border: 1px solid #df2af9;
+  /* border: 1px solid #df2af9; */
   padding: 0 16px;
   text-align: center;
 }
@@ -80,4 +80,29 @@
 
 .DropDownHistory:disabled div {
   color: red !important;
+}
+
+.tableRow:hover td {
+  background-color: #df2af9 !important;
+}
+
+.tableRow:hover td:first-child {
+  background-color: #df2af9 !important;
+}
+
+.tableRow:hover td:last-child {
+  background-color: #df2af9 !important;
+}
+
+.DropDownHistory div label,
+.DropDownHistory div div div,
+.DropDownHistory div label:focus,
+.DropDownHistory div svg {
+  color: white !important;
+}
+
+.DropDownHistory div div {
+  /* background-color: red !important; */
+  border-bottom: 1px solid #f2b2fc;
+  /* opacity: 0.; */
 }
