@@ -80,14 +80,14 @@ const Stats = () => {
   });
 
   const [tournament, setTournament] = useState("");
-  const [score, setScore] = useState("Portfolios");
+  const [score, setScore] = useState("Score");
   const [selectedScore, setSelectedScore] = useState({
-    name: "Portfolios",
-    id: "3",
-    option: "Seed's",
-    placeholder: "Seed's",
+    name: "Score",
+    id: "1",
+    option: "Data",
+    placeholder: "Data",
   });
-  const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[2]);
+  const [subDataSelected, setSubDataSelected] = useState(subDataDropDown[0]);
   const [idSubDataSelected, setIdSubDataSelected] = useState(0);
   const [round, setRound] = useState(1);
   const [selectedTournament, setSelectedTournament] =
@@ -403,7 +403,7 @@ const Stats = () => {
                 </p>
               ) : teamsPicked && teamsPicked.length > 0 ? (
                 <TableTeamsPicked
-                  title={subDataSelected[idSubDataSelected].name}
+                  title={subDataSelected[idSubDataSelected].name || ""}
                   arrHistory={teamsPicked}
                   weekLabel={selectedWeekLabel}
                 />
