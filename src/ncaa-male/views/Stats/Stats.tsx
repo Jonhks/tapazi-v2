@@ -403,6 +403,7 @@ const Stats = () => {
                 </p>
               ) : teamsPicked && teamsPicked.length > 0 ? (
                 <TableTeamsPicked
+                  title={subDataSelected[idSubDataSelected].name}
                   arrHistory={teamsPicked}
                   weekLabel={selectedWeekLabel}
                 />

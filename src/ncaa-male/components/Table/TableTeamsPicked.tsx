@@ -6,9 +6,11 @@ import { TableBase, BallSvg } from "./Table";
 export default function TableTeamsPicked({
   arrHistory,
   weekLabel,
+  title,
 }: {
   arrHistory: any[];
   weekLabel?: string;
+  title?: string;
 }) {
   const columns = useMemo(
     () => [
@@ -31,8 +33,15 @@ export default function TableTeamsPicked({
         cell: (info) => {
           const name = info.getValue();
           return name ? (
-            <span style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
-              <BallSvg />{name}
+            <span
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                whiteSpace: "nowrap",
+              }}
+            >
+              <BallSvg />
+              {name}
             </span>
           ) : null;
         },
@@ -55,7 +64,7 @@ export default function TableTeamsPicked({
     [],
   );
 
-  const title = weekLabel ? `Teams Picked - ${weekLabel}` : "Teams Picked";
+  // const title = weekLabel ? `Teams Picked - ${weekLabel}` : "Teams Picked";
 
   return (
     <TableBase
