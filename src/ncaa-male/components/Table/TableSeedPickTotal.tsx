@@ -4,8 +4,22 @@ import { useMemo } from "react";
 import { TableBase } from "./Table";
 
 const NUMERALS = [
-  "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
-  "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
+  "One",
+  "Two",
+  "Three",
+  "Four",
+  "Five",
+  "Six",
+  "Seven",
+  "Eight",
+  "Nine",
+  "Ten",
+  "Eleven",
+  "Twelve",
+  "Thirteen",
+  "Fourteen",
+  "Fifteen",
+  "Sixteen",
 ];
 
 export default function TableSeedPickTotal({ arrHistory, score }) {
@@ -33,6 +47,12 @@ export default function TableSeedPickTotal({ arrHistory, score }) {
   );
 
   return (
-    <TableBase data={data} columns={columns} title={score} maxHeight="50vh" searchWidth="100%" />
+    <TableBase
+      data={data}
+      columns={columns}
+      title={score}
+      maxHeight="50vh"
+      searchWidth="100%"
+    />
   );
 }

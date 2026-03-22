@@ -125,6 +125,7 @@ export function TableBase<T>({
           width: "100%",
           backgroundColor: HDR_EVEN,
           padding: "0",
+          overflow: "hidden",
         }}
       >
         <div
@@ -139,8 +140,8 @@ export function TableBase<T>({
             borderRadius: 5,
             display: "flex",
             alignItems: "center",
-            padding: "4px 8px",
-            height: isMobile ? 28 : 36,
+            padding: "4px",
+            height: isMobile ? 20 : 30,
             border: `1px solid ${SEARCH_BORDER}`,
           }}
         >
@@ -158,7 +159,7 @@ export function TableBase<T>({
             inputProps={{
               style: {
                 textTransform: "lowercase",
-                color: "white",
+                color: "#111",
                 fontSize: isMobile ? 11 : 13,
               },
               autoCapitalize: "none",
@@ -171,6 +172,7 @@ export function TableBase<T>({
 
       {/* Table */}
       <div
+        className={`enable-horizontal-scroll${maxHeight ? " enable-vertical-scroll" : ""}`}
         style={{
           overflowX: "scroll",
           overflowY: maxHeight ? "scroll" : "visible",

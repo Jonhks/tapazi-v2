@@ -17,7 +17,9 @@
   padding: 12px 5px;
   border-bottom: 2px solid #e040fb;
   letter-spacing: 1px;
-  text-transform: uppercase;
+  max-height: 51px;
+  /* text-transform: uppercase; */
+  overflow: scroll;
 }
 
 .fixed {

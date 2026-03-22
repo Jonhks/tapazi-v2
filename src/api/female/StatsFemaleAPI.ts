@@ -43,3 +43,137 @@ export const getTeamsPickedFemale = async (
     return [];
   }
 };
+
+export const getMostPickedTeamsFemale = async (tournamentId: number) => {
+  try {
+    const url = `/reports/most-picked-teams?tournament_id=${tournamentId}`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data) {
+      return "Error";
+    }
+    if (data.data) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getLeastPickedTeamsFemale = async (tournamentId: number) => {
+  try {
+    const url = `/reports/least-picked-teams?tournament_id=${tournamentId}`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data) {
+      return "Error";
+    }
+    if (data.data) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getTeamsNotPickedLogFemale = async (tournamentId: number) => {
+  try {
+    const url = `/reports/teams-not-picked-log?tournament_id=${tournamentId}`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data) {
+      return "Error";
+    }
+    if (data.data) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getTeamsPickedLogFemale = async (tournamentId: number) => {
+  try {
+    const url = `/reports/teams-picked-log?tournament_id=${tournamentId}`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data) {
+      return "Error";
+    }
+    if (data.data) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getSeedPickTotalFemale = async (tournamentId: number) => {
+  try {
+    const url = `/reports/seed-pick-totals?tournament_id=${tournamentId}`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data) {
+      return "Error";
+    }
+    if (data.data) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getPortfolioSeedSelectionsFemale = async (
+  tournamentId: number,
+) => {
+  try {
+    const url = `/reports/portfolio-seed-selections?tournament_id=${tournamentId}`;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data) {
+      return "Error";
+    }
+    if (data.data) {
+      return data.data;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
