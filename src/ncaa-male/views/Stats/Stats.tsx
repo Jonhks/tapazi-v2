@@ -16,7 +16,7 @@ import {
 } from "@tanstack/react-query";
 import { getTournaments } from "@/api/HistoryAPI";
 import { Tournament } from "@/types/index";
-// import Loader from "../../components/BallLoader/BallLoader";
+import Loader from "../../components/BallLoader/BallLoader";
 // import TableHistory from "../../components/Table/TableHistory";
 // import DescriptionIcon from "@mui/icons-material/Description";
 // import RadioButtonHistory from "../../components/Inputs/RadioButtonHistory";
@@ -289,6 +289,19 @@ const Stats = () => {
 
   console.log(portfolioSeedSelections);
   // console.log(mostPickedTeamsRaw);
+
+  if (
+    isLoadingPortfolioStats ||
+    isLoadingMostPickedTeams ||
+    isLoadingTeamsPicked ||
+    isLoadinTeamsPickedLog ||
+    isLoadinLeastPickedTeams ||
+    isLoadinTeamsNotPickedLog ||
+    isLoadinSeedPickTotal ||
+    isLoadinPortfolioSeedSelections
+  ) {
+    return <Loader />;
+  }
 
   return (
     <Grid
