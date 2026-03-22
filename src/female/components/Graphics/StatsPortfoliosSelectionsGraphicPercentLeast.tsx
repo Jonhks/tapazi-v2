@@ -1,9 +1,7 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-
 import { Chart, GoogleChartWrapperChartType } from "react-google-charts";
 
-function TeamPerYearlogGraphic({
+function StatsPortfoliosSelectionsGraphicPercentLeast({
   graphType,
   data,
   title,
@@ -12,8 +10,6 @@ function TeamPerYearlogGraphic({
   data;
   title: string;
 }) {
-  console.log(data);
-
   const convertDataForGoogleChart = (item): (string | number)[][] => {
     if (!item) return [];
     const source = Array.isArray(item) ? item[0] : item;
@@ -31,37 +27,20 @@ function TeamPerYearlogGraphic({
 
   return (
     <Chart
-      // Try different chart types by changing this property with one of: ColumnChart, LineChart, AreaChart, BarChart, BubbleChart, ComboChart,  PieChart, DonutChart, GeoChart, Histogram, Line, RadarChart, ScatterChart, SteppedAreaChart, Table
-      // chartType={"SteppedAreaChart"}
       chartType={graphType}
       data={convertedData}
+      width="100%"
       options={{
-        title: title,
-        colors: [
-          "#33FFF5", // Cian
-          "#3357FF", // Azul
-          "#FF5733", // Rojo
-          "#33FF57", // Verde
-          "#FF33A1", // Rosa
-          "#FF8C33", // Naranja
-          "#8C33FF", // Púrpura
-          "#FF3333", // Rojo oscuro
-          "#33FF8C", // Verde claro
-          "#5733FF", // Azul oscuro
-          "#FF5733", // Rojo claro
-          "#33A1FF", // Azul claro
-          "#FF33FF", // Magenta
-          "#FF5733", // Rojo coral
-          "#33FF33", // Verde lima
-          "#FF33FF", // Fucsia
-        ],
+        title,
+        colors: ["#e040fb"],
         is3D: true,
-        titleTextStyle: { color: "white" },
+        titleTextStyle: { color: "white", fontSize: 14 },
         legendTextStyle: { color: "white" },
         vAxis: {
           title: "Percent",
           titleTextStyle: { color: "white" },
           textStyle: { color: "white" },
+          gridlines: { color: "#333" },
         },
         hAxis: {
           title: "Seed",
@@ -69,11 +48,11 @@ function TeamPerYearlogGraphic({
           textStyle: { color: "white" },
         },
         chartArea: { width: "60%" },
-        backgroundColor: { fill: "#0d0d0d", opacity: 0.9 },
+        backgroundColor: { fill: "#000000", opacity: 1 },
       }}
       legendToggle
     />
   );
 }
 
-export default TeamPerYearlogGraphic;
+export default StatsPortfoliosSelectionsGraphicPercentLeast;

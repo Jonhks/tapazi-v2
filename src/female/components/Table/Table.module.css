@@ -1,40 +1,27 @@
 .green {
-  color: #05fa87;
+  color: #00e676;
   font-size: 0.8rem;
 }
 
 .red {
-  color: rgb(236, 30, 30);
-}
-
-.tableRow th {
-  font-size: 0.65rem !important;
-  font-weight: bold !important;
+  color: #ff5252;
 }
 
 .firstTableRow {
   width: 100%;
-  background-color: #572d03;
-  color: #fff;
+  background-color: #0d0d1a;
+  color: #e040fb;
   font-size: 1.6rem;
-  opacity: 0.8;
   text-align: center;
-  padding: 15px 5px 0px 5px;
-  max-height: 56px;
+  padding: 12px 5px;
+  border-bottom: 2px solid #e040fb;
+  max-height: 51px;
   overflow: scroll;
 }
 
 .fixed {
   position: sticky;
   z-index: 2;
-  background-color: #572d03;
+  background-color: #0d0d1a;
   left: 0;
-}
-
-.headTable {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 2px solid #eaad2b;
-  box-sizing: border-box;
 }

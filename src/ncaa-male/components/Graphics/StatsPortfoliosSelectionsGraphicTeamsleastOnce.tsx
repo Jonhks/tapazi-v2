@@ -130,12 +130,12 @@ function TeamPerYearlogGraphic({
           "#FF33FF", // Fucsia
         ],
         is3D: true,
-        vAxis: { title: "Times" },
-        hAxis: { title: "Seed" },
+        titleTextStyle: { color: "white" },
+        legendTextStyle: { color: "white" },
+        vAxis: { title: "Times", titleTextStyle: { color: "white" }, textStyle: { color: "white" } },
+        hAxis: { title: "Seed", titleTextStyle: { color: "white" }, textStyle: { color: "white" } },
         chartArea: { width: "60%" },
-        // backgroundColor: "rgb(37, 150, 190)",
-        // backgroundColor: "hsl(21, 93%, 18%)",
-        // opacity: 0.5,
+        backgroundColor: { fill: "#0d0d0d", opacity: 0.9 },
       }}
       legendToggle
     />

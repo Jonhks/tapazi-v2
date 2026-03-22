@@ -35,15 +35,6 @@ table {
   border-spacing: 0;
   width: 100%;
   border: 1px solid black;
-  background-color: #380f65;
-  opacity: 0.8;
-  /* height: 100%; */
-  /* height: fit-content; */
-}
-
-thead {
-  background-color: #200930;
-  color: white !important;
   opacity: 0.8;
 }
 
@@ -52,16 +43,6 @@ td {
   text-align: left;
   padding: 16px;
   border: 1px solid black;
-}
-
-tr:nth-child(even) {
-  background-color: #380f51;
-  color: black;
-}
-
-tr:nth-child(odd) {
-  background-color: #380f51;
-  color: white;
 }
 
 /* Enable specific scrolls */
