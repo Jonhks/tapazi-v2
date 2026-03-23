@@ -49,7 +49,7 @@ function TeamPerYearlogGraphic({
       // total: number;
       // total_prcnt: number;
       // entries: number;
-    }[]
+    }[],
   ): (string | number)[][] => {
     const header = [
       // "Year",
@@ -132,8 +132,16 @@ function TeamPerYearlogGraphic({
         is3D: true,
         titleTextStyle: { color: "white" },
         legendTextStyle: { color: "white" },
-        vAxis: { title: "Times", titleTextStyle: { color: "white" }, textStyle: { color: "white" } },
-        hAxis: { title: "Seed", titleTextStyle: { color: "white" }, textStyle: { color: "white" } },
+        vAxis: {
+          title: "Times",
+          titleTextStyle: { color: "white" },
+          textStyle: { color: "white" },
+        },
+        hAxis: {
+          title: "Seed",
+          titleTextStyle: { color: "white" },
+          textStyle: { color: "white" },
+        },
         chartArea: { width: "60%" },
         backgroundColor: { fill: "#0d0d0d", opacity: 0.9 },
       }}

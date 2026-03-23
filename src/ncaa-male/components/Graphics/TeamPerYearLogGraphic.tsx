@@ -13,7 +13,7 @@ function TeamPerYearlogGraphic({
   setTeamsPerYearLogSelected: (value: nmber) => void;
 }) {
   const convertData = (
-    data: { year: number; tournament_id: number; teams: number }[]
+    data: { year: number; tournament_id: number; teams: number }[],
   ): (string | number)[][] => {
     const header = [
       "Year",
@@ -56,10 +56,19 @@ function TeamPerYearlogGraphic({
         colors: ["#238b94", "#b45705", "#fff"],
         is3D: true,
         backgroundColor: "#000000",
-        vAxis: { title: "Tournament", titleTextStyle: { color: "#ffffff" }, textStyle: { color: "#ffffff" } },
-        hAxis: { title: "Year", titleTextStyle: { color: "#ffffff" }, textStyle: { color: "#ffffff" } },
+        vAxis: {
+          title: "Tournament",
+          titleTextStyle: { color: "#ffffff" },
+          textStyle: { color: "#ffffff" },
+        },
+        hAxis: {
+          title: "Year",
+          titleTextStyle: { color: "#ffffff" },
+          textStyle: { color: "#ffffff" },
+        },
         legend: { textStyle: { color: "#ffffff" } },
         opacity: 0.5,
+        height: 500,
       }}
       chartEvents={[
         {
