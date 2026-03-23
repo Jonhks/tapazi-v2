@@ -1,6 +1,6 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
-import { Tournament } from "../types";
+import { Tournament } from "@/types/index";
 
 export const getTournaments = async () => {
   const urlGetTournaments = `/sports/1/tournaments`;
@@ -73,7 +73,7 @@ export const getScoreHistory = () => {
   //   });
 };
 
-export const getTeamsPerYearLog = async (tournamentId: number) => {
+export const getTeamsPerYearLogFemale = async (tournamentId: number) => {
   try {
     const url = `/reports/teams-per-year-log?tournament_id=${tournamentId}`;
     const { data } = await apiEnv(url, {
@@ -96,7 +96,7 @@ export const getTeamsPerYearLog = async (tournamentId: number) => {
   }
 };
 
-export const getTeamsPerfectPortfolios = async () => {
+export const getTeamsPerfectPortfoliosFemale = async () => {
   try {
     const url = `/reports/historical-perfect-portfolios-header`;
     const { data } = await apiEnv(url, {
@@ -119,7 +119,7 @@ export const getTeamsPerfectPortfolios = async () => {
   }
 };
 
-export const getTeamsHistoricAllRounds = async (orderBy = "risk") => {
+export const getTeamsHistoricAllRoundsFemale = async (orderBy = "risk") => {
   try {
     const url = `/reports/historical-all-rounds?order-by=${orderBy}`;
     const { data } = await apiEnv(url, {

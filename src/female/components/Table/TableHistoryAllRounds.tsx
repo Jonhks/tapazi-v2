@@ -1,206 +1,210 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { memo } from "react";
-import { styled } from "@mui/material/styles";
-import Table from "@mui/material/Table";
-import TableBody from "@mui/material/TableBody";
-import TableCell, { tableCellClasses } from "@mui/material/TableCell";
-import TableContainer from "@mui/material/TableContainer";
-import TableHead from "@mui/material/TableHead";
-import TableRow from "@mui/material/TableRow";
-import Paper from "@mui/material/Paper";
+import { useMemo, useRef } from "react";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  flexRender,
+} from "@tanstack/react-table";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import { useMediaQuery } from "@mui/material";
 import classes from "./Table.module.css";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  textAlign: "center",
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: "#572d03",
-    color: theme.palette.common.white,
-    opacity: 0.9,
-    fontSize: 10,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 11,
-    color: "white",
-    border: "2px solid #eaad2b",
-    fontWeight: "bold",
-    padding: "7px",
-  },
-  "&.fixed": {
-    position: "sticky",
-    left: 0,
-    backgroundColor: "#572d03",
-    zIndex: 1,
-  },
-  "&.fixed + &.fixed": {
-    left: "50px", // Ajusta este valor según el ancho de la columna `year`
-  },
-}));
+const EXCLUDED_KEYS = [
+  "tournament_name",
+  "consecutive",
+  "round5_place",
+  "round5_eliminated_teams",
+  "round4_place",
+  "round4_eliminated_teams",
+  "round3_place",
+  "round3_eliminated_teams",
+  "round2_place",
+  "round2_eliminated_teams",
+  "round1_place",
+  "round1_eliminated_teams",
+];
 
-const StyledTableRow = styled(TableRow)(() => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: "#874607",
-    color: "white",
-  },
-  "&:nth-of-type(even)": {
-    backgroundColor: "#e27d25",
-    color: "#000",
-  },
-  "&:last-child td, &:last-child th": {},
-}));
+const capitalize = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1);
 
-const TableHistoryAllRound = ({ arrHistory, score }) => {
+const HDR_EVEN = "#24253e";
+const HDR_ODD = "#2d2d44";
+
+const headerBgColor = (index: number) =>
+  index === 0 ? "#0d0d1a" : index % 2 === 0 ? HDR_EVEN : HDR_ODD;
+
+const cellBgColor = (colIndex: number, rowIndex: number) => {
+  const isDarkCol = colIndex % 2 === 0;
+  const isEvenRow = rowIndex % 2 === 0;
+  if (isDarkCol) return isEvenRow ? "#111120" : "#1c1c2e";
+  return isEvenRow ? "#252538" : "#303048";
+};
+
+const ROW_HEIGHT = 40;
+
+const TableHistoryAllRounds = ({
+  arrHistory,
+  score,
+  isFetching = false,
+}: {
+  arrHistory: any[];
+  score: string;
+  isFetching?: boolean;
+}) => {
+  const isMobile = useMediaQuery("(max-width:900px)");
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const columns = useMemo(() => {
+    if (!arrHistory?.[0]) return [];
+    return Object.keys(arrHistory[0])
+      .filter((key) => !EXCLUDED_KEYS.includes(key))
+      .map((key) => ({
+        header: capitalize(key.replace(/_/g, " ")),
+        accessorKey: key,
+      }));
+  }, [arrHistory]);
+
+  const table = useReactTable({
+    data: arrHistory ?? [],
+    columns,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    manualSorting: true,
+  });
+
+  const rows = table.getRowModel().rows;
+
+  const virtualizer = useVirtualizer({
+    count: rows.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => ROW_HEIGHT,
+    overscan: 10,
+  });
+
+  const virtualRows = virtualizer.getVirtualItems();
+  const totalHeight = virtualizer.getTotalSize();
+  const paddingTop = virtualRows.length > 0 ? virtualRows[0].start : 0;
+  const paddingBottom =
+    virtualRows.length > 0
+      ? totalHeight - virtualRows[virtualRows.length - 1].end
+      : 0;
+
   if (!arrHistory) return null;
-  const createData = (
-    year,
-    portfolio_name,
-    portfolio_weight,
-    final_place,
-    final_score,
-    round5_score,
-    round4_score,
-    round3_score,
-    round2_score,
-    round1_score,
-    total_wins,
-    perfect_score,
-    perfect_weight,
-    hist_perform,
-    roi,
-    risk_adjusted
-  ) => {
-    return {
-      year,
-      portfolio_name,
-      portfolio_weight,
-      final_place,
-      final_score,
-      round5_score,
-      round4_score,
-      round3_score,
-      round2_score,
-      round1_score,
-      total_wins,
-      perfect_score,
-      perfect_weight,
-      hist_perform,
-      roi,
-      risk_adjusted,
-    };
-  };
-
-  const rows = [
-    arrHistory?.map((row) =>
-      createData(
-        row.year,
-        row.portfolio_name,
-        row.portfolio_weight,
-        row.final_place,
-        row.final_score,
-        row.round5_score,
-        row.round4_score,
-        row.round3_score,
-        row.round2_score,
-        row.round1_score,
-        row.total_wins,
-        row.perfect_score,
-        row.perfect_weight,
-        row.hist_perform,
-        row.roi,
-        row.risk_adjusted
-      )
-    ),
-  ];
-
-  const capitalizeFirstLetter = (string: string) => {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-  };
-
-  const getCapitalizedProperties = (obj: object) => {
-    return Object.keys(obj)
-      .filter(
-        (key) =>
-          key !== "tournament_name" &&
-          key !== "consecutive" &&
-          key !== "round5_place" &&
-          key !== "round5_eliminated_teams" &&
-          key !== "round4_place" &&
-          key !== "round4_eliminated_teams" &&
-          key !== "round3_place" &&
-          key !== "round3_eliminated_teams" &&
-          key !== "round2_place" &&
-          key !== "round2_eliminated_teams" &&
-          key !== "round1_place" &&
-          key !== "round1_eliminated_teams"
-      )
-      .map((key) => capitalizeFirstLetter(key.replace(/_/g, " ")));
-  };
-
-  const capitalizedProperties = getCapitalizedProperties(arrHistory[0]);
 
   return (
-    <TableContainer
-      component={Paper}
-      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "60vh" }}
-    >
-      <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
+    <div style={{ width: "100%", position: "relative" }}>
+      <div className={`${classes.firstTableRow} ${classes.fixed}`}>
         {score}
       </div>
-      <Table
-        sx={{ minWidth: 100, opacity: ".87" }}
-        aria-label="customized table"
-      >
-        <TableHead
+
+      {isFetching && (
+        <div
           style={{
-            position: "sticky",
-            top: "0px",
-            zIndex: 2,
+            position: "absolute",
+            top: 36,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "rgba(0,0,0,0.4)",
+            zIndex: 10,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            color: "#e040fb",
+            fontSize: 14,
+            fontWeight: "bold",
+            letterSpacing: 1,
           }}
         >
-          <TableRow className={classes?.tableRow}>
-            {capitalizedProperties.map((property, i) => (
-              <StyledTableCell
-                key={i}
-                className={i === 0 || i === 1 ? "fixed" : ""}
-              >
-                {property}
-              </StyledTableCell>
+          Cargando...
+        </div>
+      )}
+
+      <div
+        ref={scrollRef}
+        className="enable-horizontal-scroll enable-vertical-scroll"
+        style={{ overflowX: "scroll", overflowY: "scroll", maxHeight: "60vh" }}
+      >
+        <table
+          style={{ width: "100%", borderCollapse: "collapse", opacity: 0.9 }}
+        >
+          <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header, index) => (
+                  <th
+                    key={header.id}
+                    style={{
+                      position: index === 0 ? "sticky" : "static",
+                      left: index === 0 ? 0 : undefined,
+                      backgroundColor: headerBgColor(index),
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: isMobile ? "9px" : "10px",
+                      textAlign: index === 0 ? "center" : "left",
+                      textTransform: "uppercase",
+                      padding: isMobile ? "8px 4px" : "14px 10px",
+                      zIndex: index === 0 ? 3 : 2,
+                      whiteSpace: "pre-wrap",
+                    }}
+                  >
+                    {flexRender(
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
+                  </th>
+                ))}
+              </tr>
             ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.flat()?.map((row, i) => (
-            <StyledTableRow key={i}>
-              <StyledTableCell
-                component="th"
-                scope="row"
-                className="fixed"
-              >
-                {row?.year}
-              </StyledTableCell>
-              <StyledTableCell className="fixed">
-                {row?.portfolio_name}
-              </StyledTableCell>
-              <StyledTableCell>{row?.portfolio_weight}</StyledTableCell>
-              <StyledTableCell>{row?.final_place}</StyledTableCell>
-              <StyledTableCell>{row?.final_score}</StyledTableCell>
-              <StyledTableCell>{row?.round5_score}</StyledTableCell>
-              <StyledTableCell>{row?.round4_score}</StyledTableCell>
-              <StyledTableCell>{row?.round3_score}</StyledTableCell>
-              <StyledTableCell>{row?.round2_score}</StyledTableCell>
-              <StyledTableCell>{row?.round1_score}</StyledTableCell>
-              <StyledTableCell>{row?.total_wins}</StyledTableCell>
-              <StyledTableCell>{row?.perfect_score}</StyledTableCell>
-              <StyledTableCell>{row?.perfect_weight}</StyledTableCell>
-              <StyledTableCell>{row?.hist_perform}</StyledTableCell>
-              <StyledTableCell>{row?.roi}</StyledTableCell>
-              <StyledTableCell>{row?.risk_adjusted}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </thead>
+
+          <tbody>
+            {paddingTop > 0 && (
+              <tr>
+                <td style={{ height: paddingTop, padding: 0 }} />
+              </tr>
+            )}
+            {virtualRows.map((virtualRow) => {
+              const row = rows[virtualRow.index];
+              return (
+                <tr key={row.id} style={{ height: ROW_HEIGHT }}>
+                  {row.getVisibleCells().map((cell, index) => (
+                    <td
+                      key={cell.id}
+                      style={{
+                        position: index === 0 ? "sticky" : "static",
+                        left: index === 0 ? 0 : undefined,
+                        backgroundColor: cellBgColor(index, virtualRow.index),
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: isMobile ? "12px" : "11px",
+                        textAlign: index === 0 ? "center" : "left",
+                        padding: isMobile ? "8px 4px" : "12px 10px",
+                        zIndex: index === 0 ? 1 : 0,
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+            {paddingBottom > 0 && (
+              <tr>
+                <td style={{ height: paddingBottom, padding: 0 }} />
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+    </div>
   );
 };
 
-export default memo(TableHistoryAllRound);
+export default TableHistoryAllRounds;

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import classes from "./HistoryFemale.module.css";
 import { Zoom } from "@mui/material";
 import Grid from "@mui/material/Grid2";
@@ -7,45 +7,45 @@ import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
-  getHistoricalPerfectPortfoliosHistory,
-  getTeamsHistoricAllRounds,
-  // getTeamsPerfectPortfolios,
-  getTeamsPerYearLog,
-  getTeamsPickedLogHistory,
-  // getTournaments,
-} from "@/api/HistoryAPI";
+  getTeamsHistoricAllRoundsFemale,
+  getTeamsPerfectPortfoliosFemale,
+  getTeamsPerYearLogFemale,
+  // getTeamsPickedLogHistoryFemale,
+  getTournaments,
+} from "@/api/female/HistoryFemaleAPI";
 // import { Tournament } from "@/types/index";
-// import Loader from "../../components/BallLoader/BallLoader";
-// import TableHistoryTeamsPerYearLog from "../../components/Table/TableHistoryTeamsPerYearLog";
-import TableHistoryTeamsPerYearLogSelected from "../../components/Table/TableHistoryTeamsPerYearLogSelected";
-// import TableHistoryPerfectPortfolios from "../../components/Table/TableHistoryPerfectPortfolios";
-import TableHistoryPerfectPortfoliosSelected from "../../components/Table/TableHistoryPerfectPortfoliosSelected";
+import Loader from "../../components/BallLoader/BallLoader";
+import TableHistoryTeamsPerYearLog from "../../components/Table/TableHistoryTeamsPerYearLog";
+// import TableHistoryTeamsPerYearLogSelected from "../../components/Table/TableHistoryTeamsPerYearLogSelected";
+import TableHistoryPerfectPortfolios from "../../components/Table/TableHistoryPerfectPortfolios";
+// import TableHistoryPerfectPortfoliosSelected from "../../components/Table/TableHistoryPerfectPortfoliosSelected";
 import TableHistoryAllRounds from "../../components/Table/TableHistoryAllRounds";
 // import DescriptionIcon from "@mui/icons-material/Description";
-// import TeamPerYearlogGraphic from "../../components/Graphics/TeamPerYearLogGraphic";
-// import AutoGraphIcon from "@mui/icons-material/AutoGraph";
-// import { typeGraphs } from "@/utils/typeGraphs";
-// import TeamPerfectPortfoliosGraphic from "../../components/Graphics/TeamPerfectPortfoliosGraphic";
+import TeamPerYearlogGraphic from "../../components/Graphics/TeamPerYearLogGraphic";
+import AutoGraphIcon from "@mui/icons-material/AutoGraph";
+import { typeGraphs } from "@/utils/typeGraphs";
+import TeamPerfectPortfoliosGraphic from "../../components/Graphics/TeamPerfectPortfoliosGraphic";
 // import NotRecordFounds from "../../components/NotRecordsFound/NotRecordFounds";
+import { Tournament } from "@/types/index";
 
-// type dataDropdowndataType = {
-//   name: string;
-//   id: string;
-// };
+type dataDropdowndataType = {
+  name: string;
+  id: string;
+};
 
 const HistoryFemale = () => {
   const params = useParams();
   const userId = params.userId!;
 
-  // const [graphType, setGraphType] = useState(typeGraphs[0]);
-  const [
-    TeamPerfectPortfoliosSelected,
-    // SeteamPerfectPortfoliosSelected
-  ] = useState<number>(0);
-  const [
-    teamsPerYearLogSelected,
-    // setTeamsPerYearLogSelected
-  ] = useState<number>(0);
+  const [graphType, setGraphType] = useState(typeGraphs[0]);
+  const [selectedTournament, setSelectedTournament] =
+    useState<Tournament | null>(null);
+  const [TeamPerfectPortfoliosSelected, SeteamPerfectPortfoliosSelected] =
+    useState<number>(0);
+  const [teamsPerYearLogSelected, setTeamsPerYearLogSelected] =
+    useState<number>(0);
+
+  console.log(teamsPerYearLogSelected, TeamPerfectPortfoliosSelected);
 
   const [selectedScore, setSelectedScore] = useState<{
     name: string;
@@ -95,60 +95,78 @@ const HistoryFemale = () => {
     [],
   );
 
-  // const handleChangeGraph = useCallback(
-  //   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  //   // @ts-ignore
-  //   (e) => {
-  //     const optionSelect = typeGraphs.filter(
-  //       (el: dataDropdowndataType) => el?.name === e.target.value,
-  //     )[0];
-  //     setGraphType(optionSelect);
-  //   },
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [typeGraphs],
-  // );
+  const handleChangeGraph = useCallback(
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    (e) => {
+      const optionSelect = typeGraphs.filter(
+        (el: dataDropdowndataType) => el?.name === e.target.value,
+      )[0];
+      setGraphType(optionSelect);
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [typeGraphs],
+  );
 
-  const {
-    data: teamsPerYearLog,
-    //  isLoading: loadingTeamsPerYearLog
-  } = useQuery({
-    queryKey: ["teamsPerYearLog", userId],
-    queryFn: () => getTeamsPerYearLog(),
+  const { data: tournaments, isLoading: loadingTournaments } = useQuery({
+    queryKey: ["tournamentsFemale", userId],
+    queryFn: () => getTournaments(),
   });
 
-  // const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
-  //   useQuery({
-  //     queryKey: ["teamsPerfectPortfolios", userId],
-  //     queryFn: () => getTeamsPerfectPortfolios(),
-  //   });
+  const { data: teamsPerYearLog, isLoading: loadingTeamsPerYearLog } = useQuery(
+    {
+      queryKey: ["teamsPerYearLogFemale", userId],
+      queryFn: () => getTeamsPerYearLogFemale(selectedTournament!.id),
+      enabled: !!selectedTournament?.id && selectedScore.id === "3",
+    },
+  );
+
+  const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
+    useQuery({
+      queryKey: ["teamsPerfectPortfoliosFemale", userId],
+      queryFn: () => getTeamsPerfectPortfoliosFemale(),
+      enabled: selectedScore.id === "2",
+    });
+
+  console.log(teamsPerfectPortfolios);
 
   const {
     data: teamsHistoricAllRounds,
-    //  isLoading: loadingHistoryAllRounds
+    isLoading: loadingHistoryAllRounds,
+    isFetching: fetchingHistoryAllRounds,
   } = useQuery({
-    queryKey: ["teamsHistoricAllRounds", orderHistorySelected],
-    queryFn: () => getTeamsHistoricAllRounds(orderHistorySelected.value),
+    queryKey: ["teamsHistoricAllRoundsFemale", orderHistorySelected.value],
+    queryFn: () => getTeamsHistoricAllRoundsFemale(orderHistorySelected.value),
+    enabled: selectedScore.id === "1",
+    staleTime: Infinity,
   });
 
-  const {
-    data: historicalPerfectPortfoliosHistory,
-    isLoading: loadingHistoricalPerfectPortfoliosHistory,
-  } = useQuery({
-    queryKey: [
-      "historicalPerfectPortfoliosHistory",
-      TeamPerfectPortfoliosSelected,
-    ],
-    queryFn: () =>
-      getHistoricalPerfectPortfoliosHistory(TeamPerfectPortfoliosSelected),
-  });
+  // const {
+  //   data: historicalPerfectPortfoliosHistory,
+  //   isLoading: loadingHistoricalPerfectPortfoliosHistory,
+  // } = useQuery({
+  //   queryKey: [
+  //     "historicalPerfectPortfoliosHistoryFemale",
+  //     TeamPerfectPortfoliosSelected,
+  //   ],
+  //   queryFn: () =>
+  //     getHistoricalPerfectPortfoliosHistory(TeamPerfectPortfoliosSelected),
+  // });
 
-  const {
-    data: teamsPickedLogHistory,
-    isLoading: loadingTeamsPickedLogHistory,
-  } = useQuery({
-    queryKey: ["TeamsPickedLogHistory", teamsPerYearLogSelected],
-    queryFn: () => getTeamsPickedLogHistory(teamsPerYearLogSelected),
-  });
+  // const {
+  //   data: teamsPickedLogHistory,
+  //   isLoading: loadingTeamsPickedLogHistory,
+  // } = useQuery({
+  //   queryKey: ["TeamsPickedLogHistoryFemale", teamsPerYearLogSelected],
+  //   queryFn: () => getTeamsPickedLogHistory(teamsPerYearLogSelected),
+  // });
+
+  useEffect(() => {
+    if (tournaments) {
+      // setTournament(tournaments[0]?.name);
+      setSelectedTournament(tournaments[0]);
+    }
+  }, [tournaments]);
 
   const handleChange = useCallback(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -181,15 +199,15 @@ const HistoryFemale = () => {
     },
     [orderHistoricalData],
   );
-  // console.log(selectedScore);
 
-  // if (
-  // isLoading ||
-  // loadingTeamsPerYearLog ||
-  // loadingPerfectPortfolios ||
-  // loadingHistoryAllRounds
-  // )
-  // return <Loader />;
+  if (
+    loadingHistoryAllRounds ||
+    loadingPerfectPortfolios ||
+    loadingTeamsPerYearLog ||
+    // loadingTeamsPickedLogHistory ||
+    loadingTournaments
+  )
+    return <Loader />;
 
   return (
     <>
@@ -219,7 +237,7 @@ const HistoryFemale = () => {
               size={12}
               className={classes.containerHeadHistory}
             >
-              <Grid size={{ xs: 6 }}>
+              <Grid size={{ xs: 12 }}>
                 <p className={classes.titleBox}>
                   <HistoryIcon /> History
                 </p>
@@ -234,7 +252,7 @@ const HistoryFemale = () => {
             >
               <Grid
                 container
-                size={{ xs: 12, md: 6 }}
+                size={{ xs: 12, md: 12 }}
               >
                 <Grid size={12}>
                   <span>Data:</span>
@@ -266,7 +284,7 @@ const HistoryFemale = () => {
                     </div>
                   </Grid>
                 )}
-                {/* {selectedScore.id !== "1" && (
+                {selectedScore.id !== "1" && (
                   <Grid size={12}>
                     <span>Chart:</span>
                     <div className={classes.containerDrop}>
@@ -281,7 +299,7 @@ const HistoryFemale = () => {
                       />
                     </div>
                   </Grid>
-                )} */}
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -308,28 +326,28 @@ const HistoryFemale = () => {
                   <TableHistoryAllRounds
                     arrHistory={teamsHistoricAllRounds}
                     score={selectedScore.name}
+                    isFetching={fetchingHistoryAllRounds}
                   />
                 )}
               </Grid>
             </Zoom>
           )}
-          {/* 
           {selectedScore.id === "2" && graphType.name === "Table" && (
             <Zoom
               in={true}
               style={{ marginBottom: "20px" }}
             >
               <Grid size={{ xs: 10, lg: 6 }}>
-                {typeof getTeamsPerfectPortfolios !== "string" && (
+                {
                   <TableHistoryPerfectPortfolios
                     arrHistory={teamsPerfectPortfolios}
                     score={selectedScore.name}
                   />
-                )}
+                }
               </Grid>
             </Zoom>
-          )} */}
-          {/* {selectedScore.id === "2" && graphType.name !== "Table" && (
+          )}
+          {selectedScore.id === "2" && graphType.name !== "Table" && (
             <Zoom
               in={true}
               style={{ marginBottom: "20px" }}
@@ -346,9 +364,8 @@ const HistoryFemale = () => {
                 )}
               </Grid>
             </Zoom>
-          )} */}
-
-          {TeamPerfectPortfoliosSelected > 0 &&
+          )}
+          {/* {TeamPerfectPortfoliosSelected > 0 &&
             selectedScore.id === "2" &&
             !loadingHistoricalPerfectPortfoliosHistory &&
             typeof historicalPerfectPortfoliosHistory !== "string" && (
@@ -366,14 +383,14 @@ const HistoryFemale = () => {
                   />
                 </Grid>
               </Zoom>
-            )}
-
-          {/* {selectedScore.id === "2" &&
+            )} */}
+          {/* 
+          {selectedScore.id === "2" &&
             TeamPerfectPortfoliosSelected > 0 &&
             typeof historicalPerfectPortfoliosHistory === "string" &&
             !loadingHistoricalPerfectPortfoliosHistory && <NotRecordFounds />} */}
 
-          {/* {selectedScore.id === "3" && graphType.name === "Table" && (
+          {selectedScore.id === "3" && graphType.name === "Table" && (
             <Zoom
               in={true}
               style={{ marginBottom: "20px" }}
@@ -387,8 +404,8 @@ const HistoryFemale = () => {
                 )}
               </Grid>
             </Zoom>
-          )} */}
-          {/* {selectedScore.id === "3" && graphType.name !== "Table" && (
+          )}
+          {selectedScore.id === "3" && graphType.name !== "Table" && (
             <Zoom
               in={true}
               style={{ marginBottom: "20px" }}
@@ -403,9 +420,9 @@ const HistoryFemale = () => {
                 )}
               </Grid>
             </Zoom>
-          )} */}
+          )}
 
-          {selectedScore.id === "3" &&
+          {/* {selectedScore.id === "3" &&
             teamsPerYearLogSelected > 0 &&
             typeof teamsPickedLogHistory !== "string" &&
             !loadingTeamsPickedLogHistory && (
@@ -423,7 +440,7 @@ const HistoryFemale = () => {
                   )}
                 </Grid>
               </Zoom>
-            )}
+            )} */}
           {/* {selectedScore.id === "3" &&
             teamsPerYearLogSelected > 0 &&
             typeof teamsPickedLogHistory === "string" &&

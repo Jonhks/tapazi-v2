@@ -72,7 +72,7 @@ const History = () => {
         id: "3",
       },
     ],
-    []
+    [],
   );
 
   const orderHistoricalData = useMemo(
@@ -88,7 +88,7 @@ const History = () => {
         value: "risk",
       },
     ],
-    []
+    [],
   );
 
   const handleChangeGraph = useCallback(
@@ -96,19 +96,19 @@ const History = () => {
     // @ts-ignore
     (e) => {
       const optionSelect = typeGraphs.filter(
-        (el: dataDropdowndataType) => el?.name === e.target.value
+        (el: dataDropdowndataType) => el?.name === e.target.value,
       )[0];
       setGraphType(optionSelect);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [typeGraphs]
+    [typeGraphs],
   );
 
   const { data: teamsPerYearLog, isLoading: loadingTeamsPerYearLog } = useQuery(
     {
       queryKey: ["teamsPerYearLog", userId],
-      queryFn: () => getTeamsPerYearLog(),
-    }
+      queryFn: () => getTeamsPerYearLog(4),
+    },
   );
 
   const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
@@ -149,12 +149,12 @@ const History = () => {
     (e) => {
       if (e.target.name === "dataDropdowndata") {
         const optionSelect = dataDropdowndata.find(
-          (el) => el.name === e.target.value
+          (el) => el.name === e.target.value,
         ) || { name: "", id: "" };
         setSelectedScore(optionSelect);
       }
     },
-    [dataDropdowndata]
+    [dataDropdowndata],
   );
 
   interface OrderHistoryData {
@@ -167,12 +167,12 @@ const History = () => {
     // @ts-ignore
     (e) => {
       const select: OrderHistoryData | undefined = orderHistoricalData.find(
-        (el) => el.name === e.target.value
+        (el) => el.name === e.target.value,
       );
       setOrderHistorySelected(select || { name: "", id: "", value: "" });
       console.log(select?.value);
     },
-    [orderHistoricalData]
+    [orderHistoricalData],
   );
   // console.log(selectedScore);
 

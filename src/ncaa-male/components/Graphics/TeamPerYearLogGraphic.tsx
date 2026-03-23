@@ -20,7 +20,7 @@ function TeamPerYearlogGraphic({
       //  "Tournament ID",
       "Teams",
     ];
-    if (!data) return [];
+    if (!Array.isArray(data)) return [];
     const rows = data.map((item) => [
       item.year.toString(),
       // item.tournament_id,
@@ -52,13 +52,13 @@ function TeamPerYearlogGraphic({
       data={convertedData}
       options={{
         title: "Teams Per Year Log",
+        titleTextStyle: { color: "#ffffff" },
         colors: ["#238b94", "#b45705", "#fff"],
         is3D: true,
-        vAxis: { title: "Tournament" },
-        hAxis: { title: "Year" },
-        // chartArea: { width: "85%", height: "0%" },
-        // backgroundColor: "rgb(37, 150, 190)",
-        // backgroundColor: "hsl(21, 93%, 18%)",
+        backgroundColor: "#000000",
+        vAxis: { title: "Tournament", titleTextStyle: { color: "#ffffff" }, textStyle: { color: "#ffffff" } },
+        hAxis: { title: "Year", titleTextStyle: { color: "#ffffff" }, textStyle: { color: "#ffffff" } },
+        legend: { textStyle: { color: "#ffffff" } },
         opacity: 0.5,
       }}
       chartEvents={[
