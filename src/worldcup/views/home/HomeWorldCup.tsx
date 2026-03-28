@@ -30,7 +30,7 @@ const HomeWorldCup = () => {
     queryKey: ["tournamentWorldCup", userId, sportId],
     queryFn: () => getTournamentWorldCup(sportId),
   });
-
+  console.log(tournament);
   // const tournamentId = tournament?.[0]?.id;
   const tournamentId = "4";
 

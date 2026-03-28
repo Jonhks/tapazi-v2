@@ -7,10 +7,11 @@ import Grid from "@mui/material/Grid2";
 
 const MyPortfolioWorldCup = () => {
   const params = useParams();
-  const _userId = params.userId!;
+  const userId = params.userId!;
 
   // Placeholder mientras se conecta al API de worldcup
   const isLoading = false;
+  console.log(userId);
 
   if (isLoading) return <BallLoader />;
 
@@ -28,11 +29,12 @@ const MyPortfolioWorldCup = () => {
         color: "#00E2F6",
       }}
     >
-      <Grid size={{ xs: 11, md: 8 }} style={{ textAlign: "center" }}>
+      <Grid
+        size={{ xs: 11, md: 8 }}
+        style={{ textAlign: "center" }}
+      >
         <h2 style={{ color: "#00E2F6", fontSize: "2rem" }}>My Portfolios</h2>
-        <p style={{ color: "#ffffff" }}>
-          World Cup portfolios — coming soon.
-        </p>
+        <p style={{ color: "#ffffff" }}>World Cup portfolios — coming soon.</p>
       </Grid>
     </Grid>
   );

@@ -7,8 +7,8 @@ import Grid from "@mui/material/Grid2";
 
 const StatsWorldCup = () => {
   const params = useParams();
-  const _userId = params.userId!;
-
+  const userId = params.userId!;
+  console.log(userId);
   const isLoading = false;
 
   if (isLoading) return <BallLoader />;
@@ -27,11 +27,12 @@ const StatsWorldCup = () => {
         color: "#00E2F6",
       }}
     >
-      <Grid size={{ xs: 11, md: 8 }} style={{ textAlign: "center" }}>
+      <Grid
+        size={{ xs: 11, md: 8 }}
+        style={{ textAlign: "center" }}
+      >
         <h2 style={{ color: "#00E2F6", fontSize: "2rem" }}>Stats</h2>
-        <p style={{ color: "#ffffff" }}>
-          World Cup stats — coming soon.
-        </p>
+        <p style={{ color: "#ffffff" }}>World Cup stats — coming soon.</p>
       </Grid>
     </Grid>
   );
