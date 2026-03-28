@@ -2,30 +2,61 @@
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": [
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     "baseUrl": "src",
     "paths": {
       // Portfolio paths
-      "@/components/*": ["components/*"],
-      "@/views/*": ["views/*"],
-      "@/layouts/*": ["layouts/*"],
-
+      "@/components/*": [
+        "components/*"
+      ],
+      "@/views/*": [
+        "views/*"
+      ],
+      "@/layouts/*": [
+        "layouts/*"
+      ],
       // EPL paths
-      "@/epl/components/*": ["epl/components/*"],
-      "@/epl/views/*": ["epl/views/*"],
-      "@/epl/layouts/*": ["epl/layouts/*"],
-
+      "@/epl/components/*": [
+        "epl/components/*"
+      ],
+      "@/epl/views/*": [
+        "epl/views/*"
+      ],
+      "@/epl/layouts/*": [
+        "epl/layouts/*"
+      ],
       // Global paths
-      "@/assets/*": ["assets/*"],
-      "@/api/*": ["api/*"],
-      "@/lib/*": ["lib/*"],
-      "@/types/*": ["types/*"],
-      "@/hooks/*": ["hooks/*"],
-      "@/utils/*": ["utils/*"]
+      "@/assets/*": [
+        "assets/*"
+      ],
+      "@/api/*": [
+        "api/*"
+      ],
+      "@/lib/*": [
+        "lib/*"
+      ],
+      "@/types/*": [
+        "types/*"
+      ],
+      "@/hooks/*": [
+        "hooks/*"
+      ],
+      "@/utils/*": [
+        "utils/*"
+      ],
+      "@/worldcup/*": [
+        "worldcup/*"
+      ],
+      "@/shared/*": [
+        "shared/*"
+      ]
     },
-
     /* Bundler mode */
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
@@ -33,12 +64,13 @@
     "moduleDetection": "force",
     "noEmit": true,
     "jsx": "react-jsx",
-
     /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": [
+    "src"
+  ]
 }

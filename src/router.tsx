@@ -54,6 +54,17 @@ const InstructionsEPL = lazy(
 );
 const StatsEpl = lazy(() => import("./epl/views/StatsEpl/StatsEpl"));
 
+// ? --------------------------  World Cup Router -------------------------- ? //
+const AppLayoutWorldCup = lazy(() => import("./worldcup/layouts/AppLayoutWorldCup"));
+const HistoryLayoutWorldCup = lazy(() => import("./worldcup/layouts/HistoryLayoutWorldCup"));
+const StatsLayoutWorldCup = lazy(() => import("./worldcup/layouts/StatsLayoutWorldCup"));
+const InstructionsLayoutWorldCup = lazy(() => import("./worldcup/layouts/InstructionsLayoutWorldCup"));
+const HomeWorldCup = lazy(() => import("./worldcup/views/home/HomeWorldCup"));
+const MyPortfolioWorldCup = lazy(() => import("./worldcup/views/myPortfolio/MyPortfolioWorldCup"));
+const StatsWorldCup = lazy(() => import("./worldcup/views/Stats/StatsWorldCup"));
+const HistoryWorldCup = lazy(() => import("./worldcup/views/HistoryPortfolios/HistoryWorldCup"));
+const InstructionsWorldCup = lazy(() => import("./worldcup/views/InstructionsPortfolios/InstructionsWorldCup"));
+
 // ? --------------------------  Female Router -------------------------- ? //
 const AppLayoutFemale = lazy(() => import("./female/layouts/AppLayoutFemale"));
 const HomeFemale = lazy(() => import("./female/views/homeFemale/HomeFemale"));
@@ -259,17 +270,33 @@ const Router = () => {
               }
             />
           </Route>
-          {/* mundial */}
-          <Route element={<AuthLayout />}>
+          {/* World Cup Routes */}
+          <Route element={<AppLayoutWorldCup />}>
             <Route
-              path="/worldcup/wip/:userId/:sportId"
-              element={
-                // <WIP
-                //   NCAAFemaleImg={NCAAFemaleImg}
-                //   NCAAMaleImg={NCAAMaleImg}
-                // />
-                <Error404 sports={"sports"} />
-              }
+              path="/worldcup/home/:userId/:sportId"
+              element={<PrivateRoute><HomeWorldCup /></PrivateRoute>}
+            />
+            <Route
+              path="/worldcup/myPortfolio/:userId/:sportId"
+              element={<PrivateRoute><MyPortfolioWorldCup /></PrivateRoute>}
+            />
+          </Route>
+          <Route element={<StatsLayoutWorldCup />}>
+            <Route
+              path="/worldcup/stats/:userId/:sportId"
+              element={<PrivateRoute><StatsWorldCup /></PrivateRoute>}
+            />
+          </Route>
+          <Route element={<HistoryLayoutWorldCup />}>
+            <Route
+              path="/worldcup/history/:userId/:sportId"
+              element={<PrivateRoute><HistoryWorldCup /></PrivateRoute>}
+            />
+          </Route>
+          <Route element={<InstructionsLayoutWorldCup />}>
+            <Route
+              path="/worldcup/instructions/:userId/:sportId"
+              element={<PrivateRoute><InstructionsWorldCup /></PrivateRoute>}
             />
           </Route>
         </Routes>

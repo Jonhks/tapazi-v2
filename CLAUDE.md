@@ -2,9 +2,25 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Reglas de colaboración
+
+### Antes de mover o reorganizar archivos
+**Siempre preguntar primero.** Antes de mover, renombrar o reorganizar cualquier archivo o carpeta, Claude debe:
+1. Explicar qué va a mover y por qué.
+2. Describir el impacto (qué imports/aliases se romperían y cómo se repararían).
+3. Esperar confirmación explícita del usuario antes de ejecutar el cambio.
+
+### Documentar cambios importantes
+Cualquier cambio relevante en arquitectura, patrones nuevos, o módulos nuevos debe documentarse en este mismo archivo (`CLAUDE.md`) al momento de realizarse — no después. Esto incluye:
+- Nuevos módulos de deporte (`worldcup`, etc.)
+- Cambios en el sistema de rutas
+- Nuevas carpetas compartidas (`shared/`)
+- Decisiones de diseño que afecten a más de un archivo
+
 ## Convenciones UX importantes
 
 ### Scrolls en tablas
+
 Usar siempre `overflow: "scroll"` (no `"auto"`) en los contenedores de tabla. Los usuarios de este proyecto arrastran las barras de scroll manualmente — con `"auto"` las barras solo aparecen cuando hay desbordamiento y el usuario no sabe que puede scrollear. Con `"scroll"` las barras siempre son visibles.
 
 ```css
@@ -14,6 +30,8 @@ overflowY: "scroll"   /* o "visible" si no hay maxHeight */
 
 /* Evitar */
 overflow: "auto"
+
+poner barra de desplazamiento siempre a las tablas y vistas que sobre pasen el tamaño de la pantalla
 ```
 
 ## Comandos
@@ -35,11 +53,14 @@ Es una **SPA / PWA** construida con React 18 + TypeScript. Solo frontend — tod
 
 El proyecto está dividido en tres módulos paralelos, cada uno con `components/`, `layouts/` y `views/`:
 
-| Módulo | Prefijo de rutas | Descripción |
-|---|---|---|
-| `src/ncaa-male/` | `/home`, `/myPortfolio`, `/stats`, `/history`, `/instructions` | NCAA Baloncesto Masculino (deporte por defecto) |
-| `src/female/` | `/ncaa-female/...` | NCAA Baloncesto Femenino |
-| `src/epl/` | `/epl/...` | English Premier League |
+| Módulo              | Prefijo de rutas                                               | Descripción                                     |
+| ------------------- | -------------------------------------------------------------- | ----------------------------------------------- |
+| `src/ncaa-male/`    | `/home`, `/myPortfolio`, `/stats`, `/history`, `/instructions` | NCAA Baloncesto Masculino (deporte por defecto) |
+| `src/female/`       | `/ncaa-female/...`                                             | NCAA Baloncesto Femenino                        |
+| `src/epl/`          | `/epl/...`                                                     | English Premier League                          |
+| `src/worldcup/`     | `/worldcup/...`                                                | Copa del Mundo (tema teal/cyan oscuro)          |
+
+Los colores de worldcup están centralizados en `src/shared/theme/colors.ts` bajo la clave `worldcup`. Es el primer módulo en usar el sistema de colores centralizado.
 
 Las rutas de autenticación (`/login`, `/signup`, `/forgot`) y el selector de deporte (`/sports/:userId`) son compartidas y usan layouts de `ncaa-male/layouts/`.
 
@@ -146,19 +167,21 @@ export const sportThemes = {
 
 **Problema:** `src/api/HomeAPI.ts` y `src/api/female/HomeAPIFemale.ts` son casi idénticos. Llaman a los mismos endpoints con la misma lógica y solo cambian los nombres de función. Ejemplos:
 
-| `HomeAPI.ts` | `HomeAPIFemale.ts` | Endpoint |
-|---|---|---|
-| `getTournamentMale` | `getTournamentFemale` | `/sports/${id}/tournaments` — **idéntico** |
-| `getParticipants` | `getParticipantsFemale` | `/tournaments/${id}/stats` — **idéntico** |
-| `getHOINFO` | `getHOINFOFemale` | `/tournaments/${id}/parameters?key=HOINFO` — **idéntico** |
-| `getPopona` | `getPoponaFemale` | `/tournaments/${id}/parameters?key=POPONA` — **idéntico** |
+| `HomeAPI.ts`        | `HomeAPIFemale.ts`      | Endpoint                                                  |
+| ------------------- | ----------------------- | --------------------------------------------------------- |
+| `getTournamentMale` | `getTournamentFemale`   | `/sports/${id}/tournaments` — **idéntico**                |
+| `getParticipants`   | `getParticipantsFemale` | `/tournaments/${id}/stats` — **idéntico**                 |
+| `getHOINFO`         | `getHOINFOFemale`       | `/tournaments/${id}/parameters?key=HOINFO` — **idéntico** |
+| `getPopona`         | `getPoponaFemale`       | `/tournaments/${id}/parameters?key=POPONA` — **idéntico** |
 
 **Solución:** Consolidar en funciones genéricas en `src/api/shared/`:
 
 ```ts
 // src/api/shared/TournamentAPI.ts
-export const getTournaments = (sportId: string) => apiEnv(`/sports/${sportId}/tournaments`)
-export const getParameter = (tournamentId: string, key: string) => apiEnv(`/tournaments/${tournamentId}/parameters?key=${key}`)
+export const getTournaments = (sportId: string) =>
+  apiEnv(`/sports/${sportId}/tournaments`);
+export const getParameter = (tournamentId: string, key: string) =>
+  apiEnv(`/tournaments/${tournamentId}/parameters?key=${key}`);
 ```
 
 ---
@@ -177,7 +200,8 @@ await apiEnv(url, {
 **Solución:** Configurar el header una sola vez en el interceptor de Axios en `src/lib/axios.ts`:
 
 ```ts
-apiEnv.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8";
+apiEnv.defaults.headers.common["Content-Type"] =
+  "application/json;charset=utf-8";
 ```
 
 ---
@@ -188,9 +212,9 @@ apiEnv.defaults.headers.common["Content-Type"] = "application/json;charset=utf-8
 
 ```ts
 // Patrón actual (redundante)
-if(!data.tournaments) return [];
-if(data.tournaments) return data.tournaments;  // siempre true aquí
-return data;  // nunca se alcanza
+if (!data.tournaments) return [];
+if (data.tournaments) return data.tournaments; // siempre true aquí
+return data; // nunca se alcanza
 ```
 
 **Solución:** Simplificar a:
@@ -256,15 +280,32 @@ src/
 
 ---
 
+### 10. Reorganizar carpetas de módulos en `src/sports/` — MEJORA IMPORTANTE PENDIENTE
+
+**Problema:** Las carpetas `epl/`, `ncaa-male/`, `female/` y `worldcup/` viven directamente en `src/`, lo que hace la raíz confusa a medida que crecen los módulos.
+
+**Solución propuesta:** Mover los cuatro módulos dentro de `src/sports/`:
+```
+src/sports/
+├── ncaa-male/
+├── female/
+├── epl/
+└── worldcup/
+```
+
+**⚠️ Requiere:** Actualizar todos los path aliases en `vite.config.ts` y `tsconfig.json` (especialmente `@/epl/*`), todos los imports relativos entre módulos y las referencias en `router.tsx`. **No hacer sin confirmación explícita del usuario.**
+
+---
+
 ### Prioridad sugerida de refactor
 
-| Prioridad | Tarea | Impacto |
-|---|---|---|
-| Alta | Centralizar colores en `theme/colors.ts` y pasarlos por props | Desbloquea todo lo demás |
-| Alta | Consolidar `Dropdown` duplicado (cambio mínimo, ganancia inmediata) | 1 componente en lugar de 3 |
-| Alta | Mover header `Content-Type` al interceptor de Axios | Elimina ruido en toda la capa API |
-| Media | Crear `TableBase` única con tema como prop | Elimina ~3 implementaciones duplicadas |
-| Media | Consolidar funciones de API idénticas entre módulos | Reduce duplicación en `api/` |
-| Media | Crear `MenuDrawer` único con `navItems[]` como prop | Elimina 6 archivos de menú |
-| Baja | Tipar `Table.tsx` correctamente y eliminar `@ts-nocheck` | Mejora type safety |
-| Baja | Simplificar lógica `if` redundante en API | Limpieza de código |
+| Prioridad | Tarea                                                               | Impacto                                |
+| --------- | ------------------------------------------------------------------- | -------------------------------------- |
+| Alta      | Centralizar colores en `theme/colors.ts` y pasarlos por props       | Desbloquea todo lo demás               |
+| Alta      | Consolidar `Dropdown` duplicado (cambio mínimo, ganancia inmediata) | 1 componente en lugar de 3             |
+| Alta      | Mover header `Content-Type` al interceptor de Axios                 | Elimina ruido en toda la capa API      |
+| Media     | Crear `TableBase` única con tema como prop                          | Elimina ~3 implementaciones duplicadas |
+| Media     | Consolidar funciones de API idénticas entre módulos                 | Reduce duplicación en `api/`           |
+| Media     | Crear `MenuDrawer` único con `navItems[]` como prop                 | Elimina 6 archivos de menú             |
+| Baja      | Tipar `Table.tsx` correctamente y eliminar `@ts-nocheck`            | Mejora type safety                     |
+| Baja      | Simplificar lógica `if` redundante en API                           | Limpieza de código                     |

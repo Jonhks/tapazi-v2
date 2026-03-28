@@ -1,0 +1,44 @@
+.containerApp {
+  background-image: url("@/assets/img/HOME-BACK-WC.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+}
+
+.containerHistory {
+  background-color: #000000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow: auto;
+}
+
+.containerStats {
+  background-color: #000000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+
+.containerInstructions {
+  background-color: #000000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow: auto;
+}
+
+@media (width < 900px) {
+  .containerHistory {
+    background-position: right;
+  }
+  .containerStats {
+    background-position: left;
+  }
+}
