@@ -17,7 +17,7 @@ function StatsPortfoliosSelectionsGraphic({
     return [
       ["Seed", "Percentage"],
       ...Array.from({ length: 16 }, (_, i) => [
-        `Seed ${i + 1}`,
+        `${i + 1}`,
         parseFloat(source[`prnct_teams_seed${i + 1}`]) ?? 0,
       ]),
     ];
@@ -30,12 +30,12 @@ function StatsPortfoliosSelectionsGraphic({
       chartType={graphType}
       data={convertedData}
       width="100%"
+      height="300px"
       options={{
         title,
         colors: ["#e040fb"],
-        is3D: true,
         titleTextStyle: { color: "white", fontSize: 14 },
-        legendTextStyle: { color: "white" },
+        legend: { position: "none" },
         vAxis: {
           title: "Percentage",
           titleTextStyle: { color: "white" },
@@ -45,12 +45,12 @@ function StatsPortfoliosSelectionsGraphic({
         hAxis: {
           title: "Seed",
           titleTextStyle: { color: "white" },
-          textStyle: { color: "white" },
+          textStyle: { color: "white", fontSize: 11 },
+          slantedText: false,
         },
-        chartArea: { width: "60%" },
+        chartArea: { width: "80%", height: "70%" },
         backgroundColor: { fill: "#000000", opacity: 1 },
       }}
-      legendToggle
     />
   );
 }

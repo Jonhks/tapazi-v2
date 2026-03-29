@@ -19,7 +19,7 @@ function TeamPerYearlogGraphic({
     return [
       ["Seed", "Percentage"],
       ...Array.from({ length: 16 }, (_, i) => [
-        `Seed ${i + 1}`,
+        `${i + 1}`,
         parseFloat(source[`prnct_teams_seed${i + 1}`]) ?? 0,
       ]),
     ];
@@ -32,43 +32,27 @@ function TeamPerYearlogGraphic({
       chartType={graphType}
       data={convertedData}
       width="100%"
+      height="300px"
       options={{
         title: title,
-        colors: [
-          "#33FF57", // Verde
-          "#FF5733", // Rojo
-          "#3357FF", // Azul
-          "#FF33A1", // Rosa
-          "#FF8C33", // Naranja
-          "#33FFF5", // Cian
-          "#8C33FF", // Púrpura
-          "#FF3333", // Rojo oscuro
-          "#33FF8C", // Verde claro
-          "#5733FF", // Azul oscuro
-          "#FF5733", // Rojo claro
-          "#33A1FF", // Azul claro
-          "#FF33FF", // Magenta
-          "#FF5733", // Rojo coral
-          "#33FF33", // Verde lima
-          "#FF33FF", // Fucsia
-        ],
-        is3D: true,
+        colors: ["#e040fb"],
         titleTextStyle: { color: "white" },
-        legendTextStyle: { color: "white" },
+        legend: { position: "none" },
         vAxis: {
           title: "Percentage",
           titleTextStyle: { color: "white" },
           textStyle: { color: "white" },
+          gridlines: { color: "#333" },
         },
         hAxis: {
           title: "Seed",
           titleTextStyle: { color: "white" },
-          textStyle: { color: "white" },
+          textStyle: { color: "white", fontSize: 11 },
+          slantedText: false,
         },
-        chartArea: { width: "60%" },
+        chartArea: { width: "80%", height: "70%" },
         backgroundColor: { fill: "#0d0d0d", opacity: 0.9 },
       }}
-      legendToggle
     />
   );
 }
