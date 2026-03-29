@@ -1,11 +1,15 @@
+import { useState } from "react";
 import { AppBar, Toolbar, Typography, IconButton, Box } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import WalletModal from "@/shared/components/WalletModal/WalletModal";
 
 export default function SportsMenu() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
+  const [walletOpen, setWalletOpen] = useState(false);
 
   const handleLogout = () => {
     Swal.fire({
@@ -35,32 +39,61 @@ export default function SportsMenu() {
   };
 
   return (
-    <AppBar
-      position="fixed"
-      sx={{
-        backgroundColor: "rgba(0, 0, 0, 0.85)",
-        backdropFilter: "blur(5px)",
-      }}
-    >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Typography
-          variant="h6"
-          sx={{ fontWeight: "bold", color: "#05fa87" }}
-        >
-          {user.name || "Username"}
-        </Typography>
-        <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
-          {/* <Typography variant="body1" sx={{ color: "#fff", fontWeight: 600 }}>
-            Balance: <span style={{ color: "#dc903b" }}>$45Dlls</span>
-          </Typography> */}
-          <IconButton
-            color="inherit"
-            onClick={handleLogout}
+    <>
+      <AppBar
+        position="fixed"
+        sx={{
+          backgroundColor: "rgba(0, 0, 0, 0.85)",
+          backdropFilter: "blur(5px)",
+        }}
+      >
+        <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Typography
+            variant="h6"
+            sx={{ fontWeight: "bold", color: "#05fa87" }}
           >
-            <LogoutIcon sx={{ color: "#dc903b" }} />
-          </IconButton>
-        </Box>
-      </Toolbar>
-    </AppBar>
+            {user.name || "Username"}
+          </Typography>
+          <Box sx={{ display: "flex", alignItems: "center", gap: 3 }}>
+            <Typography
+              variant="body1"
+              onClick={() => setWalletOpen(true)}
+              sx={{
+                color: "#fff",
+                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                padding: "5px",
+                borderRadius: "5px",
+                cursor: "pointer",
+                "&:hover": { opacity: 0.8 },
+              }}
+            >
+              <span
+                style={{
+                  marginRight: "5px",
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <MonetizationOnIcon sx={{ color: "#dc903b" }} />
+              </span>
+              <span style={{ color: "#dc903b" }}>$ 1,023</span>
+            </Typography>
+            <IconButton color="inherit" onClick={handleLogout}>
+              <LogoutIcon sx={{ color: "#dc903b" }} />
+            </IconButton>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      <WalletModal
+        open={walletOpen}
+        onClose={() => setWalletOpen(false)}
+        participantId={user.id ?? ""}
+        participantName={user.name ?? ""}
+        sportKey="ncaaMale"
+      />
+    </>
   );
 }

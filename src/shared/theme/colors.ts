@@ -38,8 +38,8 @@ export const sportThemes = {
     // Menú
     appBar: "#572d03",
     drawer: "#572d03",
-    accent: "#eaad2b",
-    defaultIcon: "#eaad2b",
+    accent: "#e040fb",
+    defaultIcon: "#e040fb",
     // General
     bg: "#3d1f00",
     text: "#ffffff",

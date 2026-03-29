@@ -31,6 +31,8 @@ import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 const drawerWidth = 240;
 import AltRouteIcon from "@mui/icons-material/AltRoute";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import WalletModal from "@/shared/components/WalletModal/WalletModal";
 
 const openedMixin = (theme: Theme) => ({
   width: drawerWidth,
@@ -109,10 +111,12 @@ export default function MenuEPL() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [walletOpen, setWalletOpen] = useState(false);
   const params = useParams();
   const userId = params.userId!;
   const sportId = params.sportId || "1"; // Default to 1 if sportId is not provided
   const location = useLocation();
+  const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
 
   const ACTIVE_COLOR = "#4BF589";
   const DEFAULT_COLOR = "gray";
@@ -209,9 +213,29 @@ export default function MenuEPL() {
             <div
               style={{
                 width: "100%",
-                textAlign: "right",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
               }}
             >
+              <Typography
+                variant="body1"
+                onClick={() => setWalletOpen(true)}
+                sx={{
+                  color: "#9B59B6",
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "5px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  mr: 2,
+                  "&:hover": { opacity: 0.8 },
+                }}
+              >
+                <MonetizationOnIcon sx={{ color: "#9B59B6", mr: 0.5 }} />
+                $ 1,023
+              </Typography>
               <Tooltip
                 title="Go to sports selection"
                 placement="bottom"
@@ -344,6 +368,14 @@ export default function MenuEPL() {
           <DrawerHeader />
         </Box>
       </Box>
+
+      <WalletModal
+        open={walletOpen}
+        onClose={() => setWalletOpen(false)}
+        participantId={user.id ?? ""}
+        participantName={user.name ?? ""}
+        sportKey="epl"
+      />
     </>
   );
 }

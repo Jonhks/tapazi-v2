@@ -34,6 +34,8 @@ import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOu
 // import Basket from "@/assets/icons/basket.png";
 import AltRouteIcon from "@mui/icons-material/AltRoute";
 import { BasquetIcon } from "@/assets/icons/icons";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import WalletModal from "@/shared/components/WalletModal/WalletModal";
 
 const drawerWidth = 240;
 
@@ -114,9 +116,11 @@ export default function MiniDrawer() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [walletOpen, setWalletOpen] = useState(false);
   const params = useParams();
   const userId = params.userId!;
   const location = useLocation();
+  const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
 
   const ACTIVE_COLOR = "#05fa87";
   const DEFAULT_COLOR = "#DC903B";
@@ -221,9 +225,29 @@ export default function MiniDrawer() {
             <div
               style={{
                 width: "100%",
-                textAlign: "right",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
               }}
             >
+              <Typography
+                variant="body1"
+                onClick={() => setWalletOpen(true)}
+                sx={{
+                  color: "#05fa87",
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "5px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  mr: 2,
+                  "&:hover": { opacity: 0.8 },
+                }}
+              >
+                <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />
+                <span style={{ color: "#dc903b" }}>$ 1,023</span>
+              </Typography>
               <Tooltip
                 title="Go to sports selection"
                 placement="bottom"
@@ -349,6 +373,14 @@ export default function MiniDrawer() {
           <DrawerHeader />
         </Box>
       </Box>
+
+      <WalletModal
+        open={walletOpen}
+        onClose={() => setWalletOpen(false)}
+        participantId={user.id ?? ""}
+        participantName={user.name ?? ""}
+        sportKey="ncaaMale"
+      />
     </>
   );
 }

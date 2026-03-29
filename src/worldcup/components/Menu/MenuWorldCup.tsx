@@ -32,6 +32,8 @@ import Swal from "sweetalert2";
 import classes from "./Menu.module.css";
 import { messagemodalInstall } from "@/utils/app";
 import { sportThemes } from "@/shared/theme/colors";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import WalletModal from "@/shared/components/WalletModal/WalletModal";
 
 const wc = sportThemes.worldcup;
 const drawerWidth = 240;
@@ -113,10 +115,12 @@ export default function MenuWorldCup() {
   const navigate = useNavigate();
   const theme = useTheme();
   const [open, setOpen] = useState(false);
+  const [walletOpen, setWalletOpen] = useState(false);
   const params = useParams();
   const userId = params.userId!;
   const sportId = params.sportId!;
   const location = useLocation();
+  const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
 
   const ACTIVE_COLOR = wc.positive;
   const DEFAULT_COLOR = wc.defaultIcon;
@@ -213,7 +217,25 @@ export default function MenuWorldCup() {
                 </Typography>
               </div>
             </IconButton>
-            <div style={{ width: "100%", textAlign: "right" }}>
+            <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+              <Typography
+                variant="body1"
+                onClick={() => setWalletOpen(true)}
+                sx={{
+                  color: wc.accent,
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "5px",
+                  borderRadius: "5px",
+                  cursor: "pointer",
+                  mr: 2,
+                  "&:hover": { opacity: 0.8 },
+                }}
+              >
+                <MonetizationOnIcon sx={{ color: wc.accent, mr: 0.5 }} />
+                $ 1,023
+              </Typography>
               <Tooltip
                 title="Go to sports selection"
                 placement="bottom"
@@ -333,6 +355,14 @@ export default function MenuWorldCup() {
           <DrawerHeader />
         </Box>
       </Box>
+
+      <WalletModal
+        open={walletOpen}
+        onClose={() => setWalletOpen(false)}
+        participantId={user.id ?? ""}
+        participantName={user.name ?? ""}
+        sportKey="worldcup"
+      />
     </>
   );
 }
