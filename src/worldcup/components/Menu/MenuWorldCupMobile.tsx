@@ -19,6 +19,8 @@ import InstallMobileIcon from "@mui/icons-material/InstallMobile";
 import AltRouteIcon from "@mui/icons-material/AltRoute";
 import { messagemodalInstallmobile } from "@/utils/app";
 import { sportThemes } from "@/shared/theme/colors";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import WalletModal from "@/shared/components/WalletModal/WalletModal";
 
 const wc = sportThemes.worldcup;
 
@@ -49,6 +51,7 @@ function MenuWorldCupMobile() {
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
+  const [walletOpen, setWalletOpen] = useState(false);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const pages = [
@@ -142,6 +145,12 @@ function MenuWorldCupMobile() {
         </IconButton>
         <p>{userName?.name || "Invitado"}</p>
       </MenuItem>
+      <MenuItem onClick={() => { handleMobileMenuClose(); setWalletOpen(true); }}>
+        <IconButton size="large" color="inherit">
+          <MonetizationOnIcon sx={{ color: wc.accent }} />
+        </IconButton>
+        <p style={{ color: wc.accent }}>My Wallet</p>
+      </MenuItem>
       <MenuItem onClick={() => LogoutSwal()}>
         <IconButton size="large" color="inherit">
           <Badge badgeContent={0} color="error">
@@ -194,6 +203,13 @@ function MenuWorldCupMobile() {
         </Container>
       </AppBar>
       {renderMobileMenu}
+      <WalletModal
+        open={walletOpen}
+        onClose={() => setWalletOpen(false)}
+        participantId={userName?.id ?? ""}
+        participantName={userName?.name ?? ""}
+        sportKey="worldcup"
+      />
     </Box>
   );
 }

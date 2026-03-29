@@ -69,15 +69,7 @@ export default function SportsMenu() {
                 "&:hover": { opacity: 0.8 },
               }}
             >
-              <span
-                style={{
-                  marginRight: "5px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                <MonetizationOnIcon sx={{ color: "#dc903b" }} />
-              </span>
+              <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />
               <span style={{ color: "#dc903b" }}>$ 1,023</span>
             </Typography>
             <IconButton color="inherit" onClick={handleLogout}>

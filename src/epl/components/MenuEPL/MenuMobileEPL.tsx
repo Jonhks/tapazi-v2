@@ -16,6 +16,8 @@ import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import DescriptionOutlinedIcon from "@mui/icons-material/DescriptionOutlined";
 import AltRouteIcon from "@mui/icons-material/AltRoute";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import WalletModal from "@/shared/components/WalletModal/WalletModal";
 import QueryStatsOutlinedIcon from "@mui/icons-material/QueryStatsOutlined";
 const Icons = [
   <SportsSoccerIcon key="ball" />,
@@ -47,6 +49,7 @@ function MenuMobileEpl() {
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
+  const [walletOpen, setWalletOpen] = useState(false);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -201,6 +204,12 @@ function MenuMobileEpl() {
           {userName.name || "Invitado"}
         </p>
       </MenuItem>
+      <MenuItem onClick={() => { handleMobileMenuClose(); setWalletOpen(true); }}>
+        <IconButton size="large" color="inherit">
+          <MonetizationOnIcon sx={{ color: "#9B59B6" }} />
+        </IconButton>
+        <p style={{ color: "#9B59B6" }}>My Wallet</p>
+      </MenuItem>
       <MenuItem onClick={() => LogoutSwal()}>
         <IconButton
           size="large"
@@ -280,6 +289,13 @@ function MenuMobileEpl() {
         </Container>
       </AppBar>
       {renderMobileMenu}
+      <WalletModal
+        open={walletOpen}
+        onClose={() => setWalletOpen(false)}
+        participantId={userName.id ?? ""}
+        participantName={userName.name ?? ""}
+        sportKey="epl"
+      />
     </Box>
   );
 }

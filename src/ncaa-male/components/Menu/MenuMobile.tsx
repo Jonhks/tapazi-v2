@@ -18,6 +18,8 @@ import { messagemodalInstallmobile } from "@/utils/app";
 import SportsBasketballOutlinedIcon from "@mui/icons-material/SportsBasketballOutlined";
 // import Basket from "@/assets/icons/basket.png";
 import AltRouteIcon from "@mui/icons-material/AltRoute";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import WalletModal from "@/shared/components/WalletModal/WalletModal";
 
 const Icons = [
   <SportsBasketballOutlinedIcon key="ball" />,
@@ -66,6 +68,7 @@ function ResponsiveAppBar() {
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
+  const [walletOpen, setWalletOpen] = useState(false);
 
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
@@ -191,6 +194,12 @@ function ResponsiveAppBar() {
         </IconButton>
         <p>{userName.name || "Invitado"}</p>
       </MenuItem>
+      <MenuItem onClick={() => { handleMobileMenuClose(); setWalletOpen(true); }}>
+        <IconButton size="large" color="inherit">
+          <MonetizationOnIcon sx={{ color: "#dc903b" }} />
+        </IconButton>
+        <p style={{ color: "#dc903b" }}>My Wallet</p>
+      </MenuItem>
       <MenuItem onClick={() => LogoutSwal()}>
         <IconButton
           size="large"
@@ -267,6 +276,13 @@ function ResponsiveAppBar() {
         </Container>
       </AppBar>
       {renderMobileMenu}
+      <WalletModal
+        open={walletOpen}
+        onClose={() => setWalletOpen(false)}
+        participantId={userName.id ?? ""}
+        participantName={userName.name ?? ""}
+        sportKey="ncaaMale"
+      />
     </Box>
   );
 }
