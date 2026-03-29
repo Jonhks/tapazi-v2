@@ -77,6 +77,8 @@ export default defineConfig({
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url)),
       "@/epl": fileURLToPath(new URL("./src/epl", import.meta.url)),
+      "@/ncaa-male": fileURLToPath(new URL("./src/ncaa-male", import.meta.url)),
+      "@/female": fileURLToPath(new URL("./src/female", import.meta.url)),
     },
   },
   build: {

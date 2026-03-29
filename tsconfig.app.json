@@ -55,6 +55,12 @@
       ],
       "@/shared/*": [
         "shared/*"
+      ],
+      "@/ncaa-male/*": [
+        "ncaa-male/*"
+      ],
+      "@/female/*": [
+        "female/*"
       ]
     },
     /* Bundler mode */

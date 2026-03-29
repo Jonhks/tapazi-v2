@@ -1,4 +1,4 @@
-import loader from "@/assets/img/balon-worldcup-26.webp";
+import loader from "@/assets/img/balon-worldcup-26.png";
 import classes from "./BallLoader.module.css";
 
 const Loader = () => {
