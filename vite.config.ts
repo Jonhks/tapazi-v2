@@ -6,7 +6,10 @@ import { VitePWA } from "vite-plugin-pwa";
 import { version } from "./package.json";
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  esbuild: {
+    drop: command === "build" ? ["console", "debugger"] : [],
+  },
   define: {
     "import.meta.env.VITE_APP_VERSION": JSON.stringify(version),
   },
@@ -91,4 +94,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

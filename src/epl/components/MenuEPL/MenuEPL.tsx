@@ -222,7 +222,7 @@ export default function MenuEPL() {
                 variant="body1"
                 onClick={() => setWalletOpen(true)}
                 sx={{
-                  color: "#9B59B6",
+                  color: "#dc903b",
                   fontWeight: 600,
                   display: "flex",
                   alignItems: "center",
@@ -233,7 +233,7 @@ export default function MenuEPL() {
                   "&:hover": { opacity: 0.8 },
                 }}
               >
-                <MonetizationOnIcon sx={{ color: "#9B59B6", mr: 0.5 }} />
+                <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />
                 $ 1,023
               </Typography>
               <Tooltip

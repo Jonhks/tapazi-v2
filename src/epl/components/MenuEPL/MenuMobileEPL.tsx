@@ -206,9 +206,9 @@ function MenuMobileEpl() {
       </MenuItem>
       <MenuItem onClick={() => { handleMobileMenuClose(); setWalletOpen(true); }}>
         <IconButton size="large" color="inherit">
-          <MonetizationOnIcon sx={{ color: "#9B59B6" }} />
+          <MonetizationOnIcon sx={{ color: "#dc903b" }} />
         </IconButton>
-        <p style={{ color: "#9B59B6" }}>My Wallet</p>
+        <p style={{ color: "#dc903b" }}>My Wallet</p>
       </MenuItem>
       <MenuItem onClick={() => LogoutSwal()}>
         <IconButton

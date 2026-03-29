@@ -5,7 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Container from "@mui/material/Container";
 import ReceiptLongIcon from "@mui/icons-material/ReceiptLong";
-import HistoryIcon from "@mui/icons-material/History";
+// import HistoryIcon from "@mui/icons-material/History";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
@@ -29,7 +29,7 @@ const Icons = [
   <EmojiEventsIcon key="trophy" />,
   <ReceiptLongIcon key="receipt" />,
   <TextSnippetIcon key="stats" />,
-  <HistoryIcon key="history" />,
+  // <HistoryIcon key="history" />,
   <MoreIcon key="more" />,
 ];
 
@@ -59,7 +59,7 @@ function MenuWorldCupMobile() {
     { text: "My Portfolios", id: `worldcup/myPortfolio/${userId}/${sportId}` },
     { text: "Instructions", id: `worldcup/instructions/${userId}/${sportId}` },
     { text: "Stats", id: `worldcup/stats/${userId}/${sportId}` },
-    { text: "History", id: `worldcup/history/${userId}/${sportId}` },
+    // { text: "History", id: `worldcup/history/${userId}/${sportId}` },
     { text: "More", id: "more" },
   ];
 
@@ -128,32 +128,55 @@ function MenuWorldCupMobile() {
       }}
     >
       <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
-        <IconButton size="large" color="inherit">
+        <IconButton
+          size="large"
+          color="inherit"
+        >
           <AltRouteIcon />
         </IconButton>
         <p>Sports Selection</p>
       </MenuItem>
       <MenuItem onClick={showInstructions}>
-        <IconButton size="large" color="inherit">
+        <IconButton
+          size="large"
+          color="inherit"
+        >
           <InstallMobileIcon />
         </IconButton>
         <p>Install</p>
       </MenuItem>
       <MenuItem>
-        <IconButton size="large" color="inherit">
+        <IconButton
+          size="large"
+          color="inherit"
+        >
           <AccountCircle />
         </IconButton>
         <p>{userName?.name || "Invitado"}</p>
       </MenuItem>
-      <MenuItem onClick={() => { handleMobileMenuClose(); setWalletOpen(true); }}>
-        <IconButton size="large" color="inherit">
-          <MonetizationOnIcon sx={{ color: wc.accent }} />
+      <MenuItem
+        onClick={() => {
+          handleMobileMenuClose();
+          setWalletOpen(true);
+        }}
+      >
+        <IconButton
+          size="large"
+          color="inherit"
+        >
+          <MonetizationOnIcon sx={{ color: "#dc903b" }} />
         </IconButton>
-        <p style={{ color: wc.accent }}>My Wallet</p>
+        <p style={{ color: "#dc903b" }}>My Wallet</p>
       </MenuItem>
       <MenuItem onClick={() => LogoutSwal()}>
-        <IconButton size="large" color="inherit">
-          <Badge badgeContent={0} color="error">
+        <IconButton
+          size="large"
+          color="inherit"
+        >
+          <Badge
+            badgeContent={0}
+            color="error"
+          >
             <LogoutIcon />
           </Badge>
         </IconButton>
@@ -180,7 +203,10 @@ function MenuWorldCupMobile() {
             {Icons.map((icon, index) => (
               <Box
                 key={icon.key}
-                sx={{ flexGrow: 1, display: { xs: "flex", md: "none", justifyContent: "center" } }}
+                sx={{
+                  flexGrow: 1,
+                  display: { xs: "flex", md: "none", justifyContent: "center" },
+                }}
               >
                 <IconButton
                   size="large"
@@ -190,9 +216,14 @@ function MenuWorldCupMobile() {
                       : openMenuMobile(e)
                   }
                   sx={{
-                    color: isActive(pages[index].id) ? ACTIVE_COLOR : DEFAULT_COLOR,
+                    color: isActive(pages[index].id)
+                      ? ACTIVE_COLOR
+                      : DEFAULT_COLOR,
                     transition: "all 0.2s ease-in-out",
-                    "&:hover": { transform: "translateY(-4px)", color: ACTIVE_COLOR },
+                    "&:hover": {
+                      transform: "translateY(-4px)",
+                      color: ACTIVE_COLOR,
+                    },
                   }}
                 >
                   {icon}

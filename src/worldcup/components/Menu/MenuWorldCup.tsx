@@ -179,7 +179,7 @@ export default function MenuWorldCup() {
     <EmojiEventsIcon key="trophy" />,
     <ReceiptLongIcon key="receipt" />,
     <TextSnippetIcon key="stats" />,
-    <HistoryIcon key="history" />,
+    // <HistoryIcon key="history" />,
     <LogoutIcon key="logout" />,
   ];
 
@@ -188,7 +188,7 @@ export default function MenuWorldCup() {
     { text: "My Portfolios", id: `worldcup/myPortfolio/${userId}/${sportId}` },
     { text: "Instructions", id: `worldcup/instructions/${userId}/${sportId}` },
     { text: "Stats", id: `worldcup/stats/${userId}/${sportId}` },
-    { text: "History", id: `worldcup/history/${userId}/${sportId}` },
+    // { text: "History", id: `worldcup/history/${userId}/${sportId}` },
     { text: "LogOut", id: "logOut" },
   ];
 
@@ -217,12 +217,19 @@ export default function MenuWorldCup() {
                 </Typography>
               </div>
             </IconButton>
-            <div style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+              }}
+            >
               <Typography
                 variant="body1"
                 onClick={() => setWalletOpen(true)}
                 sx={{
-                  color: wc.accent,
+                  color: "#dc903b",
                   fontWeight: 600,
                   display: "flex",
                   alignItems: "center",
@@ -233,8 +240,7 @@ export default function MenuWorldCup() {
                   "&:hover": { opacity: 0.8 },
                 }}
               >
-                <MonetizationOnIcon sx={{ color: wc.accent, mr: 0.5 }} />
-                $ 1,023
+                <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />$ 1,023
               </Typography>
               <Tooltip
                 title="Go to sports selection"
