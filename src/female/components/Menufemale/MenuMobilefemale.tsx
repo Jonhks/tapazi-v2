@@ -205,9 +205,9 @@ function ResponsiveAppBar() {
       </MenuItem>
       <MenuItem onClick={() => { handleMobileMenuClose(); setWalletOpen(true); }}>
         <IconButton size="large" color="inherit">
-          <MonetizationOnIcon sx={{ color: "#e040fb" }} />
+          <MonetizationOnIcon sx={{ color: "#dc903b" }} />
         </IconButton>
-        <p style={{ color: "#e040fb" }}>My Wallet</p>
+        <p style={{ color: "#dc903b" }}>My Wallet</p>
       </MenuItem>
       <MenuItem onClick={() => LogoutSwal()}>
         <IconButton

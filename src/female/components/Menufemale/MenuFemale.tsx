@@ -238,7 +238,7 @@ export default function MiniDrawer() {
                 variant="body1"
                 onClick={() => setWalletOpen(true)}
                 sx={{
-                  color: "#e040fb",
+                  color: "#dc903b",
                   fontWeight: 600,
                   display: "flex",
                   alignItems: "center",
@@ -249,7 +249,7 @@ export default function MiniDrawer() {
                   "&:hover": { opacity: 0.8 },
                 }}
               >
-                <MonetizationOnIcon sx={{ color: "#e040fb", mr: 0.5 }} />
+                <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />
                 $ 1,023
               </Typography>
               <Tooltip
