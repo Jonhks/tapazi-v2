@@ -35,7 +35,7 @@ function TeamPerYearlogGraphic({
       height="300px"
       options={{
         title: title,
-        colors: ["#e040fb"],
+        colors: ["#05fa05"],
         titleTextStyle: { color: "white" },
         legend: { position: "none" },
         vAxis: {
