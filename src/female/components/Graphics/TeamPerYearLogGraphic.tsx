@@ -55,7 +55,8 @@ function TeamPerYearlogGraphic({
         titleTextStyle: { color: "#ffffff" },
         colors: ["#238b94", "#b45705", "#fff"],
         is3D: true,
-        backgroundColor: "#000000",
+        height: 500,
+        backgroundColor: "#24253e",
         vAxis: {
           title: "Tournament",
           titleTextStyle: { color: "#ffffff" },
@@ -68,7 +69,6 @@ function TeamPerYearlogGraphic({
         },
         legend: { textStyle: { color: "#ffffff" } },
         opacity: 0.5,
-        height: 500,
       }}
       chartEvents={[
         {

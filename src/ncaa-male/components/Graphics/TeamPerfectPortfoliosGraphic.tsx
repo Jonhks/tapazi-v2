@@ -21,10 +21,10 @@ function TeamPerYearlogGraphic({
       year: number;
       total_weight: number;
       total_points: number;
-    }[]
+    }[],
   ): (string | number)[][] => {
     const header = ["Year", "Total Weight", "Total Points"];
-    if (!data) return [];
+    if (!Array.isArray(data)) return [];
     const rows = data.map((item) => [
       item.year.toString(),
       // item.tournament_name,
@@ -55,10 +55,22 @@ function TeamPerYearlogGraphic({
       data={convertedData}
       options={{
         title: "Historical Perfect Portfolios",
+        height: 500,
+        titleTextStyle: { color: "#ffffff" },
         colors: ["#238b94", "#b45705", "#fff"],
         is3D: true,
-        vAxis: { title: "Tournament" },
-        hAxis: { title: "Year" },
+        backgroundColor: "#000000",
+        vAxis: {
+          title: "Tournament",
+          titleTextStyle: { color: "#ffffff" },
+          textStyle: { color: "#ffffff" },
+        },
+        hAxis: {
+          title: "Year",
+          titleTextStyle: { color: "#ffffff" },
+          textStyle: { color: "#ffffff" },
+        },
+        legend: { textStyle: { color: "#ffffff" } },
       }}
       chartEvents={[
         {

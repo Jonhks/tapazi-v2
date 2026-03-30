@@ -11,12 +11,16 @@ function StatsGraphics({
   title: string;
 }) {
   const convertDataForGoogleChart = (data): (string | number)[][] => {
-    const header = Array.from({ length: 16 }, (_, i) => `Seed ${i + 1}`);
     if (!data) return [];
-    const rows = data.map((item) =>
-      Array.from({ length: 16 }, (_, i) => item[`teams_seed${i + 1}`]),
-    );
-    return [header, ...rows];
+    const source = Array.isArray(data) ? data[0] : data;
+    if (!source) return [];
+    return [
+      ["Seed", "Count"],
+      ...Array.from({ length: 16 }, (_, i) => [
+        `${i + 1}`,
+        source[`teams_seed${i + 1}`] ?? 0,
+      ]),
+    ];
   };
 
   const convertedData = convertDataForGoogleChart(data);
@@ -26,17 +30,12 @@ function StatsGraphics({
       chartType={graphType}
       data={convertedData}
       width="100%"
+      height="300px"
       options={{
         title,
-        colors: [
-          "#e040fb", "#ce93d8", "#ab47bc", "#8e24aa",
-          "#7b1fa2", "#6a1b9a", "#4a148c", "#df78ef",
-          "#ea80fc", "#cc00ff", "#d500f9", "#aa00ff",
-          "#c51162", "#f50057", "#ff4081", "#ff80ab",
-        ],
-        is3D: true,
+        colors: ["#e040fb"],
         titleTextStyle: { color: "white", fontSize: 14 },
-        legendTextStyle: { color: "white" },
+        legend: { position: "none" },
         vAxis: {
           title: "Times",
           titleTextStyle: { color: "white" },
@@ -46,12 +45,12 @@ function StatsGraphics({
         hAxis: {
           title: "Seed",
           titleTextStyle: { color: "white" },
-          textStyle: { color: "white" },
+          textStyle: { color: "white", fontSize: 11 },
+          slantedText: false,
         },
-        chartArea: { width: "60%" },
+        chartArea: { width: "80%", height: "70%" },
         backgroundColor: { fill: "#000000", opacity: 1 },
       }}
-      legendToggle
     />
   );
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import classes from "./HistoryPortfolios.module.css";
 import { Zoom } from "@mui/material";
 import Grid from "@mui/material/Grid2";
@@ -12,10 +12,10 @@ import {
   getTeamsPerfectPortfolios,
   getTeamsPerYearLog,
   getTeamsPickedLogHistory,
-  // getTournaments,
+  getTournaments,
 } from "@/api/HistoryAPI";
-// import { Tournament } from "@/types/index";
-// import Loader from "../../components/BallLoader/BallLoader";
+import { Tournament } from "@/types/index";
+import Loader from "../../components/BallLoader/BallLoader";
 import TableHistoryTeamsPerYearLog from "../../components/Table/TableHistoryTeamsPerYearLog";
 import TableHistoryTeamsPerYearLogSelected from "../../components/Table/TableHistoryTeamsPerYearLogSelected";
 import TableHistoryPerfectPortfolios from "../../components/Table/TableHistoryPerfectPortfolios";
@@ -38,6 +38,9 @@ const History = () => {
   const userId = params.userId!;
 
   const [graphType, setGraphType] = useState(typeGraphs[0]);
+  // const [tournament, setTournament] = useState("");
+  const [selectedTournament, setSelectedTournament] =
+    useState<Tournament | null>(null);
   const [TeamPerfectPortfoliosSelected, SeteamPerfectPortfoliosSelected] =
     useState<number>(0);
   const [teamsPerYearLogSelected, setTeamsPerYearLogSelected] =
@@ -104,28 +107,38 @@ const History = () => {
     [typeGraphs],
   );
 
+  const { data: tournaments, isLoading: loadingTeamsPerYearLog } = useQuery({
+    queryKey: ["tournaments", userId],
+    queryFn: () => getTournaments(),
+  });
+
   const {
     data: teamsPerYearLog,
     //  isLoading: loadingTeamsPerYearLog
   } = useQuery({
     queryKey: ["teamsPerYearLog", userId],
-    queryFn: () => getTeamsPerYearLog(),
+    queryFn: () => getTeamsPerYearLog(selectedTournament!.id),
+    enabled: !!selectedTournament?.id && selectedScore.id === "3",
   });
 
-  const {
-    data: teamsPerfectPortfolios,
-    //  isLoading: loadingPerfectPortfolios
-  } = useQuery({
-    queryKey: ["teamsPerfectPortfolios", userId],
-    queryFn: () => getTeamsPerfectPortfolios(),
-  });
+  console.log(teamsPerYearLog);
+
+  const { data: teamsPerfectPortfolios, isLoading: loadingPerfectPortfolios } =
+    useQuery({
+      queryKey: ["teamsPerfectPortfolios", userId],
+      queryFn: () => getTeamsPerfectPortfolios(),
+      enabled: !!selectedTournament?.id && selectedScore.id === "2",
+    });
 
   const {
     data: teamsHistoricAllRounds,
-    //  isLoading: loadingHistoryAllRounds
+    isLoading: loadingHistoryAllRounds,
+    isFetching: fetchingHistoryAllRounds,
   } = useQuery({
-    queryKey: ["teamsHistoricAllRounds", orderHistorySelected],
+    queryKey: ["teamsHistoricAllRounds", orderHistorySelected.value],
     queryFn: () => getTeamsHistoricAllRounds(orderHistorySelected.value),
+    enabled: !!selectedTournament?.id && selectedScore.id === "1",
+    staleTime: Infinity,
   });
 
   const {
@@ -138,6 +151,7 @@ const History = () => {
     ],
     queryFn: () =>
       getHistoricalPerfectPortfoliosHistory(TeamPerfectPortfoliosSelected),
+    enabled: selectedScore.id === "2" && TeamPerfectPortfoliosSelected > 0,
   });
 
   const {
@@ -146,7 +160,15 @@ const History = () => {
   } = useQuery({
     queryKey: ["TeamsPickedLogHistory", teamsPerYearLogSelected],
     queryFn: () => getTeamsPickedLogHistory(teamsPerYearLogSelected),
+    enabled: selectedScore.id === "3" && teamsPerYearLogSelected > 0,
   });
+
+  useEffect(() => {
+    if (tournaments) {
+      // setTournament(tournaments[0]?.name);
+      setSelectedTournament(tournaments[0]);
+    }
+  }, [tournaments]);
 
   const handleChange = useCallback(
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -175,28 +197,33 @@ const History = () => {
         (el) => el.name === e.target.value,
       );
       setOrderHistorySelected(select || { name: "", id: "", value: "" });
-      console.log(select?.value);
     },
     [orderHistoricalData],
   );
-  // console.log(selectedScore);
 
-  // if (
-  //   // isLoading ||
-  //   loadingTeamsPerYearLog ||
-  //   loadingPerfectPortfolios ||
-  //   loadingHistoryAllRounds
-  // )
-  //   return <Loader />;
+  if (
+    // isLoading ||
+    loadingTeamsPerYearLog ||
+    loadingTeamsPerYearLog ||
+    loadingPerfectPortfolios ||
+    loadingHistoryAllRounds
+  ) {
+    return <Loader />;
+  }
+
+  console.log(selectedScore);
 
   return (
     <>
       <Grid
         size={12}
         style={{
+          minHeight: "700px",
           height: "calc(100vh - 56px)",
-          overflow: "scroll",
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
+        className={`${classes.gridInstructions} enable-vertical-scroll`}
       >
         <Grid
           container
@@ -217,7 +244,7 @@ const History = () => {
               size={12}
               className={classes.containerHeadHistory}
             >
-              <Grid size={{ xs: 12, md: 6 }}>
+              <Grid size={{ xs: 12, md: 12 }}>
                 <p className={classes.titleBox}>
                   <HistoryIcon /> History
                 </p>
@@ -252,7 +279,6 @@ const History = () => {
                   <Grid size={12}>
                     <span>OrderBy:</span>
                     <div className={classes.containerDrop}>
-                      {/* <DescriptionIcon /> */}
                       <DropDownHistory
                         name={"orderBy"}
                         label={""}
@@ -306,6 +332,7 @@ const History = () => {
                   <TableHistoryAllRounds
                     arrHistory={teamsHistoricAllRounds}
                     score={selectedScore.name}
+                    isFetching={fetchingHistoryAllRounds}
                   />
                 )}
               </Grid>

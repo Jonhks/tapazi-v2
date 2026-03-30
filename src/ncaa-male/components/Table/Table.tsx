@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { useMemo, useState } from "react";
+import { useDeferredValue, useMemo, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -53,12 +53,13 @@ export function TableBase<T>({
 }: TableBaseProps<T>) {
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [filtered, setFiltered] = useState("");
+  const deferredFiltered = useDeferredValue(filtered);
   const isMobile = useMediaQuery("(max-width:900px)");
 
   const table = useReactTable({
     data: data ?? [],
     columns,
-    state: { sorting, globalFilter: filtered },
+    state: { sorting, globalFilter: deferredFiltered },
     onSortingChange: setSorting,
     onGlobalFilterChange: setFiltered,
     getCoreRowModel: getCoreRowModel(),
