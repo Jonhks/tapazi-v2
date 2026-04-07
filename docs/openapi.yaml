@@ -21,6 +21,8 @@ tags:
     description: Sports, teams, and tournament information
   - name: Tournaments
     description: Tournament details, scoring, and statistics
+  - name: Reports
+    description: Reporting and analytics
 
 paths:
   /:
@@ -32,6 +34,8 @@ paths:
       responses:
         "200":
           description: Successful response
+
+  # ─── Countries ───────────────────────────────────────────────
 
   /countries:
     get:
@@ -71,6 +75,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/State"
+
+  # ─── Participants ────────────────────────────────────────────
 
   /participants/signup:
     post:
@@ -123,7 +129,7 @@ paths:
               properties:
                 user:
                   type: string
-                  example: eduardo
+                  example: gcalderon.7
       responses:
         "200":
           description: Password reset request processed
@@ -140,13 +146,19 @@ paths:
           required: true
           schema:
             type: integer
-          example: 1
+          example: 121
         - name: tournament_id
           in: query
           required: false
           schema:
             type: integer
-          example: 3
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
       responses:
         "200":
           description: List of portfolios
@@ -179,6 +191,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Sport"
+
+  # ─── Portfolios ─────────────────────────────────────────────
 
   /portfolios:
     post:
@@ -268,6 +282,33 @@ paths:
               schema:
                 $ref: "#/components/schemas/Portfolio"
 
+  /portfolios/{portfolioId}/remove:
+    put:
+      tags:
+        - Portfolios
+      summary: Remove portfolio from tournament
+      description: Remove a portfolio from a specific tournament
+      parameters:
+        - name: portfolioId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 266
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2
+      responses:
+        "200":
+          description: Portfolio removed successfully
+        "404":
+          description: Portfolio not found
+
+  # ─── Sports ─────────────────────────────────────────────────
+
   /sports:
     get:
       tags:
@@ -297,6 +338,18 @@ paths:
           schema:
             type: integer
           example: 1
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
+        - name: tournament_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
       responses:
         "200":
           description: List of teams
@@ -319,13 +372,19 @@ paths:
           required: true
           schema:
             type: integer
-          example: 2
+          example: 3
         - name: tournament_id
           in: query
           required: true
           schema:
             type: integer
-          example: 3
+          example: 5
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
       responses:
         "200":
           description: List of unavailable teams
@@ -387,6 +446,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Tournament"
+
+  # ─── Tournaments ─────────────────────────────────────────────
 
   /tournaments/{tournamentId}:
     get:
@@ -484,16 +545,80 @@ paths:
           required: true
           schema:
             type: integer
-          example: 3
-        - name: portfolio_id
+          example: 4
+        - name: participant_id
           in: query
           required: false
           schema:
             type: integer
-          example: 0
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
       responses:
         "200":
           description: Home score data
+
+  /tournaments/{tournamentId}/score/stats:
+    get:
+      tags:
+        - Tournaments
+      summary: Get score statistics
+      description: Retrieve scoring statistics for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
+        - name: round
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: order
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Score statistics data
+
+  /tournaments/{tournamentId}/score/points-per-round:
+    get:
+      tags:
+        - Tournaments
+      summary: Get points per round
+      description: Retrieve points breakdown per round for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
+      responses:
+        "200":
+          description: Points per round data
 
   /tournaments/{tournamentId}/score/weeks:
     get:
@@ -551,6 +676,304 @@ paths:
       responses:
         "200":
           description: Tournament statistics
+
+  /tournaments/{tournamentId}/teams:
+    get:
+      tags:
+        - Tournaments
+      summary: Get tournament teams
+      description: Retrieve teams participating in a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
+        - name: show_all
+          in: query
+          required: false
+          schema:
+            type: boolean
+          example: false
+      responses:
+        "200":
+          description: List of tournament teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Team"
+
+  /tournaments/{tournamentId}/winner-of-team:
+    get:
+      tags:
+        - Tournaments
+      summary: Get winner of team
+      description: Retrieve winner-of-team data for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 10
+      responses:
+        "200":
+          description: Winner of team data
+
+  /tournaments/{tournamentId}/winner-of-team-has-team:
+    get:
+      tags:
+        - Tournaments
+      summary: Get winner-of-team has team
+      description: Retrieve winner-of-team-has-team data for a tournament
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
+        - name: winner_of_team_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Winner-of-team has team data
+
+  # ─── Reports ─────────────────────────────────────────────────
+
+  /reports/least-picked-teams:
+    get:
+      tags:
+        - Reports
+      summary: Get least picked teams
+      description: Retrieve teams that have been picked the least
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2
+      responses:
+        "200":
+          description: List of least picked teams
+
+  /reports/most-picked-teams:
+    get:
+      tags:
+        - Reports
+      summary: Get most picked teams
+      description: Retrieve teams that have been picked the most
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2
+      responses:
+        "200":
+          description: List of most picked teams
+
+  /reports/teams-picked-log:
+    get:
+      tags:
+        - Reports
+      summary: Get teams picked log
+      description: Retrieve log of teams that have been picked
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2
+      responses:
+        "200":
+          description: Teams picked log data
+
+  /reports/teams-picked-log-history:
+    get:
+      tags:
+        - Reports
+      summary: Get teams picked log history
+      description: Retrieve historical log of teams picked by year
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2024
+      responses:
+        "200":
+          description: Teams picked log history data
+
+  /reports/teams-not-picked-log:
+    get:
+      tags:
+        - Reports
+      summary: Get teams not picked log
+      description: Retrieve log of teams that have not been picked
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2
+      responses:
+        "200":
+          description: Teams not picked log data
+
+  /reports/portfolio-seed-selections:
+    get:
+      tags:
+        - Reports
+      summary: Get portfolio seed selections
+      description: Retrieve portfolio seed selection data
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Portfolio seed selections data
+
+  /reports/seed-pick-totals:
+    get:
+      tags:
+        - Reports
+      summary: Get seed pick totals
+      description: Retrieve total picks per seed
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Seed pick totals data
+
+  /reports/historical-perfect-portfolios-header:
+    get:
+      tags:
+        - Reports
+      summary: Get historical perfect portfolios header
+      description: Retrieve header data for historical perfect portfolios
+      responses:
+        "200":
+          description: Historical perfect portfolios header data
+
+  /reports/historical-perfect-portfolios-history:
+    get:
+      tags:
+        - Reports
+      summary: Get historical perfect portfolios history
+      description: Retrieve historical perfect portfolios by year
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2024
+      responses:
+        "200":
+          description: Historical perfect portfolios history data
+
+  /reports/historical-perfect-portfolios-weight:
+    get:
+      tags:
+        - Reports
+      summary: Get historical perfect portfolios weight
+      description: Retrieve historical perfect portfolios weight by year
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2024
+      responses:
+        "200":
+          description: Historical perfect portfolios weight data
+
+  /reports/teams-per-year-log:
+    get:
+      tags:
+        - Reports
+      summary: Get teams per year log
+      description: Retrieve log of teams per year
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Teams per year log data
+
+  /reports/historical-all-rounds:
+    get:
+      tags:
+        - Reports
+      summary: Get historical all rounds
+      description: Retrieve historical data for all rounds
+      parameters:
+        - name: order-by
+          in: query
+          required: false
+          schema:
+            type: string
+          example: risk
+      responses:
+        "200":
+          description: Historical all rounds data
 
 components:
   schemas:
@@ -619,11 +1042,11 @@ components:
       properties:
         user:
           type: string
-          example: eduardo
+          example: gcalderon.7
         password:
           type: string
           format: password
-          example: Eblanca5
+          example: tesxuc-futpAm-qitna3
 
     Team:
       type: object
