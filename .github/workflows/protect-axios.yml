@@ -23,20 +23,37 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Enforce Main's axios.ts
+      - name: Enforce Production axios.ts
         run: |
-          # Traemos la información más reciente de la master/main en la nube
-          git fetch origin main
+          # URL oficial de producción (hardcodeada para evitar dependencia circular con origin/main)
+          PROD_URL="https://portfolio-pool-prod.damnserver.com:443"
 
-          # Sobreescribimos el axios.ts que viene en este PR con el oficial dictado por origin/main
-          git checkout origin/main -- src/lib/axios.ts
+          # Generamos el axios.ts correcto de producción
+          cat > src/lib/axios.ts << 'AXIOS_EOF'
+          import axios from "axios";
 
-          # Revisamos si hubo diferencia. Si git diff starea cambios, hacemos un commit forzado
+          const url = "PROD_URL_PLACEHOLDER";
+
+          const apiEnv = axios.create({
+            baseURL: url,
+          });
+
+          export { apiEnv };
+          AXIOS_EOF
+
+          # Limpiamos la indentación del heredoc y reemplazamos el placeholder
+          sed -i 's/^          //' src/lib/axios.ts
+          sed -i "s|PROD_URL_PLACEHOLDER|${PROD_URL}|" src/lib/axios.ts
+
+          # Agregamos al staging
+          git add src/lib/axios.ts
+
+          # Revisamos si hubo diferencia
           if ! git diff --staged --quiet; then
             echo "⚠️ Detectado intento de alterar axios.ts hacia main."
             echo "🛡️ Restaurando automáticamente a la versión de producción..."
             git commit -m "chore(security): preservando axios.ts de producción [skip ci]"
             git push origin ${{ github.head_ref }}
           else
-            echo "✅ axios.ts no fue alterado en este PR o es idéntico a main. Todo seguro."
+            echo "✅ axios.ts ya tiene la URL de producción correcta. Todo seguro."
           fi
