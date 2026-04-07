@@ -2,9 +2,9 @@ openapi: 3.0.3
 info:
   title: PortfolioPool API
   description: API for managing portfolios, participants, sports, and tournaments
-  version: 1.0.0
+  version: 1.0.1
   contact:
-    email: tavo@ercom.tech
+    email: jonhgx@gmail.com
 
 servers:
   - url: https://portfolio-pool-test.damnserver.com:443
