@@ -6,9 +6,7 @@ import { isAxiosError } from "axios";
 export const getTournamentsWorldCup = async (sportId: string) => {
   try {
     const url = `/sports/${sportId}/tournaments`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.tournaments) return data.error?.description || "Error";
     if (data.tournaments) return data.tournaments;
   } catch (error) {
@@ -22,9 +20,7 @@ export const getTeamsHistoricAllRoundsWorldCup = async (orderBy = "risk") => {
   try {
     // TODO: Verificar endpoint worldcup para historical-all-rounds
     const url = `/reports/historical-all-rounds?order-by=${orderBy}`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.data) return data.error?.description || "Error";
     if (data.data) return data.data;
   } catch (error) {
@@ -37,9 +33,7 @@ export const getTeamsHistoricAllRoundsWorldCup = async (orderBy = "risk") => {
 export const getTeamsPerfectPortfoliosWorldCup = async () => {
   try {
     const url = `/reports/historical-perfect-portfolios-header`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.data) return data.error?.description || "Error";
     if (data.data) return data.data;
   } catch (error) {
@@ -52,9 +46,7 @@ export const getTeamsPerfectPortfoliosWorldCup = async () => {
 export const getTeamsPerYearLogWorldCup = async (tournamentId: number) => {
   try {
     const url = `/reports/teams-per-year-log?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.data) return data.error;
     if (data.data) return data.data;
   } catch (error) {
@@ -67,9 +59,7 @@ export const getTeamsPerYearLogWorldCup = async (tournamentId: number) => {
 export const getHistoricalPerfectPortfoliosHistoryWorldCup = async (year: number) => {
   try {
     const url = `historical-perfect-portfolios-history?api-key=TESTAPIKEY&year=${year}`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.success) return data.error?.description || "Error";
     if (data.success) return data.data.historicalPerfectPortfoliosHistory;
   } catch (error) {
@@ -82,9 +72,7 @@ export const getHistoricalPerfectPortfoliosHistoryWorldCup = async (year: number
 export const getTeamsPickedLogHistoryWorldCup = async (year: number) => {
   try {
     const url = `teams-picked-log-history?api-key=TESTAPIKEY&year=${year}`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.success) return data.error?.description || "Error";
     if (data.success) return data.data.teamsPickedLogHistory;
   } catch (error) {

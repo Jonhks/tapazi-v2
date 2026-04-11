@@ -13,11 +13,7 @@ export const getPayoutEpl = async (
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/payouts?portfolios=${portfolioCount}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.payouts) {
       return "Error payouts";
@@ -35,11 +31,7 @@ export const getPayoutEpl = async (
 export const getParticipantsEpl = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/stats`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data.participants) {
       return 0;
@@ -57,11 +49,7 @@ export const getParticipantsEpl = async (tournamentId: User["id"]) => {
 export const getPoponaEpl = async () => {
   try {
     const url = `/tournaments/3/parameters?key=POPONA`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     // console.log("getPoponaEpl", data);
 
     if (!data.value) {
@@ -81,11 +69,7 @@ export const getPoponaEpl = async () => {
 export const getHOINFOEpl = async () => {
   try {
     const url = `/tournaments/3/parameters?key=HOINFO`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     // console.log("Hinfo", data);
 
     if (!data.value) {
@@ -105,11 +89,7 @@ export const getHOINFOEpl = async () => {
 export const getAllPortfoliosEpl = async () => {
   try {
     const url = `/tournaments/3/stats`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return [];
@@ -131,11 +111,7 @@ export const getScoreHomeEpl = async (
   try {
     const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}&epl`;
     // console.log(url);
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     // console.log(data);
 
     if (!data.score) {
@@ -157,11 +133,7 @@ export const getScorePeerWeekHomeEpl = async (
 ) => {
   try {
     const url = `/portfolios/${portfolioId}/per-week?week=${week}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     // console.log(data);
 
     if (!data.teams) {

@@ -5,7 +5,7 @@ import { Box, Button, Input, InputAdornment } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import { BallIcon } from "@/assets/icons/icons";
-import Dropdown from "@/ncaa-male/components/Inputs/Dropdown";
+import Dropdown from "@/shared/components/Inputs/Dropdown";
 import classes from "../../views/myPortfolio/MyPortfolioWorldCup.module.css";
 
 interface PortfolioTabWorldCupProps {

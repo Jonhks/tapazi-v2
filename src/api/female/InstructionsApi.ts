@@ -5,11 +5,7 @@ import { isAxiosError } from "axios";
 export const getInstructionsFemale = async () => {
   try {
     const url = `tournaments/5/instructions`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     
     // console.log(data);
     if (!data.instructions) {

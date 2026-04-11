@@ -8,11 +8,7 @@ export const getPortfolios = async (
 ) => {
   try {
     const url = `/participants/${id}/portfolios?tournament_id=${tournamentId}&sport=ncaa`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.portfolios) {
       return [];
@@ -36,11 +32,7 @@ export const getTeamsMale = async (tournamentId: User["id"]) =>
       const url = `/tournaments/${tournamentId}/teams?sport=ncaa&show_all=false`;
 
       // const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=566`;
-      const { data } = await apiEnv.get(url, {
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
+      const { data } = await apiEnv.get(url);
       // console.log(data);
 
       if (data.teams) {
@@ -60,11 +52,7 @@ export const getTeamsAvailable = async (
   // console.log(sport, tournamentId);
   try {
     const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv.get(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.get(url);
     console.log(data);
 
     if (data.teams) {
@@ -81,9 +69,7 @@ export const postNewPortfolio = async (data: CreatePortfolio) => {
   console.log("postNewPortfolio called with:", data);
   const url = "/portfolios";
 
-  const response = await apiEnv.post(url, data, {
-    headers: { "Content-Type": "application/json;charset=utf-8" },
-  });
+  const response = await apiEnv.post(url, data);
 
   return response.data?.message || "Successfully saved portfolio";
 };
@@ -96,11 +82,7 @@ export const removeportfolio = async ({
   const urlRemovePortfolio = `/portfolios/${portId}`;
 
   try {
-    const { data } = await apiEnv.delete(urlRemovePortfolio, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.delete(urlRemovePortfolio);
     console.log(data);
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -112,11 +94,7 @@ export const removeportfolio = async ({
 export const getDATTOU = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/parameters?key=DATTOU`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.value) {
       return "Error";
@@ -135,11 +113,7 @@ export const getDATTOU = async (tournamentId: User["id"]) => {
 export const getHOUTOU = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/parameters?key=HOUTOU`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if (!data.value) {
       return "Error";
     }
@@ -158,11 +132,7 @@ export const getWinnerOfTeam = async (tournamentId: User["id"]) => {
   try {
     // const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
     const url = `/tournaments/${tournamentId}/winner-of-team?sport=ncaa&limit=99`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.teams) {
       return "Error";
@@ -185,11 +155,7 @@ export const getWinnerOfTeamHasTeam = async (
   try {
     // const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
     const url = `/tournaments/${tournamentId}/winner-of-team-has-team?sport=ncaa&winner_of_team_id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     console.log(data);
 
     if (!data.teams) {

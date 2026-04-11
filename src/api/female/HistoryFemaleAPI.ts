@@ -5,11 +5,7 @@ import { Tournament } from "@/types/index";
 export const getTournaments = async () => {
   const urlGetTournaments = `/sports/1/tournaments`;
   try {
-    const { data } = await apiEnv.get(urlGetTournaments, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.get(urlGetTournaments);
 
     if (!data.tournaments) {
       return data.error.description || "Error";
@@ -30,11 +26,7 @@ export const getScorePPR = async (id: Tournament["id"]) => {
     // const urlGetScorePPR = `/rest/points-per-round?api-key=TESTAPIKEY&tournament-id=${id}`;
     const urlGetScorePPR = "";
     try {
-      const { data } = await apiEnv.get(urlGetScorePPR, {
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      });
+      const { data } = await apiEnv.get(urlGetScorePPR);
       if (!data.success) {
         return data.error.description || "Error";
       }
@@ -76,11 +68,7 @@ export const getScoreHistory = () => {
 export const getTeamsPerYearLogFemale = async (tournamentId: number) => {
   try {
     const url = `/reports/teams-per-year-log?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return data.error;
@@ -99,11 +87,7 @@ export const getTeamsPerYearLogFemale = async (tournamentId: number) => {
 export const getTeamsPerfectPortfoliosFemale = async () => {
   try {
     const url = `/reports/historical-perfect-portfolios-header`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return data.error.description || "Error";
@@ -122,11 +106,7 @@ export const getTeamsPerfectPortfoliosFemale = async () => {
 export const getTeamsHistoricAllRoundsFemale = async (orderBy = "risk") => {
   try {
     const url = `/reports/historical-all-rounds?order-by=${orderBy}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if (!data.data) {
       return data.error.description || "Error";
     }
@@ -144,11 +124,7 @@ export const getTeamsHistoricAllRoundsFemale = async (orderBy = "risk") => {
 export const getHistoricalPerfectPortfoliosHistory = async (year: number) => {
   try {
     const url = `historical-perfect-portfolios-history?api-key=TESTAPIKEY&year=${year}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.success) {
       return data.error.description || "Error";
@@ -167,11 +143,7 @@ export const getHistoricalPerfectPortfoliosHistory = async (year: number) => {
 export const getTeamsPickedLogHistory = async (year: number) => {
   try {
     const url = `teams-picked-log-history?api-key=TESTAPIKEY&year=${year}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.success) {
       return data.error.description || "Error";

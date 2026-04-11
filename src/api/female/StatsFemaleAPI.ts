@@ -4,11 +4,7 @@ import { isAxiosError } from "axios";
 export const getTournaments = async () => {
   const urlGetTournaments = `/sports/3/tournaments`;
   try {
-    const { data } = await apiEnv.get(urlGetTournaments, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.get(urlGetTournaments);
 
     if (!data.tournaments) {
       return data.error.description || "Error";
@@ -30,11 +26,7 @@ export const getTeamsPickedFemale = async (
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/score/stats?sport=ncaa&round=${round}&order=1`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     return data.stats ?? [];
   } catch (error) {
@@ -47,11 +39,7 @@ export const getTeamsPickedFemale = async (
 export const getMostPickedTeamsFemale = async (tournamentId: number) => {
   try {
     const url = `/reports/most-picked-teams?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return "Error";
@@ -69,11 +57,7 @@ export const getMostPickedTeamsFemale = async (tournamentId: number) => {
 export const getLeastPickedTeamsFemale = async (tournamentId: number) => {
   try {
     const url = `/reports/least-picked-teams?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return "Error";
@@ -91,11 +75,7 @@ export const getLeastPickedTeamsFemale = async (tournamentId: number) => {
 export const getTeamsNotPickedLogFemale = async (tournamentId: number) => {
   try {
     const url = `/reports/teams-not-picked-log?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return "Error";
@@ -113,11 +93,7 @@ export const getTeamsNotPickedLogFemale = async (tournamentId: number) => {
 export const getTeamsPickedLogFemale = async (tournamentId: number) => {
   try {
     const url = `/reports/teams-picked-log?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return "Error";
@@ -135,11 +111,7 @@ export const getTeamsPickedLogFemale = async (tournamentId: number) => {
 export const getSeedPickTotalFemale = async (tournamentId: number) => {
   try {
     const url = `/reports/seed-pick-totals?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return "Error";
@@ -159,11 +131,7 @@ export const getPortfolioSeedSelectionsFemale = async (
 ) => {
   try {
     const url = `/reports/portfolio-seed-selections?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return "Error";

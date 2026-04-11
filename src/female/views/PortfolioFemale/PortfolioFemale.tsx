@@ -16,7 +16,7 @@ import {
 import Grid from "@mui/material/Grid2";
 import classes from "./PortfolioFemale.module.css";
 import { BasquetIcon, BallIcon } from "@/assets/icons/icons";
-import Dropdown from "../../components/Inputs/Dropdown";
+import Dropdown from "@/shared/components/Inputs/Dropdown";
 import Loader from "../../components/BallLoader/BallLoader";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 import { useQueryClient } from "@tanstack/react-query";

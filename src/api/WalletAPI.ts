@@ -4,11 +4,7 @@ import { isAxiosError } from "axios";
 export const getWallet = async (participantId: string) => {
   try {
     const url = `/participants/${participantId}/wallet`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if (!data.wallet) return [];
     return data.wallet;
   } catch (error) {

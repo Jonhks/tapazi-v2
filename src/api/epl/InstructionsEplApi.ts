@@ -5,11 +5,7 @@ import { User } from "../../types";
 export const getInstructionsEpl = async (id: User["id"]) => {
   try {
     const url = `/tournaments/${id}/instructions`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.instructions) {
       return [];

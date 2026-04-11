@@ -11,11 +11,7 @@ export const getSignUp = async (user: User) => {
   try {
     const url = "/participants/signup";
     // const url = "/participants/login";
-    const { data } = await apiEnv.post(url, user, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.post(url, user);
 
     if (data.error) {
       throw new Error(data.error);
@@ -39,11 +35,7 @@ export const getLogin = async (user: UserLogin) => {
 
   try {
     const url = "/participants/login";
-    const { data } = await apiEnv.post(url, formData, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.post(url, formData);
 
     if (!data.participant) {
       return "error";

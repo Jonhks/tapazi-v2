@@ -6,11 +6,7 @@ import { isAxiosError } from "axios";
 export const getTournamentFemale = async (id: string) => {
   try {
     const url = `/sports/${id}/tournaments`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if(!data.tournaments) {
       return [];
     }
@@ -31,11 +27,7 @@ export const getScoresFemale = async (
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/score/home?participant_id=${participantId}&sport=ncaa`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if (!data.score) {
       return [];
     }
@@ -52,11 +44,7 @@ export const getScoresFemale = async (
 export const getPoponaFemale = async (tournamentId: string) => {
   try {
     const url = `/tournaments/${tournamentId}/parameters?key=POPONA`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if (data.value) {
       return data.value;
     }
@@ -70,11 +58,7 @@ export const getPoponaFemale = async (tournamentId: string) => {
 export const getHOINFOFemale = async (tournamentId: string) => {
   try {
     const url = `/tournaments/${tournamentId}/parameters?key=HOINFO`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.value) {
       return [{ value: 0 }];
@@ -93,11 +77,7 @@ export const getHOINFOFemale = async (tournamentId: string) => {
 export const getParticipantsFemale = async (tournamentId: string) => {
   try {
     const url = `/tournaments/${tournamentId}/stats`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.data) {
       return "Error";
@@ -139,11 +119,7 @@ export const getParticipantsFemale = async (tournamentId: string) => {
 export const gatPayoutFemale = async (tournamentId: string) => {
   try {
     const url = `/tournaments/${tournamentId}/payouts?portfolios=25`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     // console.log(data, "payouyt data");
     if (!data.payouts) {
       return [{ payouts: 0 }];

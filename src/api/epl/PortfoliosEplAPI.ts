@@ -14,11 +14,7 @@ export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
         ? `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}&epl`
         : `/participants/${id}/portfolios?tournament_id=3&epl`;
     // const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if (!data.portfolios) {
       return [];
     }
@@ -36,11 +32,7 @@ export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
 export const getTeamsEpl = async (sport: User["id"]) => {
   try {
     const url = `/sports/${sport}/teams`;
-    const { data } = await apiEnv.get(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.get(url);
     // console.log(data);
 
     if (data.teams) {
@@ -56,11 +48,7 @@ export const getTeamsEpl = async (sport: User["id"]) => {
 export const getNumberTEAMXP = async () => {
   try {
     const url = `tournaments/3/parameters?key=TEAMXP`;
-    const { data } = await apiEnv.get(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.get(url);
     // console.log(data);
 
     if (!data.value) {
@@ -80,11 +68,7 @@ export const getNumberTEAMXP = async () => {
 export const getTournamentsId = async () => {
   try {
     const url = `sports/2/tournaments`;
-    const { data } = await apiEnv.get(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.get(url);
     // console.log(data);
 
     if (!data.tournaments) {
@@ -109,11 +93,7 @@ export const getTeamsDynamic = async (
   try {
     // const url = `/sports/${sport}/teams`;
     const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
-    const { data } = await apiEnv.get(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.get(url);
     // console.log(data);
 
     if (data.teams) {
@@ -133,11 +113,7 @@ export const getTeamsNotAvailable = async (
   try {
     // const url = `/sports/${sport}/teams`;
     const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv.get(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.get(url);
     // console.log(data);
 
     if (data.teams) {
@@ -159,11 +135,7 @@ export const postNewPortfolioEpl = async ({
   console.log(postNewPortfolioEpl, "postNewPortfolioEpl");
 
   try {
-    const { data } = await apiEnv.post(urlLogin, port, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv.post(urlLogin, port);
     console.log(data, "respuesta");
     if (
       !data.message &&
@@ -197,11 +169,6 @@ export const postEditPortfolio = async ({
     const { data } = await apiEnv.put(
       urlLogin,
       { teams: port },
-      {
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      },
     );
     console.log(data);
     if (
@@ -268,11 +235,6 @@ export const removeportfolio = async ({
     const { data } = await apiEnv.post(
       urlRemovePortfolio,
       JSON.stringify(postPortfolio),
-      {
-        headers: {
-          "Content-Type": "application/json;charset=utf-8",
-        },
-      },
     );
     console.log(data);
   } catch (error) {
@@ -285,11 +247,7 @@ export const removeportfolio = async ({
 export const getDATTOU = async () => {
   try {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=DATTOU`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.success) {
       return "Error";
@@ -308,11 +266,7 @@ export const getDATTOU = async () => {
 export const getHOUTOU = async () => {
   try {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOUTOU`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.success) {
       return "Error";
@@ -331,11 +285,7 @@ export const getHOUTOU = async () => {
 export const getWinnerOfTeam = async () => {
   try {
     const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.success) {
       return "Error";
@@ -354,11 +304,7 @@ export const getWinnerOfTeam = async () => {
 export const getWinnerOfTeamHasTeam = async (id: string) => {
   try {
     const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.success) {
       return "Error";
@@ -378,11 +324,7 @@ export const getTeamsDynamics = async (id: string, portfolioId: string) => {
   // portfolioId = "566";
   try {
     const url = `/sports/${id}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
 
     if (!data.teams) {
       return "Error";
@@ -402,11 +344,7 @@ export const getParameterWeek = async (id: string, parameter: string) => {
   // portfolioId = "566";
   try {
     const url = `/tournaments/${id}/parameters?key=${parameter}`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     // console.log(data);
 
     if (!data.value) {
