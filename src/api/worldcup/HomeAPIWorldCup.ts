@@ -24,6 +24,7 @@ export const getScores = async (
   tournamentId: string,
   participantId: string,
 ) => {
+  console.log(tournamentId, participantId);
   try {
     // TODO: Verificar si el endpoint cambia para worldcup (sport param)
     const url = `/tournaments/${5}/score/home?participant_id=${participantId}&sport=ncaa`;
