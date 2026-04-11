@@ -10,6 +10,7 @@
   align-items: center;
   padding: 16px;
   border: 1px solid #003b40;
+  height: 40vh;
 }
 
 .active {
@@ -38,6 +39,10 @@
   overflow: auto;
   text-align: center;
   color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .subBoxTwo > p {

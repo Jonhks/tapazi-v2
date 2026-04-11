@@ -112,7 +112,7 @@ export function TableBase<T>({
     index === 0 || (stickyLastColumn && index === totalCols - 1);
 
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "100%", height: "50vh", overflowY: "auto" }}>
       {title && (
         <div className={`${classes.firstTableRow} ${classes.fixed}`}>
           {title}

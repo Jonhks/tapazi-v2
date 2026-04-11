@@ -36,7 +36,7 @@ export const PortfolioProvider = ({
   const [weekParameter, setWeekParameter] = useState<number>(null); //estado de la semana seleccionada
 
   const [rendersAmountOfInputs, setRendersAmountOfInputs] = useState<string[]>(
-    []
+    [],
   );
 
   const { data: tournament, isLoading: isLoadingTournament } = useQuery({
@@ -84,9 +84,9 @@ export const PortfolioProvider = ({
     retry: 1,
     enabled: Boolean(
       userId &&
-        portfolios?.length > 0 &&
-        validTournament &&
-        validTournament[0]?.current_round !== weekParameter
+      portfolios?.length > 0 &&
+      validTournament &&
+      validTournament[0]?.current_round !== weekParameter,
     ),
   });
 
@@ -100,11 +100,11 @@ export const PortfolioProvider = ({
       // enabled: Boolean(userId && portfolios?.length > 0),
     });
 
-    // const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
-    //   queryKey: ["tournamentMale"],
-    //   queryFn: () => getTournamentMale('1'),
-    //   retry: true,
-    // });
+  // const { data: tournamentMale, isLoading: isLoadingTournamentMale } = useQuery({
+  //   queryKey: ["tournamentMale"],
+  //   queryFn: () => getTournamentMale('1'),
+  //   retry: true,
+  // });
 
   // console.log(weekParameter, "weekParameter");
 
@@ -129,7 +129,7 @@ export const PortfolioProvider = ({
 
   useEffect(() => {
     if (numberInputsRecived && portfolios) {
-      if (portfolios[0].available_teams === 0) {
+      if (portfolios[0]?.available_teams === 0) {
         setNumberInputs(0);
         return;
       }

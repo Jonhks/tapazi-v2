@@ -20,10 +20,14 @@ export const getTournamentWorldCup = async (sportId: string) => {
   }
 };
 
-export const getScores = async (tournamentId: string, participantId: string) => {
+export const getScores = async (
+  tournamentId: string,
+  participantId: string,
+) => {
+  console.log(tournamentId, participantId);
   try {
     // TODO: Verificar si el endpoint cambia para worldcup (sport param)
-    const url = `/tournaments/${tournamentId}/score/home?participant_id=${participantId}&sport=worldcup`;
+    const url = `/tournaments/${5}/score/home?participant_id=${participantId}&sport=ncaa`;
     const { data } = await apiEnv(url, {
       headers: { "Content-Type": "application/json;charset=utf-8" },
     });
