@@ -29,15 +29,17 @@ const HomeWorldCup = () => {
   const { data: tournament, isLoading: isLoadingTournament } = useQuery({
     queryKey: ["tournamentWorldCup", userId, sportId],
     queryFn: () => getTournamentWorldCup(sportId),
+    enabled: !!sportId,
   });
   console.log(tournament);
-  // const tournamentId = tournament?.[0]?.id;
-  const tournamentId = "4";
-
+  const tournamentId = tournament?.[0]?.id;
+  // const tournamentId = "4";
+  //
   const { data: dataScores, isLoading: isLoadingScores } = useQuery({
     queryKey: ["scoresWorldCup", userId, tournamentId],
     queryFn: () => getScores(tournamentId, userId),
     enabled: !!tournamentId,
+    retry: 1,
   });
 
   const { data: DataPopona, isLoading: isLoadingPopona } = useQuery({
@@ -109,6 +111,7 @@ const HomeWorldCup = () => {
             overflowY: "auto",
             overflowX: "hidden",
           }}
+          className={`${classes.gridInstructions} enable-vertical-scroll`}
         >
           <Grid
             size={11}
@@ -116,7 +119,8 @@ const HomeWorldCup = () => {
             flexWrap={isMobile ? "wrap" : "nowrap"}
             justifyContent={"space-around"}
             flexDirection={"row"}
-            style={{ maxHeight: isMobile ? "" : "50%" }}
+            height={"auto"}
+            mb={5}
           >
             <Grid
               size={{ xs: 12, md: 5 }}
@@ -127,8 +131,25 @@ const HomeWorldCup = () => {
               <p className={classes.titleBox}>
                 {DataPopona?.toUpperCase()} IS HERE!!!
               </p>
-              <div className={classes.subBox}>
-                {dataHOINFO && renderDescription(dataHOINFO)}
+              <div
+                className={`${classes.subBox} enable-vertical-scroll`}
+                style={{
+                  display: "flex",
+                  alignItems: "center", // Centra verticalmente
+                  justifyContent: "center", // Centra horizontalmente el contenedor
+                  height: "100%", // Opcional, para ocupar todo el alto
+                }}
+              >
+                <p
+                  style={{
+                    margin: 0,
+                    whiteSpace: "pre-wrap", // Permite que el texto se ajuste al ancho
+                    wordBreak: "break-word",
+                    textAlign: "center",
+                  }}
+                >
+                  {dataHOINFO && renderDescription(dataHOINFO)}
+                </p>
               </div>
             </Grid>
 

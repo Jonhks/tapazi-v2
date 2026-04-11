@@ -208,10 +208,6 @@ const Home = () => {
               spacing={2}
               mb={3}
             >
-              <Grid
-                size={12}
-                className={classes.containerBtn}
-              ></Grid>
               <Zoom in={true}>
                 <Grid
                   size={11}
