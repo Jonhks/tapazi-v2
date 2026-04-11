@@ -87,7 +87,7 @@ export default function CustomizedTables({
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "95vh" }}
+      sx={{ backgroundColor: "#572d03", overflowX: "scroll", maxHeight: "95vh" }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
         {score}

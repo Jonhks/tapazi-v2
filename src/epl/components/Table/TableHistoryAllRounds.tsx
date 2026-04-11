@@ -141,7 +141,7 @@ const TableHistoryAllRound = ({ arrHistory, score }) => {
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "60vh" }}
+      sx={{ backgroundColor: "#572d03", overflowX: "scroll", maxHeight: "60vh" }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
         {score}

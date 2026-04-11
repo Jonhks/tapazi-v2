@@ -255,7 +255,7 @@ const Stats = () => {
       style={{
         minHeight: "700px",
         height: "calc(100vh - 56px)",
-        overflowY: "auto",
+        overflowY: "scroll",
       }}
       className={`${classes.gridInstructions} enable-vertical-scroll`}
     >

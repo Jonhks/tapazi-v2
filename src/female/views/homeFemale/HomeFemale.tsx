@@ -122,7 +122,7 @@ const Home = () => {
             style={{
               minHeight: "700px",
               height: "calc(100vh - 56px)",
-              overflowY: "auto",
+              overflowY: "scroll",
               overflowX: "hidden",
             }}
             className={`${classes.gridInstructions} enable-vertical-scroll`}

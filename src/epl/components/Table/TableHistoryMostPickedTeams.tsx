@@ -94,7 +94,7 @@ export default function CustomizedTables({
       component={Paper}
       sx={{
         backgroundColor: "#572d03",
-        overflowX: "auto",
+        overflowX: "scroll",
         maxHeight: "40vh",
       }}
     >

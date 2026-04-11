@@ -299,13 +299,33 @@ src/sports/
 
 ### Prioridad sugerida de refactor
 
-| Prioridad | Tarea                                                               | Impacto                                |
-| --------- | ------------------------------------------------------------------- | -------------------------------------- |
-| Alta      | Centralizar colores en `theme/colors.ts` y pasarlos por props       | Desbloquea todo lo demás               |
-| Alta      | Consolidar `Dropdown` duplicado (cambio mínimo, ganancia inmediata) | 1 componente en lugar de 3             |
-| Alta      | Mover header `Content-Type` al interceptor de Axios                 | Elimina ruido en toda la capa API      |
-| Media     | Crear `TableBase` única con tema como prop                          | Elimina ~3 implementaciones duplicadas |
-| Media     | Consolidar funciones de API idénticas entre módulos                 | Reduce duplicación en `api/`           |
-| Media     | Crear `MenuDrawer` único con `navItems[]` como prop                 | Elimina 6 archivos de menú             |
-| Baja      | Tipar `Table.tsx` correctamente y eliminar `@ts-nocheck`            | Mejora type safety                     |
-| Baja      | Simplificar lógica `if` redundante en API                           | Limpieza de código                     |
+| Prioridad | Estado | Tarea                                                               | Impacto                                |
+| --------- | ------ | ------------------------------------------------------------------- | -------------------------------------- |
+| Alta      | ✅ HECHO | Consolidar `Dropdown` duplicado → `src/shared/components/Inputs/` | 1 componente en lugar de 3             |
+| Alta      | ✅ HECHO | Mover header `Content-Type` al interceptor de Axios               | Elimina 129 líneas repetidas en 21 archivos |
+| Alta      | ✅ HECHO | `src/shared/theme/colors.ts` ya existe con los 4 temas            | Base para la TableBase compartida      |
+| Media     | ✅ HECHO | Crear `TableBase` única en `src/shared/components/Table/`        | Elimina ~4 implementaciones duplicadas |
+| Media     | ✅ HECHO | Incorporar click-to-fetch (prop `onCellClick?`) en TableBase     | Ya incluido en TableBase compartida    |
+| Media     | ⏳ PENDIENTE | Mover tablas específicas duplicadas a `src/shared/`           | Elimina ~7 tablas triplicadas          |
+| Media     | ⏳ PENDIENTE | Consolidar funciones de API idénticas en `src/api/shared/`    | Reduce duplicación en `api/`           |
+| Media     | ⏳ PENDIENTE | Crear `MenuDrawer` único con `navItems[]` como prop           | Elimina 6+ archivos de menú            |
+| Baja      | ⏳ PENDIENTE | Tipar `Table.tsx` correctamente y eliminar `@ts-nocheck`      | Mejora type safety                     |
+| Baja      | ⏳ PENDIENTE | Simplificar lógica `if` redundante en API                     | Limpieza de código                     |
+
+---
+
+## Historial de refactor
+
+### Rama: `refactor/shared-components` (creada desde `mundial`, 2026-04-11)
+
+**Commit 1 — Dropdown + Axios**
+- `src/shared/components/Inputs/Dropdown.tsx` — componente único que reemplaza las 3 copias en ncaa-male, female, epl. Props: `menuBgColor?`, `icon?`. Corrige bug de `label="Age"` hardcodeado.
+- `src/lib/axios.ts` — header `Content-Type` movido al interceptor global. Eliminado de 21 archivos de API (129 líneas).
+
+**Commit 2 — TableBase compartida**
+- `src/shared/components/Table/TableBase.tsx` — TableBase genérica con TanStack Table. Props clave: `theme: SportTheme`, `hideSearch?`, `accentFirstColumn?`, `onCellClick?` (click-to-fetch listo para EPL).
+- `ncaa-male/Table.tsx` → wrapper con `sportThemes.ncaaMale`. Elimina `@ts-nocheck` y ~200 líneas de código duplicado.
+- `female/Table.tsx` → wrapper con `sportThemes.ncaaFemale` + `accentFirstColumn`. Misma reducción.
+- `worldcup/Table.tsx` → wrapper con `sportThemes.worldcup` + `accentFirstColumn`. Ya usaba colors.ts, ahora usa la TableBase compartida.
+- `epl/Table.tsx` → sin cambios (usa MUI styled, patrón distinto — se migra en fase siguiente).
+- Las tablas específicas (`TableHistoryMostPickedTeams`, etc.) **no requieren cambios** — importan `TableBase` de su `Table.tsx` local y reciben el tema automáticamente vía wrapper.

@@ -82,6 +82,7 @@ export default defineConfig(({ command }) => ({
       "@/epl": fileURLToPath(new URL("./src/epl", import.meta.url)),
       "@/ncaa-male": fileURLToPath(new URL("./src/ncaa-male", import.meta.url)),
       "@/female": fileURLToPath(new URL("./src/female", import.meta.url)),
+      "@/shared": fileURLToPath(new URL("./src/shared", import.meta.url)),
     },
   },
   build: {

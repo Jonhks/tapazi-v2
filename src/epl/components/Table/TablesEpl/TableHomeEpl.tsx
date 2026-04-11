@@ -266,7 +266,7 @@ const TableHomeEpl = ({
       </div>
       <div
         className="enable-horizontal-scroll"
-        style={{ width: "100%", overflowX: "auto" }}
+        style={{ width: "100%", overflowX: "scroll" }}
       >
         <table
           style={{

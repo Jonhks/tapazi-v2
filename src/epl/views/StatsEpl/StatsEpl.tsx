@@ -505,7 +505,7 @@ const StatsEpl = () => {
                   }}
                 />
               </div>
-              <div style={{ width: "100%", overflowX: "auto" }}>
+              <div style={{ width: "100%", overflowX: "scroll" }}>
                 <table
                   style={{
                     width: "100%",

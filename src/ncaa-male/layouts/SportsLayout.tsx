@@ -23,7 +23,7 @@ const HistoryLayout = ({ ImgSports }: { ImgSports: string }) => {
           flexGrow: 1,
           mt: !isMobile ? "64px" : 0,
           mb: isMobile ? "64px" : 0,
-          overflow: "auto",
+          overflow: "scroll",
         }}
       >
         <Outlet />

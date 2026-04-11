@@ -22,7 +22,7 @@ const HistoryWorldCup = () => {
       style={{
         minHeight: "700px",
         height: "calc(100vh - 56px)",
-        overflowY: "auto",
+        overflowY: "scroll",
         overflowX: "hidden",
         color: "#00E2F6",
       }}

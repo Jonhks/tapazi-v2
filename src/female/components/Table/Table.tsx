@@ -1,54 +1,31 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { ColumnDef } from "@tanstack/react-table";
+import { useMediaQuery } from "@mui/material";
 import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  getSortedRowModel,
-  getFilteredRowModel,
-  SortingState,
-  ColumnDef,
-} from "@tanstack/react-table";
-
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { Input, InputAdornment, useMediaQuery } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
-import classes from "./Table.module.css";
-
+  TableBase as SharedTableBase,
+  TableBaseProps,
+} from "@/shared/components/Table/TableBase";
+import { sportThemes } from "@/shared/theme/colors";
 import { OtherScores, ParticipantsScores } from "@/types/index";
 
-// ─── Female color palette ─────────────────────────────────────────────────────
+const MAGENTA = "#e040fb";
+const GREEN = "#00e676";
+const RED = "#ff5252";
 
-const MAGENTA = "#e040fb"; // accent: search icon, first-col header, name cells
-const GREEN = "#00e676"; // paid championship points
-const RED = "#ff5252"; // unpaid championship points
+// ─── Wrapper pre-configurado con el tema NCAA Femenino ────────────────────────
+// accentFirstColumn activa el color MAGENTA en la primera columna
 
-const HDR_EVEN = "#24253e"; // very dark navy (even cols header)
-const HDR_ODD = "#2d2d44"; // dark purple-grey (odd cols header)
+export function TableBase<T>(props: Omit<TableBaseProps<T>, "theme">) {
+  return (
+    <SharedTableBase
+      {...props}
+      theme={sportThemes.ncaaFemale}
+      accentFirstColumn
+    />
+  );
+}
 
-const ROW_EVEN_DARK = "#111120";
-const ROW_EVEN_LIGHT = "#252538";
-const ROW_ODD_DARK = "#1c1c2e";
-const ROW_ODD_LIGHT = "#303048";
-
-const SEARCH_BG = "white";
-const SEARCH_BORDER = "#3a3a5c";
-
-// ─── Color helpers ────────────────────────────────────────────────────────────
-
-const headerBgColor = (index: number, totalCols: number) => {
-  if (index === 0) return "#0d0d1a";
-  if (index === totalCols - 1) return HDR_ODD;
-  return index % 2 === 0 ? HDR_EVEN : HDR_ODD;
-};
-
-const cellBgColor = (colIndex: number, rowIndex: number) => {
-  const isDarkCol = colIndex % 2 === 0;
-  const isEvenRow = rowIndex % 2 === 0;
-  if (isDarkCol) return isEvenRow ? ROW_EVEN_DARK : ROW_ODD_DARK;
-  return isEvenRow ? ROW_EVEN_LIGHT : ROW_ODD_LIGHT;
-};
-
-// ─── Basketball SVG icon ──────────────────────────────────────────────────────
+// ─── Ícono balón de baloncesto ────────────────────────────────────────────────
 
 export const BallSvg = () => (
   <svg
@@ -71,240 +48,7 @@ export const BallSvg = () => (
   </svg>
 );
 
-// ─── Generic reusable table (female theme) ────────────────────────────────────
-
-interface TableBaseProps<T> {
-  data: T[];
-  columns: ColumnDef<T>[];
-  title?: string;
-  maxHeight?: string;
-  defaultSorting?: SortingState;
-  stickyLastColumn?: boolean;
-  searchWidth?: number | string;
-}
-
-export function TableBase<T>({
-  data,
-  columns,
-  title,
-  maxHeight,
-  defaultSorting = [],
-  stickyLastColumn = false,
-  searchWidth,
-}: TableBaseProps<T>) {
-  const [sorting, setSorting] = useState<SortingState>(defaultSorting);
-  const [filtered, setFiltered] = useState("");
-  const isMobile = useMediaQuery("(max-width:900px)");
-
-  const table = useReactTable({
-    data: data ?? [],
-    columns,
-    state: { sorting, globalFilter: filtered },
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setFiltered,
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-  });
-
-  const totalCols = columns.length;
-  const isSticky = (index: number) =>
-    index === 0 || (stickyLastColumn && index === totalCols - 1);
-
-  return (
-    <div style={{ width: "100%", height: "50vh", overflowY: "auto" }}>
-      {title && (
-        <div className={`${classes.firstTableRow} ${classes.fixed}`}>
-          {title}
-        </div>
-      )}
-
-      {/* Search */}
-      <div
-        style={{
-          width: "100%",
-          backgroundColor: HDR_EVEN,
-          padding: "0",
-          overflow: "hidden",
-        }}
-      >
-        <div
-          style={{
-            position: "sticky",
-            left: 0,
-            top: 0,
-            zIndex: 3,
-            backgroundColor: SEARCH_BG,
-            color: "white",
-            width: searchWidth ?? (isMobile ? 150 : 250),
-            borderRadius: 5,
-            display: "flex",
-            alignItems: "center",
-            padding: "4px",
-            height: isMobile ? 20 : 30,
-            border: `1px solid ${SEARCH_BORDER}`,
-          }}
-        >
-          <Input
-            type="search"
-            fullWidth
-            placeholder="search..."
-            value={filtered ?? ""}
-            onChange={(e) => setFiltered(String(e.target.value))}
-            startAdornment={
-              <InputAdornment position="start">
-                <SearchIcon style={{ color: MAGENTA, fontSize: 18 }} />
-              </InputAdornment>
-            }
-            inputProps={{
-              style: {
-                textTransform: "lowercase",
-                color: "#111",
-                fontSize: isMobile ? 11 : 13,
-              },
-              autoCapitalize: "none",
-            }}
-            disableUnderline
-            sx={{ "& input::placeholder": { color: "#666" } }}
-          />
-        </div>
-      </div>
-
-      {/* Table */}
-      <div
-        className={`enable-horizontal-scroll${maxHeight ? " enable-vertical-scroll" : ""}`}
-        style={{
-          overflowX: "scroll",
-          overflowY: maxHeight ? "scroll" : "visible",
-          ...(maxHeight ? { maxHeight } : {}),
-        }}
-      >
-        <table
-          style={{
-            width: "100%",
-            borderCollapse: "separate",
-            // borderSpacing: "2px",
-            opacity: 0.95,
-          }}
-        >
-          <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => (
-                  <th
-                    key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    style={{
-                      position: isSticky(index) ? "sticky" : "static",
-                      left: index === 0 ? 0 : undefined,
-                      right:
-                        stickyLastColumn && index === totalCols - 1
-                          ? 0
-                          : undefined,
-                      backgroundColor: headerBgColor(index, totalCols),
-                      color: index === 0 ? MAGENTA : "white",
-                      fontWeight: 900,
-                      fontSize: isMobile ? "9px" : "10px",
-                      textAlign:
-                        index === 0 || index === totalCols - 1
-                          ? "center"
-                          : "left",
-                      textTransform: "uppercase",
-                      letterSpacing: "0.5px",
-                      padding: isMobile ? "8px 4px" : "12px 10px",
-                      cursor: "pointer",
-                      zIndex: isSticky(index) ? 3 : 2,
-                      whiteSpace: "pre-wrap",
-                      borderBottom: `2px solid ${MAGENTA}`,
-                    }}
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent:
-                            index === 0 || index === totalCols - 1
-                              ? "center"
-                              : "flex-start",
-                          gap: 4,
-                        }}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: (
-                            <ArrowUpwardIcon
-                              style={{ fontSize: isMobile ? 12 : 16 }}
-                            />
-                          ),
-                          desc: (
-                            <ArrowUpwardIcon
-                              style={{
-                                transform: "rotate(180deg)",
-                                fontSize: isMobile ? 12 : 16,
-                              }}
-                            />
-                          ),
-                        }[header.column.getIsSorted() as string] ?? (
-                          <ArrowUpwardIcon
-                            style={{
-                              color: "#555",
-                              fontSize: isMobile ? 12 : 14,
-                            }}
-                          />
-                        )}
-                      </div>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-
-          <tbody>
-            {table.getRowModel().rows.map((row, rowIndex) => (
-              <tr key={row.id}>
-                {row.getVisibleCells().map((cell, index) => (
-                  <td
-                    key={cell.id}
-                    style={{
-                      position: isSticky(index) ? "sticky" : "static",
-                      left: index === 0 ? 0 : undefined,
-                      right:
-                        stickyLastColumn && index === totalCols - 1
-                          ? 0
-                          : undefined,
-                      backgroundColor: cellBgColor(index, rowIndex),
-                      color: "white",
-                      fontWeight: 400,
-                      fontSize: isMobile ? "12px" : "11px",
-                      textAlign:
-                        index === 0 || index === totalCols - 1
-                          ? "center"
-                          : "left",
-                      padding: isMobile ? "8px 4px" : "10px 10px",
-                      zIndex: isSticky(index) ? 1 : 0,
-                      whiteSpace: "nowrap",
-                      borderBottom: "1px solid #1a1a30",
-                      opacity: 0.9,
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-// ─── TableParticipants — usa TableBase con tema female ────────────────────────
+// ─── TableParticipants — tabla principal de la home femenina ─────────────────
 
 interface Props {
   participantScore: ParticipantsScores;
@@ -348,7 +92,8 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
           header: `Team ${n}`,
           accessorKey: `team${n}_name`,
           cell: ({ row }) => {
-            const teamName = row.original[`team${n}_name` as keyof OtherScores];
+            const teamName =
+              row.original[`team${n}_name` as keyof OtherScores];
             return (
               <span
                 style={{

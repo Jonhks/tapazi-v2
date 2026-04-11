@@ -124,7 +124,7 @@ export default function CustomizedTables({ arrHistory, score }) {
   return (
     <TableContainer
       component={Paper}
-      sx={{ backgroundColor: "#572d03", overflowX: "auto", maxHeight: "50vh" }}
+      sx={{ backgroundColor: "#572d03", overflowX: "scroll", maxHeight: "50vh" }}
     >
       <div className={`${classes?.firstTableRow} ${classes.fixed}`}>
         {score}
