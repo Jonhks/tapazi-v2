@@ -162,7 +162,7 @@ function MenuMobileEpl() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
+      <MenuItem onClick={() => navigate(`/sports/${userId}?from=epl`)}>
         <IconButton
           size="large"
           aria-label="account of current user"

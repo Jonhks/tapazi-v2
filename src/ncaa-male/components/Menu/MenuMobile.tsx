@@ -158,7 +158,7 @@ function ResponsiveAppBar() {
         },
       }}
     >
-      <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
+      <MenuItem onClick={() => navigate(`/sports/${userId}?from=ncaa-male`)}>
         <IconButton
           size="large"
           aria-label="account of current user"

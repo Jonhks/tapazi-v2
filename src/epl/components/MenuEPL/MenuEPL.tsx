@@ -243,7 +243,7 @@ export default function MenuEPL() {
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
-                  onClick={() => navigate(`/sports/${userId}`)}
+                  onClick={() => navigate(`/sports/${userId}?from=epl`)}
                   edge="end"
                   sx={{ marginRight: 5, color: "#4bf589" }}
                 >

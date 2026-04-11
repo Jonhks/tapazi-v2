@@ -248,7 +248,7 @@ export default function MenuWorldCup() {
               >
                 <IconButton
                   color="inherit"
-                  onClick={() => navigate(`/sports/${userId}`)}
+                  onClick={() => navigate(`/sports/${userId}?from=worldcup`)}
                   edge="end"
                   sx={{ marginRight: 5 }}
                 >

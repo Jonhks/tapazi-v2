@@ -127,7 +127,7 @@ function MenuWorldCupMobile() {
         },
       }}
     >
-      <MenuItem onClick={() => navigate(`/sports/${userId}`)}>
+      <MenuItem onClick={() => navigate(`/sports/${userId}?from=worldcup`)}>
         <IconButton
           size="large"
           color="inherit"
