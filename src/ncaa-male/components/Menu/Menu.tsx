@@ -255,7 +255,7 @@ export default function MiniDrawer() {
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
-                  onClick={() => navigate(`/sports/${userId}`)}
+                  onClick={() => navigate(`/sports/${userId}?from=ncaa-male`)}
                   edge="end"
                   sx={{ marginRight: 5 }}
                 >

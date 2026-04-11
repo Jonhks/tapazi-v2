@@ -1,25 +1,36 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Box, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./Sports.module.css";
-import { useNavigate, useParams } from "react-router-dom";
-import BallLoader from "../../components/BallLoader/BallLoader";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import BallLoaderNCAA from "../../components/BallLoader/BallLoader";
+import BallLoaderFemale from "../../../female/components/BallLoader/BallLoader";
 import EPLBallLoader from "../../../epl/components/EPLBallLoader/EPLBallLoader";
+import BallLoaderWorldCup from "../../../worldcup/components/BallLoader/BallLoader";
 import { getSports, getSportsDisponible } from "@/api/SportsAPI";
 import { useQuery } from "@tanstack/react-query";
 import { Sport } from "@/types/index";
 import { toast } from "react-toastify";
 
+const loaderMap: Record<string, JSX.Element> = {
+  "ncaa-male": <BallLoaderNCAA />,
+  female: <BallLoaderFemale />,
+  epl: <EPLBallLoader />,
+  worldcup: <BallLoaderWorldCup />,
+};
+
 export default function Sports() {
   const navigate = useNavigate();
   const params = useParams();
-  const [showLoader, setShowLoader] = useState(false);
-  const [changeLoader, setChangeLoader] = useState(false);
+  const [searchParams] = useSearchParams();
+  const [showContent, setShowContent] = useState(false);
+
+  const from = searchParams.get("from") ?? "ncaa-male";
+  const ActiveLoader = loaderMap[from] ?? loaderMap["ncaa-male"];
 
   const { data: dataSports, isLoading } = useQuery({
     queryKey: ["sports"],
     queryFn: () => getSports(),
-    // params.userId || ""
   });
 
   const { data: dataSportsDisponible, isLoading: isLoadingDisponible } =
@@ -28,14 +39,10 @@ export default function Sports() {
       queryFn: () => getSportsDisponible(params.userId || ""),
     });
 
-  setTimeout(() => setShowLoader(true), 1000);
-  setTimeout(() => setChangeLoader(true), 500);
-
-  // useEffect(() => {
-  //   setShowLoader(false);
-  //   // setTimeout(() => setChangeLoader(true), 500);
-  // }, []);
-  // console.log(showLoader);
+  useEffect(() => {
+    const t = setTimeout(() => setShowContent(true), 1000);
+    return () => clearTimeout(t);
+  }, []);
 
   interface SportDisponible {
     id: number;
@@ -46,19 +53,10 @@ export default function Sports() {
     ?.filter((sport: SportDisponible) => !sport.enabled)
     .map((sport: SportDisponible) => sport.id);
 
-  // return <EPLBallLoader />;
-
-  // console.log("dataSports:", dataSports);
-
   return (
     <>
-      {!showLoader && !isLoading && !isLoadingDisponible && changeLoader && (
-        <EPLBallLoader />
-      )}
-      {!showLoader && !isLoading && !isLoadingDisponible && changeLoader && (
-        <BallLoader />
-      )}
-      {showLoader && (
+      {(!showContent || isLoading || isLoadingDisponible) && ActiveLoader}
+      {showContent && !isLoading && !isLoadingDisponible && (
         <Grid
           container
           sx={{ minHeight: "100vh", height: "auto", overflowY: "auto", pb: 5 }}
@@ -88,7 +86,6 @@ export default function Sports() {
                   >
                     <Box
                       sx={{
-                        // backgroundImage: `url(${sport?.url})`,
                         backgroundImage: `url(${
                           !unavailableIds?.includes(sport.id)
                             ? sport?.url
@@ -119,7 +116,6 @@ export default function Sports() {
           </Grid>
 
           <Grid
-            // item
             size={{ xs: 12, md: 6 }}
             sx={{
               backgroundImage:
@@ -135,7 +131,7 @@ export default function Sports() {
             }}
           >
             {dataSports
-              .filter(
+              ?.filter(
                 (sport: Sport) =>
                   sport?.name?.includes("EPL") ||
                   sport?.name?.includes("WORLDCUP"),
@@ -148,7 +144,6 @@ export default function Sports() {
                   >
                     <Box
                       sx={{
-                        // backgroundImage: `url(${sport?.url})`,
                         backgroundImage: `url(${
                           !unavailableIds?.includes(sport.id)
                             ? sport?.url
