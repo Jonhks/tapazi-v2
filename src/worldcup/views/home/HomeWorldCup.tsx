@@ -120,7 +120,7 @@ const HomeWorldCup = () => {
             justifyContent={"space-around"}
             flexDirection={"row"}
             height={"auto"}
-            mb={5}
+            mb={1}
           >
             <Grid
               size={{ xs: 12, md: 5 }}
@@ -197,16 +197,11 @@ const HomeWorldCup = () => {
               </div>
             </Grid>
           </Grid>
-
           <Grid
             container
             spacing={2}
             mb={3}
           >
-            <Grid
-              size={12}
-              className={classes.containerBtn}
-            ></Grid>
             <Zoom in={true}>
               <Grid
                 size={11}

@@ -39,15 +39,78 @@ export interface WalletModalProps {
 const FAKE_WALLET: WalletData = {
   balance: 1023,
   transactions: [
-    { id: 1,  in: 1631,  out: null,  fecha: "01/01/2026", portfolio: "GUERRERO KA 489", tournament: null },
-    { id: 2,  in: null,  out: 1631,  fecha: "03/02/2026", portfolio: "GUERRERO KA 489", tournament: "WOMEN'S BB TOURNAMENT 25" },
-    { id: 5,  in: null,  out: null,  fecha: "10/02/2026", portfolio: "GUERRERO KA 489", tournament: null },
-    { id: 1,  in: 6731,  out: null,  fecha: "14/03/2026", portfolio: "GUERRERO KA 489", tournament: null },
-    { id: 6,  in: null,  out: 1631,  fecha: "15/03/2026", portfolio: "GUERRERO KA 489", tournament: "EPL TOURNAMENT 25" },
-    { id: 12, in: 10321, out: null,  fecha: "20/03/2026", portfolio: "GUERRERO KA 489", tournament: null },
-    { id: 13, in: null,  out: 631,   fecha: "24/03/2026", portfolio: "GUERRERO KA 489", tournament: "MEN's BB TOURNAMENT 25" },
-    { id: 14, in: null,  out: 100,   fecha: "24/03/2026", portfolio: "GUERRERO KA 489", tournament: "WORLD CUP TOURNAMENT 25" },
-    { id: "T", in: 18683, out: 3993, fecha: "",           portfolio: "",                tournament: null },
+    {
+      id: 1,
+      in: 1631,
+      out: null,
+      fecha: "01/01/2026",
+      portfolio: "GUERRERO KA 489",
+      tournament: null,
+    },
+    {
+      id: 2,
+      in: null,
+      out: 1631,
+      fecha: "03/02/2026",
+      portfolio: "GUERRERO KA 489",
+      tournament: "WOMEN'S BB TOURNAMENT 25",
+    },
+    {
+      id: 5,
+      in: null,
+      out: null,
+      fecha: "10/02/2026",
+      portfolio: "GUERRERO KA 489",
+      tournament: null,
+    },
+    {
+      id: 1,
+      in: 6731,
+      out: null,
+      fecha: "14/03/2026",
+      portfolio: "GUERRERO KA 489",
+      tournament: null,
+    },
+    {
+      id: 6,
+      in: null,
+      out: 1631,
+      fecha: "15/03/2026",
+      portfolio: "GUERRERO KA 489",
+      tournament: "EPL TOURNAMENT 25",
+    },
+    {
+      id: 12,
+      in: 10321,
+      out: null,
+      fecha: "20/03/2026",
+      portfolio: "GUERRERO KA 489",
+      tournament: null,
+    },
+    {
+      id: 13,
+      in: null,
+      out: 631,
+      fecha: "24/03/2026",
+      portfolio: "GUERRERO KA 489",
+      tournament: "MEN's BB TOURNAMENT 25",
+    },
+    {
+      id: 14,
+      in: null,
+      out: 100,
+      fecha: "24/03/2026",
+      portfolio: "GUERRERO KA 489",
+      tournament: "WORLD CUP TOURNAMENT 25",
+    },
+    {
+      id: "T",
+      in: 18683,
+      out: 3993,
+      fecha: "",
+      portfolio: "",
+      tournament: null,
+    },
   ],
 };
 
@@ -75,6 +138,7 @@ export default function WalletModal({
     queryKey: ["wallet", participantId],
     queryFn: () => getWallet(participantId),
     enabled: open && !!participantId,
+    retry: 1,
   });
 
   const transactions: WalletTransaction[] = data?.transactions?.length
@@ -135,7 +199,7 @@ export default function WalletModal({
         },
       },
     ],
-    [theme]
+    [theme],
   );
 
   return (
@@ -192,7 +256,10 @@ export default function WalletModal({
             TOTAL
           </Typography>
 
-          <Typography variant="h4" sx={{ color: theme.accent, fontWeight: 800 }}>
+          <Typography
+            variant="h4"
+            sx={{ color: theme.accent, fontWeight: 800 }}
+          >
             $ {balance.toLocaleString()}
           </Typography>
         </Box>
