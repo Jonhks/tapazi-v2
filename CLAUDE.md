@@ -307,8 +307,9 @@ src/sports/
 | Media     | ✅ HECHO | Crear `TableBase` única en `src/shared/components/Table/`        | Elimina ~4 implementaciones duplicadas |
 | Media     | ✅ HECHO | Incorporar click-to-fetch (prop `onCellClick?`) en TableBase     | Ya incluido en TableBase compartida    |
 | Media     | ✅ HECHO | Mover tablas específicas duplicadas a `src/shared/`              | Elimina ~7 tablas triplicadas + fix bug EPL |
-| Media     | ⏳ PENDIENTE | Consolidar funciones de API idénticas en `src/api/shared/`    | Reduce duplicación en `api/`           |
-| Media     | ⏳ PENDIENTE | Crear `MenuDrawer` único con `navItems[]` como prop           | Elimina 6+ archivos de menú            |
+| Media     | ✅ HECHO | Consolidar funciones de API idénticas en `src/api/shared/`       | Reduce duplicación en `api/`           |
+| Media     | ✅ HECHO | Crear `src/api/ncaa-male/` con re-exports + funciones específicas | Carpeta por deporte, backwards compat  |
+| Media     | ✅ HECHO | Crear `MenuDrawer` único con `navItems[]` como prop              | Elimina 8 archivos de menú (4 desktop + 4 mobile) |
 | Baja      | ⏳ PENDIENTE | Tipar `Table.tsx` correctamente y eliminar `@ts-nocheck`      | Mejora type safety                     |
 | Baja      | ⏳ PENDIENTE | Simplificar lógica `if` redundante en API                     | Limpieza de código                     |
 
@@ -361,7 +362,44 @@ src/sports/
   - `value={subDataSelected[idSubDataSelected]?.name ?? ""}` en los 2 lugares donde aparece (previene crash cuando index queda fuera de rango)
 - `female/views/StatsFemale/StatsFemale.tsx` — mismos guards aplicados (3 cambios idénticos).
 
-**Para borrar los archivos obsoletos, ejecutar en terminal:**
+**Commit 5 — Refactor de API: carpetas por deporte + shared**
+- `src/api/shared/TournamentsAPI.ts` — funciones genéricas: `getTournaments(sportId)`, `getParticipants(tournamentId)`, `getParameter(tournamentId, key)`.
+- `src/api/shared/ReportsAPI.ts` — 12 funciones de reportes compartidas: `getTeamsPicked`, `getMostPickedTeams`, `getLeastPickedTeams`, `getTeamsNotPickedLog`, `getTeamsPickedLog`, `getSeedPickTotal`, `getPortfolioSeedSelections`, `getTeamsPerYearLog`, `getTeamsPerfectPortfolios`, `getTeamsHistoricAllRounds`, `getHistoricalPerfectPortfoliosHistory`, `getTeamsPickedLogHistory`. Usan patrón `data.x ?? fallback` (sin ifs redundantes).
+- `src/api/ncaa-male/HomeAPI.ts` — usa shared + funciones específicas de male (getScores, gatPayout, getInstructions).
+- `src/api/ncaa-male/PortfoliosAPI.ts` — re-exports de shared + funciones específicas de portfolios.
+- `src/api/ncaa-male/StatsAPI.ts` — re-exports de ReportsAPI + funciones específicas (getScoreWeeksMale, getPortfolioStatsWeek, getNcaaMaleTeams).
+- `src/api/ncaa-male/HistoryAPI.ts` — re-exports de ReportsAPI + `getTournaments` como wrapper de sport ID "1".
+- `src/api/female/HomeAPIFemale.ts` — refactorizado para usar shared.
+- `src/api/female/StatsFemaleAPI.ts` — re-exports de ReportsAPI con alias `Female`.
+- `src/api/female/HistoryFemaleAPI.ts` — re-exports de ReportsAPI con alias `Female`, sport ID "3".
+- Imports actualizados en 8 archivos consumidores: `ncaa-male/views/home/Home.tsx`, `InstructionsPortfolios.tsx`, `HistoryPortfolios.tsx`, `Stats.tsx`, `src/hooks/usePortfolioData.ts`, `usePortfolioActions.ts`, `epl/views/HistoryPortfolios.tsx` (→ `@/api/shared/ReportsAPI`), archivos `-copia`.
+- **Archivos raíz obsoletos a borrar** (ejecutar en terminal): `src/api/HomeAPI.ts`, `src/api/StatsAPI.ts`, `src/api/HistoryAPI.ts`, `src/api/PortfoliosAPI.ts`.
+
+```bash
+git rm src/api/HomeAPI.ts src/api/StatsAPI.ts src/api/HistoryAPI.ts src/api/PortfoliosAPI.ts
+```
+
+---
+
+**Commit 6 — MenuDrawer y MenuMobile compartidos**
+- `src/shared/components/Menu/MenuDrawer.tsx` — sidebar de escritorio genérico. Props clave: `navItems: NavItem[]`, `activeColor`, `defaultColor`, `appBarBgColor`, `drawerBgColor`, `titleColor`, `sportKey`, `sportFrom`, `swal: SwalConfig`, `showUsernameInBar?`.
+- `src/shared/components/Menu/MenuMobile.tsx` — barra inferior móvil genérica. Props clave: `navItems`, `activeColor`, `appBarBgColor`, `menuPaperBgColor`, `sportKey`, `sportFrom`, `swal`, `usernameLabelColor?`.
+- Tipos exportados: `NavItem`, `SwalConfig`, `MenuDrawerProps` en `MenuDrawer.tsx`.
+- `isActive()` unificado: usa `parts.find(p => ACTIVE_SEGMENTS.includes(p))` — funciona para todas las variantes de ruta (con prefijo de deporte, con slash inicial, sin prefijo).
+- `isMoreItem()` en MenuMobile: detecta el ítem de popup por `id === "more" || id.endsWith("/more")`.
+- 8 archivos de menú convertidos a wrappers (~10 líneas c/u):
+  - `ncaa-male/components/Menu/Menu.tsx` → `activeColor="#05fa87"`, `appBar="#000"`
+  - `ncaa-male/components/Menu/MenuMobile.tsx` → `appBar="#000"`, `menuPaper="rgba(0,0,0,0.8)"`
+  - `female/components/Menufemale/MenuFemale.tsx` → `activeColor="#e040fb"`, `appBar="rgba(36,37,62,0.95)"`
+  - `female/components/Menufemale/MenuMobilefemale.tsx` → `appBar="#24253e"`, `menuPaper="rgba(36,37,62,0.95)"`
+  - `epl/components/MenuEPL/MenuEPL.tsx` → `activeColor="#4BF589"`, `appBar="#380f51"`, `showUsernameInBar=false`
+  - `epl/components/MenuEPL/MenuMobileEPL.tsx` → `appBar="#380f51"`, `usernameLabelColor="#4BF589"`
+  - `worldcup/components/Menu/MenuWorldCup.tsx` → colores desde `sportThemes.worldcup`, rutas con `/` absoluto
+  - `worldcup/components/Menu/MenuWorldCupMobile.tsx` → rutas absolutas `/worldcup/...`
+
+---
+
+**Para borrar las tablas obsoletas, ejecutar en terminal:**
 ```bash
 git rm src/ncaa-male/components/Table/TableHistory.tsx \
        src/ncaa-male/components/Table/TableHistoryAllRounds.tsx \

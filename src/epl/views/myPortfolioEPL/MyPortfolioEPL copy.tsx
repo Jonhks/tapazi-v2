@@ -27,7 +27,7 @@ import {
   getTeams,
   getTeamsAvailable,
   postNewPortfolio,
-} from "@/api/PortfoliosAPI";
+} from "@/api/ncaa-male/PortfoliosAPI";
 import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";
 import ErrorMessage from "@/components/ErrorMessage/ErrorMessage";

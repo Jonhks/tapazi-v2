@@ -14,7 +14,7 @@ import {
   getPortfoliosCount,
   getScores,
   getTournamentMale,
-} from "@/api/HomeAPI";
+} from "@/api/ncaa-male/HomeAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { PayOut } from "@/types/index";
 

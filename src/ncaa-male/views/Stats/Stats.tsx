@@ -14,7 +14,7 @@ import {
   useQuery,
   // useQueryClient,
 } from "@tanstack/react-query";
-import { getTournaments } from "@/api/HistoryAPI";
+import { getTournaments } from "@/api/ncaa-male/HistoryAPI";
 import { Tournament } from "@/types/index";
 import Loader from "../../components/BallLoader/BallLoader";
 // import TableHistory from "../../components/Table/TableHistory";
@@ -50,7 +50,7 @@ import {
   getTeamsPickedLog,
   getSeedPickTotal,
   getPortfolioSeedSelections,
-} from "@/api/StatsAPI";
+} from "@/api/ncaa-male/StatsAPI";
 import TablePortfolioWeekStats from "../../components/Table/TablePortfolioWeekStats";
 import TableTeamsPicked from "../../components/Table/TableTeamsPicked";
 import NoData from "@/components/NoData/NoData";

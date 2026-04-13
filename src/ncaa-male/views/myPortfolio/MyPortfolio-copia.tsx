@@ -22,7 +22,7 @@ import {
   getWinnerOfTeamHasTeam,
   postNewPortfolio,
   removeportfolio,
-} from "@/api/PortfoliosAPI";
+} from "@/api/ncaa-male/PortfoliosAPI";
 // } from "../../../api/PortfoliosAPI";
 import { Portfolios } from "@/types/index";
 import { toast } from "react-toastify";

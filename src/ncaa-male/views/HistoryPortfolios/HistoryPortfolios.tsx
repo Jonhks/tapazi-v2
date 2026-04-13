@@ -13,7 +13,7 @@ import {
   getTeamsPerYearLog,
   getTeamsPickedLogHistory,
   getTournaments,
-} from "@/api/HistoryAPI";
+} from "@/api/ncaa-male/HistoryAPI";
 import { Tournament } from "@/types/index";
 import Loader from "../../components/BallLoader/BallLoader";
 import TableHistoryTeamsPerYearLog from "@/shared/components/Table/TableHistoryTeamsPerYearLog";

@@ -9,9 +9,9 @@ import {
   getHOUTOU,
   getWinnerOfTeam,
   getWinnerOfTeamHasTeam,
-} from "@/api/PortfoliosAPI";
+} from "@/api/ncaa-male/PortfoliosAPI";
 import { isDateTimeReached } from "@/utils/getDaysLeft";
-import { getTournamentMale } from "@/api/HomeAPI";
+import { getTournamentMale } from "@/api/ncaa-male/HomeAPI";
 import { log } from "console";
 
 export const usePortfolioData = (userId: string) => {

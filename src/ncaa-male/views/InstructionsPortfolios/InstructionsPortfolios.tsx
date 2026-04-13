@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./InstructionsPortfolios.module.css";
 import { useQuery } from "@tanstack/react-query";
-import { getInstructions, getTournamentMale } from "@/api/HomeAPI";
+import { getInstructions, getTournamentMale } from "@/api/ncaa-male/HomeAPI";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/BallLoader/BallLoader";
 import type { Instructions } from "@/types/index";
