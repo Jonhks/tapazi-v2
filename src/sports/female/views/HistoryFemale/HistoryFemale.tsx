@@ -226,6 +226,7 @@ const HistoryFemale = () => {
           justifyContent={"center"}
           alignContent={"center"}
           flexWrap={"wrap"}
+          className="subboxes-wrapper"
           size={12}
         >
           <Grid

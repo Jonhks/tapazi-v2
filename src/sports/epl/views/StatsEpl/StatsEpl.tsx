@@ -277,6 +277,7 @@ const StatsEpl = () => {
         justifyContent={"center"}
         alignContent={"center"}
         flexWrap={"nowrap"}
+        className="subboxes-wrapper"
         sx={{ width: "100%", maxWidth: "100%" }}
       >
         <div className={`${classes.boxHistory} ${classes.active}`}>

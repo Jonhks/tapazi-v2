@@ -124,6 +124,7 @@ const Home = () => {
               flexWrap={isMobile ? "wrap" : "nowrap"}
               justifyContent={"space-around"}
               flexDirection={"row"}
+              className="subboxes-wrapper"
               style={{
                 maxHeight: isMobile ? "" : "50%",
               }}
@@ -198,11 +199,12 @@ const Home = () => {
               container
               spacing={2}
               mb={3}
+              justifyContent="center"
             >
               <Zoom in={true}>
                 <Grid
                   size={11}
-                  offset={0.5}
+                  className="subboxes-wrapper"
                 >
                   {(dataScores?.score?.participant ||
                     dataScores?.score?.others) && (

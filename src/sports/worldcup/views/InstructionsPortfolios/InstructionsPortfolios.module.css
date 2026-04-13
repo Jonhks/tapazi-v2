@@ -28,8 +28,8 @@
   border: 2px solid #00e2f6;
   padding: 16px;
   border-radius: 20px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 .highlighted {

@@ -264,12 +264,13 @@ const Stats = () => {
     >
       <Grid
         container
-        size={2}
+        size={12}
         spacing={1}
         display={"flex"}
         justifyContent={"center"}
         alignContent={"center"}
         flexWrap={"nowrap"}
+        className="subboxes-wrapper"
       >
         <Grid
           size={{ xs: 10, md: 8 }}

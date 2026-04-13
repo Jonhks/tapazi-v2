@@ -102,6 +102,7 @@ const HomeEPL = () => {
           flexDirection={"row"}
           height={"auto"}
           mb={5}
+          className="subboxes-wrapper"
         >
           <Grid
             size={{ xs: 12, md: 5 }}
@@ -207,9 +208,9 @@ const HomeEPL = () => {
         <Grid
           size={11}
           display={"flex"}
-          // flexWrap={isMobile ? "wrap" : "nowrap"}
           justifyContent={"space-around"}
           flexDirection={"row"}
+          className="subboxes-wrapper"
         >
           <div
             style={{

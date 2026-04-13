@@ -27,8 +27,8 @@
   border: 2px solid #05fa05;
   padding: 16px;
   border-radius: 20px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 .subBoxInstructionsBlack {

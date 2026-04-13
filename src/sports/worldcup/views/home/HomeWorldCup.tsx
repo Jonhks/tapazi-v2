@@ -121,6 +121,7 @@ const HomeWorldCup = () => {
             flexDirection={"row"}
             height={"auto"}
             mb={1}
+            className="subboxes-wrapper"
           >
             <Grid
               size={{ xs: 12, md: 5 }}
@@ -201,11 +202,12 @@ const HomeWorldCup = () => {
             container
             spacing={2}
             mb={3}
+            justifyContent="center"
           >
             <Zoom in={true}>
               <Grid
                 size={11}
-                offset={0.5}
+                className="subboxes-wrapper"
               >
                 {(dataScores?.score?.participant ||
                   dataScores?.score?.others) && (

@@ -16,7 +16,8 @@
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
-  overflow: auto;
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 @media (max-width: 800px) {
@@ -31,7 +32,8 @@
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
-  overflow: auto;
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .containerStats {
@@ -40,7 +42,8 @@
   background-repeat: no-repeat;
   background-position: right;
   height: 100vh;
-  overflow: auto;
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 /* Compensar el sidebar permanente (mini drawer ~65 px) en desktop */

@@ -16,8 +16,9 @@
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
-  /* height: 100vh; */
-  /* overflow: scroll; */
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .containerHistory {
@@ -26,7 +27,8 @@
   background-repeat: no-repeat;
   background-position: center;
   height: 100vh;
-  overflow: auto;
+  overflow-x: scroll;
+  overflow-y: scroll;
 }
 
 .containerStats {

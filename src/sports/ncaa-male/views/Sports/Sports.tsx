@@ -59,7 +59,7 @@ export default function Sports() {
       {showContent && !isLoading && !isLoadingDisponible && (
         <Grid
           container
-          sx={{ minHeight: "100vh", height: "auto", overflowY: "auto", pb: 5 }}
+          sx={{ minHeight: "100vh", height: "auto", overflowY: "scroll", overflowX: "scroll", pb: 5 }}
         >
           <Grid
             size={{ xs: 12, md: 6 }}
@@ -128,6 +128,7 @@ export default function Sports() {
               alignItems: "center",
               gap: 4,
               padding: 4,
+              cursor: "pointer",
             }}
           >
             {dataSports
@@ -152,6 +153,7 @@ export default function Sports() {
                         justifyContent: sport.id === 2 ? "left" : "right",
                         alignItems: "center",
                         textAlign: "center",
+                        cursor: "pointer",
                       }}
                       className={classes.imgCard}
                       onClick={() => {
