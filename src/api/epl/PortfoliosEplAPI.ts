@@ -15,12 +15,7 @@ export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
         : `/participants/${id}/portfolios?tournament_id=3&epl`;
     // const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
     const { data } = await apiEnv(url);
-    if (!data.portfolios) {
-      return [];
-    }
-    if (data.portfolios) {
-      return data?.portfolios;
-    }
+    return data.portfolios ?? [];
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -51,13 +46,7 @@ export const getNumberTEAMXP = async () => {
     const { data } = await apiEnv.get(url);
     // console.log(data);
 
-    if (!data.value) {
-      return 0;
-    }
-
-    if (data.value) {
-      return data.value;
-    }
+    return data.value ?? 0;
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -71,13 +60,7 @@ export const getTournamentsId = async () => {
     const { data } = await apiEnv.get(url);
     // console.log(data);
 
-    if (!data.tournaments) {
-      return 0;
-    }
-
-    if (data.tournaments) {
-      return data.tournaments;
-    }
+    return data.tournaments ?? 0;
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -249,13 +232,7 @@ export const getDATTOU = async () => {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=DATTOU`;
     const { data } = await apiEnv(url);
 
-    if (!data.success) {
-      return "Error";
-    }
-
-    if (data.success) {
-      return data.data.value;
-    }
+    return data.success ? data.data.value : "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -268,13 +245,7 @@ export const getHOUTOU = async () => {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOUTOU`;
     const { data } = await apiEnv(url);
 
-    if (!data.success) {
-      return "Error";
-    }
-
-    if (data.success) {
-      return data.data.value;
-    }
+    return data.success ? data.data.value : "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -287,13 +258,7 @@ export const getWinnerOfTeam = async () => {
     const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
     const { data } = await apiEnv(url);
 
-    if (!data.success) {
-      return "Error";
-    }
-
-    if (data.success) {
-      return data.data.winnerOfTeam;
-    }
+    return data.success ? data.data.winnerOfTeam : "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -306,13 +271,7 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
     const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
     const { data } = await apiEnv(url);
 
-    if (!data.success) {
-      return "Error";
-    }
-
-    if (data.success) {
-      return data.data.winnerOfTeamHasTeam;
-    }
+    return data.success ? data.data.winnerOfTeamHasTeam : "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -326,13 +285,7 @@ export const getTeamsDynamics = async (id: string, portfolioId: string) => {
     const url = `/sports/${id}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
     const { data } = await apiEnv(url);
 
-    if (!data.teams) {
-      return "Error";
-    }
-
-    if (data.teams) {
-      return data.teams;
-    }
+    return data.teams ?? "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -347,13 +300,7 @@ export const getParameterWeek = async (id: string, parameter: string) => {
     const { data } = await apiEnv(url);
     // console.log(data);
 
-    if (!data.value) {
-      return "Error";
-    }
-
-    if (data.value) {
-      return data.value;
-    }
+    return data.value ?? "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

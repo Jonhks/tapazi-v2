@@ -310,8 +310,8 @@ src/sports/
 | Media     | ✅ HECHO | Consolidar funciones de API idénticas en `src/api/shared/`       | Reduce duplicación en `api/`           |
 | Media     | ✅ HECHO | Crear `src/api/ncaa-male/` con re-exports + funciones específicas | Carpeta por deporte, backwards compat  |
 | Media     | ✅ HECHO | Crear `MenuDrawer` único con `navItems[]` como prop              | Elimina 8 archivos de menú (4 desktop + 4 mobile) |
-| Baja      | ⏳ PENDIENTE | Tipar `Table.tsx` correctamente y eliminar `@ts-nocheck`      | Mejora type safety                     |
-| Baja      | ⏳ PENDIENTE | Simplificar lógica `if` redundante en API                     | Limpieza de código                     |
+| Baja      | ✅ HECHO | Tipar `TableTeamsPicked` y `TablePortfolioWeekStats`, eliminar `@ts-nocheck` | Type safety completo en tablas |
+| Baja      | ✅ HECHO | Simplificar lógica `if` redundante en API (EPL + female)      | Patrón `??` / ternario en lugar de doble-if |
 
 ---
 

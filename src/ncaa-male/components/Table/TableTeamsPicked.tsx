@@ -1,37 +1,39 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { useMemo } from "react";
+import { ColumnDef, CellContext } from "@tanstack/react-table";
 import { TableBase, BallSvg } from "./Table";
+
+type TeamPickedRow = Record<string, unknown>;
 
 export default function TableTeamsPicked({
   arrHistory,
-  weekLabel,
   title,
 }: {
-  arrHistory: any[];
+  arrHistory: TeamPickedRow[];
   weekLabel?: string;
   title?: string;
 }) {
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<TeamPickedRow>[]>(
     () => [
       {
         header: "Portfolio",
         accessorKey: "portfolioName",
-        cell: (info) => <span>{info.getValue()}</span>,
+        cell: (info) => <span>{String(info.getValue() ?? "")}</span>,
       },
       {
         header: "Weight",
         accessorKey: "portfolioWeight",
         cell: (info) => {
-          const val = parseFloat(info.getValue());
-          return <span>{isNaN(val) ? info.getValue() : val.toFixed(2)}</span>;
+          const val = parseFloat(String(info.getValue() ?? ""));
+          return (
+            <span>{isNaN(val) ? String(info.getValue() ?? "") : val.toFixed(2)}</span>
+          );
         },
       },
-      ...Array.from({ length: 8 }, (_, i) => ({
+      ...Array.from({ length: 8 }, (_, i): ColumnDef<TeamPickedRow> => ({
         header: `Team ${i + 1}`,
         accessorKey: `team${i + 1}Name`,
-        cell: (info) => {
-          const name = info.getValue();
+        cell: (info: CellContext<TeamPickedRow, unknown>) => {
+          const name = info.getValue() as string | null;
           return name ? (
             <span
               style={{
@@ -56,15 +58,15 @@ export default function TableTeamsPicked({
         header: "Score",
         accessorKey: "score",
         cell: (info) => {
-          const val = parseFloat(info.getValue());
-          return <span>{isNaN(val) ? info.getValue() : val.toFixed(2)}</span>;
+          const val = parseFloat(String(info.getValue() ?? ""));
+          return (
+            <span>{isNaN(val) ? String(info.getValue() ?? "") : val.toFixed(2)}</span>
+          );
         },
       },
     ],
     [],
   );
-
-  // const title = weekLabel ? `Teams Picked - ${weekLabel}` : "Teams Picked";
 
   return (
     <TableBase

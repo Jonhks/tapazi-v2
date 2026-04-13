@@ -1,6 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { useMemo } from "react";
+import { ColumnDef } from "@tanstack/react-table";
 import { Box, Typography } from "@mui/material";
 import { TableBase, BallSvg } from "./Table";
 
@@ -28,17 +27,9 @@ type PortfolioWithCrests = {
 };
 
 const TeamDisplay = ({ name }: { name: string }) => (
-  <Box
-    display="flex"
-    alignItems="center"
-    justifyContent="start"
-    gap={1}
-  >
+  <Box display="flex" alignItems="center" justifyContent="start" gap={1}>
     <BallSvg />
-    <Typography
-      variant="body2"
-      sx={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}
-    >
+    <Typography variant="body2" sx={{ fontSize: "0.75rem", whiteSpace: "nowrap" }}>
       {name}
     </Typography>
   </Box>
@@ -53,16 +44,16 @@ export default function TablePortfolioWeekStats({
   teamsData: TeamStat[];
   weekLabel: string;
 }) {
-  const teamsMap: Record<string, string> = useMemo(() => {
+  const teamsMap = useMemo<Record<string, string>>(() => {
     return (
-      teamsData?.reduce((acc, team) => {
+      teamsData?.reduce<Record<string, string>>((acc, team) => {
         acc[team.name] = team.crest_url;
         return acc;
       }, {}) ?? {}
     );
   }, [teamsData]);
 
-  const statsWithCrests: PortfolioWithCrests[] = useMemo(() => {
+  const statsWithCrests = useMemo<PortfolioWithCrests[]>(() => {
     if (!statsData || !teamsMap) return [];
     return statsData.map((item) => {
       const teams: string[] = JSON.parse(item.teams);
@@ -82,22 +73,20 @@ export default function TablePortfolioWeekStats({
     [statsWithCrests],
   );
 
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
     () => [
       {
         header: "Portfolio",
         accessorKey: "portfolio",
-        cell: (info) => <span>{info.getValue()}</span>,
+        cell: (info) => <span>{info.getValue() as string}</span>,
       },
-      ...Array.from({ length: maxTeams }, (_, i) => ({
+      ...Array.from({ length: maxTeams }, (_, i): ColumnDef<PortfolioWithCrests> => ({
         header: `Team ${i + 1}`,
-        accessorFn: (row) => row.teams?.[i]?.name || "",
+        accessorFn: (row) => row.teams?.[i]?.name ?? "",
         id: `team_${i}`,
         cell: (info) => {
-          const teamName = info.getValue();
-          return teamName ? (
-            <TeamDisplay name={teamName} />
-          ) : null;
+          const teamName = info.getValue() as string;
+          return teamName ? <TeamDisplay name={teamName} /> : null;
         },
       })),
       {

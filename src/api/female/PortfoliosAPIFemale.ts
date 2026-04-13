@@ -107,13 +107,7 @@ export const getDATTOUFemale = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/parameters?key=DATTOU`;
     const { data } = await apiEnv(url);
-    if (!data.value) {
-      return "Error";
-    }
-
-    if (data.value) {
-      return data.value;
-    }
+    return data.value ?? "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -126,13 +120,7 @@ export const getHOUTOUFemale = async (tournamentId: User["id"]) => {
     const url = `/tournaments/${tournamentId}/parameters?key=HOUTOU`;
     const { data } = await apiEnv(url);
 
-    if (!data.value) {
-      return "Error";
-    }
-
-    if (data.value) {
-      return data.value;
-    }
+    return data.value ?? "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -145,13 +133,7 @@ export const getWinnerOfTeam = async (tournamentId: User["id"]) => {
     const url = `/tournaments/${tournamentId}/winner-of-team?sport=ncaa&limit=99`;
     const { data } = await apiEnv(url);
 
-    if (!data.teams) {
-      return [];
-    }
-
-    if (data.teams) {
-      return data.teams;
-    }
+    return data.teams ?? [];
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -164,13 +146,7 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
     const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
     const { data } = await apiEnv(url);
 
-    if (!data.success) {
-      return "Error";
-    }
-
-    if (data.success) {
-      return data.data.winnerOfTeamHasTeam;
-    }
+    return data.success ? data.data.winnerOfTeamHasTeam : "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
