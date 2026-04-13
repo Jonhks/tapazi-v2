@@ -16,11 +16,12 @@ import {
 } from "@/api/HistoryAPI";
 // import { Tournament } from "@/types/index";
 import Loader from "ncaa-male/components/BallLoader/BallLoader";
-import TableHistoryTeamsPerYearLog from "ncaa-male/components/Table/TableHistoryTeamsPerYearLog";
-import TableHistoryTeamsPerYearLogSelected from "ncaa-male/components/Table/TableHistoryTeamsPerYearLogSelected";
-import TableHistoryPerfectPortfolios from "ncaa-male/components/Table/TableHistoryPerfectPortfolios";
-import TableHistoryPerfectPortfoliosSelected from "ncaa-male/components/Table/TableHistoryPerfectPortfoliosSelected";
-import TableHistoryAllRounds from "ncaa-male/components/Table/TableHistoryAllRounds";
+import TableHistoryTeamsPerYearLog from "@/shared/components/Table/TableHistoryTeamsPerYearLog";
+import TableHistoryTeamsPerYearLogSelected from "@/shared/components/Table/TableHistoryTeamsPerYearLogSelected";
+import TableHistoryPerfectPortfolios from "@/shared/components/Table/TableHistoryPerfectPortfolios";
+import TableHistoryPerfectPortfoliosSelected from "@/shared/components/Table/TableHistoryPerfectPortfoliosSelected";
+import TableHistoryAllRounds from "@/shared/components/Table/TableHistoryAllRounds";
+import { sportThemes } from "@/shared/theme/colors";
 import DescriptionIcon from "@mui/icons-material/Description";
 import TeamPerYearlogGraphic from "ncaa-male/components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
@@ -300,6 +301,7 @@ const History = () => {
                   <TableHistoryAllRounds
                     arrHistory={teamsHistoricAllRounds}
                     score={selectedScore.name}
+                    theme={sportThemes.epl}
                   />
                 )}
               </Grid>
@@ -316,6 +318,7 @@ const History = () => {
                   <TableHistoryPerfectPortfolios
                     arrHistory={teamsPerfectPortfolios}
                     score={selectedScore.name}
+                    theme={sportThemes.epl}
                   />
                 )}
               </Grid>
@@ -355,6 +358,7 @@ const History = () => {
                     TeamPerfectPortfoliosSelected={
                       TeamPerfectPortfoliosSelected
                     }
+                    theme={sportThemes.epl}
                   />
                 </Grid>
               </Zoom>
@@ -375,6 +379,7 @@ const History = () => {
                   <TableHistoryTeamsPerYearLog
                     arrHistory={teamsPerYearLog}
                     score={selectedScore.name}
+                    theme={sportThemes.epl}
                   />
                 )}
               </Grid>
@@ -411,6 +416,7 @@ const History = () => {
                       arrHistory={teamsPickedLogHistory}
                       score={selectedScore.name}
                       teamsPerYearLogSelected={teamsPerYearLogSelected}
+                      theme={sportThemes.epl}
                     />
                   )}
                 </Grid>

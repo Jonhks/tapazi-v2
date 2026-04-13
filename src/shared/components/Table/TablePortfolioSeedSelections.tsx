@@ -1,15 +1,28 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { useMemo } from "react";
-import { TableBase } from "./Table";
+import { ColumnDef } from "@tanstack/react-table";
+import { TableBase } from "./TableBase";
+import { SportTheme } from "@/shared/theme/colors";
 
 const NUMERALS = [
   "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight",
   "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen",
 ];
 
-export default function TablePortfolioSeedSelections({ arrHistory, score }) {
-  const data = useMemo(() => {
+interface SeedRow {
+  seed: string;
+  number: number;
+  percentage: number;
+}
+
+interface Props {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  arrHistory: any;
+  score: string;
+  theme: SportTheme;
+}
+
+export default function TablePortfolioSeedSelections({ arrHistory, score, theme }: Props) {
+  const data = useMemo<SeedRow[]>(() => {
     const item = Array.isArray(arrHistory) ? arrHistory[0] : arrHistory;
     if (!item) return [];
     return NUMERALS.map((seed, i) => ({
@@ -19,7 +32,7 @@ export default function TablePortfolioSeedSelections({ arrHistory, score }) {
     }));
   }, [arrHistory]);
 
-  const columns = useMemo(
+  const columns = useMemo<ColumnDef<SeedRow>[]>(
     () => [
       { header: "Seed", accessorKey: "seed" },
       { header: "Times", accessorKey: "number" },
@@ -33,6 +46,13 @@ export default function TablePortfolioSeedSelections({ arrHistory, score }) {
   );
 
   return (
-    <TableBase data={data} columns={columns} title={score} maxHeight="50vh" searchWidth="100%" />
+    <TableBase
+      data={data}
+      columns={columns}
+      theme={theme}
+      title={score}
+      maxHeight="50vh"
+      searchWidth="100%"
+    />
   );
 }

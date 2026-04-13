@@ -1,26 +1,28 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { useMemo } from "react";
-import { TableBase, BallSvg } from "./Table";
+import { ColumnDef } from "@tanstack/react-table";
+import { TableBase } from "./TableBase";
+import { BallSvg } from "./BallSvg";
+import { SportTheme } from "@/shared/theme/colors";
 import { TeamsPickedLog } from "@/types/index";
 
-export default function TableTeamsPickedLog({
-  arrHistory,
-  score,
-}: {
+interface Props {
   arrHistory: TeamsPickedLog[];
   score: string;
-}) {
-  const columns = useMemo(
+  theme: SportTheme;
+}
+
+export default function TableTeamsPickedLog({ arrHistory, score, theme }: Props) {
+  const columns = useMemo<ColumnDef<TeamsPickedLog>[]>(
     () => [
       {
         header: "Team",
         accessorKey: "team_name",
         cell: (info) => {
-          const name = info.getValue();
+          const name = info.getValue() as string;
           return name ? (
             <span style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
-              <BallSvg />{name}
+              <BallSvg />
+              {name}
             </span>
           ) : null;
         },
@@ -40,6 +42,7 @@ export default function TableTeamsPickedLog({
     <TableBase
       data={arrHistory ?? []}
       columns={columns}
+      theme={theme}
       title={score}
       maxHeight="95vh"
     />

@@ -15,11 +15,12 @@ import {
 } from "@/api/female/HistoryFemaleAPI";
 // import { Tournament } from "@/types/index";
 import Loader from "../../components/BallLoader/BallLoader";
-import TableHistoryTeamsPerYearLog from "../../components/Table/TableHistoryTeamsPerYearLog";
-// import TableHistoryTeamsPerYearLogSelected from "../../components/Table/TableHistoryTeamsPerYearLogSelected";
-import TableHistoryPerfectPortfolios from "../../components/Table/TableHistoryPerfectPortfolios";
-// import TableHistoryPerfectPortfoliosSelected from "../../components/Table/TableHistoryPerfectPortfoliosSelected";
-import TableHistoryAllRounds from "../../components/Table/TableHistoryAllRounds";
+import TableHistoryTeamsPerYearLog from "@/shared/components/Table/TableHistoryTeamsPerYearLog";
+// import TableHistoryTeamsPerYearLogSelected from "@/shared/components/Table/TableHistoryTeamsPerYearLogSelected";
+import TableHistoryPerfectPortfolios from "@/shared/components/Table/TableHistoryPerfectPortfolios";
+// import TableHistoryPerfectPortfoliosSelected from "@/shared/components/Table/TableHistoryPerfectPortfoliosSelected";
+import TableHistoryAllRounds from "@/shared/components/Table/TableHistoryAllRounds";
+import { sportThemes } from "@/shared/theme/colors";
 // import DescriptionIcon from "@mui/icons-material/Description";
 import TeamPerYearlogGraphic from "../../components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
@@ -327,6 +328,7 @@ const HistoryFemale = () => {
                     arrHistory={teamsHistoricAllRounds}
                     score={selectedScore.name}
                     isFetching={fetchingHistoryAllRounds}
+                    theme={sportThemes.ncaaFemale}
                   />
                 )}
               </Grid>
@@ -342,6 +344,7 @@ const HistoryFemale = () => {
                   <TableHistoryPerfectPortfolios
                     arrHistory={teamsPerfectPortfolios}
                     score={selectedScore.name}
+                    theme={sportThemes.ncaaFemale}
                   />
                 }
               </Grid>
@@ -400,6 +403,7 @@ const HistoryFemale = () => {
                   <TableHistoryTeamsPerYearLog
                     arrHistory={teamsPerYearLog}
                     score={selectedScore.name}
+                    theme={sportThemes.ncaaFemale}
                   />
                 )}
               </Grid>

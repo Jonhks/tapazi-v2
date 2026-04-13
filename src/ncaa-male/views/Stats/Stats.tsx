@@ -27,11 +27,12 @@ import Loader from "../../components/BallLoader/BallLoader";
 //   getSeedPickTotal,
 //   getTeamsPickedLog,
 // } from "@/api/StatsAPI";
-import TableHistoryMostPickedTeams from "../../components/Table/TableHistoryMostPickedTeams";
-import TableTeamsPickedLog from "../../components/Table/TableTeamsPickedLog";
-import TableHistoryTeamsNotPicked from "../../components/Table/TableHistoryTeamsNotPicked";
-import TableSeedPickTotal from "../../components/Table/TableSeedPickTotal";
-import TablePortfolioSeedSelections from "../../components/Table/TablePortfolioSeedSelections";
+import TableHistoryMostPickedTeams from "@/shared/components/Table/TableHistoryMostPickedTeams";
+import TableTeamsPickedLog from "@/shared/components/Table/TableTeamsPickedLog";
+import TableHistoryTeamsNotPicked from "@/shared/components/Table/TableHistoryTeamsNotPicked";
+import TableSeedPickTotal from "@/shared/components/Table/TableSeedPickTotal";
+import TablePortfolioSeedSelections from "@/shared/components/Table/TablePortfolioSeedSelections";
+import { sportThemes } from "@/shared/theme/colors";
 // import SortIcon from "@mui/icons-material/Sort";
 import StatsGraphics from "../../components/Graphics/StatsGraphic";
 import StatsPortfoliosSelectionsGraphic from "../../components/Graphics/StatsPortfoliosSelectionsGraphic";
@@ -118,6 +119,7 @@ const Stats = () => {
         // @ts-ignore
         (el) => el?.name === e?.target?.value,
       )[0];
+      if (!optionSelect) return;
       setScore(e?.target?.value);
       setSelectedScore(optionSelect);
       setSubDataSelected(subDataDropDown[+optionSelect.id - 1]);
@@ -145,6 +147,7 @@ const Stats = () => {
       // @ts-ignore
       (data) => data.name === e.target.value,
     );
+    if (!selected[0]) return;
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setRound(+selected[0].round);
@@ -392,7 +395,7 @@ const Stats = () => {
                       name={"subData"}
                       label={""}
                       className={classes.DropDownHistory}
-                      value={subDataSelected[idSubDataSelected].name}
+                      value={subDataSelected[idSubDataSelected]?.name ?? ""}
                       handleChange={handleChangeSubData}
                       options={subDataDropDown[Number(selectedScore.id) - 1]}
                     />
@@ -420,7 +423,7 @@ const Stats = () => {
                 </p>
               ) : teamsPicked && teamsPicked.length > 0 ? (
                 <TableTeamsPicked
-                  title={subDataSelected[idSubDataSelected].name || ""}
+                  title={subDataSelected[idSubDataSelected]?.name ?? ""}
                   arrHistory={teamsPicked}
                   weekLabel={selectedWeekLabel}
                 />
@@ -475,6 +478,7 @@ const Stats = () => {
                       arrHistory={mostPickedTeamsRaw}
                       score={"Top 10 Most Frequently Picked Teams"}
                       least={false}
+                      theme={sportThemes.ncaaMale}
                     />
                   ) : (
                     <NoData message="No teams data available" />
@@ -493,6 +497,7 @@ const Stats = () => {
                           "Least Frequently Picked Teams Among Teams Picked at Least Once"
                         }
                         least={true}
+                        theme={sportThemes.ncaaMale}
                       />
                     )
                   )}
@@ -507,6 +512,7 @@ const Stats = () => {
                       <TableHistoryTeamsNotPicked
                         arrHistory={teamsNotPickedLog}
                         score={"Teams Not Picked"}
+                        theme={sportThemes.ncaaMale}
                       />
                     </Grid>
                   )
@@ -527,6 +533,7 @@ const Stats = () => {
                       <TableTeamsPickedLog
                         arrHistory={TeamsPickedLog}
                         score={"Frequency of Teams Picked"}
+                        theme={sportThemes.ncaaMale}
                       />
                     )}
                   </Grid>
@@ -561,6 +568,7 @@ const Stats = () => {
                       <TableSeedPickTotal
                         arrHistory={seedPickTotal}
                         score={"Picks By Seed"}
+                        theme={sportThemes.ncaaMale}
                       />
                     )
                   )}
@@ -575,6 +583,7 @@ const Stats = () => {
                       <TablePortfolioSeedSelections
                         arrHistory={portfolioSeedSelections}
                         score={"Seed Picked in Portfolio \n (at least once)"}
+                        theme={sportThemes.ncaaMale}
                       />
                     )
                   )}

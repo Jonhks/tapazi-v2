@@ -1,31 +1,37 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { useMemo } from "react";
-import { TableBase, BallSvg } from "./Table";
+import { ColumnDef } from "@tanstack/react-table";
+import { TableBase } from "./TableBase";
+import { BallSvg } from "./BallSvg";
+import { SportTheme } from "@/shared/theme/colors";
 import { MostPickedTeams } from "@/types/index";
+
+interface Props {
+  arrHistory: MostPickedTeams[];
+  score: string;
+  least?: boolean;
+  theme: SportTheme;
+}
 
 export default function TableHistoryMostPickedTeams({
   arrHistory,
   score,
   least,
-}: {
-  arrHistory: MostPickedTeams[];
-  score: string;
-  least?: boolean;
-}) {
-  const columns = useMemo(
+  theme,
+}: Props) {
+  const columns = useMemo<ColumnDef<MostPickedTeams>[]>(
     () => [
       ...(!least
-        ? [{ header: "Tournament", accessorKey: "tournament_name" }]
+        ? [{ header: "Tournament", accessorKey: "tournament_name" } as ColumnDef<MostPickedTeams>]
         : []),
       {
         header: "Team name",
         accessorKey: "team_name",
         cell: (info) => {
-          const name = info.getValue();
+          const name = info.getValue() as string;
           return name ? (
             <span style={{ display: "inline-flex", alignItems: "center", whiteSpace: "nowrap" }}>
-              <BallSvg />{name}
+              <BallSvg />
+              {name}
             </span>
           ) : null;
         },
@@ -44,6 +50,7 @@ export default function TableHistoryMostPickedTeams({
     <TableBase
       data={arrHistory ?? []}
       columns={columns}
+      theme={theme}
       title={score}
       maxHeight="40vh"
     />

@@ -306,7 +306,7 @@ src/sports/
 | Alta      | ✅ HECHO | `src/shared/theme/colors.ts` ya existe con los 4 temas            | Base para la TableBase compartida      |
 | Media     | ✅ HECHO | Crear `TableBase` única en `src/shared/components/Table/`        | Elimina ~4 implementaciones duplicadas |
 | Media     | ✅ HECHO | Incorporar click-to-fetch (prop `onCellClick?`) en TableBase     | Ya incluido en TableBase compartida    |
-| Media     | ⏳ PENDIENTE | Mover tablas específicas duplicadas a `src/shared/`           | Elimina ~7 tablas triplicadas          |
+| Media     | ✅ HECHO | Mover tablas específicas duplicadas a `src/shared/`              | Elimina ~7 tablas triplicadas + fix bug EPL |
 | Media     | ⏳ PENDIENTE | Consolidar funciones de API idénticas en `src/api/shared/`    | Reduce duplicación en `api/`           |
 | Media     | ⏳ PENDIENTE | Crear `MenuDrawer` único con `navItems[]` como prop           | Elimina 6+ archivos de menú            |
 | Baja      | ⏳ PENDIENTE | Tipar `Table.tsx` correctamente y eliminar `@ts-nocheck`      | Mejora type safety                     |
@@ -329,3 +329,71 @@ src/sports/
 - `worldcup/Table.tsx` → wrapper con `sportThemes.worldcup` + `accentFirstColumn`. Ya usaba colors.ts, ahora usa la TableBase compartida.
 - `epl/Table.tsx` → sin cambios (usa MUI styled, patrón distinto — se migra en fase siguiente).
 - Las tablas específicas (`TableHistoryMostPickedTeams`, etc.) **no requieren cambios** — importan `TableBase` de su `Table.tsx` local y reciben el tema automáticamente vía wrapper.
+
+**Commit 3 — Tablas específicas compartidas**
+- `src/shared/components/Table/BallSvg.tsx` — ícono de baloncesto extraído a componente independiente.
+- 9 tablas específicas migradas a `src/shared/components/Table/`:
+  - `TableHistoryMostPickedTeams` — props: `arrHistory, score, least?, theme`
+  - `TableHistoryTeamsNotPicked` — props: `arrHistory, score, theme`
+  - `TableTeamsPickedLog` — props: `arrHistory, score, theme`
+  - `TablePortfolioSeedSelections` — props: `arrHistory, score, theme`
+  - `TableSeedPickTotal` — props: `arrHistory, score, theme`
+  - `TableHistoryPerfectPortfolios` — props: `arrHistory, score, theme`
+  - `TableHistoryPerfectPortfoliosSelected` — props: `arrHistory, score, TeamPerfectPortfoliosSelected?, theme`
+  - `TableHistoryTeamsPerYearLog` — props: `arrHistory, score, theme`
+  - `TableHistoryTeamsPerYearLogSelected` — props: `arrHistory, score, teamsPerYearLogSelected?, theme`
+  - `TableHistoryAllRounds` — usa `useVirtualizer` (solo esta tabla), props: `arrHistory, score, isFetching?, theme`
+- **Bug corregido:** `epl/views/HistoryPortfolios/HistoryPortfolios.tsx` importaba tablas desde `ncaa-male/components/Table/` → ahora usa `@/shared/` con `sportThemes.epl`. EPL History ya muestra colores morados correctos.
+- 5 vistas consumidoras actualizadas (imports → `@/shared/`, prop `theme` agregado):
+  - `ncaa-male/views/Stats/Stats.tsx` → `sportThemes.ncaaMale`
+  - `ncaa-male/views/HistoryPortfolios/HistoryPortfolios.tsx` → `sportThemes.ncaaMale`
+  - `female/views/StatsFemale/StatsFemale.tsx` → `sportThemes.ncaaFemale`
+  - `female/views/HistoryFemale/HistoryFemale.tsx` → `sportThemes.ncaaFemale`
+  - `epl/views/HistoryPortfolios/HistoryPortfolios.tsx` → `sportThemes.epl`
+- Todas las tablas compartidas usan `overflowX/Y: "scroll"` (nunca `"auto"`).
+- `@ts-nocheck` eliminado de todas las tablas compartidas — tipado completo con generics de TanStack Table.
+
+**Commit 4 — Limpieza y seguridad de props**
+- Archivos a eliminar (ejecutar `git rm` manualmente — ver instrucciones abajo): las 11 tablas duplicadas en `ncaa-male/components/Table/`, `female/components/Table/` y `epl/components/Table/` que ya están en `src/shared/`.
+- `ncaa-male/views/Stats/Stats.tsx` — guards añadidos:
+  - `handleChange`: `if (!optionSelect) return;` antes de `setSubDataSelected(subDataDropDown[...])`
+  - `handleChangeSubData`: `if (!selected[0]) return;` antes de `setRound(...)`
+  - `value={subDataSelected[idSubDataSelected]?.name ?? ""}` en los 2 lugares donde aparece (previene crash cuando index queda fuera de rango)
+- `female/views/StatsFemale/StatsFemale.tsx` — mismos guards aplicados (3 cambios idénticos).
+
+**Para borrar los archivos obsoletos, ejecutar en terminal:**
+```bash
+git rm src/ncaa-male/components/Table/TableHistory.tsx \
+       src/ncaa-male/components/Table/TableHistoryAllRounds.tsx \
+       src/ncaa-male/components/Table/TableHistoryMostPickedTeams.tsx \
+       src/ncaa-male/components/Table/TableHistoryPerfectPortfolios.tsx \
+       src/ncaa-male/components/Table/TableHistoryPerfectPortfoliosSelected.tsx \
+       src/ncaa-male/components/Table/TableHistoryTeamsNotPicked.tsx \
+       src/ncaa-male/components/Table/TableHistoryTeamsPerYearLog.tsx \
+       src/ncaa-male/components/Table/TableHistoryTeamsPerYearLogSelected.tsx \
+       src/ncaa-male/components/Table/TablePortfolioSeedSelections.tsx \
+       src/ncaa-male/components/Table/TableSeedPickTotal.tsx \
+       src/ncaa-male/components/Table/TableTeamsPickedLog.tsx \
+       src/female/components/Table/TableHistory.tsx \
+       src/female/components/Table/TableHistoryAllRounds.tsx \
+       src/female/components/Table/TableHistoryMostPickedTeams.tsx \
+       src/female/components/Table/TableHistoryPerfectPortfolios.tsx \
+       src/female/components/Table/TableHistoryPerfectPortfoliosSelected.tsx \
+       src/female/components/Table/TableHistoryTeamsNotPicked.tsx \
+       src/female/components/Table/TableHistoryTeamsPerYearLog.tsx \
+       src/female/components/Table/TableHistoryTeamsPerYearLogSelected.tsx \
+       src/female/components/Table/TablePortfolioSeedSelections.tsx \
+       src/female/components/Table/TableSeedPickTotal.tsx \
+       src/female/components/Table/TableTeamsPickedLog.tsx \
+       src/epl/components/Table/TableHistory.tsx \
+       src/epl/components/Table/TableHistoryAllRounds.tsx \
+       src/epl/components/Table/TableHistoryMostPickedTeams.tsx \
+       src/epl/components/Table/TableHistoryPerfectPortfolios.tsx \
+       src/epl/components/Table/TableHistoryPerfectPortfoliosSelected.tsx \
+       src/epl/components/Table/TableHistoryTeamsNotPicked.tsx \
+       src/epl/components/Table/TableHistoryTeamsPerYearLog.tsx \
+       src/epl/components/Table/TableHistoryTeamsPerYearLogSelected.tsx \
+       src/epl/components/Table/TablePortfolioSeedSelections.tsx \
+       src/epl/components/Table/TableSeedPickTotal.tsx \
+       src/epl/components/Table/TableTeamsPickedLog.tsx
+```

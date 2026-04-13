@@ -1,5 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { useMemo, useRef } from "react";
 import {
   useReactTable,
@@ -9,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import { useMediaQuery } from "@mui/material";
-import classes from "./Table.module.css";
+import { SportTheme } from "@/shared/theme/colors";
 
 const EXCLUDED_KEYS = [
   "tournament_name",
@@ -26,35 +24,37 @@ const EXCLUDED_KEYS = [
   "round1_eliminated_teams",
 ];
 
-const capitalize = (str: string) =>
-  str.charAt(0).toUpperCase() + str.slice(1);
-
-const HDR_EVEN = "#24253e";
-const HDR_ODD = "#2d2d44";
-
-const headerBgColor = (index: number) =>
-  index === 0 ? "#0d0d1a" : index % 2 === 0 ? HDR_EVEN : HDR_ODD;
-
-const cellBgColor = (colIndex: number, rowIndex: number) => {
-  const isDarkCol = colIndex % 2 === 0;
-  const isEvenRow = rowIndex % 2 === 0;
-  if (isDarkCol) return isEvenRow ? "#111120" : "#1c1c2e";
-  return isEvenRow ? "#252538" : "#303048";
-};
+const capitalize = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 
 const ROW_HEIGHT = 40;
+
+interface Props {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  arrHistory: any[];
+  score: string;
+  isFetching?: boolean;
+  theme: SportTheme;
+}
 
 const TableHistoryAllRounds = ({
   arrHistory,
   score,
   isFetching = false,
-}: {
-  arrHistory: any[];
-  score: string;
-  isFetching?: boolean;
-}) => {
+  theme,
+}: Props) => {
   const isMobile = useMediaQuery("(max-width:900px)");
   const scrollRef = useRef<HTMLDivElement>(null);
+
+  const headerBgColor = (index: number) =>
+    index % 2 === 0 ? theme.headerEven : theme.headerOdd;
+
+  const cellBgColor = (colIndex: number, rowIndex: number) => {
+    const isEvenCol = colIndex % 2 === 0;
+    const isEvenRow = rowIndex % 2 === 0;
+    if (isEvenCol)
+      return isEvenRow ? theme.cellEvenColEvenRow : theme.cellEvenColOddRow;
+    return isEvenRow ? theme.cellOddColEvenRow : theme.cellOddColOddRow;
+  };
 
   const columns = useMemo(() => {
     if (!arrHistory?.[0]) return [];
@@ -95,15 +95,33 @@ const TableHistoryAllRounds = ({
 
   return (
     <div style={{ width: "100%", position: "relative" }}>
-      <div className={`${classes.firstTableRow} ${classes.fixed}`}>
+      {/* Título sticky */}
+      <div
+        style={{
+          width: "100%",
+          backgroundColor: theme.headerEven,
+          color: theme.accent,
+          fontSize: "1.6rem",
+          opacity: 0.8,
+          textAlign: "center",
+          borderBottom: `2px solid ${theme.accent}`,
+          padding: "12px 5px",
+          maxHeight: 56,
+          overflow: "scroll",
+          position: "sticky",
+          left: 0,
+          zIndex: 2,
+        }}
+      >
         {score}
       </div>
 
+      {/* Overlay de carga */}
       {isFetching && (
         <div
           style={{
             position: "absolute",
-            top: 36,
+            top: 56,
             left: 0,
             right: 0,
             bottom: 0,
@@ -112,7 +130,7 @@ const TableHistoryAllRounds = ({
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            color: "#e040fb",
+            color: theme.text,
             fontSize: 14,
             fontWeight: "bold",
             letterSpacing: 1,
@@ -122,9 +140,9 @@ const TableHistoryAllRounds = ({
         </div>
       )}
 
+      {/* Contenedor con scroll y virtualización */}
       <div
         ref={scrollRef}
-        className="enable-horizontal-scroll enable-vertical-scroll"
         style={{ overflowX: "scroll", overflowY: "scroll", maxHeight: "60vh" }}
       >
         <table
@@ -140,7 +158,7 @@ const TableHistoryAllRounds = ({
                       position: index === 0 ? "sticky" : "static",
                       left: index === 0 ? 0 : undefined,
                       backgroundColor: headerBgColor(index),
-                      color: "white",
+                      color: index === 0 ? theme.accent : theme.text,
                       fontWeight: "bold",
                       fontSize: isMobile ? "9px" : "10px",
                       textAlign: index === 0 ? "center" : "left",
@@ -177,7 +195,7 @@ const TableHistoryAllRounds = ({
                         position: index === 0 ? "sticky" : "static",
                         left: index === 0 ? 0 : undefined,
                         backgroundColor: cellBgColor(index, virtualRow.index),
-                        color: "white",
+                        color: index === 0 ? theme.accent : theme.text,
                         fontWeight: "bold",
                         fontSize: isMobile ? "12px" : "11px",
                         textAlign: index === 0 ? "center" : "left",
