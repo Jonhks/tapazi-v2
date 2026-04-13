@@ -23,13 +23,13 @@
       ],
       // EPL paths
       "@/epl/components/*": [
-        "epl/components/*"
+        "sports/epl/components/*"
       ],
       "@/epl/views/*": [
-        "epl/views/*"
+        "sports/epl/views/*"
       ],
       "@/epl/layouts/*": [
-        "epl/layouts/*"
+        "sports/epl/layouts/*"
       ],
       // Global paths
       "@/assets/*": [
@@ -51,16 +51,16 @@
         "utils/*"
       ],
       "@/worldcup/*": [
-        "worldcup/*"
+        "sports/worldcup/*"
       ],
       "@/shared/*": [
         "shared/*"
       ],
       "@/ncaa-male/*": [
-        "ncaa-male/*"
+        "sports/ncaa-male/*"
       ],
       "@/female/*": [
-        "female/*"
+        "sports/female/*"
       ]
     },
     /* Bundler mode */

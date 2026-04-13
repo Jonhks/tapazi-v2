@@ -43,6 +43,15 @@
   overflow: auto;
 }
 
+/* Compensar el sidebar permanente (mini drawer ~65 px) en desktop */
+@media (min-width: 800px) {
+  .containerApp,
+  .containerHistory,
+  .containerStats {
+    padding-left: 65px;
+  }
+}
+
 @media (width < 900px) {
   .containerHistory {
     background-position: right;

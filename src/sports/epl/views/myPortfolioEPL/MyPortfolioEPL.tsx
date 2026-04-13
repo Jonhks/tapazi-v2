@@ -24,7 +24,7 @@ import { useParams } from "react-router-dom";
 
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import { toast } from "react-toastify";
-import { usePortfolio } from "../../../context/PortfolioContext";
+import { usePortfolio } from "../../../../context/PortfolioContext";
 import Swal from "sweetalert2";
 import {
   postEditPortfolio,

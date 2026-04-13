@@ -6,32 +6,25 @@ import Grid from "@mui/material/Grid2";
 import { useParams } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import SportsSoccerIcon from "@mui/icons-material/SportsSoccer";
 
-import classes from "./MyPortfolio.module.css";
-import { BasquetIcon } from "@/assets/icons/icons";
-import Loader from "../../components/BallLoader/BallLoader";
+import classes from "./MyPortfolioWorldCup.module.css";
+import BallLoader from "../../components/BallLoader/BallLoader";
+import { usePortfolioWorldCupData } from "../../../../hooks/usePortfolioWorldCupData";
+import { usePortfolioWorldCupActions } from "../../../../hooks/usePortfolioWorldCupActions";
+import { usePortfolioValidation } from "../../../../hooks/usePortfolioValidation";
+import PortfolioTabWorldCup from "../../components/PortfolioTab/PortfolioTabWorldCup";
+import AddPortfolioButtonWorldCup from "../../components/AddPortfolioButton/AddPortfolioButtonWorldCup";
 
-// Hooks personalizados
-import { usePortfolioData } from "../../../hooks/usePortfolioData";
-import { usePortfolioActions } from "../../../hooks/usePortfolioActions";
-import { usePortfolioValidation } from "../../../hooks/usePortfolioValidation";
-
-// Componentes
-import PortfolioTab from "../../components/PortfolioTab";
-import AddPortfolioButton from "../../components/AddPortfolioButton";
-// import { getTournamentMale } from "@/api/HomeAPI";
-
-const MyPortfolio = () => {
+const MyPortfolioWorldCup = () => {
   const params = useParams();
   const userId = params.userId!;
   const queryClient = useQueryClient();
 
-  // Estado principal
   const [activeTab, setActiveTab] = useState(0);
   const [portfolios, setPortfolios] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
-  // Cargar datos
   const {
     portfoliosData,
     teamsData,
@@ -39,16 +32,15 @@ const MyPortfolio = () => {
     isLoading,
     isValidTournament,
     winnerTeamValidation,
-    currenttournamentMale,
-  } = usePortfolioData(userId);
+    currentTournamentWorldCup,
+  } = usePortfolioWorldCupData(userId);
 
-  // Acciones del portfolio
   const {
     handleAddPortfolio,
     handleSavePortfolio,
     handleRemovePortfolio,
     handleCancelPortfolio,
-  } = usePortfolioActions({
+  } = usePortfolioWorldCupActions({
     userId,
     portfolios,
     setPortfolios,
@@ -57,21 +49,15 @@ const MyPortfolio = () => {
     isValidTournament,
     queryClient,
     refetchTeams,
-    tournamentId: currenttournamentMale?.id,
+    tournamentId: currentTournamentWorldCup?.id,
   });
 
-  // Validaciones
-  const { validateTeamSelection } =
-    usePortfolioValidation(winnerTeamValidation);
+  const { validateTeamSelection } = usePortfolioValidation(winnerTeamValidation);
 
-  // Sincronizar portfolios cuando cambien los datos
   useEffect(() => {
-    if (portfoliosData) {
-      setPortfolios(portfoliosData);
-    }
+    if (portfoliosData) setPortfolios(portfoliosData);
   }, [portfoliosData]);
 
-  // Validar selección de equipos cuando cambie el portfolio activo
   useEffect(() => {
     if (portfolios[activeTab]) {
       const teamIds = portfolios[activeTab]?.teams
@@ -81,44 +67,32 @@ const MyPortfolio = () => {
     }
   }, [portfolios, activeTab, validateTeamSelection]);
 
-  // Handlers
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     setActiveTab(newValue);
   };
 
   const handleTeamSelection = (teamData, teamIndex: number) => {
     const updatedPortfolios = portfolios.map((portfolio) => {
       if (portfolio.newPortfolio) {
-        // Verificar duplicados
         if (portfolio.teams.some((team) => team?.id === teamData?.id)) {
           toast.error("You cannot enter duplicate fields!");
           return portfolio;
         }
-
         const updatedTeams = [...portfolio.teams];
         updatedTeams[teamIndex] = teamData;
-
-        return {
-          ...portfolio,
-          teams: updatedTeams,
-        };
+        return { ...portfolio, teams: updatedTeams };
       }
       return portfolio;
     });
-
     setPortfolios(updatedPortfolios);
   };
 
   const handleChampionshipPointsChange = (value: string) => {
     const regex = /^(?:[1-9][0-9]{0,2}|0)$/;
-
     if (value === "" || regex.test(value)) {
       const updatedPortfolios = portfolios.map((portfolio) => {
         if (portfolio.newPortfolio) {
-          return {
-            ...portfolio,
-            championship_points: value,
-          };
+          return { ...portfolio, championship_points: value };
         }
         return portfolio;
       });
@@ -126,15 +100,13 @@ const MyPortfolio = () => {
     }
   };
 
-  if (isLoading) {
-    return <Loader />;
-  }
+  if (isLoading) return <BallLoader />;
 
   return (
     <Grid
       container
-      justifyContent={"center"}
-      alignContent={"start"}
+      justifyContent="center"
+      alignContent="start"
       size={12}
       style={{
         minHeight: "700px",
@@ -145,42 +117,33 @@ const MyPortfolio = () => {
       className={`${classes.gridInstructions} enable-vertical-scroll`}
     >
       <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
-        <Box
-          component="section"
-          className={classes.boxPortfolio}
-          m={3}
-        >
+        <Box component="section" className={classes.boxPortfolio} m={3}>
           {/* Header */}
           <div className={classes.headerPortfolio}>
             <div>
-              <BasquetIcon />
-              <h2 style={{ color: "#05fa87", fontSize: "2.4rem" }}>
-                {/* Portfolio{portfolios?.length > 1 && "s"}:{" "} */}
+              <SportsSoccerIcon sx={{ color: "#00E2F6", fontSize: 36, mr: 1 }} />
+              <h2 style={{ color: "#00E2F6", fontSize: "2.4rem" }}>
                 MY PORTFOLIO ({portfolios?.length > 0 && portfolios?.length})
               </h2>
             </div>
           </div>
+
           <div>
             <h2 style={{ color: "white", textAlign: "center" }}>
               Tournament:
-              <p style={{ color: "#05fa87" }}>
-                {(currenttournamentMale && currenttournamentMale?.name) || ""}
+              <p style={{ color: "#00E2F6" }}>
+                {currentTournamentWorldCup?.name || ""}
               </p>
             </h2>
             <Divider
-              sx={{
-                borderColor: "white",
-                mb: 2,
-                width: "70%",
-                margin: "0 auto",
-              }}
+              sx={{ borderColor: "#00E2F6", mb: 2, width: "70%", margin: "0 auto" }}
             />
           </div>
+
           <Box>
             <Grid size={12}>
               <Box sx={{ width: "100%" }}>
-                {/* Botón para agregar portfolio */}
-                <AddPortfolioButton
+                <AddPortfolioButtonWorldCup
                   canAdd={portfolios?.length < 8 && isValidTournament}
                   isDisabled={isEditing}
                   onClick={handleAddPortfolio}
@@ -188,51 +151,43 @@ const MyPortfolio = () => {
 
                 {portfolios?.length === 0 ? (
                   <Box sx={{ mt: 4, mb: 4, textAlign: "center" }}>
-                    <h3 style={{ color: "white" }}>
-                      You don't have any portfolios yet. Click on "Add
-                      Portfolio" to create one.
+                    <h3 style={{ color: "#00E2F6" }}>
+                      You don't have any portfolios yet. Click on "Add Portfolio"
+                      to create one.
                     </h3>
                   </Box>
                 ) : (
                   <>
-                    {/* Tabs */}
-                    <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                    <Box sx={{ borderBottom: 1, borderColor: "#00E2F6" }}>
                       <Tabs
                         value={activeTab}
                         onChange={handleTabChange}
                         variant="scrollable"
                         scrollButtons="auto"
                         aria-label="portfolio tabs"
-                        indicatorColor="primary"
                         sx={{
+                          "& .MuiTabs-indicator": { backgroundColor: "#00E2F6" },
                           "& .MuiTabs-scrollButtons": {
-                            color: "#05fa87",
-                            "& svg": {
-                              fontSize: "2rem",
-                            },
+                            color: "#00E2F6",
+                            "& svg": { fontSize: "2rem" },
                           },
-                          "& .MuiTabs-scrollButtons.Mui-disabled": {
-                            opacity: 0.3,
-                          },
+                          "& .MuiTabs-scrollButtons.Mui-disabled": { opacity: 0.3 },
                         }}
                       >
                         {portfolios?.map((portfolio, index) => (
                           <Tab
                             key={index}
-                            label={
-                              portfolio?.name || `New (Portfolio ${index + 1})`
-                            }
+                            label={portfolio?.name || `New (Portfolio ${index + 1})`}
                             className={`${classes.tabComponent} ${
-                              index === activeTab && classes.activeTab
+                              index === activeTab ? classes.activeTab : ""
                             }`}
                           />
                         ))}
                       </Tabs>
                     </Box>
 
-                    {/* Contenido de los tabs */}
                     {portfolios?.map((portfolio, index) => (
-                      <PortfolioTab
+                      <PortfolioTabWorldCup
                         key={index}
                         portfolio={portfolio}
                         portfolioIndex={index}
@@ -240,9 +195,7 @@ const MyPortfolio = () => {
                         teams={teamsData}
                         isValidTournament={isValidTournament}
                         onTeamSelect={handleTeamSelection}
-                        onChampionshipPointsChange={
-                          handleChampionshipPointsChange
-                        }
+                        onChampionshipPointsChange={handleChampionshipPointsChange}
                         onSave={handleSavePortfolio}
                         onRemove={handleRemovePortfolio}
                         onCancel={handleCancelPortfolio}
@@ -259,4 +212,4 @@ const MyPortfolio = () => {
   );
 };
 
-export default MyPortfolio;
+export default MyPortfolioWorldCup;

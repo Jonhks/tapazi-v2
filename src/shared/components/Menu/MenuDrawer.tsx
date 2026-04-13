@@ -8,10 +8,8 @@
  *   - config de Swal (logout / install)
  */
 import { useState } from "react";
-import { styled, Theme, useTheme } from "@mui/material/styles";
-import { MUIStyledCommonProps } from "@mui/system";
+import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
-import MuiDrawer from "@mui/material/Drawer";
 import MuiAppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
@@ -69,30 +67,9 @@ export interface MenuDrawerProps {
   swal: SwalConfig;
 }
 
-// ─── MUI styled components (idénticos en todos los menús originales) ──────────
+// ─── MUI styled components ────────────────────────────────────────────────────
 
 const drawerWidth = 240;
-
-const openedMixin = (theme: Theme) => ({
-  width: drawerWidth,
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.enteringScreen,
-  }),
-  overflowX: "hidden",
-});
-
-const closedMixin = (theme: Theme) => ({
-  transition: theme.transitions.create("width", {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  overflowX: "hidden",
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up("sm")]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
-});
 
 const DrawerHeader = styled("div")(({ theme }) => ({
   display: "flex",
@@ -102,7 +79,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   ...theme.mixins.toolbar,
 }));
 
-interface AppBarProps { open?: boolean; }
+interface AppBarProps {
+  open?: boolean;
+}
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== "open",
@@ -122,28 +101,14 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-interface DrawerProps { open?: boolean; }
-
-const Drawer = styled(MuiDrawer, {
-  shouldForwardProp: (prop) => prop !== "open",
-})<DrawerProps & MUIStyledCommonProps<Theme>>(({ theme, open }) => ({
-  width: drawerWidth,
-  flexShrink: 0,
-  whiteSpace: "nowrap",
-  boxSizing: "border-box",
-  variants: [],
-  ...(open && {
-    ...openedMixin(theme),
-    "& .MuiDrawer-paper": openedMixin(theme),
-  }),
-  ...(!open && {
-    ...closedMixin(theme),
-    "& .MuiDrawer-paper": closedMixin(theme),
-  }),
-}));
-
 // ─── segmentos de URL reconocidos como activos ─────────────────────────────────
-const ACTIVE_SEGMENTS = ["home", "myPortfolio", "instructions", "stats", "history"];
+const ACTIVE_SEGMENTS = [
+  "home",
+  "myPortfolio",
+  "instructions",
+  "stats",
+  "history",
+];
 
 // ─── componente ───────────────────────────────────────────────────────────────
 
@@ -222,120 +187,144 @@ export default function MenuDrawer({
 
   return (
     <>
-      <Box sx={{ display: "flex" }}>
-        <CssBaseline />
+      <CssBaseline />
 
-        {/* ── AppBar superior ── */}
-        <AppBar
-          position="fixed"
-          open={open}
-          sx={{ backgroundColor: appBarBgColor, opacity: 0.9 }}
-        >
-          <Toolbar>
-            <IconButton
-              color="inherit"
-              aria-label="open drawer"
-              onClick={handleDrawerOpen}
-              edge="start"
-              sx={{
-                marginRight: 5,
-                color: appBarIconColor ?? "inherit",
-                ...(open && { display: "none" }),
-              }}
-            >
-              <MenuIcon />
-              {showUsernameInBar && (
-                <Typography
-                  sx={{
-                    fontSize: 20,
-                    textAlign: "center",
-                    paddingLeft: "16px",
-                    color: titleColor,
-                  }}
-                >
-                  {user?.name || "Username"}
-                </Typography>
-              )}
-            </IconButton>
-
-            {/* Acciones de la derecha */}
-            <Box
-              sx={{
-                width: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-              }}
-            >
-              {/* Wallet */}
+      {/* ── AppBar superior ── */}
+      <AppBar
+        position="fixed"
+        open={open}
+        sx={{ backgroundColor: appBarBgColor, opacity: 0.9 }}
+      >
+        <Toolbar>
+          <IconButton
+            color="inherit"
+            aria-label="open drawer"
+            onClick={handleDrawerOpen}
+            edge="start"
+            sx={{
+              marginRight: 5,
+              color: appBarIconColor ?? "inherit",
+              ...(open && { display: "none" }),
+            }}
+          >
+            <MenuIcon />
+            {showUsernameInBar && (
               <Typography
-                variant="body1"
-                onClick={() => setWalletOpen(true)}
                 sx={{
-                  color: "#dc903b",
-                  fontWeight: 600,
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "5px",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                  mr: 2,
-                  "&:hover": { opacity: 0.8 },
+                  fontSize: 20,
+                  textAlign: "center",
+                  paddingLeft: "16px",
+                  color: titleColor,
                 }}
               >
-                <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />
-                <span style={{ color: "#dc903b" }}>$ 1,023</span>
+                {user?.name || "Username"}
               </Typography>
+            )}
+          </IconButton>
 
-              {/* Selector de deporte */}
-              <Tooltip title="Go to sports selection" placement="bottom">
-                <IconButton
-                  color="inherit"
-                  onClick={() => navigate(`/sports/${userId}?from=${sportFrom}`)}
-                  edge="end"
-                  sx={{ marginRight: 5, color: appBarIconColor ?? "inherit" }}
-                >
-                  <AltRouteIcon />
-                </IconButton>
-              </Tooltip>
-
-              {/* Instalar PWA */}
-              <Tooltip title="¿How to Install The Portfolio Pool?" placement="bottom">
-                <IconButton
-                  color="inherit"
-                  onClick={showInstallModal}
-                  edge="end"
-                  sx={{ marginRight: 5, color: appBarIconColor ?? "inherit" }}
-                >
-                  <InstallDesktopIcon />
-                </IconButton>
-              </Tooltip>
-            </Box>
-          </Toolbar>
-        </AppBar>
-
-        {/* ── Drawer lateral ── */}
-        <Drawer
-          variant="permanent"
-          open={open}
-          sx={{
-            "& .MuiDrawer-paper": {
-              backgroundColor: drawerBgColor,
-              color: "white",
-            },
-          }}
-        >
-          <DrawerHeader sx={{ backgroundColor: appBarBgColor, opacity: 0.9 }}>
-            <IconButton
-              onClick={handleDrawerClose}
-              sx={{ color: appBarIconColor ?? "inherit" }}
+          {/* Acciones de la derecha */}
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "flex-end",
+            }}
+          >
+            {/* Wallet */}
+            <Typography
+              variant="body1"
+              onClick={() => setWalletOpen(true)}
+              sx={{
+                color: "#dc903b",
+                fontWeight: 600,
+                display: "flex",
+                alignItems: "center",
+                padding: "5px",
+                borderRadius: "5px",
+                cursor: "pointer",
+                mr: 2,
+                "&:hover": { opacity: 0.8 },
+              }}
             >
-              {theme.direction === "rtl" ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-            </IconButton>
-          </DrawerHeader>
-          <Divider />
+              <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />
+              <span style={{ color: "#dc903b" }}>$ 1,023</span>
+            </Typography>
 
-          {open && (
+            {/* Selector de deporte */}
+            <Tooltip
+              title="Go to sports selection"
+              placement="bottom"
+            >
+              <IconButton
+                color="inherit"
+                onClick={() => navigate(`/sports/${userId}?from=${sportFrom}`)}
+                edge="end"
+                sx={{ marginRight: 5, color: appBarIconColor ?? "inherit" }}
+              >
+                <AltRouteIcon />
+              </IconButton>
+            </Tooltip>
+
+            {/* Instalar PWA */}
+            <Tooltip
+              title="¿How to Install The Portfolio Pool?"
+              placement="bottom"
+            >
+              <IconButton
+                color="inherit"
+                onClick={showInstallModal}
+                edge="end"
+                sx={{ marginRight: 5, color: appBarIconColor ?? "inherit" }}
+              >
+                <InstallDesktopIcon />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Toolbar>
+      </AppBar>
+
+      {/* ── Sidebar lateral (Box custom — altura controlada por contenido) ── */}
+      <Box
+        sx={{
+          position: "fixed",
+          top: open ? "0px" : "64px",
+          left: 0,
+          zIndex: (t) => t.zIndex.drawer,
+          width: open ? drawerWidth : `calc(${theme.spacing(7)} + 1px)`,
+          [theme.breakpoints.up("sm")]: {
+            width: open ? drawerWidth : `calc(${theme.spacing(8)} + 1px)`,
+          },
+          transition: theme.transitions.create("width", {
+            easing: theme.transitions.easing.sharp,
+            duration: open
+              ? theme.transitions.duration.enteringScreen
+              : theme.transitions.duration.leavingScreen,
+          }),
+          overflowX: "hidden",
+          whiteSpace: "nowrap",
+          boxSizing: "border-box",
+          borderRadius: "0 0 8px 0",
+          backgroundColor: drawerBgColor,
+          color: "white",
+        }}
+      >
+        {/* Header y username solo visibles cuando el drawer está abierto */}
+        {open && (
+          <>
+            <DrawerHeader sx={{ backgroundColor: appBarBgColor, opacity: 0.9 }}>
+              <IconButton
+                onClick={handleDrawerClose}
+                sx={{ color: appBarIconColor ?? "inherit" }}
+              >
+                {theme.direction === "rtl" ? (
+                  <ChevronRightIcon />
+                ) : (
+                  <ChevronLeftIcon />
+                )}
+              </IconButton>
+            </DrawerHeader>
+            <Divider />
             <Typography
               sx={{
                 fontSize: 20,
@@ -347,65 +336,75 @@ export default function MenuDrawer({
             >
               {user?.name || "Username"}
             </Typography>
-          )}
+          </>
+        )}
 
-          <List>
-            {navItems.map((el, index) => (
-              <Grid key={index}>
-                <Tooltip title={el.text} placement="right">
-                  <ListItem disablePadding sx={{ display: "block" }}>
-                    <ListItemButton
+        <List>
+          {navItems.map((el, index) => (
+            <Grid key={index}>
+              <Tooltip
+                title={el.text}
+                placement="right"
+              >
+                <ListItem
+                  disablePadding
+                  sx={{ display: "block" }}
+                >
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: open ? "initial" : "center",
+                      px: 2.5,
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                        transform: "translateX(4px)",
+                      },
+                      ...(isActive(el.id) && {
+                        backgroundColor: "rgba(255, 255, 255, 0.05)",
+                        borderRight: `4px solid ${activeColor}`,
+                      }),
+                    }}
+                    onClick={() =>
+                      el.id !== "logOut" ? navigate(el.id) : removeUser()
+                    }
+                  >
+                    <ListItemIcon
                       sx={{
-                        minHeight: 48,
-                        justifyContent: open ? "initial" : "center",
-                        px: 2.5,
-                        transition: "all 0.2s ease-in-out",
-                        "&:hover": {
-                          backgroundColor: "rgba(255, 255, 255, 0.1)",
-                          transform: "translateX(4px)",
-                        },
-                        ...(isActive(el.id) && {
-                          backgroundColor: "rgba(255, 255, 255, 0.05)",
-                          borderRight: `4px solid ${activeColor}`,
-                        }),
+                        minWidth: 0,
+                        mr: open ? 3 : "auto",
+                        justifyContent: "center",
+                        color: isActive(el.id) ? activeColor : defaultColor,
                       }}
-                      onClick={() =>
-                        el.id !== "logOut" ? navigate(el.id) : removeUser()
-                      }
                     >
-                      <ListItemIcon
-                        sx={{
-                          minWidth: 0,
-                          mr: open ? 3 : "auto",
-                          justifyContent: "center",
-                          color: isActive(el.id) ? activeColor : defaultColor,
-                        }}
-                      >
-                        {el.icon}
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={el.text}
-                        sx={{
-                          opacity: open ? 1 : 0,
-                          "& .MuiTypography-root": {
-                            color: isActive(el.id) ? activeColor : "inherit",
-                            fontWeight: isActive(el.id) ? 700 : 400,
-                          },
-                        }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                </Tooltip>
-              </Grid>
-            ))}
-          </List>
-          <Divider />
-        </Drawer>
-
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <DrawerHeader />
-        </Box>
+                      {el.icon}
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={el.text}
+                      sx={{
+                        opacity: open ? 1 : 0,
+                        "& .MuiTypography-root": {
+                          color: isActive(el.id) ? activeColor : "inherit",
+                          fontWeight: isActive(el.id) ? 700 : 400,
+                        },
+                      }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              </Tooltip>
+            </Grid>
+          ))}
+        </List>
+        <Divider />
       </Box>
+
+      {/*
+        Espaciador en el flujo normal del documento (no fixed).
+        DrawerHeader mide exactamente la altura del AppBar (64 px en desktop,
+        56 px en mobile), lo que empuja el contenido <Outlet /> hacia abajo
+        para que quede justo debajo de la barra de navegación superior.
+      */}
+      <DrawerHeader />
 
       <WalletModal
         open={walletOpen}

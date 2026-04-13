@@ -280,11 +280,11 @@ src/
 
 ---
 
-### 10. Reorganizar carpetas de módulos en `src/sports/` — MEJORA IMPORTANTE PENDIENTE
+### 10. Reorganizar carpetas de módulos en `src/sports/` — ✅ HECHO
 
-**Problema:** Las carpetas `epl/`, `ncaa-male/`, `female/` y `worldcup/` viven directamente en `src/`, lo que hace la raíz confusa a medida que crecen los módulos.
+**Problema:** Las carpetas `epl/`, `ncaa-male/`, `female/` y `worldcup/` vivían directamente en `src/`, lo que hacía la raíz confusa a medida que crecen los módulos.
 
-**Solución propuesta:** Mover los cuatro módulos dentro de `src/sports/`:
+**Solución ejecutada:** Los cuatro módulos se movieron dentro de `src/sports/`:
 ```
 src/sports/
 ├── ncaa-male/
@@ -293,7 +293,14 @@ src/sports/
 └── worldcup/
 ```
 
-**⚠️ Requiere:** Actualizar todos los path aliases en `vite.config.ts` y `tsconfig.json` (especialmente `@/epl/*`), todos los imports relativos entre módulos y las referencias en `router.tsx`. **No hacer sin confirmación explícita del usuario.**
+**Cambios aplicados:**
+- `vite.config.ts` — aliases `@/epl`, `@/ncaa-male`, `@/female`, `@/worldcup` apuntan a `src/sports/*/`
+- `tsconfig.app.json` — paths actualizados a `sports/epl/*`, `sports/ncaa-male/*`, etc.
+- `src/router.tsx` — todos los lazy imports cambiados de `./ncaa-male/` → `./sports/ncaa-male/`, etc.
+- `epl/layouts/HistoryLayout.tsx` — imports bare `ncaa-male/...` → `@/ncaa-male/...`
+- `epl/views/HistoryPortfolios/HistoryPortfolios.tsx` — 5 imports bare → `@/ncaa-male/...`
+- `epl/components/Modal/TableModal.tsx` — import relativo `../../../types` corregido a `../../../../types`
+- `tsc -b` pasa sin errores tras los cambios.
 
 ---
 
@@ -312,6 +319,7 @@ src/sports/
 | Media     | ✅ HECHO | Crear `MenuDrawer` único con `navItems[]` como prop              | Elimina 8 archivos de menú (4 desktop + 4 mobile) |
 | Baja      | ✅ HECHO | Tipar `TableTeamsPicked` y `TablePortfolioWeekStats`, eliminar `@ts-nocheck` | Type safety completo en tablas |
 | Baja      | ✅ HECHO | Simplificar lógica `if` redundante en API (EPL + female)      | Patrón `??` / ternario en lugar de doble-if |
+| Baja      | ✅ HECHO | Mover módulos de deporte a `src/sports/` (Step 10)            | Raíz de `src/` limpia, 4 aliases actualizados |
 
 ---
 
@@ -435,3 +443,15 @@ git rm src/ncaa-male/components/Table/TableHistory.tsx \
        src/epl/components/Table/TableSeedPickTotal.tsx \
        src/epl/components/Table/TableTeamsPickedLog.tsx
 ```
+
+---
+
+**Commit 7 — Step 10: módulos de deporte → `src/sports/`**
+- Carpetas movidas: `src/ncaa-male/` → `src/sports/ncaa-male/`, `src/epl/` → `src/sports/epl/`, `src/female/` → `src/sports/female/`, `src/worldcup/` → `src/sports/worldcup/`.
+- `vite.config.ts` — aliases `@/epl`, `@/ncaa-male`, `@/female`, `@/worldcup` apuntan a `src/sports/*/`.
+- `tsconfig.app.json` — paths actualizados (todos los módulos de deporte ahora bajo `sports/`).
+- `src/router.tsx` — 20+ lazy imports actualizados (`./ncaa-male/` → `./sports/ncaa-male/`, etc.).
+- `src/sports/epl/layouts/HistoryLayout.tsx` — imports bare `"ncaa-male/..."` → `"@/ncaa-male/..."`.
+- `src/sports/epl/views/HistoryPortfolios/HistoryPortfolios.tsx` — 5 imports bare → `@/ncaa-male/...`.
+- `src/sports/epl/components/Modal/TableModal.tsx` — import de tipos corregido a `"../../../../types"`.
+- `tsc -b` pasa sin errores.

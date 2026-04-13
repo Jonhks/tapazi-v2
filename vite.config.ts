@@ -77,13 +77,16 @@ export default defineConfig(({ command }) => ({
     }),
   ],
   resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@/epl": fileURLToPath(new URL("./src/epl", import.meta.url)),
-      "@/ncaa-male": fileURLToPath(new URL("./src/ncaa-male", import.meta.url)),
-      "@/female": fileURLToPath(new URL("./src/female", import.meta.url)),
-      "@/shared": fileURLToPath(new URL("./src/shared", import.meta.url)),
-    },
+    alias: [
+      // Aliases específicos primero — deben resolverse antes que "@" genérico
+      { find: "@/epl",      replacement: fileURLToPath(new URL("./src/sports/epl",      import.meta.url)) },
+      { find: "@/ncaa-male",replacement: fileURLToPath(new URL("./src/sports/ncaa-male",import.meta.url)) },
+      { find: "@/female",   replacement: fileURLToPath(new URL("./src/sports/female",   import.meta.url)) },
+      { find: "@/worldcup", replacement: fileURLToPath(new URL("./src/sports/worldcup", import.meta.url)) },
+      { find: "@/shared",   replacement: fileURLToPath(new URL("./src/shared",          import.meta.url)) },
+      // Alias genérico al final
+      { find: "@",          replacement: fileURLToPath(new URL("./src",                 import.meta.url)) },
+    ],
   },
   build: {
     rollupOptions: {

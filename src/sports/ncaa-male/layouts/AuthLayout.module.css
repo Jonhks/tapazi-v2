@@ -12,7 +12,7 @@
 
 .containerApp {
   /* background-image: url("../../assets/img/home.jpeg"); */
-  background-image: url("../../assets/img/NCAA-MALE-HOME-BACK.png");
+  background-image: url("@/assets/img/NCAA-MALE-HOME-BACK.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -38,6 +38,15 @@
   overflow-y: scroll;
   overflow-x: scroll;
   /* background-color: red; */
+}
+
+/* Compensar el sidebar permanente (mini drawer ~65 px) en desktop */
+@media (min-width: 800px) {
+  .containerApp,
+  .containerHistory,
+  .containerStats {
+    padding-left: 65px;
+  }
 }
 
 @media (width < 900px) {

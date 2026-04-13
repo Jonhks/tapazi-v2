@@ -5,7 +5,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { ScorePortfoliosTable } from "../../../types";
+import { ScorePortfoliosTable } from "../../../../types";
 import { useMediaQuery } from "@mui/material";
 
 function createData(

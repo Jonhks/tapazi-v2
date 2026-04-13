@@ -1,5 +1,5 @@
 .containerAppFemale {
-  background-image: url("../../assets/img/NCAA-FEMALE-HOME-BACK.png");
+  background-image: url("@/assets/img/NCAA-FEMALE-HOME-BACK.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -11,7 +11,7 @@
 }
 
 .containerInstructionsFemale {
-  background-image: url("../../assets//img/NCAA-FEMALE-INSTRUCTIONS-BACK.png");
+  background-image: url("@/assets/img/NCAA-FEMALE-INSTRUCTIONS-BACK.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -23,7 +23,7 @@
 }
 
 .containerStatsFemale {
-  background-image: url("../../assets/img/NCAA-STATS_Female_backup.png");
+  background-image: url("@/assets/img/NCAA-STATS_Female_backup.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -36,7 +36,7 @@
 }
 
 .containerHistoryFemale {
-  background-image: url("../../assets/img/NCAA-HISTORY_Female_Back.png");
+  background-image: url("@/assets/img/NCAA-HISTORY_Female_Back.png");
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -45,7 +45,16 @@
   overflow: auto;
   /* display: flex; */
   /* justify-content: center; */
-  background-color: red;
+}
+
+/* Compensar el sidebar permanente (mini drawer ~65 px) en desktop */
+@media (min-width: 800px) {
+  .containerAppFemale,
+  .containerHistoryFemale,
+  .containerStatsFemale,
+  .containerInstructionsFemale {
+    padding-left: 65px;
+  }
 }
 
 /* ── Female table colors ─────────────────────────────────────────────────── */

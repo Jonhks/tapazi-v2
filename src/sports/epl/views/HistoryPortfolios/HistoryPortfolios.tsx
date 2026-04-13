@@ -3,7 +3,7 @@ import classes from "./HistoryPortfolios.module.css";
 import { Zoom } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import HistoryIcon from "@mui/icons-material/History";
-import DropDownHistory from "ncaa-male/components/Inputs/DropdDownHistory";
+import DropDownHistory from "@/ncaa-male/components/Inputs/DropdDownHistory";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -15,7 +15,7 @@ import {
   // getTournaments,
 } from "@/api/shared/ReportsAPI";
 // import { Tournament } from "@/types/index";
-import Loader from "ncaa-male/components/BallLoader/BallLoader";
+import Loader from "@/ncaa-male/components/BallLoader/BallLoader";
 import TableHistoryTeamsPerYearLog from "@/shared/components/Table/TableHistoryTeamsPerYearLog";
 import TableHistoryTeamsPerYearLogSelected from "@/shared/components/Table/TableHistoryTeamsPerYearLogSelected";
 import TableHistoryPerfectPortfolios from "@/shared/components/Table/TableHistoryPerfectPortfolios";
@@ -23,11 +23,11 @@ import TableHistoryPerfectPortfoliosSelected from "@/shared/components/Table/Tab
 import TableHistoryAllRounds from "@/shared/components/Table/TableHistoryAllRounds";
 import { sportThemes } from "@/shared/theme/colors";
 import DescriptionIcon from "@mui/icons-material/Description";
-import TeamPerYearlogGraphic from "ncaa-male/components/Graphics/TeamPerYearLogGraphic";
+import TeamPerYearlogGraphic from "@/ncaa-male/components/Graphics/TeamPerYearLogGraphic";
 import AutoGraphIcon from "@mui/icons-material/AutoGraph";
 import { typeGraphs } from "@/utils/typeGraphs";
-import TeamPerfectPortfoliosGraphic from "ncaa-male/components/Graphics/TeamPerfectPortfoliosGraphic";
-import NotRecordFounds from "ncaa-male/components/NotRecordsFound/NotRecordFounds";
+import TeamPerfectPortfoliosGraphic from "@/ncaa-male/components/Graphics/TeamPerfectPortfoliosGraphic";
+import NotRecordFounds from "@/ncaa-male/components/NotRecordsFound/NotRecordFounds";
 
 type dataDropdowndataType = {
   name: string;
