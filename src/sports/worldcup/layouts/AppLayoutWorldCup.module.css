@@ -1,0 +1,56 @@
+.containerApp {
+  background-image: url("@/assets/img/HOME-BACK-WC.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  min-height: 100vh;
+}
+
+.containerHistory {
+  background-color: #000000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.containerStats {
+  background-color: #000000;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+
+.containerInstructions {
+  background-image: url("@/assets/img/Back-INSTRUCTIONS-WC.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+/* Compensar el sidebar permanente (mini drawer ~65 px) en desktop */
+/* @media (min-width: 800px) {
+  .containerApp,
+  .containerHistory,
+  .containerStats,
+  .containerInstructions {
+    padding-left: 65px;
+  }
+} */
+
+@media (width < 900px) {
+  .containerHistory {
+    background-position: right;
+  }
+  .containerStats {
+    background-position: left;
+  }
+}

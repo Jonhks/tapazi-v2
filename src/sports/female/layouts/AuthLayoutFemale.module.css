@@ -1,0 +1,87 @@
+.containerAppFemale {
+  background-image: url("@/assets/img/NCAA-FEMALE-HOME-BACK.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  /* display: flex; */
+  /* justify-content: center; */
+}
+
+.containerInstructionsFemale {
+  background-image: url("@/assets/img/NCAA-FEMALE-INSTRUCTIONS-BACK.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  /* display: flex; */
+  /* justify-content: center; */
+}
+
+.containerStatsFemale {
+  background-image: url("@/assets/img/NCAA-STATS_Female_backup.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  /* display: flex; */
+  /* justify-content: center; */
+}
+
+.containerHistoryFemale {
+  background-image: url("@/assets/img/NCAA-HISTORY_Female_Back.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
+  /* display: flex; */
+  /* justify-content: center; */
+}
+
+/* Compensar el sidebar permanente (mini drawer ~65 px) en desktop */
+/* @media (min-width: 800px) {
+  .containerAppFemale,
+  .containerHistoryFemale,
+  .containerStatsFemale,
+  .containerInstructionsFemale {
+    padding-left: 65px;
+  }
+} */
+
+/* ── Female table colors ─────────────────────────────────────────────────── */
+.containerAppFemale :global(thead),
+.containerStatsFemale :global(thead),
+.containerHistoryFemale :global(thead),
+.containerInstructionsFemale :global(thead) {
+  background-color: #200930;
+  color: white !important;
+  opacity: 0.8;
+}
+
+.containerAppFemale :global(tr:nth-child(even)),
+.containerStatsFemale :global(tr:nth-child(even)),
+.containerHistoryFemale :global(tr:nth-child(even)),
+.containerInstructionsFemale :global(tr:nth-child(even)) {
+  background-color: #380f51;
+  color: black;
+}
+
+.containerAppFemale :global(tr:nth-child(odd)),
+.containerStatsFemale :global(tr:nth-child(odd)),
+.containerHistoryFemale :global(tr:nth-child(odd)),
+.containerInstructionsFemale :global(tr:nth-child(odd)) {
+  background-color: #380f51;
+  color: white;
+}

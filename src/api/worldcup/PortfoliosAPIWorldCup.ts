@@ -8,9 +8,7 @@ export const getPortfoliosWorldCup = async (
 ) => {
   try {
     const url = `/participants/${participantId}/portfolios?tournament_id=${tournamentId}&sport=world-cup`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.portfolios) return [];
     return data.portfolios;
   } catch (error) {
@@ -23,9 +21,7 @@ export const getPortfoliosWorldCup = async (
 export const getTeamsWorldCup = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/teams?sport=world-cup&show_all=false`;
-    const { data } = await apiEnv.get(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv.get(url);
     if (!data.teams) return [];
     return data.teams;
   } catch (error) {
@@ -38,9 +34,7 @@ export const getTeamsWorldCup = async (tournamentId: User["id"]) => {
 export const getDATTOUWorldCup = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/parameters?key=DATTOU`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.value) return "Error";
     return data.value;
   } catch (error) {
@@ -53,9 +47,7 @@ export const getDATTOUWorldCup = async (tournamentId: User["id"]) => {
 export const getHOUTOUWorldCup = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/parameters?key=HOUTOU`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.value) return "Error";
     return data.value;
   } catch (error) {
@@ -68,9 +60,7 @@ export const getHOUTOUWorldCup = async (tournamentId: User["id"]) => {
 export const getWinnerOfTeamWorldCup = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/winner-of-team?sport=world-cup&limit=99`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.teams) return [];
     return data.teams;
   } catch (error) {
@@ -86,9 +76,7 @@ export const getWinnerOfTeamHasTeamWorldCup = async (
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/winner-of-team-has-team?team_id=${teamId}`;
-    const { data } = await apiEnv(url, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data } = await apiEnv(url);
     if (!data.teams) return [];
     return data.teams;
   } catch (error) {
@@ -100,9 +88,7 @@ export const getWinnerOfTeamHasTeamWorldCup = async (
 
 export const postNewPortfolioWorldCup = async (data: PortfolioToSave) => {
   try {
-    const { data: responseData } = await apiEnv.post("/portfolios", data, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    const { data: responseData } = await apiEnv.post("/portfolios", data);
     if (responseData.message === "success")
       return "Successfully created portfolio";
   } catch (error) {
@@ -118,9 +104,7 @@ export const removePortfolioWorldCup = async ({
   portId: number;
 }) => {
   try {
-    await apiEnv.delete(`/portfolios/${portId}`, {
-      headers: { "Content-Type": "application/json;charset=utf-8" },
-    });
+    await apiEnv.delete(`/portfolios/${portId}`);
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

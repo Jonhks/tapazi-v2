@@ -28,23 +28,23 @@ export const sportThemes = {
   },
 
   ncaaFemale: {
-    // Tabla (tema naranja)
-    headerEven: "#572d03",
-    headerOdd: "#874607",
-    cellEvenColEvenRow: "#572d03",
-    cellEvenColOddRow: "#3d1f00",
-    cellOddColEvenRow: "#874607",
-    cellOddColOddRow: "#e27d25",
+    // Tabla (tema morado/navy con acento magenta)
+    headerEven: "#24253e",
+    headerOdd: "#2d2d44",
+    cellEvenColEvenRow: "#111120",
+    cellEvenColOddRow: "#1c1c2e",
+    cellOddColEvenRow: "#252538",
+    cellOddColOddRow: "#303048",
     // Menú
-    appBar: "#572d03",
-    drawer: "#572d03",
-    accent: "#e040fb",
+    appBar: "#24253e",
+    drawer: "#24253e",
+    accent: "#e040fb",    // magenta — primera columna, íconos, resaltados
     defaultIcon: "#e040fb",
     // General
-    bg: "#3d1f00",
+    bg: "#111120",
     text: "#ffffff",
-    positive: "#05fa87",
-    negative: "#ff3636",
+    positive: "#00e676",  // verde brillante para puntos pagados
+    negative: "#ff5252",  // rojo para puntos no pagados
     searchBg: "#d6cfcfff",
   },
 

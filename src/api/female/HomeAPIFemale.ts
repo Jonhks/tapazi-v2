@@ -1,157 +1,55 @@
+/**
+ * API del Home NCAA Femenino.
+ * getTournamentFemale, getHOINFOFemale, getPoponaFemale y getParticipantsFemale
+ * usan funciones genéricas de shared/.
+ */
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
-// import { User } from "../types";
+import {
+  getTournaments,
+  getParticipants as getParticipantsShared,
+  getParameter,
+} from "@/api/shared/TournamentsAPI";
 
+// ─── Re-exports con nombres originales (Female) ──────────────────────────────
 
-export const getTournamentFemale = async (id: string) => {
-  try {
-    const url = `/sports/${id}/tournaments`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    if(!data.tournaments) {
-      return [];
-    }
-    if(data.tournaments) {
-      return data.tournaments;
-    }
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }  
-}
+export const getTournamentFemale = (id: string) => getTournaments(id);
+
+export const getParticipantsFemale = (tournamentId: string) =>
+  getParticipantsShared(tournamentId);
+
+export const getPoponaFemale = (tournamentId: string) =>
+  getParameter(tournamentId, "POPONA");
+
+export const getHOINFOFemale = async (tournamentId: string) => {
+  const value = await getParameter(tournamentId, "HOINFO");
+  return value ?? [{ value: 0 }];
+};
+
+// ─── Funciones específicas de NCAA Female Home ───────────────────────────────
 
 export const getScoresFemale = async (
   tournamentId: string,
   participantId: string,
 ) => {
   try {
-    const url = `/tournaments/${tournamentId}/score/home?participant_id=${participantId}&sport=ncaa`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    if (!data.score) {
-      return [];
-    }
-    if (data.score) {
-      return data.score;
-    }
+    const { data } = await apiEnv(
+      `/tournaments/${tournamentId}/score/home?participant_id=${participantId}&sport=ncaa`,
+    );
+    return data.score ?? [];
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
     return;
   }
 };
-
-export const getPoponaFemale = async (tournamentId: string) => {
-  try {
-    const url = `/tournaments/${tournamentId}/parameters?key=POPONA`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    if (data.value) {
-      return data.value;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getHOINFOFemale = async (tournamentId: string) => {
-  try {
-    const url = `/tournaments/${tournamentId}/parameters?key=HOINFO`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-
-    if (!data.value) {
-      return [{ value: 0 }];
-    }
-
-    if (data.value) {
-      return data.value;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getParticipantsFemale = async (tournamentId: string) => {
-  try {
-    const url = `/tournaments/${tournamentId}/stats`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-
-    if (!data.data) {
-      return "Error";
-    }
-
-    if (data.data) {
-      return data.data;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-// export const getPortfoliosCountFemale = async (tournamentId: string) => {
-//   try {
-//     const url = `/tournaments/${tournamentId}/stats`;
-//     const { data } = await apiEnv(url, {
-//       headers: {
-//         "Content-Type": "application/json;charset=utf-8",
-//       },
-//     });
-
-//     if (!data.data) {
-//       return "Error";
-//     }
-
-//     if (data.data) {
-//       return data.data;
-//     }
-//   } catch (error) {
-//     if (isAxiosError(error) && error.response)
-//       throw new Error(error.response.data.error);
-//     return;
-//   }
-// };
 
 export const gatPayoutFemale = async (tournamentId: string) => {
   try {
-    const url = `/tournaments/${tournamentId}/payouts?portfolios=25`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
-    // console.log(data, "payouyt data");
-    if (!data.payouts) {
-      return [{ payouts: 0 }];
-    }
-
-    if (data.payouts) {
-      return data.payouts;
-    }
+    const { data } = await apiEnv(
+      `/tournaments/${tournamentId}/payouts?portfolios=25`,
+    );
+    return data.payouts ?? [{ payouts: 0 }];
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
