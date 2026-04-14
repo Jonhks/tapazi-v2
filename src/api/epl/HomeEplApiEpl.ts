@@ -1,6 +1,11 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
-import { User } from "../../types";
+import {
+  // CreatePortfolio,
+  // PortfolioComplete,
+  // Portfolios,
+  User,
+} from "../../types";
 
 export const getPayoutEpl = async (
   tournamentId: User["id"],
@@ -8,8 +13,18 @@ export const getPayoutEpl = async (
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/payouts?portfolios=${portfolioCount}`;
-    const { data } = await apiEnv(url);
-    return data.payouts ?? "Error payouts";
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.payouts) {
+      return "Error payouts";
+    }
+    if (data.payouts) {
+      return data?.payouts;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -20,8 +35,18 @@ export const getPayoutEpl = async (
 export const getParticipantsEpl = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/stats`;
-    const { data } = await apiEnv(url);
-    return data.data?.participants ?? 0;
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data.participants) {
+      return 0;
+    }
+    if (data.data.participants) {
+      return data?.data.participants;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -32,8 +57,20 @@ export const getParticipantsEpl = async (tournamentId: User["id"]) => {
 export const getPoponaEpl = async () => {
   try {
     const url = `/tournaments/3/parameters?key=POPONA`;
-    const { data } = await apiEnv(url);
-    return data.value ?? "Error popona";
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log("getPoponaEpl", data);
+
+    if (!data.value) {
+      return "Error popona";
+    }
+
+    if (data.value) {
+      return data.value;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -44,8 +81,20 @@ export const getPoponaEpl = async () => {
 export const getHOINFOEpl = async () => {
   try {
     const url = `/tournaments/3/parameters?key=HOINFO`;
-    const { data } = await apiEnv(url);
-    return data.value ?? "Error Hinfo";
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log("Hinfo", data);
+
+    if (!data.value) {
+      return "Error Hinfo";
+    }
+
+    if (data.value) {
+      return data.value;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -56,8 +105,18 @@ export const getHOINFOEpl = async () => {
 export const getAllPortfoliosEpl = async () => {
   try {
     const url = `/tournaments/3/stats`;
-    const { data } = await apiEnv(url);
-    return data.data ?? [];
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+
+    if (!data.data) {
+      return [];
+    }
+    if (data.data) {
+      return data?.data;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -71,8 +130,20 @@ export const getScoreHomeEpl = async (
 ) => {
   try {
     const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}&epl`;
-    const { data } = await apiEnv(url);
-    return data.score ?? [];
+    // console.log(url);
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (!data.score) {
+      return [];
+    }
+    if (data.score) {
+      return data?.score;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -86,8 +157,19 @@ export const getScorePeerWeekHomeEpl = async (
 ) => {
   try {
     const url = `/portfolios/${portfolioId}/per-week?week=${week}`;
-    const { data } = await apiEnv(url);
-    return data.teams ?? "Error teams";
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (!data.teams) {
+      return "Error teams";
+    }
+    if (data.teams) {
+      return data?.teams;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

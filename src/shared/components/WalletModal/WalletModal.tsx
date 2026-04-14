@@ -9,7 +9,7 @@ import {
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { TableBase } from "@/shared/components/Table/TableBase";
+import { TableBase } from "@/ncaa-male/components/Table/Table";
 import { getWallet } from "@/api/WalletAPI";
 import { sportThemes, SportKey } from "@/shared/theme/colors";
 
@@ -290,7 +290,6 @@ export default function WalletModal({
               data={transactions}
               columns={columns}
               maxHeight="380px"
-              theme={theme}
             />
           )}
         </Box>

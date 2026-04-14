@@ -1,31 +1,13 @@
 * {
   margin: 0;
   padding: 0;
-  /* Scrollbars siempre visibles — el cliente usa mouse y arrastra barras directamente */
-  scrollbar-width: thin;                      /* Firefox: barra delgada */
-  scrollbar-color: #888 rgba(0,0,0,0.15);     /* Firefox: thumb / track sutilmente visible */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
 }
 
-/* Webkit (Chrome, Edge) — scrollbar delgada y siempre visible */
-*::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-*::-webkit-scrollbar-thumb {
-  background-color: #888;
-  border-radius: 4px;
-}
-/*
-  Track con fondo sutil: el usuario ve la "ranura" del scroll
-  aunque todavía no haya arrastrado, así sabe que puede moverse.
-*/
-*::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 4px;
-}
-*::-webkit-scrollbar-corner {
-  background: transparent;
-}
+/* *::-webkit-scrollbar {
+  display: none;
+} */
 
 :root {
   --verde: #3ed076;
@@ -63,10 +45,36 @@ td {
   border: 1px solid black;
 }
 
-/* Evitar que las cajas superiores se escondan bajo el sidebar fijo */
-@media (min-width: 800px) {
-  .subboxes-wrapper {
-    padding-left: 65px !important;
-    box-sizing: border-box !important;
-  }
+/* Enable specific scrolls */
+.enable-horizontal-scroll {
+  scrollbar-width: auto;
+  -ms-overflow-style: auto;
+}
+.enable-horizontal-scroll::-webkit-scrollbar {
+  display: block;
+  height: 8px;
+}
+.enable-horizontal-scroll::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 4px;
+}
+.enable-horizontal-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.enable-vertical-scroll {
+  scrollbar-width: auto !important;
+  -ms-overflow-style: auto !important;
+  overflow-y: auto !important;
+}
+.enable-vertical-scroll::-webkit-scrollbar {
+  display: block !important;
+  width: 8px !important;
+}
+.enable-vertical-scroll::-webkit-scrollbar-thumb {
+  background-color: #888 !important;
+  border-radius: 4px !important;
+}
+.enable-vertical-scroll::-webkit-scrollbar-track {
+  background: transparent !important;
 }

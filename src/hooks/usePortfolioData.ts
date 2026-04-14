@@ -9,9 +9,9 @@ import {
   getHOUTOU,
   getWinnerOfTeam,
   getWinnerOfTeamHasTeam,
-} from "@/api/ncaa-male/PortfoliosAPI";
+} from "@/api/PortfoliosAPI";
 import { isDateTimeReached } from "@/utils/getDaysLeft";
-import { getTournamentMale } from "@/api/ncaa-male/HomeAPI";
+import { getTournamentMale } from "@/api/HomeAPI";
 import { log } from "console";
 
 export const usePortfolioData = (userId: string) => {
@@ -22,7 +22,7 @@ export const usePortfolioData = (userId: string) => {
     {
       queryKey: ["tournamentMale"],
       queryFn: () => getTournamentMale("1"),
-      retry: 1,
+      retry: true,
     },
   );
 
@@ -34,7 +34,7 @@ export const usePortfolioData = (userId: string) => {
     queryKey: ["portfolios", userId],
     queryFn: () => getPortfolios(userId, currenttournamentMale?.id),
     enabled: !!currenttournamentMale,
-    retry: 1,
+    retry: true,
   });
 
   // Obtener equipos
@@ -55,14 +55,14 @@ export const usePortfolioData = (userId: string) => {
     queryKey: ["dattou", userId],
     queryFn: () => getDATTOU(currenttournamentMale?.id),
     enabled: !!currenttournamentMale,
-    retry: 1,
+    retry: true,
   });
 
   const { data: dataHOUTOU } = useQuery({
     queryKey: ["houtou", userId],
     queryFn: () => getHOUTOU(currenttournamentMale?.id),
     enabled: !!currenttournamentMale,
-    retry: 1,
+    retry: true,
   });
 
   // console.log("asdmakñsdaksk", dataHOUTOU, dataDATTOU, "api");
@@ -72,7 +72,7 @@ export const usePortfolioData = (userId: string) => {
     queryKey: ["winnerOfTeam", userId],
     queryFn: () => getWinnerOfTeam(currenttournamentMale?.id),
     enabled: !!currenttournamentMale,
-    retry: 1,
+    retry: false,
   });
 
   // Validar fechas del torneo

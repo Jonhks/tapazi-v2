@@ -6,7 +6,9 @@ import { isAxiosError } from "axios";
 export const getStatsWorldCup = async (tournamentId: string) => {
   try {
     const url = `/tournaments/${tournamentId}/stats`;
-    const { data } = await apiEnv(url);
+    const { data } = await apiEnv(url, {
+      headers: { "Content-Type": "application/json;charset=utf-8" },
+    });
     if (!data.data) return "Error";
     if (data.data) return data.data;
   } catch (error) {

@@ -5,7 +5,11 @@ import { isAxiosError } from "axios";
 export const getTournaments = async (id: string) => {
   const urlGetTournaments = `/sports/${id}/tournaments`;
   try {
-    const { data } = await apiEnv.get(urlGetTournaments);
+    const { data } = await apiEnv.get(urlGetTournaments, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
 
     if (!data.tournaments) {
       return "Error";

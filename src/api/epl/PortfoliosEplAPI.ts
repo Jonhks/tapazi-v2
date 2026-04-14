@@ -14,8 +14,17 @@ export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
         ? `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}&epl`
         : `/participants/${id}/portfolios?tournament_id=3&epl`;
     // const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
-    const { data } = await apiEnv(url);
-    return data.portfolios ?? [];
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    if (!data.portfolios) {
+      return [];
+    }
+    if (data.portfolios) {
+      return data?.portfolios;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -27,7 +36,11 @@ export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
 export const getTeamsEpl = async (sport: User["id"]) => {
   try {
     const url = `/sports/${sport}/teams`;
-    const { data } = await apiEnv.get(url);
+    const { data } = await apiEnv.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
     // console.log(data);
 
     if (data.teams) {
@@ -43,10 +56,20 @@ export const getTeamsEpl = async (sport: User["id"]) => {
 export const getNumberTEAMXP = async () => {
   try {
     const url = `tournaments/3/parameters?key=TEAMXP`;
-    const { data } = await apiEnv.get(url);
+    const { data } = await apiEnv.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
     // console.log(data);
 
-    return data.value ?? 0;
+    if (!data.value) {
+      return 0;
+    }
+
+    if (data.value) {
+      return data.value;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -57,10 +80,20 @@ export const getNumberTEAMXP = async () => {
 export const getTournamentsId = async () => {
   try {
     const url = `sports/2/tournaments`;
-    const { data } = await apiEnv.get(url);
+    const { data } = await apiEnv.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
     // console.log(data);
 
-    return data.tournaments ?? 0;
+    if (!data.tournaments) {
+      return 0;
+    }
+
+    if (data.tournaments) {
+      return data.tournaments;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -76,7 +109,11 @@ export const getTeamsDynamic = async (
   try {
     // const url = `/sports/${sport}/teams`;
     const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
-    const { data } = await apiEnv.get(url);
+    const { data } = await apiEnv.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
     // console.log(data);
 
     if (data.teams) {
@@ -96,7 +133,11 @@ export const getTeamsNotAvailable = async (
   try {
     // const url = `/sports/${sport}/teams`;
     const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
-    const { data } = await apiEnv.get(url);
+    const { data } = await apiEnv.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
     // console.log(data);
 
     if (data.teams) {
@@ -118,7 +159,11 @@ export const postNewPortfolioEpl = async ({
   console.log(postNewPortfolioEpl, "postNewPortfolioEpl");
 
   try {
-    const { data } = await apiEnv.post(urlLogin, port);
+    const { data } = await apiEnv.post(urlLogin, port, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
     console.log(data, "respuesta");
     if (
       !data.message &&
@@ -152,6 +197,11 @@ export const postEditPortfolio = async ({
     const { data } = await apiEnv.put(
       urlLogin,
       { teams: port },
+      {
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      },
     );
     console.log(data);
     if (
@@ -218,6 +268,11 @@ export const removeportfolio = async ({
     const { data } = await apiEnv.post(
       urlRemovePortfolio,
       JSON.stringify(postPortfolio),
+      {
+        headers: {
+          "Content-Type": "application/json;charset=utf-8",
+        },
+      },
     );
     console.log(data);
   } catch (error) {
@@ -230,9 +285,19 @@ export const removeportfolio = async ({
 export const getDATTOU = async () => {
   try {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=DATTOU`;
-    const { data } = await apiEnv(url);
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
 
-    return data.success ? data.data.value : "Error";
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.value;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -243,9 +308,19 @@ export const getDATTOU = async () => {
 export const getHOUTOU = async () => {
   try {
     const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOUTOU`;
-    const { data } = await apiEnv(url);
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
 
-    return data.success ? data.data.value : "Error";
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.value;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -256,9 +331,19 @@ export const getHOUTOU = async () => {
 export const getWinnerOfTeam = async () => {
   try {
     const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
-    const { data } = await apiEnv(url);
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
 
-    return data.success ? data.data.winnerOfTeam : "Error";
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.winnerOfTeam;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -269,9 +354,19 @@ export const getWinnerOfTeam = async () => {
 export const getWinnerOfTeamHasTeam = async (id: string) => {
   try {
     const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
-    const { data } = await apiEnv(url);
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
 
-    return data.success ? data.data.winnerOfTeamHasTeam : "Error";
+    if (!data.success) {
+      return "Error";
+    }
+
+    if (data.success) {
+      return data.data.winnerOfTeamHasTeam;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -283,9 +378,19 @@ export const getTeamsDynamics = async (id: string, portfolioId: string) => {
   // portfolioId = "566";
   try {
     const url = `/sports/${id}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
-    const { data } = await apiEnv(url);
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
 
-    return data.teams ?? "Error";
+    if (!data.teams) {
+      return "Error";
+    }
+
+    if (data.teams) {
+      return data.teams;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -297,10 +402,20 @@ export const getParameterWeek = async (id: string, parameter: string) => {
   // portfolioId = "566";
   try {
     const url = `/tournaments/${id}/parameters?key=${parameter}`;
-    const { data } = await apiEnv(url);
+    const { data } = await apiEnv(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
     // console.log(data);
 
-    return data.value ?? "Error";
+    if (!data.value) {
+      return "Error";
+    }
+
+    if (data.value) {
+      return data.value;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

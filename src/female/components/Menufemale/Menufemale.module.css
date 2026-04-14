@@ -1,0 +1,31 @@
+.appbar,
+.appbar > button {
+  background-color: #24253e !important;
+  color: #df2af9 !important;
+  opacity: 0.8 !important;
+}
+
+.Mydrawer > div {
+  background-color: #24253e !important;
+  height: auto !important;
+  color: white !important;
+  opacity: 0.8 !important;
+}
+
+.titleDrawerFuera {
+  font-size: 20px;
+  text-align: center;
+  padding: 0 0 0 24px;
+  color: #df2af9;
+}
+
+.titleDrawer {
+  font-size: 20px;
+  text-align: center;
+  padding: 16px 0 0 0;
+  color: #df2af9;
+}
+
+.modalInstall {
+  background-color: red;
+}

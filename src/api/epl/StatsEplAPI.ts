@@ -4,8 +4,18 @@ import { isAxiosError } from "axios";
 export const getStatsEpl = async ({ week }: { week: string }) => {
   try {
     const url = `tournaments/3/score/stats/portfolio?week=${week}`;
-    const { data } = await apiEnv.get(url);
-    return data.data ?? [];
+    const { data } = await apiEnv.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (data.data) {
+      return data.data;
+    } else {
+      return [];
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -20,8 +30,18 @@ export const getScoreWeeksEpl = async ({
 }) => {
   try {
     const url = `tournaments/${tournamentId}/score/weeks`;
-    const { data } = await apiEnv.get(url);
-    return data.weeks ?? [];
+    const { data } = await apiEnv.get(url, {
+      headers: {
+        "Content-Type": "application/json;charset=utf-8",
+      },
+    });
+    // console.log(data);
+
+    if (!data.weeks) {
+      return [];
+    } else {
+      return data.weeks;
+    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
