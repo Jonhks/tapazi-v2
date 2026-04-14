@@ -314,7 +314,7 @@ const Stats = () => {
         overflowY: "scroll",
         overflowX: "hidden",
       }}
-      className={`${classes.gridInstructions} enable-vertical-scroll`}
+      className={`${classes.gridInstructions}`}
     >
       <Grid
         container

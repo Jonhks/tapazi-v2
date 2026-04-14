@@ -268,7 +268,7 @@ const Login = () => {
                       MenuProps={{
                         slotProps: {
                           paper: {
-                            className: "enable-vertical-scroll",
+
                             sx: {
                               // maxHeight: 250,
                               backgroundColor: "rgba(0, 0, 0, 0.9)",
@@ -331,7 +331,7 @@ const Login = () => {
                       MenuProps={{
                         slotProps: {
                           paper: {
-                            className: "enable-vertical-scroll",
+
                             sx: {
                               // maxHeight: 250,
                               backgroundColor: "rgba(0, 0, 0, 0.9)",

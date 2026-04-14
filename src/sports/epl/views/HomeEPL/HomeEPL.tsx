@@ -92,10 +92,10 @@ const HomeEPL = () => {
           overflowY: "scroll",
           overflowX: "hidden",
         }}
-        className={`${classes.gridInstructions} enable-vertical-scroll`}
+        className={`${classes.gridInstructions}`}
       >
         <Grid
-          size={11}
+          size={12}
           display={"flex"}
           flexWrap={isMobile ? "wrap" : "nowrap"}
           justifyContent={"space-around"}
@@ -118,7 +118,7 @@ const HomeEPL = () => {
               IS HERE!!!
             </p>
             <div
-              className={`${classes.subBox} enable-vertical-scroll`}
+              className={`${classes.subBox}`}
               style={{
                 display: "flex",
                 alignItems: "start", // Centra verticalmente

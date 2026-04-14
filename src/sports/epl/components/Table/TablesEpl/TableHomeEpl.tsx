@@ -233,7 +233,7 @@ const TableHomeEpl = ({
           alignItems: "center",
           justifyContent: "center",
         }}
-        // className="enable-horizontal-scroll"
+        //
       >
         <ModalTableHome
           openModal={openModal}
@@ -265,7 +265,6 @@ const TableHomeEpl = ({
         />
       </div>
       <div
-        className="enable-horizontal-scroll"
         style={{ width: "100%", overflowX: "scroll" }}
       >
         <table

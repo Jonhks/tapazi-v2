@@ -111,7 +111,7 @@ const HomeWorldCup = () => {
             overflowY: "scroll",
             overflowX: "hidden",
           }}
-          className={`${classes.gridInstructions} enable-vertical-scroll`}
+          className={`${classes.gridInstructions}`}
         >
           <Grid
             size={11}
@@ -133,7 +133,7 @@ const HomeWorldCup = () => {
                 {DataPopona?.toUpperCase()} IS HERE!!!
               </p>
               <div
-                className={`${classes.subBox} enable-vertical-scroll`}
+                className={`${classes.subBox}`}
                 style={{
                   display: "flex",
                   alignItems: "center", // Centra verticalmente
@@ -141,7 +141,7 @@ const HomeWorldCup = () => {
                   height: "100%", // Opcional, para ocupar todo el alto
                 }}
               >
-                <p
+                <div
                   style={{
                     margin: 0,
                     whiteSpace: "pre-wrap", // Permite que el texto se ajuste al ancho
@@ -150,7 +150,7 @@ const HomeWorldCup = () => {
                   }}
                 >
                   {dataHOINFO && renderDescription(dataHOINFO)}
-                </p>
+                </div>
               </div>
             </Grid>
 

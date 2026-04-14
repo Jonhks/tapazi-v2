@@ -30,7 +30,7 @@ const InstructionsEpl = () => {
           height: "calc(100vh - 56px)",
           overflow: "scroll",
         }}
-        className={`${classes.gridInstructions} enable-vertical-scroll`}
+        className={`${classes.gridInstructions}`}
       >
         <Grid size={{ xs: 11, md: 8 }}>
           <Box
@@ -42,7 +42,7 @@ const InstructionsEpl = () => {
             </p>
             <Grid
               size={12}
-              className={`${classes.subBoxInstructions} enable-vertical-scroll enable-horizontal-scroll`}
+              className={`${classes.subBoxInstructions}`}
             >
               {instructionsData.map((paragrpah: Instructions, i: number) => (
                 <div

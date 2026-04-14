@@ -37,14 +37,14 @@
 }
 
 /* Compensar el sidebar permanente (mini drawer ~65 px) en desktop */
-@media (min-width: 800px) {
+/* @media (min-width: 800px) {
   .containerApp,
   .containerHistory,
   .containerStats,
   .containerInstructions {
     padding-left: 65px;
   }
-}
+} */
 
 @media (width < 900px) {
   .containerHistory {

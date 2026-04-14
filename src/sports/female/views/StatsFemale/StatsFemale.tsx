@@ -259,8 +259,11 @@ const Stats = () => {
         minHeight: "700px",
         height: "calc(100vh - 56px)",
         overflowY: "scroll",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-around",
       }}
-      className={`${classes.gridInstructions} enable-vertical-scroll`}
+      className={`${classes.gridInstructions}`}
     >
       <Grid
         container
@@ -352,7 +355,7 @@ const Stats = () => {
         display={"flex"}
         justifyContent={"center"}
         alignContent={"center"}
-        mb={3}
+        // mb={3}
       >
         {score === "Score" && (
           <Zoom in={true}>

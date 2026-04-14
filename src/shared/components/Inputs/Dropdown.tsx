@@ -51,7 +51,7 @@ export default function Dropdown({
         MenuProps={{
           slotProps: {
             paper: {
-              className: "enable-vertical-scroll",
+
               sx: {
                 backgroundColor: menuBgColor,
                 color: "#fff",

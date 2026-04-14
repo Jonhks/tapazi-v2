@@ -4,7 +4,7 @@
  * El último NavItem con id que contiene "more" abre el popup de menú.
  * El NavItem con id === "logOut" llama removeUser() directamente.
  */
-import { useState } from "react";
+import React, { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -27,6 +27,7 @@ import type { NavItem, SwalConfig } from "./MenuDrawer";
 export interface MenuMobileProps {
   navItems: NavItem[];
   activeColor: string;
+  defaultColor?: string;
   appBarBgColor: string;
   /** Color de fondo del popup "More". */
   menuPaperBgColor: string;
@@ -53,6 +54,7 @@ export default function MenuMobile({
   sportKey,
   sportFrom,
   usernameLabelColor = "inherit",
+  defaultColor = "gray",
   swal,
 }: MenuMobileProps) {
   const navigate = useNavigate();
@@ -60,7 +62,7 @@ export default function MenuMobile({
   const userId = params.userId!;
   const location = useLocation();
 
-  const DEFAULT_COLOR = "inherit";
+  const DEFAULT_COLOR = defaultColor;
 
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
     useState<null | HTMLElement>(null);
@@ -231,7 +233,13 @@ export default function MenuMobile({
                     },
                   }}
                 >
-                  {item.icon}
+                  {React.isValidElement(item.icon)
+                    ? React.cloneElement(item.icon as React.ReactElement<any>, {
+                        sx: {
+                          color: isActive(item.id) ? activeColor : DEFAULT_COLOR,
+                        },
+                      })
+                    : item.icon}
                 </IconButton>
               </Box>
             ))}

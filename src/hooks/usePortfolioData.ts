@@ -22,7 +22,7 @@ export const usePortfolioData = (userId: string) => {
     {
       queryKey: ["tournamentMale"],
       queryFn: () => getTournamentMale("1"),
-      retry: true,
+      retry: 1,
     },
   );
 
@@ -34,7 +34,7 @@ export const usePortfolioData = (userId: string) => {
     queryKey: ["portfolios", userId],
     queryFn: () => getPortfolios(userId, currenttournamentMale?.id),
     enabled: !!currenttournamentMale,
-    retry: true,
+    retry: 1,
   });
 
   // Obtener equipos
@@ -55,14 +55,14 @@ export const usePortfolioData = (userId: string) => {
     queryKey: ["dattou", userId],
     queryFn: () => getDATTOU(currenttournamentMale?.id),
     enabled: !!currenttournamentMale,
-    retry: true,
+    retry: 1,
   });
 
   const { data: dataHOUTOU } = useQuery({
     queryKey: ["houtou", userId],
     queryFn: () => getHOUTOU(currenttournamentMale?.id),
     enabled: !!currenttournamentMale,
-    retry: true,
+    retry: 1,
   });
 
   // console.log("asdmakñsdaksk", dataHOUTOU, dataDATTOU, "api");
@@ -72,7 +72,7 @@ export const usePortfolioData = (userId: string) => {
     queryKey: ["winnerOfTeam", userId],
     queryFn: () => getWinnerOfTeam(currenttournamentMale?.id),
     enabled: !!currenttournamentMale,
-    retry: false,
+    retry: 1,
   });
 
   // Validar fechas del torneo

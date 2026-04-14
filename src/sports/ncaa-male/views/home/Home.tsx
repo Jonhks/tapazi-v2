@@ -116,10 +116,10 @@ const Home = () => {
               overflowY: "scroll",
               overflowX: "hidden",
             }}
-            className={`${classes.gridInstructions} enable-vertical-scroll`}
+            className={`${classes.gridInstructions}`}
           >
             <Grid
-              size={11}
+              size={12}
               display={"flex"}
               flexWrap={isMobile ? "wrap" : "nowrap"}
               justifyContent={"space-around"}

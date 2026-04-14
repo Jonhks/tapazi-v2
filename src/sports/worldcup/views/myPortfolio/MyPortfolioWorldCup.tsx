@@ -114,7 +114,7 @@ const MyPortfolioWorldCup = () => {
         overflowY: "scroll",
         overflowX: "hidden",
       }}
-      className={`${classes.gridInstructions} enable-vertical-scroll`}
+      className={`${classes.gridInstructions}`}
     >
       <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
         <Box component="section" className={classes.boxPortfolio} m={3}>

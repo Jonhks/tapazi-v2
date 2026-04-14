@@ -599,7 +599,7 @@ const MyPortfolioEPL = () => {
         overflowY: "scroll",
         overflowX: "hidden",
       }}
-      className={`${classes.gridInstructions} enable-vertical-scroll`}
+      className={`${classes.gridInstructions}`}
     >
       <Grid size={{ xs: 12, sm: 10, lg: 8 }}>
         <Box

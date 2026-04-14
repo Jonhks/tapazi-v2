@@ -7,7 +7,7 @@
  *   - sportKey para WalletModal
  *   - config de Swal (logout / install)
  */
-import { useState } from "react";
+import React, { useState } from "react";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiAppBar from "@mui/material/AppBar";
@@ -377,7 +377,13 @@ export default function MenuDrawer({
                         color: isActive(el.id) ? activeColor : defaultColor,
                       }}
                     >
-                      {el.icon}
+                      {React.isValidElement(el.icon)
+                        ? React.cloneElement(el.icon as React.ReactElement<any>, {
+                            sx: {
+                              color: isActive(el.id) ? activeColor : defaultColor,
+                            },
+                          })
+                        : el.icon}
                     </ListItemIcon>
                     <ListItemText
                       primary={el.text}

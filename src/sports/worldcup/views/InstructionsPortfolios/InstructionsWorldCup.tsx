@@ -44,7 +44,7 @@ const InstructionsWorldCup = () => {
           overflowY: "scroll",
           overflowX: "hidden",
         }}
-        className={`${classes.gridInstructions} enable-vertical-scroll`}
+        className={`${classes.gridInstructions}`}
       >
         <Grid size={{ xs: 11, md: 8 }}>
           <Box component="section" className={classes.boxInstructions}>
@@ -53,7 +53,7 @@ const InstructionsWorldCup = () => {
             </p>
             <Grid
               size={12}
-              className={`${classes.subBoxInstructions} enable-vertical-scroll enable-horizontal-scroll`}
+              className={`${classes.subBoxInstructions}`}
             >
               {instructionsData.map((paragraph: Instructions, i: number) => (
                 <div

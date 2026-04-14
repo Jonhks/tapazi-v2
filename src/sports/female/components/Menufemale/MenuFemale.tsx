@@ -19,6 +19,7 @@ export default function MiniDrawer() {
       sportKey="ncaaFemale"
       sportFrom="female"
       appBarBgColor="rgba(36, 37, 62, 0.95)"
+      appBarIconColor="#e040fb"
       drawerBgColor="rgba(36, 37, 62, 0.95)"
       titleColor="#e040fb"
       showUsernameInBar

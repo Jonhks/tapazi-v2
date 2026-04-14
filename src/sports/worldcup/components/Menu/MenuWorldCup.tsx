@@ -21,6 +21,7 @@ export default function MenuWorldCup() {
       sportKey="worldcup"
       sportFrom="worldcup"
       appBarBgColor={wc.appBar}
+      appBarIconColor={wc.accent}
       drawerBgColor={wc.appBar}
       titleColor={wc.positive}
       showUsernameInBar
