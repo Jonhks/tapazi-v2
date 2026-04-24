@@ -12,14 +12,13 @@ info:
     | EPL         | `epl`         | 2        |
     | World Cup   | `world-cup`   | 4        |
 
-  version: 2.0.1
+  version: 3.0.1
   contact:
     email: jonhgx@gmail.com
 
 servers:
   - url: https://portfolio-pool-test.damnserver.com:443
     description: Test environment
-
 
 tags:
   - name: Auth
@@ -57,9 +56,21 @@ x-tagGroups:
   - name: Auth
     tags: [Auth]
   - name: NCAA Male
-    tags: [NCAA Male - Home, NCAA Male - Portfolios, NCAA Male - Stats, NCAA Male - History]
+    tags:
+      [
+        NCAA Male - Home,
+        NCAA Male - Portfolios,
+        NCAA Male - Stats,
+        NCAA Male - History,
+      ]
   - name: NCAA Female
-    tags: [NCAA Female - Home, NCAA Female - Portfolios, NCAA Female - Stats, NCAA Female - History]
+    tags:
+      [
+        NCAA Female - Home,
+        NCAA Female - Portfolios,
+        NCAA Female - Stats,
+        NCAA Female - History,
+      ]
   - name: EPL
     tags: [EPL - Home, EPL - Portfolios, EPL - Stats]
   - name: World Cup
@@ -487,7 +498,12 @@ paths:
         "404":
           description: Not found
     delete:
-      tags: [NCAA Male - Portfolios, NCAA Female - Portfolios, World Cup - Portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          World Cup - Portfolios,
+        ]
       summary: Delete portfolio
       description: Not used by EPL (EPL uses PUT /remove).
       parameters:
@@ -504,7 +520,12 @@ paths:
 
   /tournaments/{tournamentId}/teams:
     get:
-      tags: [NCAA Male - Portfolios, NCAA Female - Portfolios, World Cup - Portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          World Cup - Portfolios,
+        ]
       summary: Get teams available for a tournament
       description: |
         - **NCAA:** `?sport=ncaa&show_all=false`
@@ -574,7 +595,12 @@ paths:
 
   /tournaments/{tournamentId}/winner-of-team:
     get:
-      tags: [NCAA Male - Portfolios, NCAA Female - Portfolios, World Cup - Portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          World Cup - Portfolios,
+        ]
       summary: Get winner-of-team options
       description: |
         - **NCAA:** `?sport=ncaa&limit=99`
@@ -599,7 +625,12 @@ paths:
 
   /tournaments/{tournamentId}/winner-of-team-has-team:
     get:
-      tags: [NCAA Male - Portfolios, NCAA Female - Portfolios, World Cup - Portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          World Cup - Portfolios,
+        ]
       summary: Get teams under a winner-of-team group
       description: |
         - **NCAA:** `?sport=ncaa&winner_of_team_id={id}`
