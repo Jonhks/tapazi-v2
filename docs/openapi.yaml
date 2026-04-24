@@ -22,7 +22,7 @@ servers:
 
 
 tags:
-  - name: auth
+  - name: Auth
     description: Authentication, registration, countries and user management.
   - name: NCAA Male - Home
     description: Home screen — `sport=ncaa`, sport_id 1/2.
@@ -53,10 +53,22 @@ tags:
   - name: World Cup - History
     description: Historical reports for FIFA World Cup.
 
+x-tagGroups:
+  - name: Auth
+    tags: [Auth]
+  - name: NCAA Male
+    tags: [NCAA Male - Home, NCAA Male - Portfolios, NCAA Male - Stats, NCAA Male - History]
+  - name: NCAA Female
+    tags: [NCAA Female - Home, NCAA Female - Portfolios, NCAA Female - Stats, NCAA Female - History]
+  - name: EPL
+    tags: [EPL - Home, EPL - Portfolios, EPL - Stats]
+  - name: World Cup
+    tags: [World Cup - Home, World Cup - Portfolios, World Cup - History]
+
 paths:
   /countries:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get all countries
       responses:
         "200":
@@ -73,7 +85,7 @@ paths:
 
   /countries/{countryId}/states:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get states by country
       parameters:
         - name: countryId
@@ -96,7 +108,7 @@ paths:
 
   /participants/signup:
     post:
-      tags: [auth]
+      tags: [Auth]
       summary: Sign up new participant
       requestBody:
         required: true
@@ -112,7 +124,7 @@ paths:
 
   /participants/login:
     post:
-      tags: [auth]
+      tags: [Auth]
       summary: Login participant
       requestBody:
         required: true
@@ -135,7 +147,7 @@ paths:
 
   /participants/forgot:
     post:
-      tags: [auth]
+      tags: [Auth]
       summary: Forgot password
       requestBody:
         required: true
@@ -152,7 +164,7 @@ paths:
 
   /sports:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get all sports
       responses:
         "200":
@@ -169,7 +181,7 @@ paths:
 
   /participants/{participantId}/sports:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get sports for a participant
       parameters:
         - name: participantId
@@ -192,7 +204,7 @@ paths:
 
   /participants/{participantId}/wallet:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get participant wallet
       parameters:
         - name: participantId
