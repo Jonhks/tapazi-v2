@@ -9,24 +9,16 @@
     </style>
   </head>
   <body>
-    <rapi-doc
-      spec-url         = "./openapi.yaml"
-      render-style     = "view"
-      theme            = "light"
-      show-header      = "false"
-      show-info        = "true"
-      allow-try        = "true"
-      allow-search     = "true"
-      allow-spec-file-load = "false"
-      nav-bg-color     = "#1a1a2e"
-      nav-text-color   = "#e0e0e0"
-      nav-hover-bg-color  = "#16213e"
-      nav-hover-text-color = "#ffffff"
-      nav-accent-color = "#05fa87"
-      primary-color    = "#05fa87"
-      font-size        = "default"
-      show-components  = "true"
-    ></rapi-doc>
-    <script type="module" src="https://unpkg.com/rapidoc/dist/rapidoc-min.js"></script>
+    <script
+      id="api-reference"
+      data-url="./openapi.yaml"
+      data-configuration='{
+        "theme": "deepSpace",
+        "layout": "sidebar",
+        "defaultHttpClient": { "targetKey": "js", "clientKey": "fetch" },
+        "showSidebar": true,
+        "searchHotKey": "k"
+      }'
+      src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
   </body>
 </html>
