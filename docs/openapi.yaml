@@ -4,13 +4,13 @@ info:
   description: |
     API for managing portfolios, participants, sports, and tournaments.
 
-    ## Sports & IDs
-    | Sport       | sport param | sport_id |
-    |-------------|-------------|----------|
-    | NCAA Male   | `ncaa`      | 1 / 2    |
-    | NCAA Female | `ncaa`      | 3        |
-    | EPL         | `epl`       | 2        |
-    | World Cup   | `world-cup` | TBD      |
+    ## Sport identifiers
+    | Sport       | `sport` param | sport_id |
+    |-------------|---------------|----------|
+    | NCAA Male   | `ncaa`        | 1 / 2    |
+    | NCAA Female | `ncaa`        | 3        |
+    | EPL         | `epl`         | 2        |
+    | World Cup   | `world-cup`   | TBD      |
 
   version: 1.0.1
   contact:
@@ -20,30 +20,84 @@ servers:
   - url: https://portfolio-pool-test.damnserver.com:443
     description: Test environment
 
+# ─── Tag groups (Redoc sidebar) ──────────────────────────────
+x-tagGroups:
+  - name: Auth
+    tags:
+      - Auth
+  - name: NCAA Male
+    tags:
+      - NCAA Male — Home
+      - NCAA Male — Portfolios
+      - NCAA Male — Stats
+      - NCAA Male — History
+  - name: NCAA Female
+    tags:
+      - NCAA Female — Home
+      - NCAA Female — Portfolios
+      - NCAA Female — Stats
+      - NCAA Female — History
+  - name: EPL
+    tags:
+      - EPL — Home
+      - EPL — Portfolios
+      - EPL — Stats
+  - name: World Cup
+    tags:
+      - World Cup — Home
+      - World Cup — Portfolios
+      - World Cup — History
+  - name: Shared
+    tags:
+      - Shared — Tournaments
+      - Shared — Reports
+
 tags:
   - name: Auth
-    description: Authentication, registration, countries and user management. No sport required.
-  - name: NCAA Male
-    description: NCAA Men's Basketball — `sport=ncaa`, sport_id 1/2
-  - name: NCAA Female
-    description: NCAA Women's Basketball — `sport=ncaa`, sport_id 3
-  - name: EPL
-    description: English Premier League — `sport=epl`, tournament_id fixed to 3
-  - name: World Cup
-    description: FIFA World Cup — `sport=world-cup`
-  - name: Shared
-    description: Endpoints shared across multiple sports (reports, tournaments, parameters)
+    description: Authentication, registration, countries and user management.
+  - name: NCAA Male — Home
+    description: Home screen endpoints for NCAA Men's Basketball (`sport=ncaa`, sport_id 1/2).
+  - name: NCAA Male — Portfolios
+    description: Portfolio management for NCAA Men's Basketball.
+  - name: NCAA Male — Stats
+    description: Stats and score endpoints for NCAA Men's Basketball.
+  - name: NCAA Male — History
+    description: Historical reports for NCAA Men's Basketball.
+  - name: NCAA Female — Home
+    description: Home screen endpoints for NCAA Women's Basketball (`sport=ncaa`, sport_id 3).
+  - name: NCAA Female — Portfolios
+    description: Portfolio management for NCAA Women's Basketball.
+  - name: NCAA Female — Stats
+    description: Stats and score endpoints for NCAA Women's Basketball.
+  - name: NCAA Female — History
+    description: Historical reports for NCAA Women's Basketball.
+  - name: EPL — Home
+    description: Home screen endpoints for the English Premier League (`sport=epl`, tournament_id 3).
+  - name: EPL — Portfolios
+    description: Portfolio management for the English Premier League.
+  - name: EPL — Stats
+    description: Stats and score endpoints for the English Premier League.
+  - name: World Cup — Home
+    description: Home screen endpoints for FIFA World Cup (`sport=world-cup`).
+  - name: World Cup — Portfolios
+    description: Portfolio management for FIFA World Cup.
+  - name: World Cup — History
+    description: Historical reports for FIFA World Cup.
+  - name: Shared — Tournaments
+    description: Generic tournament endpoints used across all sports (tournaments, parameters, payouts, instructions).
+  - name: Shared — Reports
+    description: Generic report endpoints shared across multiple sports.
 
 paths:
 
-  # ─── Auth ────────────────────────────────────────────────────
+  # ────────────────────────────────────────────────────────────
+  # Auth
+  # ────────────────────────────────────────────────────────────
 
   /countries:
     get:
-      tags:
-        - Auth
+      tags: [Auth]
       summary: Get all countries
-      description: Retrieve list of all countries
       responses:
         "200":
           description: List of countries
@@ -59,10 +113,8 @@ paths:
 
   /countries/{countryId}/states:
     get:
-      tags:
-        - Auth
+      tags: [Auth]
       summary: Get states by country
-      description: Retrieve all states for a specific country
       parameters:
         - name: countryId
           in: path
@@ -85,10 +137,8 @@ paths:
 
   /participants/signup:
     post:
-      tags:
-        - Auth
+      tags: [Auth]
       summary: Sign up new participant
-      description: Register a new participant account
       requestBody:
         required: true
         content:
@@ -103,10 +153,8 @@ paths:
 
   /participants/login:
     post:
-      tags:
-        - Auth
+      tags: [Auth]
       summary: Login participant
-      description: Authenticate a participant and retrieve their data
       requestBody:
         required: true
         content:
@@ -128,18 +176,15 @@ paths:
 
   /participants/forgot:
     post:
-      tags:
-        - Auth
+      tags: [Auth]
       summary: Forgot password
-      description: Request a password reset for a participant
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required:
-                - user
+              required: [user]
               properties:
                 user:
                   type: string
@@ -150,10 +195,8 @@ paths:
 
   /sports:
     get:
-      tags:
-        - Auth
+      tags: [Auth]
       summary: Get all sports
-      description: Retrieve list of all available sports
       responses:
         "200":
           description: List of sports
@@ -169,10 +212,8 @@ paths:
 
   /participants/{participantId}/sports:
     get:
-      tags:
-        - Auth
+      tags: [Auth]
       summary: Get sports for a participant
-      description: Retrieve all sports associated with a specific participant
       parameters:
         - name: participantId
           in: path
@@ -195,10 +236,8 @@ paths:
 
   /participants/{participantId}/wallet:
     get:
-      tags:
-        - Auth
+      tags: [Auth]
       summary: Get participant wallet
-      description: Retrieve wallet balance and details for a participant
       parameters:
         - name: participantId
           in: path
@@ -219,18 +258,19 @@ paths:
                     items:
                       $ref: "#/components/schemas/Wallet"
 
-  # ─── Shared ───────────────────────────────────────────────────
+  # ────────────────────────────────────────────────────────────
+  # Shared — Tournaments
+  # ────────────────────────────────────────────────────────────
 
   /sports/{sportId}/tournaments:
     get:
-      tags:
-        - Shared
+      tags: [Shared — Tournaments]
       summary: Get tournaments by sport
       description: |
-        Retrieve all tournaments for a specific sport. Used by all sport modules.
-        - NCAA Male: sportId = 1
-        - NCAA Female: sportId = 3
-        - EPL: sportId = 2
+        Used by all modules to load the tournament selector.
+        - NCAA Male: `sportId=1`
+        - NCAA Female: `sportId=3`
+        - EPL: `sportId=2`
       parameters:
         - name: sportId
           in: path
@@ -253,10 +293,8 @@ paths:
 
   /tournaments/{tournamentId}/stats:
     get:
-      tags:
-        - Shared
-      summary: Get tournament statistics / participant count
-      description: Retrieve general statistics for a tournament, including participant count.
+      tags: [Shared — Tournaments]
+      summary: Get tournament stats / participant count
       parameters:
         - name: tournamentId
           in: path
@@ -280,17 +318,15 @@ paths:
 
   /tournaments/{tournamentId}/parameters:
     get:
-      tags:
-        - Shared
+      tags: [Shared — Tournaments]
       summary: Get tournament parameter by key
       description: |
-        Retrieve a tournament parameter value by key. Common keys:
-        - `POPONA` — number of portfolios per participant
-        - `HOINFO` — home info parameter
+        Common keys:
+        - `POPONA` — max portfolios per participant
+        - `HOINFO` — home info text
         - `DATTOU` — tournament date info
         - `HOUTOU` — tournament hours info
         - `TEAMXP` — team XP value (EPL)
-        - `RECODE` — recode parameter
       parameters:
         - name: tournamentId
           in: path
@@ -318,10 +354,8 @@ paths:
 
   /tournaments/{tournamentId}/instructions:
     get:
-      tags:
-        - Shared
+      tags: [Shared — Tournaments]
       summary: Get tournament instructions
-      description: Retrieve instructions for a tournament. Used by all sport modules.
       parameters:
         - name: tournamentId
           in: path
@@ -344,10 +378,8 @@ paths:
 
   /tournaments/{tournamentId}/payouts:
     get:
-      tags:
-        - Shared
+      tags: [Shared — Tournaments]
       summary: Get tournament payouts
-      description: Retrieve payout distribution for a tournament. Used by all sport modules.
       parameters:
         - name: tournamentId
           in: path
@@ -363,7 +395,7 @@ paths:
           example: 223
       responses:
         "200":
-          description: Payout information
+          description: Payout distribution
           content:
             application/json:
               schema:
@@ -377,13 +409,16 @@ paths:
   /tournaments/{tournamentId}/score/home:
     get:
       tags:
-        - Shared
+        - NCAA Male — Home
+        - NCAA Female — Home
+        - EPL — Home
+        - World Cup — Home
       summary: Get home screen score
       description: |
-        Retrieve score data for the home screen. Query params differ by sport:
-        - NCAA Male / Female: `?participant_id={id}&sport=ncaa`
-        - EPL: `?portfolio_id={id}&epl`
-        - World Cup: `?participant_id={id}&sport=ncaa` (TBD)
+        Returns current score data for the home screen. Query params differ by sport:
+        - **NCAA Male / Female:** `?participant_id={id}&sport=ncaa`
+        - **EPL:** `?portfolio_id={id}&epl`
+        - **World Cup:** `?participant_id={id}&sport=ncaa` *(TBD)*
       parameters:
         - name: tournamentId
           in: path
@@ -400,6 +435,7 @@ paths:
         - name: portfolio_id
           in: query
           required: false
+          description: EPL only
           schema:
             type: integer
           example: 566
@@ -408,6 +444,7 @@ paths:
           required: false
           schema:
             type: string
+            enum: [ncaa, epl, world-cup]
           example: ncaa
         - name: epl
           in: query
@@ -419,20 +456,380 @@ paths:
         "200":
           description: Home score data
 
-  # ─── NCAA Male ────────────────────────────────────────────────
+  # ────────────────────────────────────────────────────────────
+  # Portfolios — shared across sports
+  # ────────────────────────────────────────────────────────────
+
+  /participants/{participantId}/portfolios:
+    get:
+      tags:
+        - NCAA Male — Portfolios
+        - NCAA Female — Portfolios
+        - EPL — Portfolios
+        - World Cup — Portfolios
+      summary: Get participant portfolios
+      description: |
+        - **NCAA Male/Female:** `?tournament_id={id}&sport=ncaa`
+        - **EPL:** `?tournament_id=3&epl` or `?tournament_id=3&portfolio_id={id}&epl`
+        - **World Cup:** `?tournament_id={id}&sport=world-cup`
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 121
+        - name: tournament_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ncaa, world-cup]
+          example: ncaa
+        - name: epl
+          in: query
+          required: false
+          description: EPL only — pass without value
+          schema:
+            type: boolean
+        - name: portfolio_id
+          in: query
+          required: false
+          description: EPL only — filter by portfolio
+          schema:
+            type: integer
+          example: 566
+      responses:
+        "200":
+          description: List of portfolios
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  portfolios:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Portfolio"
+
+  /portfolios:
+    post:
+      tags:
+        - NCAA Male — Portfolios
+        - NCAA Female — Portfolios
+        - EPL — Portfolios
+        - World Cup — Portfolios
+      summary: Create portfolio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioCreateRequest"
+      responses:
+        "201":
+          description: Portfolio created successfully
+        "400":
+          description: Invalid input
+
+  /portfolios/{portfolioId}:
+    put:
+      tags:
+        - EPL — Portfolios
+      summary: Update portfolio — EPL only
+      description: Update teams in an existing EPL portfolio.
+      parameters:
+        - name: portfolioId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 570
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PortfolioUpdateRequest"
+      responses:
+        "200":
+          description: Portfolio updated successfully
+        "404":
+          description: Portfolio not found
+
+    delete:
+      tags:
+        - NCAA Male — Portfolios
+        - NCAA Female — Portfolios
+        - World Cup — Portfolios
+      summary: Delete portfolio
+      description: Delete a portfolio. Not used by EPL (uses PUT /remove instead).
+      parameters:
+        - name: portfolioId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 565
+      responses:
+        "204":
+          description: Portfolio deleted successfully
+        "404":
+          description: Portfolio not found
+
+  /tournaments/{tournamentId}/teams:
+    get:
+      tags:
+        - NCAA Male — Portfolios
+        - NCAA Female — Portfolios
+        - World Cup — Portfolios
+      summary: Get teams available for a tournament
+      description: |
+        - **NCAA:** `?sport=ncaa&show_all=false`
+        - **World Cup:** `?sport=world-cup&show_all=false`
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [ncaa, world-cup]
+          example: ncaa
+        - name: show_all
+          in: query
+          required: false
+          schema:
+            type: boolean
+          example: false
+      responses:
+        "200":
+          description: List of teams
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  teams:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Team"
+
+  /sports/{sportId}/teams/not-available:
+    get:
+      tags:
+        - NCAA Male — Portfolios
+        - NCAA Female — Portfolios
+        - EPL — Portfolios
+        - World Cup — Portfolios
+      summary: Get teams not available for selection
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 3
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 5
+      responses:
+        "200":
+          description: List of unavailable teams
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  teams:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Team"
+
+  /tournaments/{tournamentId}/winner-of-team:
+    get:
+      tags:
+        - NCAA Male — Portfolios
+        - NCAA Female — Portfolios
+        - World Cup — Portfolios
+      summary: Get winner-of-team options
+      description: |
+        - **NCAA:** `?sport=ncaa&limit=99`
+        - **World Cup:** `?sport=world-cup&limit=99`
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 99
+      responses:
+        "200":
+          description: Winner-of-team data
+
+  /tournaments/{tournamentId}/winner-of-team-has-team:
+    get:
+      tags:
+        - NCAA Male — Portfolios
+        - NCAA Female — Portfolios
+        - World Cup — Portfolios
+      summary: Get teams under a winner-of-team group
+      description: |
+        - **NCAA:** `?sport=ncaa&winner_of_team_id={id}`
+        - **World Cup:** `?team_id={id}`
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: sport
+          in: query
+          required: false
+          schema:
+            type: string
+          example: ncaa
+        - name: winner_of_team_id
+          in: query
+          required: false
+          schema:
+            type: integer
+          example: 1
+        - name: team_id
+          in: query
+          required: false
+          description: World Cup — replaces winner_of_team_id
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Teams under the winner-of-team group
+
+  # ────────────────────────────────────────────────────────────
+  # EPL — Portfolios (EPL-specific)
+  # ────────────────────────────────────────────────────────────
+
+  /portfolios/{portfolioId}/per-week:
+    get:
+      tags:
+        - EPL — Portfolios
+      summary: Get EPL portfolio by week
+      description: Retrieve the teams selected in an EPL portfolio for a specific gameweek.
+      parameters:
+        - name: portfolioId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 566
+        - name: week
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+      responses:
+        "200":
+          description: Portfolio teams for the week
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  teams:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Team"
+
+  /portfolios/{portfolioId}/remove:
+    put:
+      tags:
+        - EPL — Portfolios
+      summary: Remove EPL portfolio from tournament (legacy)
+      parameters:
+        - name: portfolioId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 266
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 3
+      responses:
+        "200":
+          description: Portfolio removed successfully
+
+  /sports/{sportId}/teams/dynamics:
+    get:
+      tags:
+        - EPL — Portfolios
+      summary: Get team dynamics — EPL only
+      description: Retrieve dynamic team availability for an EPL portfolio based on current standings.
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema:
+            type: integer
+          example: 2
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 3
+        - name: portfolio_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 561
+      responses:
+        "200":
+          description: Team dynamics data
 
   /sports/{sportId}/teams:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
-        - EPL
+        - NCAA Male — Stats
+        - NCAA Female — Stats
+        - EPL — Portfolios
       summary: Get teams by sport
       description: |
-        Retrieve all teams for a sport.
-        - NCAA Male: sportId=2, `?sport=ncaa&tournament_id={id}`
-        - NCAA Female: sportId=2, `?sport=ncaa&tournament_id={id}`
-        - EPL: sportId=2 (no extra params)
+        - **NCAA Male/Female:** `?sport=ncaa&tournament_id={id}` — used in Stats view.
+        - **EPL:** `sportId=2`, no extra params — used in Portfolios to load available teams.
       parameters:
         - name: sportId
           in: path
@@ -465,377 +862,17 @@ paths:
                     items:
                       $ref: "#/components/schemas/Team"
 
-  /sports/{sportId}/teams/not-available:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-        - EPL
-        - World Cup
-      summary: Get unavailable teams
-      description: Retrieve teams not available for selection in a tournament.
-      parameters:
-        - name: sportId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 3
-        - name: tournament_id
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 5
-      responses:
-        "200":
-          description: List of unavailable teams
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  teams:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Team"
-
-  /tournaments/{tournamentId}/teams:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-        - World Cup
-      summary: Get teams for a tournament
-      description: |
-        Retrieve teams participating in a tournament.
-        - NCAA: `?sport=ncaa&show_all=false`
-        - World Cup: `?sport=world-cup&show_all=false`
-      parameters:
-        - name: tournamentId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 3
-        - name: sport
-          in: query
-          required: false
-          schema:
-            type: string
-          example: ncaa
-        - name: show_all
-          in: query
-          required: false
-          schema:
-            type: boolean
-          example: false
-      responses:
-        "200":
-          description: List of tournament teams
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  teams:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Team"
-
-  /tournaments/{tournamentId}/winner-of-team:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-        - World Cup
-      summary: Get winner-of-team options
-      description: |
-        Retrieve winner-of-team bracket data.
-        - NCAA: `?sport=ncaa&limit=99`
-        - World Cup: `?sport=world-cup&limit=99`
-      parameters:
-        - name: tournamentId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 2
-        - name: sport
-          in: query
-          required: false
-          schema:
-            type: string
-          example: ncaa
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-          example: 99
-      responses:
-        "200":
-          description: Winner of team data
-
-  /tournaments/{tournamentId}/winner-of-team-has-team:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-        - World Cup
-      summary: Get teams under a winner-of-team group
-      description: |
-        Retrieve the teams under a specific winner-of-team group.
-        - NCAA: `?sport=ncaa&winner_of_team_id={id}`
-        - World Cup: `?team_id={id}`
-      parameters:
-        - name: tournamentId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 2
-        - name: sport
-          in: query
-          required: false
-          schema:
-            type: string
-          example: ncaa
-        - name: winner_of_team_id
-          in: query
-          required: false
-          schema:
-            type: integer
-          example: 1
-        - name: team_id
-          in: query
-          required: false
-          description: Used in World Cup instead of winner_of_team_id
-          schema:
-            type: integer
-          example: 1
-      responses:
-        "200":
-          description: Teams under winner-of-team group
-
-  /participants/{participantId}/portfolios:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-        - EPL
-        - World Cup
-      summary: Get participant portfolios
-      description: |
-        Retrieve all portfolios for a participant in a tournament.
-        - NCAA Male/Female: `?tournament_id={id}&sport=ncaa`
-        - EPL: `?tournament_id=3&epl` or `?tournament_id=3&portfolio_id={id}&epl`
-        - World Cup: `?tournament_id={id}&sport=world-cup`
-      parameters:
-        - name: participantId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 121
-        - name: tournament_id
-          in: query
-          required: false
-          schema:
-            type: integer
-          example: 2
-        - name: sport
-          in: query
-          required: false
-          schema:
-            type: string
-          example: ncaa
-        - name: epl
-          in: query
-          required: false
-          description: Pass without value for EPL requests
-          schema:
-            type: boolean
-        - name: portfolio_id
-          in: query
-          required: false
-          description: EPL only — filter by specific portfolio
-          schema:
-            type: integer
-          example: 566
-      responses:
-        "200":
-          description: List of portfolios
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  portfolios:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Portfolio"
-
-  /portfolios:
-    post:
-      tags:
-        - NCAA Male
-        - NCAA Female
-        - EPL
-        - World Cup
-      summary: Create portfolio
-      description: |
-        Create a new portfolio for a participant.
-        - NCAA / World Cup: `{ tournament_id, participant_id, championship_points, teams }`
-        - EPL: same structure
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PortfolioCreateRequest"
-      responses:
-        "201":
-          description: Portfolio created successfully
-        "400":
-          description: Invalid input
-
-  /portfolios/{portfolioId}:
-    put:
-      tags:
-        - EPL
-      summary: Update portfolio (EPL only)
-      description: Update an existing EPL portfolio's teams.
-      parameters:
-        - name: portfolioId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 570
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/PortfolioUpdateRequest"
-      responses:
-        "200":
-          description: Portfolio updated successfully
-        "404":
-          description: Portfolio not found
-
-    delete:
-      tags:
-        - NCAA Male
-        - NCAA Female
-        - World Cup
-      summary: Delete portfolio
-      description: Delete a portfolio. Used by NCAA Male, NCAA Female and World Cup.
-      parameters:
-        - name: portfolioId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 565
-      responses:
-        "204":
-          description: Portfolio deleted successfully
-        "404":
-          description: Portfolio not found
-
-  /portfolios/{portfolioId}/per-week:
-    get:
-      tags:
-        - EPL
-      summary: Get EPL portfolio by week
-      description: Retrieve the teams in an EPL portfolio for a specific week.
-      parameters:
-        - name: portfolioId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 566
-        - name: week
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 1
-      responses:
-        "200":
-          description: Portfolio teams for the week
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  teams:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/Team"
-
-  /portfolios/{portfolioId}/remove:
-    put:
-      tags:
-        - EPL
-      summary: Remove EPL portfolio from tournament (legacy)
-      description: Legacy endpoint — remove an EPL portfolio from a tournament.
-      parameters:
-        - name: portfolioId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 266
-        - name: tournament_id
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 3
-      responses:
-        "200":
-          description: Portfolio removed successfully
-
-  /sports/{sportId}/teams/dynamics:
-    get:
-      tags:
-        - EPL
-      summary: Get team dynamics (EPL only)
-      description: Retrieve dynamic team data for an EPL portfolio, including current standing.
-      parameters:
-        - name: sportId
-          in: path
-          required: true
-          schema:
-            type: integer
-          example: 2
-        - name: tournament_id
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 3
-        - name: portfolio_id
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 561
-      responses:
-        "200":
-          description: Team dynamics data
+  # ────────────────────────────────────────────────────────────
+  # Stats
+  # ────────────────────────────────────────────────────────────
 
   /tournaments/{tournamentId}/score/stats:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
-      summary: Get score stats by round
-      description: Retrieve team pick statistics per round. NCAA only.
+        - NCAA Male — Stats
+        - NCAA Female — Stats
+      summary: Get team pick stats by round
+      description: Returns how many times each team was picked per round. NCAA only.
       parameters:
         - name: tournamentId
           in: path
@@ -863,15 +900,15 @@ paths:
           example: 1
       responses:
         "200":
-          description: Score statistics data
+          description: Score statistics
 
   /tournaments/{tournamentId}/score/weeks:
     get:
       tags:
-        - NCAA Male
-        - EPL
+        - NCAA Male — Stats
+        - EPL — Stats
       summary: Get available score weeks
-      description: Retrieve the list of weeks that have score data. Used by NCAA Male and EPL.
+      description: Returns the list of weeks with score data. Used by NCAA Male and EPL.
       parameters:
         - name: tournamentId
           in: path
@@ -881,7 +918,7 @@ paths:
           example: 3
       responses:
         "200":
-          description: List of weeks
+          description: List of scored weeks
           content:
             application/json:
               schema:
@@ -895,10 +932,9 @@ paths:
   /tournaments/{tournamentId}/score/stats/portfolio:
     get:
       tags:
-        - NCAA Male
-        - EPL
+        - NCAA Male — Stats
+        - EPL — Stats
       summary: Get portfolio stats by week
-      description: Retrieve portfolio performance statistics for a specific week.
       parameters:
         - name: tournamentId
           in: path
@@ -919,10 +955,9 @@ paths:
   /tournaments/{tournamentId}/score/points-per-round:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
+        - NCAA Male — Stats
+        - NCAA Female — Stats
       summary: Get points per round
-      description: Retrieve points breakdown by round for a tournament.
       parameters:
         - name: tournamentId
           in: path
@@ -940,15 +975,12 @@ paths:
         "200":
           description: Points per round data
 
-  # ─── Reports ─────────────────────────────────────────────────
-
   /reports/most-picked-teams:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
+        - NCAA Male — Stats
+        - NCAA Female — Stats
       summary: Get most picked teams
-      description: Retrieve teams picked most frequently across portfolios.
       parameters:
         - name: tournament_id
           in: query
@@ -972,10 +1004,9 @@ paths:
   /reports/least-picked-teams:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
+        - NCAA Male — Stats
+        - NCAA Female — Stats
       summary: Get least picked teams
-      description: Retrieve teams picked least frequently across portfolios.
       parameters:
         - name: tournament_id
           in: query
@@ -999,10 +1030,9 @@ paths:
   /reports/teams-not-picked-log:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
+        - NCAA Male — Stats
+        - NCAA Female — Stats
       summary: Get teams not picked log
-      description: Retrieve log of teams that were not picked in a tournament.
       parameters:
         - name: tournament_id
           in: query
@@ -1026,10 +1056,9 @@ paths:
   /reports/teams-picked-log:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
+        - NCAA Male — Stats
+        - NCAA Female — Stats
       summary: Get teams picked log
-      description: Retrieve log of teams that were picked in a tournament.
       parameters:
         - name: tournament_id
           in: query
@@ -1050,37 +1079,12 @@ paths:
                     items:
                       $ref: "#/components/schemas/TeamsPickedLog"
 
-  /reports/teams-picked-log-history:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-      summary: Get teams picked log — historical
-      description: Retrieve historical log of teams picked, filtered by year.
-      parameters:
-        - name: tournament_id
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 1
-        - name: year
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 2024
-      responses:
-        "200":
-          description: Historical teams picked log
-
   /reports/seed-pick-totals:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
+        - NCAA Male — Stats
+        - NCAA Female — Stats
       summary: Get seed pick totals
-      description: Retrieve total picks per seed number.
       parameters:
         - name: tournament_id
           in: query
@@ -1095,10 +1099,9 @@ paths:
   /reports/portfolio-seed-selections:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
+        - NCAA Male — Stats
+        - NCAA Female — Stats
       summary: Get portfolio seed selections
-      description: Retrieve how many portfolios picked each seed.
       parameters:
         - name: tournament_id
           in: query
@@ -1110,71 +1113,17 @@ paths:
         "200":
           description: Portfolio seed selections
 
-  /reports/historical-perfect-portfolios-header:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-        - World Cup
-      summary: Get perfect portfolios header (history)
-      description: Retrieve header data for historical perfect portfolios.
-      responses:
-        "200":
-          description: Perfect portfolios header
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  data:
-                    type: array
-                    items:
-                      $ref: "#/components/schemas/TeamPerfectPortfolios"
-
-  /reports/historical-perfect-portfolios-history:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-      summary: Get perfect portfolios history by year
-      description: Retrieve historical perfect portfolios filtered by year.
-      parameters:
-        - name: year
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 2024
-      responses:
-        "200":
-          description: Perfect portfolios history
-
-  /reports/historical-perfect-portfolios-weight:
-    get:
-      tags:
-        - NCAA Male
-        - NCAA Female
-      summary: Get perfect portfolios weight by year
-      description: Retrieve weight data for historical perfect portfolios.
-      parameters:
-        - name: year
-          in: query
-          required: true
-          schema:
-            type: integer
-          example: 2024
-      responses:
-        "200":
-          description: Perfect portfolios weight data
+  # ────────────────────────────────────────────────────────────
+  # History
+  # ────────────────────────────────────────────────────────────
 
   /reports/teams-per-year-log:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
-        - World Cup
+        - NCAA Male — History
+        - NCAA Female — History
+        - World Cup — History
       summary: Get teams per year log
-      description: Retrieve number of teams per year for a tournament.
       parameters:
         - name: tournament_id
           in: query
@@ -1195,14 +1144,67 @@ paths:
                     items:
                       $ref: "#/components/schemas/TeamsPerYearLog"
 
+  /reports/historical-perfect-portfolios-header:
+    get:
+      tags:
+        - NCAA Male — History
+        - NCAA Female — History
+        - World Cup — History
+      summary: Get perfect portfolios header
+      responses:
+        "200":
+          description: Perfect portfolios header data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/TeamPerfectPortfolios"
+
+  /reports/historical-perfect-portfolios-history:
+    get:
+      tags:
+        - NCAA Male — History
+        - NCAA Female — History
+      summary: Get perfect portfolios history by year
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2024
+      responses:
+        "200":
+          description: Perfect portfolios history
+
+  /reports/historical-perfect-portfolios-weight:
+    get:
+      tags:
+        - NCAA Male — History
+        - NCAA Female — History
+      summary: Get perfect portfolios weight by year
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2024
+      responses:
+        "200":
+          description: Perfect portfolios weight data
+
   /reports/historical-all-rounds:
     get:
       tags:
-        - NCAA Male
-        - NCAA Female
-        - World Cup
+        - NCAA Male — History
+        - NCAA Female — History
+        - World Cup — History
       summary: Get historical all rounds
-      description: Retrieve historical data for all tournament rounds.
       parameters:
         - name: order-by
           in: query
@@ -1215,7 +1217,32 @@ paths:
         "200":
           description: Historical all rounds data
 
-# ─── Schemas ──────────────────────────────────────────────────
+  /reports/teams-picked-log-history:
+    get:
+      tags:
+        - NCAA Male — History
+        - NCAA Female — History
+      summary: Get teams picked log — historical by year
+      parameters:
+        - name: tournament_id
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 1
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+          example: 2024
+      responses:
+        "200":
+          description: Historical teams picked log
+
+# ────────────────────────────────────────────────────────────
+# Schemas
+# ────────────────────────────────────────────────────────────
 
 components:
   schemas:
@@ -1240,15 +1267,7 @@ components:
 
     SignupRequest:
       type: object
-      required:
-        - code
-        - name
-        - surname
-        - email
-        - username
-        - password
-        - country_id
-        - state_id
+      required: [code, name, surname, email, username, password, country_id, state_id]
       properties:
         code:
           type: integer
@@ -1279,9 +1298,7 @@ components:
 
     LoginRequest:
       type: object
-      required:
-        - user
-        - password
+      required: [user, password]
       properties:
         user:
           type: string
@@ -1348,8 +1365,6 @@ components:
           type: string
         key:
           type: string
-        description:
-          type: string
         seed:
           type: integer
         streak_multiplier:
@@ -1363,10 +1378,7 @@ components:
 
     PortfolioTeam:
       type: object
-      required:
-        - id
-        - seed
-        - streak_multiplier
+      required: [id, seed, streak_multiplier]
       properties:
         id:
           type: integer
@@ -1400,11 +1412,7 @@ components:
 
     PortfolioCreateRequest:
       type: object
-      required:
-        - tournament_id
-        - participant_id
-        - championship_points
-        - teams
+      required: [tournament_id, participant_id, championship_points, teams]
       properties:
         tournament_id:
           type: integer
@@ -1417,14 +1425,13 @@ components:
           example: 0
         teams:
           type: array
+          minItems: 5
           items:
             $ref: "#/components/schemas/PortfolioTeam"
-          minItems: 5
 
     PortfolioUpdateRequest:
       type: object
-      required:
-        - teams
+      required: [teams]
       properties:
         teams:
           type: array
