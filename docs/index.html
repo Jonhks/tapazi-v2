@@ -4,26 +4,54 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Portfolio Pool API Docs</title>
-    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css" />
     <style>
       body { margin: 0; padding: 0; }
-      .topbar { display: none; }
+      #nav-bar {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        z-index: 9999;
+      }
+      #nav-bar a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 18px;
+        background: #2d3a4a;
+        color: #fff;
+        font-family: sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        border-radius: 8px;
+        text-decoration: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        transition: background 0.2s;
+      }
+      #nav-bar a:hover { background: #3e5068; }
     </style>
   </head>
   <body>
-    <div id="swagger-ui"></div>
-    <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
+    <div id="nav-bar">
+      <a href="./swagger.html">⚡ Try it out →</a>
+    </div>
+    <div id="redoc-container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/redoc@2.1.3/bundles/redoc.standalone.js"></script>
     <script>
-      SwaggerUIBundle({
-        url: "./openapi.yaml",
-        dom_id: "#swagger-ui",
-        deepLinking: true,
-        tryItOutEnabled: true,
-        persistAuthorization: true,
-        displayRequestDuration: true,
-        filter: true,
-        layout: "BaseLayout",
-      });
+      Redoc.init(
+        "./openapi.yaml",
+        {
+          expandResponses: "200",
+          hideDownloadButton: false,
+          noAutoAuth: false,
+          pathInMiddlePanel: false,
+          scrollYOffset: 0,
+          sortPropsAlphabetically: false,
+          theme: {
+            sidebar: { width: "260px" }
+          }
+        },
+        document.getElementById("redoc-container")
+      );
     </script>
   </body>
 </html>
