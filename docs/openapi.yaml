@@ -12,7 +12,7 @@ info:
     | EPL         | `epl`         | 2        |
     | World Cup   | `world-cup`   | TBD      |
 
-  version: 1.0.1
+  version: 2.0.1
   contact:
     email: jonhgx@gmail.com
 
@@ -24,9 +24,16 @@ x-tagGroups:
   - name: Auth
     tags: [auth]
   - name: NCAA Male
-    tags: [ncaa-male-home, ncaa-male-portfolios, ncaa-male-stats, ncaa-male-history]
+    tags:
+      [ncaa-male-home, ncaa-male-portfolios, ncaa-male-stats, ncaa-male-history]
   - name: NCAA Female
-    tags: [ncaa-female-home, ncaa-female-portfolios, ncaa-female-stats, ncaa-female-history]
+    tags:
+      [
+        ncaa-female-home,
+        ncaa-female-portfolios,
+        ncaa-female-stats,
+        ncaa-female-history,
+      ]
   - name: EPL
     tags: [epl-home, epl-portfolios, epl-stats]
   - name: World Cup
@@ -88,7 +95,6 @@ tags:
     description: Generic report endpoints shared across multiple sports.
 
 paths:
-
   /countries:
     get:
       tags: [auth]
@@ -416,7 +422,13 @@ paths:
 
   /participants/{participantId}/portfolios:
     get:
-      tags: [ncaa-male-portfolios, ncaa-female-portfolios, epl-portfolios, worldcup-portfolios]
+      tags:
+        [
+          ncaa-male-portfolios,
+          ncaa-female-portfolios,
+          epl-portfolios,
+          worldcup-portfolios,
+        ]
       summary: Get participant portfolios
       description: |
         - **NCAA:** `?tournament_id={id}&sport=ncaa`
@@ -462,7 +474,13 @@ paths:
 
   /portfolios:
     post:
-      tags: [ncaa-male-portfolios, ncaa-female-portfolios, epl-portfolios, worldcup-portfolios]
+      tags:
+        [
+          ncaa-male-portfolios,
+          ncaa-female-portfolios,
+          epl-portfolios,
+          worldcup-portfolios,
+        ]
       summary: Create portfolio
       requestBody:
         required: true
@@ -551,7 +569,13 @@ paths:
 
   /sports/{sportId}/teams/not-available:
     get:
-      tags: [ncaa-male-portfolios, ncaa-female-portfolios, epl-portfolios, worldcup-portfolios]
+      tags:
+        [
+          ncaa-male-portfolios,
+          ncaa-female-portfolios,
+          epl-portfolios,
+          worldcup-portfolios,
+        ]
       summary: Get teams not available for selection
       parameters:
         - name: sportId
@@ -1048,7 +1072,6 @@ paths:
 
 components:
   schemas:
-
     Country:
       type: object
       properties:
@@ -1064,7 +1087,8 @@ components:
 
     SignupRequest:
       type: object
-      required: [code, name, surname, email, username, password, country_id, state_id]
+      required:
+        [code, name, surname, email, username, password, country_id, state_id]
       properties:
         code: { type: integer, example: 123456 }
         name: { type: string, example: Gustavo }
@@ -1080,7 +1104,8 @@ components:
       required: [user, password]
       properties:
         user: { type: string, example: gcalderon.7 }
-        password: { type: string, format: password, example: tesxuc-futpAm-qitna3 }
+        password:
+          { type: string, format: password, example: tesxuc-futpAm-qitna3 }
 
     Participant:
       type: object
