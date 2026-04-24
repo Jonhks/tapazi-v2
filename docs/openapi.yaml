@@ -7,10 +7,10 @@ info:
     ## Sport identifiers
     | Sport       | `sport` param | sport_id |
     |-------------|---------------|----------|
-    | NCAA Male   | `ncaa`        | 1 / 2    |
+    | NCAA Male   | `ncaa`        | 1        |
     | NCAA Female | `ncaa`        | 3        |
     | EPL         | `epl`         | 2        |
-    | World Cup   | `world-cup`   | TBD      |
+    | World Cup   | `world-cup`   | 4        |
 
   version: 2.0.1
   contact:
