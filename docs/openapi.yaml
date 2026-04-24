@@ -7,12 +7,12 @@ info:
     ## Sport identifiers
     | Sport       | `sport` param | sport_id |
     |-------------|---------------|----------|
-    | NCAA Male   | `ncaa`        | 1 / 2    |
+    | NCAA Male   | `ncaa`        | 1        |
     | NCAA Female | `ncaa`        | 3        |
     | EPL         | `epl`         | 2        |
-    | World Cup   | `world-cup`   | TBD      |
+    | World Cup   | `world-cup`   | 4        |
 
-  version: 2.0.1
+  version: 3.0.1
   contact:
     email: jonhgx@gmail.com
 
@@ -22,82 +22,64 @@ servers:
 
 x-tagGroups:
   - name: Auth
-    tags: [auth]
+    description: Authentication, registration, countries and user management.
+  - name: NCAA Male - Home
+    description: Home screen — `sport=ncaa`, sport_id 1/2.
+  - name: NCAA Male - Portfolios
+    description: Portfolio CRUD for NCAA Men's Basketball.
+  - name: NCAA Male - Stats
+    description: Score and stats for NCAA Men's Basketball.
+  - name: NCAA Male - History
+    description: Historical reports for NCAA Men's Basketball.
+  - name: NCAA Female - Home
+    description: Home screen — `sport=ncaa`, sport_id 3.
+  - name: NCAA Female - Portfolios
+    description: Portfolio CRUD for NCAA Women's Basketball.
+  - name: NCAA Female - Stats
+    description: Score and stats for NCAA Women's Basketball.
+  - name: NCAA Female - History
+    description: Historical reports for NCAA Women's Basketball.
+  - name: EPL - Home
+    description: Home screen — `sport=epl`, tournament_id 3.
+  - name: EPL - Portfolios
+    description: Portfolio CRUD for the English Premier League.
+  - name: EPL - Stats
+    description: Score and stats for the English Premier League.
+  - name: World Cup - Home
+    description: Home screen — `sport=world-cup`.
+  - name: World Cup - Portfolios
+    description: Portfolio CRUD for FIFA World Cup.
+  - name: World Cup - History
+    description: Historical reports for FIFA World Cup.
+
+x-tagGroups:
+  - name: Auth
+    tags: [Auth]
   - name: NCAA Male
     tags:
-      [ncaa-male-home, ncaa-male-portfolios, ncaa-male-stats, ncaa-male-history]
+      [
+        NCAA Male - Home,
+        NCAA Male - Portfolios,
+        NCAA Male - Stats,
+        NCAA Male - History,
+      ]
   - name: NCAA Female
     tags:
       [
-        ncaa-female-home,
-        ncaa-female-portfolios,
-        ncaa-female-stats,
-        ncaa-female-history,
+        NCAA Female - Home,
+        NCAA Female - Portfolios,
+        NCAA Female - Stats,
+        NCAA Female - History,
       ]
   - name: EPL
-    tags: [epl-home, epl-portfolios, epl-stats]
+    tags: [EPL - Home, EPL - Portfolios, EPL - Stats]
   - name: World Cup
-    tags: [worldcup-home, worldcup-portfolios, worldcup-history]
-  - name: Shared
-    tags: [shared-tournaments, shared-reports]
-
-tags:
-  - name: auth
-    x-displayName: Auth
-    description: Authentication, registration, countries and user management.
-  - name: ncaa-male-home
-    x-displayName: Home
-    description: Home screen — `sport=ncaa`, sport_id 1/2.
-  - name: ncaa-male-portfolios
-    x-displayName: Portfolios
-    description: Portfolio CRUD for NCAA Men's Basketball.
-  - name: ncaa-male-stats
-    x-displayName: Stats
-    description: Score and stats for NCAA Men's Basketball.
-  - name: ncaa-male-history
-    x-displayName: History
-    description: Historical reports for NCAA Men's Basketball.
-  - name: ncaa-female-home
-    x-displayName: Home
-    description: Home screen — `sport=ncaa`, sport_id 3.
-  - name: ncaa-female-portfolios
-    x-displayName: Portfolios
-    description: Portfolio CRUD for NCAA Women's Basketball.
-  - name: ncaa-female-stats
-    x-displayName: Stats
-    description: Score and stats for NCAA Women's Basketball.
-  - name: ncaa-female-history
-    x-displayName: History
-    description: Historical reports for NCAA Women's Basketball.
-  - name: epl-home
-    x-displayName: Home
-    description: Home screen — `sport=epl`, tournament_id 3.
-  - name: epl-portfolios
-    x-displayName: Portfolios
-    description: Portfolio CRUD for the English Premier League.
-  - name: epl-stats
-    x-displayName: Stats
-    description: Score and stats for the English Premier League.
-  - name: worldcup-home
-    x-displayName: Home
-    description: Home screen — `sport=world-cup`.
-  - name: worldcup-portfolios
-    x-displayName: Portfolios
-    description: Portfolio CRUD for FIFA World Cup.
-  - name: worldcup-history
-    x-displayName: History
-    description: Historical reports for FIFA World Cup.
-  - name: shared-tournaments
-    x-displayName: Tournaments
-    description: Generic tournament endpoints shared across all sports.
-  - name: shared-reports
-    x-displayName: Reports
-    description: Generic report endpoints shared across multiple sports.
+    tags: [World Cup - Home, World Cup - Portfolios, World Cup - History]
 
 paths:
   /countries:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get all countries
       responses:
         "200":
@@ -114,7 +96,7 @@ paths:
 
   /countries/{countryId}/states:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get states by country
       parameters:
         - name: countryId
@@ -137,7 +119,7 @@ paths:
 
   /participants/signup:
     post:
-      tags: [auth]
+      tags: [Auth]
       summary: Sign up new participant
       requestBody:
         required: true
@@ -153,7 +135,7 @@ paths:
 
   /participants/login:
     post:
-      tags: [auth]
+      tags: [Auth]
       summary: Login participant
       requestBody:
         required: true
@@ -176,7 +158,7 @@ paths:
 
   /participants/forgot:
     post:
-      tags: [auth]
+      tags: [Auth]
       summary: Forgot password
       requestBody:
         required: true
@@ -193,7 +175,7 @@ paths:
 
   /sports:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get all sports
       responses:
         "200":
@@ -210,7 +192,7 @@ paths:
 
   /participants/{participantId}/sports:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get sports for a participant
       parameters:
         - name: participantId
@@ -233,7 +215,7 @@ paths:
 
   /participants/{participantId}/wallet:
     get:
-      tags: [auth]
+      tags: [Auth]
       summary: Get participant wallet
       parameters:
         - name: participantId
@@ -256,7 +238,7 @@ paths:
 
   /sports/{sportId}/tournaments:
     get:
-      tags: [shared-tournaments]
+      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
       summary: Get tournaments by sport
       description: |
         - NCAA Male: `sportId=1`
@@ -283,7 +265,7 @@ paths:
 
   /tournaments/{tournamentId}/stats:
     get:
-      tags: [shared-tournaments]
+      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
       summary: Get tournament stats / participant count
       parameters:
         - name: tournamentId
@@ -306,7 +288,7 @@ paths:
 
   /tournaments/{tournamentId}/parameters:
     get:
-      tags: [shared-tournaments]
+      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
       summary: Get tournament parameter by key
       description: |
         Common keys: `POPONA`, `HOINFO`, `DATTOU`, `HOUTOU`, `TEAMXP` (EPL), `RECODE`
@@ -335,7 +317,7 @@ paths:
 
   /tournaments/{tournamentId}/instructions:
     get:
-      tags: [shared-tournaments]
+      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
       summary: Get tournament instructions
       parameters:
         - name: tournamentId
@@ -358,7 +340,7 @@ paths:
 
   /tournaments/{tournamentId}/payouts:
     get:
-      tags: [shared-tournaments]
+      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
       summary: Get tournament payouts
       parameters:
         - name: tournamentId
@@ -385,7 +367,7 @@ paths:
 
   /tournaments/{tournamentId}/score/home:
     get:
-      tags: [ncaa-male-home, ncaa-female-home, epl-home, worldcup-home]
+      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
       summary: Get home screen score
       description: |
         - **NCAA Male/Female:** `?participant_id={id}&sport=ncaa`
@@ -424,10 +406,10 @@ paths:
     get:
       tags:
         [
-          ncaa-male-portfolios,
-          ncaa-female-portfolios,
-          epl-portfolios,
-          worldcup-portfolios,
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          EPL - Portfolios,
+          World Cup - Portfolios,
         ]
       summary: Get participant portfolios
       description: |
@@ -476,10 +458,10 @@ paths:
     post:
       tags:
         [
-          ncaa-male-portfolios,
-          ncaa-female-portfolios,
-          epl-portfolios,
-          worldcup-portfolios,
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          EPL - Portfolios,
+          World Cup - Portfolios,
         ]
       summary: Create portfolio
       requestBody:
@@ -496,7 +478,7 @@ paths:
 
   /portfolios/{portfolioId}:
     put:
-      tags: [epl-portfolios]
+      tags: [EPL - Portfolios]
       summary: Update portfolio — EPL only
       parameters:
         - name: portfolioId
@@ -516,7 +498,12 @@ paths:
         "404":
           description: Not found
     delete:
-      tags: [ncaa-male-portfolios, ncaa-female-portfolios, worldcup-portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          World Cup - Portfolios,
+        ]
       summary: Delete portfolio
       description: Not used by EPL (EPL uses PUT /remove).
       parameters:
@@ -533,7 +520,12 @@ paths:
 
   /tournaments/{tournamentId}/teams:
     get:
-      tags: [ncaa-male-portfolios, ncaa-female-portfolios, worldcup-portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          World Cup - Portfolios,
+        ]
       summary: Get teams available for a tournament
       description: |
         - **NCAA:** `?sport=ncaa&show_all=false`
@@ -571,10 +563,10 @@ paths:
     get:
       tags:
         [
-          ncaa-male-portfolios,
-          ncaa-female-portfolios,
-          epl-portfolios,
-          worldcup-portfolios,
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          EPL - Portfolios,
+          World Cup - Portfolios,
         ]
       summary: Get teams not available for selection
       parameters:
@@ -603,7 +595,12 @@ paths:
 
   /tournaments/{tournamentId}/winner-of-team:
     get:
-      tags: [ncaa-male-portfolios, ncaa-female-portfolios, worldcup-portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          World Cup - Portfolios,
+        ]
       summary: Get winner-of-team options
       description: |
         - **NCAA:** `?sport=ncaa&limit=99`
@@ -628,7 +625,12 @@ paths:
 
   /tournaments/{tournamentId}/winner-of-team-has-team:
     get:
-      tags: [ncaa-male-portfolios, ncaa-female-portfolios, worldcup-portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          World Cup - Portfolios,
+        ]
       summary: Get teams under a winner-of-team group
       description: |
         - **NCAA:** `?sport=ncaa&winner_of_team_id={id}`
@@ -658,7 +660,7 @@ paths:
 
   /portfolios/{portfolioId}/per-week:
     get:
-      tags: [epl-portfolios]
+      tags: [EPL - Portfolios]
       summary: Get EPL portfolio by gameweek
       parameters:
         - name: portfolioId
@@ -686,7 +688,7 @@ paths:
 
   /portfolios/{portfolioId}/remove:
     put:
-      tags: [epl-portfolios]
+      tags: [EPL - Portfolios]
       summary: Remove EPL portfolio from tournament (legacy)
       parameters:
         - name: portfolioId
@@ -705,7 +707,7 @@ paths:
 
   /sports/{sportId}/teams/dynamics:
     get:
-      tags: [epl-portfolios]
+      tags: [EPL - Portfolios]
       summary: Get team dynamics — EPL only
       description: Dynamic team availability based on current standings.
       parameters:
@@ -730,7 +732,7 @@ paths:
 
   /sports/{sportId}/teams:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats, epl-portfolios]
+      tags: [NCAA Male - Stats, NCAA Female - Stats, EPL - Portfolios]
       summary: Get teams by sport
       description: |
         - **NCAA:** `?sport=ncaa&tournament_id={id}` — Stats view.
@@ -764,7 +766,7 @@ paths:
 
   /tournaments/{tournamentId}/score/stats:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats]
+      tags: [NCAA Male - Stats, NCAA Female - Stats]
       summary: Get team pick stats by round
       description: How many times each team was picked per round. NCAA only.
       parameters:
@@ -791,7 +793,7 @@ paths:
 
   /tournaments/{tournamentId}/score/weeks:
     get:
-      tags: [ncaa-male-stats, epl-stats]
+      tags: [NCAA Male - Stats, EPL - Stats]
       summary: Get available score weeks
       parameters:
         - name: tournamentId
@@ -814,7 +816,7 @@ paths:
 
   /tournaments/{tournamentId}/score/stats/portfolio:
     get:
-      tags: [ncaa-male-stats, epl-stats]
+      tags: [NCAA Male - Stats, EPL - Stats]
       summary: Get portfolio stats by week
       parameters:
         - name: tournamentId
@@ -832,7 +834,7 @@ paths:
 
   /tournaments/{tournamentId}/score/points-per-round:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats]
+      tags: [NCAA Male - Stats, NCAA Female - Stats]
       summary: Get points per round
       parameters:
         - name: tournamentId
@@ -850,7 +852,7 @@ paths:
 
   /reports/most-picked-teams:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats]
+      tags: [NCAA Male - Stats, NCAA Female - Stats]
       summary: Get most picked teams
       parameters:
         - name: tournament_id
@@ -873,7 +875,7 @@ paths:
 
   /reports/least-picked-teams:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats]
+      tags: [NCAA Male - Stats, NCAA Female - Stats]
       summary: Get least picked teams
       parameters:
         - name: tournament_id
@@ -896,7 +898,7 @@ paths:
 
   /reports/teams-not-picked-log:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats]
+      tags: [NCAA Male - Stats, NCAA Female - Stats]
       summary: Get teams not picked log
       parameters:
         - name: tournament_id
@@ -919,7 +921,7 @@ paths:
 
   /reports/teams-picked-log:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats]
+      tags: [NCAA Male - Stats, NCAA Female - Stats]
       summary: Get teams picked log
       parameters:
         - name: tournament_id
@@ -942,7 +944,7 @@ paths:
 
   /reports/seed-pick-totals:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats]
+      tags: [NCAA Male - Stats, NCAA Female - Stats]
       summary: Get seed pick totals
       parameters:
         - name: tournament_id
@@ -956,7 +958,7 @@ paths:
 
   /reports/portfolio-seed-selections:
     get:
-      tags: [ncaa-male-stats, ncaa-female-stats]
+      tags: [NCAA Male - Stats, NCAA Female - Stats]
       summary: Get portfolio seed selections
       parameters:
         - name: tournament_id
@@ -970,7 +972,7 @@ paths:
 
   /reports/teams-per-year-log:
     get:
-      tags: [ncaa-male-history, ncaa-female-history, worldcup-history]
+      tags: [NCAA Male - History, NCAA Female - History, World Cup - History]
       summary: Get teams per year log
       parameters:
         - name: tournament_id
@@ -993,7 +995,7 @@ paths:
 
   /reports/historical-perfect-portfolios-header:
     get:
-      tags: [ncaa-male-history, ncaa-female-history, worldcup-history]
+      tags: [NCAA Male - History, NCAA Female - History, World Cup - History]
       summary: Get perfect portfolios header
       responses:
         "200":
@@ -1010,7 +1012,7 @@ paths:
 
   /reports/historical-perfect-portfolios-history:
     get:
-      tags: [ncaa-male-history, ncaa-female-history]
+      tags: [NCAA Male - History, NCAA Female - History]
       summary: Get perfect portfolios history by year
       parameters:
         - name: year
@@ -1024,7 +1026,7 @@ paths:
 
   /reports/historical-perfect-portfolios-weight:
     get:
-      tags: [ncaa-male-history, ncaa-female-history]
+      tags: [NCAA Male - History, NCAA Female - History]
       summary: Get perfect portfolios weight by year
       parameters:
         - name: year
@@ -1038,7 +1040,7 @@ paths:
 
   /reports/historical-all-rounds:
     get:
-      tags: [ncaa-male-history, ncaa-female-history, worldcup-history]
+      tags: [NCAA Male - History, NCAA Female - History, World Cup - History]
       summary: Get historical all rounds
       parameters:
         - name: order-by
@@ -1053,7 +1055,7 @@ paths:
 
   /reports/teams-picked-log-history:
     get:
-      tags: [ncaa-male-history, ncaa-female-history]
+      tags: [NCAA Male - History, NCAA Female - History]
       summary: Get teams picked log — historical by year
       parameters:
         - name: tournament_id
