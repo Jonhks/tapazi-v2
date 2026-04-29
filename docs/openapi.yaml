@@ -24,7 +24,7 @@ tags:
   - name: Auth
     description: Authentication, registration, countries and user management.
   - name: NCAA Male - Home
-    description: Home screen — `sport=ncaa`, sport_id 1/2.
+    description: Home screen — `sport=ncaa`, sport_id 1.
   - name: NCAA Male - Portfolios
     description: Portfolio CRUD for NCAA Men's Basketball.
   - name: NCAA Male - Stats
