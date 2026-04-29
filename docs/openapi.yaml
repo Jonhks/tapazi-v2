@@ -20,11 +20,11 @@ servers:
   - url: https://portfolio-pool-test.damnserver.com:443
     description: Test environment
 
-x-tagGroups:
+tags:
   - name: Auth
     description: Authentication, registration, countries and user management.
   - name: NCAA Male - Home
-    description: Home screen — `sport=ncaa`, sport_id 1/2.
+    description: Home screen — `sport=ncaa`, sport_id 1.
   - name: NCAA Male - Portfolios
     description: Portfolio CRUD for NCAA Men's Basketball.
   - name: NCAA Male - Stats
@@ -46,7 +46,7 @@ x-tagGroups:
   - name: EPL - Stats
     description: Score and stats for the English Premier League.
   - name: World Cup - Home
-    description: Home screen — `sport=world-cup`.
+    description: Home screen — `sport=world-cup`, sport_id 4.
   - name: World Cup - Portfolios
     description: Portfolio CRUD for FIFA World Cup.
   - name: World Cup - History
