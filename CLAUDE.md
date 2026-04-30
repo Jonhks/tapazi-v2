@@ -323,6 +323,84 @@ src/sports/
 
 ---
 
+## Manual: subir cambios de `refactor/shared-components` a otras ramas
+
+### Contexto
+`refactor/shared-components` es la **fuente de verdad**. Contiene un refactor grande (nueva estructura de carpetas, componentes compartidos, etc.). Cuando se quiera escalar estos cambios a `qa`, `dev` o `main` (prod), hay que hacerlo con cuidado para no perder la estructura nueva.
+
+### Por qué NO hacer `git pull origin <rama-destino>` directo
+
+Si haces `git pull origin qa` (o cualquier otra rama) estando en `refactor/shared-components`, git intentará hacer un merge bidireccional. Esto puede sobrescribir la estructura nueva con la antigua y generar conflictos que, al resolverse mal, destruyen el trabajo del refactor.
+
+### El flujo correcto: merge `-s ours`
+
+La estrategia `-s ours` registra que el merge ocurrió (para que GitHub lo acepte y no muestre conflictos), pero conserva **todo el contenido de `refactor/shared-components`** sin tocar nada.
+
+#### Paso 1 — Asegurarte de estar en la rama correcta y con los cambios listos
+
+```bash
+git checkout refactor/shared-components
+git status          # debe estar limpio (sin cambios pendientes)
+git log --oneline -3   # verifica que el último commit es el que quieres mandar
+```
+
+#### Paso 2 — Bajar la rama destino y hacer el merge con `-s ours`
+
+**Para subir a `qa`:**
+```bash
+git fetch origin qa
+git merge -s ours origin/qa --no-edit
+git push origin refactor/shared-components
+```
+
+**Para subir a `dev`:**
+```bash
+git fetch origin dev
+git merge -s ours origin/dev --no-edit
+git push origin refactor/shared-components
+```
+
+**Para subir a `main` (prod):**
+```bash
+git fetch origin main
+git merge -s ours origin/main --no-edit
+git push origin refactor/shared-components
+```
+
+#### Paso 3 — Crear el PR desde GitHub o con `gh`
+
+```bash
+# PR hacia qa
+gh pr create --base qa --head refactor/shared-components
+
+# PR hacia dev
+gh pr create --base dev --head refactor/shared-components
+
+# PR hacia main
+gh pr create --base main --head refactor/shared-components
+```
+
+Después del merge `-s ours`, GitHub no mostrará conflictos y el botón "Merge pull request" estará activo.
+
+### Si algo salió mal y la rama quedó en un estado roto
+
+Identifica el último commit bueno con `git log --oneline` y resetea a él:
+
+```bash
+git log --oneline -10   # encuentra el commit hash del estado bueno
+git reset --hard <hash-del-commit-bueno>
+git push --force origin refactor/shared-components
+```
+
+Luego vuelve al Paso 2 y repite el proceso limpio.
+
+### Regla de oro
+
+> **Nunca** hagas `git pull origin <otra-rama>` desde `refactor/shared-components` sin usar `-s ours`.
+> Siempre: `git fetch` + `git merge -s ours origin/<rama>` + `git push`.
+
+---
+
 ## Historial de refactor
 
 ### Rama: `refactor/shared-components` (creada desde `mundial`, 2026-04-11)
