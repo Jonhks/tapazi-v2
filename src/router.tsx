@@ -1,41 +1,51 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { lazy } from "react";
 // ? --------------------------  Portfolio -------------------------- ? //
-const AuthLayout = lazy(() => import("./ncaa-male/layouts/AuthLayout"));
-const SportsLayout = lazy(() => import("./ncaa-male/layouts/SportsLayout"));
-const Splash = lazy(() => import("./ncaa-male/components/Splash/Splash"));
-const Login = lazy(() => import("./ncaa-male/views/login/Login"));
-const Signup = lazy(() => import("./ncaa-male/views/login/SignUp"));
-const Forgot = lazy(() => import("./ncaa-male/views/login/Forgot"));
-const AppLayout = lazy(() => import("./ncaa-male/layouts/AppLayout"));
-const Home = lazy(() => import("./ncaa-male/views/home/Home"));
-const Sports = lazy(() => import("./ncaa-male/views/Sports/Sports"));
+const AuthLayout = lazy(() => import("./sports/ncaa-male/layouts/AuthLayout"));
+const SportsLayout = lazy(
+  () => import("./sports/ncaa-male/layouts/SportsLayout"),
+);
+const Splash = lazy(
+  () => import("./sports/ncaa-male/components/Splash/Splash"),
+);
+const Login = lazy(() => import("./sports/ncaa-male/views/login/Login"));
+const Signup = lazy(() => import("./sports/ncaa-male/views/login/SignUp"));
+const Forgot = lazy(() => import("./sports/ncaa-male/views/login/Forgot"));
+const AppLayout = lazy(() => import("./sports/ncaa-male/layouts/AppLayout"));
+const Home = lazy(() => import("./sports/ncaa-male/views/home/Home"));
+const Sports = lazy(() => import("./sports/ncaa-male/views/Sports/Sports"));
 const PrivateRoute = lazy(
-  () => import("./ncaa-male/components/PrivateRoute/PrivateRoute"),
+  () => import("./sports/ncaa-male/components/PrivateRoute/PrivateRoute"),
 );
 const MyPortfolio = lazy(
-  () => import("./ncaa-male/views/myPortfolio/MyPortfolio"),
+  () => import("./sports/ncaa-male/views/myPortfolio/MyPortfolio"),
 );
-const HistoryLayout = lazy(() => import("./ncaa-male/layouts/HistoryLayout"));
+const HistoryLayout = lazy(
+  () => import("./sports/ncaa-male/layouts/HistoryLayout"),
+);
 const InstructionsLayout = lazy(
-  () => import("./ncaa-male/layouts/InstructionsLayout"),
+  () => import("./sports/ncaa-male/layouts/InstructionsLayout"),
 );
-const StatsLayout = lazy(() => import("./ncaa-male/layouts/StatsLayout"));
-const Stats = lazy(() => import("./ncaa-male/views/Stats/Stats"));
+const StatsLayout = lazy(
+  () => import("./sports/ncaa-male/layouts/StatsLayout"),
+);
+const Stats = lazy(() => import("./sports/ncaa-male/views/Stats/Stats"));
 const Instructions = lazy(
   () =>
-    import("./ncaa-male/views/InstructionsPortfolios/InstructionsPortfolios"),
+    import("./sports/ncaa-male/views/InstructionsPortfolios/InstructionsPortfolios"),
 );
 const History = lazy(
-  () => import("./ncaa-male/views/HistoryPortfolios/HistoryPortfolios"),
+  () => import("./sports/ncaa-male/views/HistoryPortfolios/HistoryPortfolios"),
 );
-const Error404 = lazy(() => import("./ncaa-male/views/Error404/Error404"));
+const Error404 = lazy(
+  () => import("./sports/ncaa-male/views/Error404/Error404"),
+);
 // fondos
 import ImgStats from "@/assets/img/NCAA-STATS_Male_backup.png";
 import ImgHistory from "@/assets/img/NCAA-HISTORY_Male_Back.png";
 import ImgInstructions from "@/assets/img/NCAA-MALE-INSTRUCTIONS-BACK.png";
-// import WIP from "./ncaa-male/views/WIP/WIP";
-import MyPortfolioEPL from "./epl/views/myPortfolioEPL/MyPortfolioEPL";
+// import WIP from "./sports/ncaa-male/views/WIP/WIP";
+import MyPortfolioEPL from "./sports/epl/views/myPortfolioEPL/MyPortfolioEPL";
 const ImgSports =
   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/sports/epl/stats/back_stats.png?quality=5&format=webp";
 
@@ -46,48 +56,73 @@ const ImgSports =
 //   "https://s3.mx-central-1.amazonaws.com/portfolio.pool/resources/coming_soon_orange.png?quality=80&format=webp";
 
 // ? --------------------------  EPL Router -------------------------- ? //
-const AppLayoutEPL = lazy(() => import("./epl/layouts/AppLayoutEPL"));
-const StatsLayoutEpl = lazy(() => import("./epl/layouts/StatsLayoutEpl"));
-const HomeEPL = lazy(() => import("./epl/views/HomeEPL/HomeEPL"));
-const InstructionsEPL = lazy(
-  () => import("./epl/views/InstructionsEpl/InstructionsEpl"),
+const AppLayoutEPL = lazy(() => import("./sports/epl/layouts/AppLayoutEPL"));
+const StatsLayoutEpl = lazy(
+  () => import("./sports/epl/layouts/StatsLayoutEpl"),
 );
-const StatsEpl = lazy(() => import("./epl/views/StatsEpl/StatsEpl"));
+const HomeEPL = lazy(() => import("./sports/epl/views/HomeEPL/HomeEPL"));
+const InstructionsEPL = lazy(
+  () => import("./sports/epl/views/InstructionsEpl/InstructionsEpl"),
+);
+const StatsEpl = lazy(() => import("./sports/epl/views/StatsEpl/StatsEpl"));
 
 // ? --------------------------  World Cup Router -------------------------- ? //
-const AppLayoutWorldCup = lazy(() => import("./worldcup/layouts/AppLayoutWorldCup"));
-const HistoryLayoutWorldCup = lazy(() => import("./worldcup/layouts/HistoryLayoutWorldCup"));
-const StatsLayoutWorldCup = lazy(() => import("./worldcup/layouts/StatsLayoutWorldCup"));
-const InstructionsLayoutWorldCup = lazy(() => import("./worldcup/layouts/InstructionsLayoutWorldCup"));
-const HomeWorldCup = lazy(() => import("./worldcup/views/home/HomeWorldCup"));
-const MyPortfolioWorldCup = lazy(() => import("./worldcup/views/myPortfolio/MyPortfolioWorldCup"));
-const StatsWorldCup = lazy(() => import("./worldcup/views/Stats/StatsWorldCup"));
-const HistoryWorldCup = lazy(() => import("./worldcup/views/HistoryPortfolios/HistoryWorldCup"));
-const InstructionsWorldCup = lazy(() => import("./worldcup/views/InstructionsPortfolios/InstructionsWorldCup"));
+const AppLayoutWorldCup = lazy(
+  () => import("./sports/worldcup/layouts/AppLayoutWorldCup"),
+);
+const HistoryLayoutWorldCup = lazy(
+  () => import("./sports/worldcup/layouts/HistoryLayoutWorldCup"),
+);
+const StatsLayoutWorldCup = lazy(
+  () => import("./sports/worldcup/layouts/StatsLayoutWorldCup"),
+);
+const InstructionsLayoutWorldCup = lazy(
+  () => import("./sports/worldcup/layouts/InstructionsLayoutWorldCup"),
+);
+const HomeWorldCup = lazy(
+  () => import("./sports/worldcup/views/home/HomeWorldCup"),
+);
+const MyPortfolioWorldCup = lazy(
+  () => import("./sports/worldcup/views/myPortfolio/MyPortfolioWorldCup"),
+);
+const StatsWorldCup = lazy(
+  () => import("./sports/worldcup/views/Stats/StatsWorldCup"),
+);
+const HistoryWorldCup = lazy(
+  () => import("./sports/worldcup/views/HistoryPortfolios/HistoryWorldCup"),
+);
+const InstructionsWorldCup = lazy(
+  () =>
+    import("./sports/worldcup/views/InstructionsPortfolios/InstructionsWorldCup"),
+);
 
 // ? --------------------------  Female Router -------------------------- ? //
-const AppLayoutFemale = lazy(() => import("./female/layouts/AppLayoutFemale"));
-const HomeFemale = lazy(() => import("./female/views/homeFemale/HomeFemale"));
+const AppLayoutFemale = lazy(
+  () => import("./sports/female/layouts/AppLayoutFemale"),
+);
+const HomeFemale = lazy(
+  () => import("./sports/female/views/homeFemale/HomeFemale"),
+);
 const InstructionsFemale = lazy(
-  () => import("./female/views/InstructionsFemale/InstructionsFemale"),
+  () => import("./sports/female/views/InstructionsFemale/InstructionsFemale"),
 );
 const StatsFemale = lazy(
-  () => import("./female/views/StatsFemale/StatsFemale"),
+  () => import("./sports/female/views/StatsFemale/StatsFemale"),
 );
 const HistoryFemale = lazy(
-  () => import("./female/views/HistoryFemale/HistoryFemale"),
+  () => import("./sports/female/views/HistoryFemale/HistoryFemale"),
 );
 const InstructionsFemaleLayout = lazy(
-  () => import("./female/layouts/InstructionsFemaleLayout"),
+  () => import("./sports/female/layouts/InstructionsFemaleLayout"),
 );
 const StatsFemaleLayout = lazy(
-  () => import("./female/layouts/StatsFemaleLayout"),
+  () => import("./sports/female/layouts/StatsFemaleLayout"),
 );
 const HistoryFemaleLayout = lazy(
-  () => import("./female/layouts/HistoryFemaleLayout"),
+  () => import("./sports/female/layouts/HistoryFemaleLayout"),
 );
 const PortfolioFemale = lazy(
-  () => import("./female/views/PortfolioFemale/PortfolioFemale"),
+  () => import("./sports/female/views/PortfolioFemale/PortfolioFemale"),
 );
 
 // ? --------------------------  URL Parameter Handler -------------------------- ? //
@@ -274,29 +309,49 @@ const Router = () => {
           <Route element={<AppLayoutWorldCup />}>
             <Route
               path="/worldcup/home/:userId/:sportId"
-              element={<PrivateRoute><HomeWorldCup /></PrivateRoute>}
+              element={
+                <PrivateRoute>
+                  <HomeWorldCup />
+                </PrivateRoute>
+              }
             />
             <Route
               path="/worldcup/myPortfolio/:userId/:sportId"
-              element={<PrivateRoute><MyPortfolioWorldCup /></PrivateRoute>}
+              element={
+                <PrivateRoute>
+                  <MyPortfolioWorldCup />
+                </PrivateRoute>
+              }
             />
           </Route>
           <Route element={<StatsLayoutWorldCup />}>
             <Route
               path="/worldcup/stats/:userId/:sportId"
-              element={<PrivateRoute><StatsWorldCup /></PrivateRoute>}
+              element={
+                <PrivateRoute>
+                  <StatsWorldCup />
+                </PrivateRoute>
+              }
             />
           </Route>
           <Route element={<HistoryLayoutWorldCup />}>
             <Route
               path="/worldcup/history/:userId/:sportId"
-              element={<PrivateRoute><HistoryWorldCup /></PrivateRoute>}
+              element={
+                <PrivateRoute>
+                  <HistoryWorldCup />
+                </PrivateRoute>
+              }
             />
           </Route>
           <Route element={<InstructionsLayoutWorldCup />}>
             <Route
               path="/worldcup/instructions/:userId/:sportId"
-              element={<PrivateRoute><InstructionsWorldCup /></PrivateRoute>}
+              element={
+                <PrivateRoute>
+                  <InstructionsWorldCup />
+                </PrivateRoute>
+              }
             />
           </Route>
         </Routes>

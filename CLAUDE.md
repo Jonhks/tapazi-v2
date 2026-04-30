@@ -280,11 +280,11 @@ src/
 
 ---
 
-### 10. Reorganizar carpetas de módulos en `src/sports/` — MEJORA IMPORTANTE PENDIENTE
+### 10. Reorganizar carpetas de módulos en `src/sports/` — ✅ HECHO
 
-**Problema:** Las carpetas `epl/`, `ncaa-male/`, `female/` y `worldcup/` viven directamente en `src/`, lo que hace la raíz confusa a medida que crecen los módulos.
+**Problema:** Las carpetas `epl/`, `ncaa-male/`, `female/` y `worldcup/` vivían directamente en `src/`, lo que hacía la raíz confusa a medida que crecen los módulos.
 
-**Solución propuesta:** Mover los cuatro módulos dentro de `src/sports/`:
+**Solución ejecutada:** Los cuatro módulos se movieron dentro de `src/sports/`:
 ```
 src/sports/
 ├── ncaa-male/
@@ -293,19 +293,165 @@ src/sports/
 └── worldcup/
 ```
 
-**⚠️ Requiere:** Actualizar todos los path aliases en `vite.config.ts` y `tsconfig.json` (especialmente `@/epl/*`), todos los imports relativos entre módulos y las referencias en `router.tsx`. **No hacer sin confirmación explícita del usuario.**
+**Cambios aplicados:**
+- `vite.config.ts` — aliases `@/epl`, `@/ncaa-male`, `@/female`, `@/worldcup` apuntan a `src/sports/*/`
+- `tsconfig.app.json` — paths actualizados a `sports/epl/*`, `sports/ncaa-male/*`, etc.
+- `src/router.tsx` — todos los lazy imports cambiados de `./ncaa-male/` → `./sports/ncaa-male/`, etc.
+- `epl/layouts/HistoryLayout.tsx` — imports bare `ncaa-male/...` → `@/ncaa-male/...`
+- `epl/views/HistoryPortfolios/HistoryPortfolios.tsx` — 5 imports bare → `@/ncaa-male/...`
+- `epl/components/Modal/TableModal.tsx` — import relativo `../../../types` corregido a `../../../../types`
+- `tsc -b` pasa sin errores tras los cambios.
 
 ---
 
 ### Prioridad sugerida de refactor
 
-| Prioridad | Tarea                                                               | Impacto                                |
-| --------- | ------------------------------------------------------------------- | -------------------------------------- |
-| Alta      | Centralizar colores en `theme/colors.ts` y pasarlos por props       | Desbloquea todo lo demás               |
-| Alta      | Consolidar `Dropdown` duplicado (cambio mínimo, ganancia inmediata) | 1 componente en lugar de 3             |
-| Alta      | Mover header `Content-Type` al interceptor de Axios                 | Elimina ruido en toda la capa API      |
-| Media     | Crear `TableBase` única con tema como prop                          | Elimina ~3 implementaciones duplicadas |
-| Media     | Consolidar funciones de API idénticas entre módulos                 | Reduce duplicación en `api/`           |
-| Media     | Crear `MenuDrawer` único con `navItems[]` como prop                 | Elimina 6 archivos de menú             |
-| Baja      | Tipar `Table.tsx` correctamente y eliminar `@ts-nocheck`            | Mejora type safety                     |
-| Baja      | Simplificar lógica `if` redundante en API                           | Limpieza de código                     |
+| Prioridad | Estado | Tarea                                                               | Impacto                                |
+| --------- | ------ | ------------------------------------------------------------------- | -------------------------------------- |
+| Alta      | ✅ HECHO | Consolidar `Dropdown` duplicado → `src/shared/components/Inputs/` | 1 componente en lugar de 3             |
+| Alta      | ✅ HECHO | Mover header `Content-Type` al interceptor de Axios               | Elimina 129 líneas repetidas en 21 archivos |
+| Alta      | ✅ HECHO | `src/shared/theme/colors.ts` ya existe con los 4 temas            | Base para la TableBase compartida      |
+| Media     | ✅ HECHO | Crear `TableBase` única en `src/shared/components/Table/`        | Elimina ~4 implementaciones duplicadas |
+| Media     | ✅ HECHO | Incorporar click-to-fetch (prop `onCellClick?`) en TableBase     | Ya incluido en TableBase compartida    |
+| Media     | ✅ HECHO | Mover tablas específicas duplicadas a `src/shared/`              | Elimina ~7 tablas triplicadas + fix bug EPL |
+| Media     | ✅ HECHO | Consolidar funciones de API idénticas en `src/api/shared/`       | Reduce duplicación en `api/`           |
+| Media     | ✅ HECHO | Crear `src/api/ncaa-male/` con re-exports + funciones específicas | Carpeta por deporte, backwards compat  |
+| Media     | ✅ HECHO | Crear `MenuDrawer` único con `navItems[]` como prop              | Elimina 8 archivos de menú (4 desktop + 4 mobile) |
+| Baja      | ✅ HECHO | Tipar `TableTeamsPicked` y `TablePortfolioWeekStats`, eliminar `@ts-nocheck` | Type safety completo en tablas |
+| Baja      | ✅ HECHO | Simplificar lógica `if` redundante en API (EPL + female)      | Patrón `??` / ternario en lugar de doble-if |
+| Baja      | ✅ HECHO | Mover módulos de deporte a `src/sports/` (Step 10)            | Raíz de `src/` limpia, 4 aliases actualizados |
+
+---
+
+## Historial de refactor
+
+### Rama: `refactor/shared-components` (creada desde `mundial`, 2026-04-11)
+
+**Commit 1 — Dropdown + Axios**
+- `src/shared/components/Inputs/Dropdown.tsx` — componente único que reemplaza las 3 copias en ncaa-male, female, epl. Props: `menuBgColor?`, `icon?`. Corrige bug de `label="Age"` hardcodeado.
+- `src/lib/axios.ts` — header `Content-Type` movido al interceptor global. Eliminado de 21 archivos de API (129 líneas).
+
+**Commit 2 — TableBase compartida**
+- `src/shared/components/Table/TableBase.tsx` — TableBase genérica con TanStack Table. Props clave: `theme: SportTheme`, `hideSearch?`, `accentFirstColumn?`, `onCellClick?` (click-to-fetch listo para EPL).
+- `ncaa-male/Table.tsx` → wrapper con `sportThemes.ncaaMale`. Elimina `@ts-nocheck` y ~200 líneas de código duplicado.
+- `female/Table.tsx` → wrapper con `sportThemes.ncaaFemale` + `accentFirstColumn`. Misma reducción.
+- `worldcup/Table.tsx` → wrapper con `sportThemes.worldcup` + `accentFirstColumn`. Ya usaba colors.ts, ahora usa la TableBase compartida.
+- `epl/Table.tsx` → sin cambios (usa MUI styled, patrón distinto — se migra en fase siguiente).
+- Las tablas específicas (`TableHistoryMostPickedTeams`, etc.) **no requieren cambios** — importan `TableBase` de su `Table.tsx` local y reciben el tema automáticamente vía wrapper.
+
+**Commit 3 — Tablas específicas compartidas**
+- `src/shared/components/Table/BallSvg.tsx` — ícono de baloncesto extraído a componente independiente.
+- 9 tablas específicas migradas a `src/shared/components/Table/`:
+  - `TableHistoryMostPickedTeams` — props: `arrHistory, score, least?, theme`
+  - `TableHistoryTeamsNotPicked` — props: `arrHistory, score, theme`
+  - `TableTeamsPickedLog` — props: `arrHistory, score, theme`
+  - `TablePortfolioSeedSelections` — props: `arrHistory, score, theme`
+  - `TableSeedPickTotal` — props: `arrHistory, score, theme`
+  - `TableHistoryPerfectPortfolios` — props: `arrHistory, score, theme`
+  - `TableHistoryPerfectPortfoliosSelected` — props: `arrHistory, score, TeamPerfectPortfoliosSelected?, theme`
+  - `TableHistoryTeamsPerYearLog` — props: `arrHistory, score, theme`
+  - `TableHistoryTeamsPerYearLogSelected` — props: `arrHistory, score, teamsPerYearLogSelected?, theme`
+  - `TableHistoryAllRounds` — usa `useVirtualizer` (solo esta tabla), props: `arrHistory, score, isFetching?, theme`
+- **Bug corregido:** `epl/views/HistoryPortfolios/HistoryPortfolios.tsx` importaba tablas desde `ncaa-male/components/Table/` → ahora usa `@/shared/` con `sportThemes.epl`. EPL History ya muestra colores morados correctos.
+- 5 vistas consumidoras actualizadas (imports → `@/shared/`, prop `theme` agregado):
+  - `ncaa-male/views/Stats/Stats.tsx` → `sportThemes.ncaaMale`
+  - `ncaa-male/views/HistoryPortfolios/HistoryPortfolios.tsx` → `sportThemes.ncaaMale`
+  - `female/views/StatsFemale/StatsFemale.tsx` → `sportThemes.ncaaFemale`
+  - `female/views/HistoryFemale/HistoryFemale.tsx` → `sportThemes.ncaaFemale`
+  - `epl/views/HistoryPortfolios/HistoryPortfolios.tsx` → `sportThemes.epl`
+- Todas las tablas compartidas usan `overflowX/Y: "scroll"` (nunca `"auto"`).
+- `@ts-nocheck` eliminado de todas las tablas compartidas — tipado completo con generics de TanStack Table.
+
+**Commit 4 — Limpieza y seguridad de props**
+- Archivos a eliminar (ejecutar `git rm` manualmente — ver instrucciones abajo): las 11 tablas duplicadas en `ncaa-male/components/Table/`, `female/components/Table/` y `epl/components/Table/` que ya están en `src/shared/`.
+- `ncaa-male/views/Stats/Stats.tsx` — guards añadidos:
+  - `handleChange`: `if (!optionSelect) return;` antes de `setSubDataSelected(subDataDropDown[...])`
+  - `handleChangeSubData`: `if (!selected[0]) return;` antes de `setRound(...)`
+  - `value={subDataSelected[idSubDataSelected]?.name ?? ""}` en los 2 lugares donde aparece (previene crash cuando index queda fuera de rango)
+- `female/views/StatsFemale/StatsFemale.tsx` — mismos guards aplicados (3 cambios idénticos).
+
+**Commit 5 — Refactor de API: carpetas por deporte + shared**
+- `src/api/shared/TournamentsAPI.ts` — funciones genéricas: `getTournaments(sportId)`, `getParticipants(tournamentId)`, `getParameter(tournamentId, key)`.
+- `src/api/shared/ReportsAPI.ts` — 12 funciones de reportes compartidas: `getTeamsPicked`, `getMostPickedTeams`, `getLeastPickedTeams`, `getTeamsNotPickedLog`, `getTeamsPickedLog`, `getSeedPickTotal`, `getPortfolioSeedSelections`, `getTeamsPerYearLog`, `getTeamsPerfectPortfolios`, `getTeamsHistoricAllRounds`, `getHistoricalPerfectPortfoliosHistory`, `getTeamsPickedLogHistory`. Usan patrón `data.x ?? fallback` (sin ifs redundantes).
+- `src/api/ncaa-male/HomeAPI.ts` — usa shared + funciones específicas de male (getScores, gatPayout, getInstructions).
+- `src/api/ncaa-male/PortfoliosAPI.ts` — re-exports de shared + funciones específicas de portfolios.
+- `src/api/ncaa-male/StatsAPI.ts` — re-exports de ReportsAPI + funciones específicas (getScoreWeeksMale, getPortfolioStatsWeek, getNcaaMaleTeams).
+- `src/api/ncaa-male/HistoryAPI.ts` — re-exports de ReportsAPI + `getTournaments` como wrapper de sport ID "1".
+- `src/api/female/HomeAPIFemale.ts` — refactorizado para usar shared.
+- `src/api/female/StatsFemaleAPI.ts` — re-exports de ReportsAPI con alias `Female`.
+- `src/api/female/HistoryFemaleAPI.ts` — re-exports de ReportsAPI con alias `Female`, sport ID "3".
+- Imports actualizados en 8 archivos consumidores: `ncaa-male/views/home/Home.tsx`, `InstructionsPortfolios.tsx`, `HistoryPortfolios.tsx`, `Stats.tsx`, `src/hooks/usePortfolioData.ts`, `usePortfolioActions.ts`, `epl/views/HistoryPortfolios.tsx` (→ `@/api/shared/ReportsAPI`), archivos `-copia`.
+- **Archivos raíz obsoletos a borrar** (ejecutar en terminal): `src/api/HomeAPI.ts`, `src/api/StatsAPI.ts`, `src/api/HistoryAPI.ts`, `src/api/PortfoliosAPI.ts`.
+
+```bash
+git rm src/api/HomeAPI.ts src/api/StatsAPI.ts src/api/HistoryAPI.ts src/api/PortfoliosAPI.ts
+```
+
+---
+
+**Commit 6 — MenuDrawer y MenuMobile compartidos**
+- `src/shared/components/Menu/MenuDrawer.tsx` — sidebar de escritorio genérico. Props clave: `navItems: NavItem[]`, `activeColor`, `defaultColor`, `appBarBgColor`, `drawerBgColor`, `titleColor`, `sportKey`, `sportFrom`, `swal: SwalConfig`, `showUsernameInBar?`.
+- `src/shared/components/Menu/MenuMobile.tsx` — barra inferior móvil genérica. Props clave: `navItems`, `activeColor`, `appBarBgColor`, `menuPaperBgColor`, `sportKey`, `sportFrom`, `swal`, `usernameLabelColor?`.
+- Tipos exportados: `NavItem`, `SwalConfig`, `MenuDrawerProps` en `MenuDrawer.tsx`.
+- `isActive()` unificado: usa `parts.find(p => ACTIVE_SEGMENTS.includes(p))` — funciona para todas las variantes de ruta (con prefijo de deporte, con slash inicial, sin prefijo).
+- `isMoreItem()` en MenuMobile: detecta el ítem de popup por `id === "more" || id.endsWith("/more")`.
+- 8 archivos de menú convertidos a wrappers (~10 líneas c/u):
+  - `ncaa-male/components/Menu/Menu.tsx` → `activeColor="#05fa87"`, `appBar="#000"`
+  - `ncaa-male/components/Menu/MenuMobile.tsx` → `appBar="#000"`, `menuPaper="rgba(0,0,0,0.8)"`
+  - `female/components/Menufemale/MenuFemale.tsx` → `activeColor="#e040fb"`, `appBar="rgba(36,37,62,0.95)"`
+  - `female/components/Menufemale/MenuMobilefemale.tsx` → `appBar="#24253e"`, `menuPaper="rgba(36,37,62,0.95)"`
+  - `epl/components/MenuEPL/MenuEPL.tsx` → `activeColor="#4BF589"`, `appBar="#380f51"`, `showUsernameInBar=false`
+  - `epl/components/MenuEPL/MenuMobileEPL.tsx` → `appBar="#380f51"`, `usernameLabelColor="#4BF589"`
+  - `worldcup/components/Menu/MenuWorldCup.tsx` → colores desde `sportThemes.worldcup`, rutas con `/` absoluto
+  - `worldcup/components/Menu/MenuWorldCupMobile.tsx` → rutas absolutas `/worldcup/...`
+
+---
+
+**Para borrar las tablas obsoletas, ejecutar en terminal:**
+```bash
+git rm src/ncaa-male/components/Table/TableHistory.tsx \
+       src/ncaa-male/components/Table/TableHistoryAllRounds.tsx \
+       src/ncaa-male/components/Table/TableHistoryMostPickedTeams.tsx \
+       src/ncaa-male/components/Table/TableHistoryPerfectPortfolios.tsx \
+       src/ncaa-male/components/Table/TableHistoryPerfectPortfoliosSelected.tsx \
+       src/ncaa-male/components/Table/TableHistoryTeamsNotPicked.tsx \
+       src/ncaa-male/components/Table/TableHistoryTeamsPerYearLog.tsx \
+       src/ncaa-male/components/Table/TableHistoryTeamsPerYearLogSelected.tsx \
+       src/ncaa-male/components/Table/TablePortfolioSeedSelections.tsx \
+       src/ncaa-male/components/Table/TableSeedPickTotal.tsx \
+       src/ncaa-male/components/Table/TableTeamsPickedLog.tsx \
+       src/female/components/Table/TableHistory.tsx \
+       src/female/components/Table/TableHistoryAllRounds.tsx \
+       src/female/components/Table/TableHistoryMostPickedTeams.tsx \
+       src/female/components/Table/TableHistoryPerfectPortfolios.tsx \
+       src/female/components/Table/TableHistoryPerfectPortfoliosSelected.tsx \
+       src/female/components/Table/TableHistoryTeamsNotPicked.tsx \
+       src/female/components/Table/TableHistoryTeamsPerYearLog.tsx \
+       src/female/components/Table/TableHistoryTeamsPerYearLogSelected.tsx \
+       src/female/components/Table/TablePortfolioSeedSelections.tsx \
+       src/female/components/Table/TableSeedPickTotal.tsx \
+       src/female/components/Table/TableTeamsPickedLog.tsx \
+       src/epl/components/Table/TableHistory.tsx \
+       src/epl/components/Table/TableHistoryAllRounds.tsx \
+       src/epl/components/Table/TableHistoryMostPickedTeams.tsx \
+       src/epl/components/Table/TableHistoryPerfectPortfolios.tsx \
+       src/epl/components/Table/TableHistoryPerfectPortfoliosSelected.tsx \
+       src/epl/components/Table/TableHistoryTeamsNotPicked.tsx \
+       src/epl/components/Table/TableHistoryTeamsPerYearLog.tsx \
+       src/epl/components/Table/TableHistoryTeamsPerYearLogSelected.tsx \
+       src/epl/components/Table/TablePortfolioSeedSelections.tsx \
+       src/epl/components/Table/TableSeedPickTotal.tsx \
+       src/epl/components/Table/TableTeamsPickedLog.tsx
+```
+
+---
+
+**Commit 7 — Step 10: módulos de deporte → `src/sports/`**
+- Carpetas movidas: `src/ncaa-male/` → `src/sports/ncaa-male/`, `src/epl/` → `src/sports/epl/`, `src/female/` → `src/sports/female/`, `src/worldcup/` → `src/sports/worldcup/`.
+- `vite.config.ts` — aliases `@/epl`, `@/ncaa-male`, `@/female`, `@/worldcup` apuntan a `src/sports/*/`.
+- `tsconfig.app.json` — paths actualizados (todos los módulos de deporte ahora bajo `sports/`).
+- `src/router.tsx` — 20+ lazy imports actualizados (`./ncaa-male/` → `./sports/ncaa-male/`, etc.).
+- `src/sports/epl/layouts/HistoryLayout.tsx` — imports bare `"ncaa-male/..."` → `"@/ncaa-male/..."`.
+- `src/sports/epl/views/HistoryPortfolios/HistoryPortfolios.tsx` — 5 imports bare → `@/ncaa-male/...`.
+- `src/sports/epl/components/Modal/TableModal.tsx` — import de tipos corregido a `"../../../../types"`.
+- `tsc -b` pasa sin errores.
