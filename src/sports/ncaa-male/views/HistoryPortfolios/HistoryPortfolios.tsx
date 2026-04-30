@@ -221,8 +221,8 @@ const History = () => {
         style={{
           minHeight: "700px",
           height: "calc(100vh - 56px)",
-          overflowY: "scroll",
-          overflowX: "hidden",
+          // overflowY: "scroll",
+          // overflowX: "hidden",
         }}
         className={`${classes.gridInstructions}`}
       >
@@ -319,11 +319,6 @@ const History = () => {
           justifyContent={"center"}
           alignContent={"center"}
         >
-          <Grid
-            size={12}
-            className={classes.containerBtn}
-          ></Grid>
-
           {selectedScore.id === "1" && (
             <Zoom
               in={true}

@@ -14,7 +14,11 @@ interface Props {
   theme: SportTheme;
 }
 
-export default function TableHistoryTeamsPerYearLog({ arrHistory, score, theme }: Props) {
+export default function TableHistoryTeamsPerYearLog({
+  arrHistory,
+  score,
+  theme,
+}: Props) {
   const columns = useMemo<ColumnDef<TeamsPerYearEntry>[]>(
     () => [
       { header: "Year", accessorKey: "year" },

@@ -143,7 +143,7 @@ const TableHistoryAllRounds = ({
       {/* Contenedor con scroll y virtualización */}
       <div
         ref={scrollRef}
-        style={{ overflowX: "scroll", overflowY: "scroll", maxHeight: "60vh" }}
+        style={{ overflowX: "scroll", overflowY: "scroll", maxHeight: "48vh" }}
       >
         <table
           style={{ width: "100%", borderCollapse: "collapse", opacity: 0.9 }}
@@ -187,7 +187,10 @@ const TableHistoryAllRounds = ({
             {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index];
               return (
-                <tr key={row.id} style={{ height: ROW_HEIGHT }}>
+                <tr
+                  key={row.id}
+                  style={{ height: ROW_HEIGHT }}
+                >
                   {row.getVisibleCells().map((cell, index) => (
                     <td
                       key={cell.id}

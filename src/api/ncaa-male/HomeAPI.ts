@@ -55,7 +55,7 @@ export const getScores = async (
 export const gatPayout = async (tournamentId: string) => {
   try {
     const { data } = await apiEnv(
-      `/tournaments/${tournamentId}/payouts?portfolios=223`,
+      `/tournaments/${tournamentId}/payouts?portfolios=99`,
     );
     return data.payouts ?? [{ payouts: 0 }];
   } catch (error) {

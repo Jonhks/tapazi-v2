@@ -92,7 +92,7 @@ export function TableBase<T>({
     accentFirstColumn && index === 0 ? theme.accent : theme.text;
 
   return (
-    <div style={{ width: "100%", height: "50vh", overflowY: "scroll", overflowX: "scroll" }}>
+    <div style={{ width: "100%", height: "47vh", overflow: "hidden" }}>
       {/* Título sticky opcional */}
       {title && (
         <div

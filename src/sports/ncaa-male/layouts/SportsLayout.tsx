@@ -21,9 +21,8 @@ const HistoryLayout = ({ ImgSports }: { ImgSports: string }) => {
       <Box
         sx={{
           flexGrow: 1,
-          mt: !isMobile ? "64px" : 0,
-          mb: isMobile ? "64px" : 0,
-          overflow: "scroll",
+          overflow: "hidden",
+          width: "100%",
         }}
       >
         <Outlet />

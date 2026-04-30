@@ -59,7 +59,7 @@ export default function Sports() {
       {showContent && !isLoading && !isLoadingDisponible && (
         <Grid
           container
-          sx={{ minHeight: "100vh", height: "auto", overflowY: "scroll", overflowX: "scroll", pb: 5 }}
+          sx={{ minHeight: "100vh", height: "stretch" }}
         >
           <Grid
             size={{ xs: 12, md: 6 }}

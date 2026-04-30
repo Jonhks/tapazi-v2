@@ -108,8 +108,8 @@ const HomeWorldCup = () => {
           style={{
             minHeight: "700px",
             height: "calc(100vh - 56px)",
-            overflowY: "scroll",
-            overflowX: "hidden",
+            // overflowY: "hidden",
+            // overflowX: "hidden",
           }}
           className={`${classes.gridInstructions}`}
         >

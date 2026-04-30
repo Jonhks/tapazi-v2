@@ -72,7 +72,7 @@ const Home = () => {
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payout", userId],
     queryFn: () => gatPayout(tournamentId),
-    retry: true,
+    retry: 1,
     enabled: !!tournamentId,
   });
 
@@ -113,10 +113,10 @@ const Home = () => {
             style={{
               minHeight: "700px",
               height: "calc(100vh - 56px)",
-              overflowY: "scroll",
-              overflowX: "hidden",
+              // overflowY: "scroll",
+              // overflowX: "hidden",
             }}
-            className={`${classes.gridInstructions}`}
+            // className={`${classes.gridInstructions}`}
           >
             <Grid
               size={12}

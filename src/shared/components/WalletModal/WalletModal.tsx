@@ -269,8 +269,8 @@ export default function WalletModal({
           sx={{
             border: `1px solid ${theme.accent}33`,
             borderRadius: "4px",
-            overflowX: "scroll",
-            overflowY: "scroll",
+            // overflowX: "scroll",
+            // overflowY: "scroll",
             maxHeight: "420px",
           }}
         >

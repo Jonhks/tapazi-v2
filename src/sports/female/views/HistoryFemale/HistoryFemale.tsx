@@ -216,7 +216,7 @@ const HistoryFemale = () => {
         size={12}
         style={{
           height: "calc(100vh - 56px)",
-          overflow: "scroll",
+          // overflow: "scroll",
         }}
       >
         <Grid
