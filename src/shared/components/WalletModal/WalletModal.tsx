@@ -10,23 +10,15 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableBase } from "@/shared/components/Table/TableBase";
-import { getWallet } from "@/api/WalletAPI";
+import EmptyState from "@/shared/components/EmptyState/EmptyState";
+import {
+  getWalletTransactions,
+  getWalletTotals,
+  getWalletRemaining,
+  type WalletTransaction,
+  type WalletTotals,
+} from "@/api/WalletAPI";
 import { sportThemes, SportKey } from "@/shared/theme/colors";
-
-interface WalletTransaction {
-  id: number | string;
-  in: number | null;
-  out: number | null;
-  fecha: string;
-  portfolio: string;
-  tournament: string | null;
-  tournament_color?: string;
-}
-
-interface WalletData {
-  balance: number;
-  transactions: WalletTransaction[];
-}
 
 export interface WalletModalProps {
   open: boolean;
@@ -36,87 +28,9 @@ export interface WalletModalProps {
   sportKey?: SportKey;
 }
 
-const FAKE_WALLET: WalletData = {
-  balance: 1023,
-  transactions: [
-    {
-      id: 1,
-      in: 1631,
-      out: null,
-      fecha: "01/01/2026",
-      portfolio: "GUERRERO KA 489",
-      tournament: null,
-    },
-    {
-      id: 2,
-      in: null,
-      out: 1631,
-      fecha: "03/02/2026",
-      portfolio: "GUERRERO KA 489",
-      tournament: "WOMEN'S BB TOURNAMENT 25",
-    },
-    {
-      id: 5,
-      in: null,
-      out: null,
-      fecha: "10/02/2026",
-      portfolio: "GUERRERO KA 489",
-      tournament: null,
-    },
-    {
-      id: 1,
-      in: 6731,
-      out: null,
-      fecha: "14/03/2026",
-      portfolio: "GUERRERO KA 489",
-      tournament: null,
-    },
-    {
-      id: 6,
-      in: null,
-      out: 1631,
-      fecha: "15/03/2026",
-      portfolio: "GUERRERO KA 489",
-      tournament: "EPL TOURNAMENT 25",
-    },
-    {
-      id: 12,
-      in: 10321,
-      out: null,
-      fecha: "20/03/2026",
-      portfolio: "GUERRERO KA 489",
-      tournament: null,
-    },
-    {
-      id: 13,
-      in: null,
-      out: 631,
-      fecha: "24/03/2026",
-      portfolio: "GUERRERO KA 489",
-      tournament: "MEN's BB TOURNAMENT 25",
-    },
-    {
-      id: 14,
-      in: null,
-      out: 100,
-      fecha: "24/03/2026",
-      portfolio: "GUERRERO KA 489",
-      tournament: "WORLD CUP TOURNAMENT 25",
-    },
-    {
-      id: "T",
-      in: 18683,
-      out: 3993,
-      fecha: "",
-      portfolio: "",
-      tournament: null,
-    },
-  ],
-};
-
-const getTournamentColor = (tournament: string | null): string => {
-  if (!tournament) return "#ffffff";
-  const t = tournament.toLowerCase();
+const fallbackTournamentColor = (name: string): string => {
+  if (!name?.trim()) return "#ffffff";
+  const t = name.toLowerCase();
   if (t.includes("women") || t.includes("female")) return "#b060f0";
   if (t.includes("epl")) return "#9c6ff5";
   if (t.includes("world cup") || t.includes("worldcup")) return "#00bcd4";
@@ -134,30 +48,45 @@ export default function WalletModal({
 }: WalletModalProps) {
   const theme = sportThemes[sportKey];
 
-  const { data, isLoading } = useQuery<WalletData>({
-    queryKey: ["wallet", participantId],
-    queryFn: () => getWallet(participantId),
+  // staleTime: 0 → siempre refetch al abrir el modal para mostrar saldo actualizado
+  const queryOpts = {
     enabled: open && !!participantId,
     retry: 1,
+    staleTime: 0,
+  };
+
+  const { data: transactions = [], isLoading: loadingTx } = useQuery<
+    WalletTransaction[]
+  >({
+    queryKey: ["wallet-transactions", participantId],
+    queryFn: () => getWalletTransactions(participantId),
+    ...queryOpts,
   });
 
-  const transactions: WalletTransaction[] = data?.transactions?.length
-    ? data.transactions
-    : FAKE_WALLET.transactions;
-  const balance = data?.balance ?? FAKE_WALLET.balance;
+  const { data: totals, isLoading: loadingTotals } = useQuery<WalletTotals>({
+    queryKey: ["wallet-totals", participantId],
+    queryFn: () => getWalletTotals(participantId),
+    ...queryOpts,
+  });
+
+  const { data: remaining = 0, isLoading: loadingRemaining } = useQuery<number>(
+    {
+      queryKey: ["wallet-remaining", participantId],
+      queryFn: () => getWalletRemaining(participantId),
+      ...queryOpts,
+    },
+  );
+
+  const isLoading = loadingTx || loadingTotals || loadingRemaining;
 
   const columns = useMemo<ColumnDef<WalletTransaction>[]>(
     () => [
       {
-        header: "ID",
-        accessorKey: "id",
-      },
-      {
         header: "IN",
-        accessorKey: "in",
+        accessorKey: "wallet_in",
         cell: ({ getValue }) => {
-          const val = getValue<number | null>();
-          if (val == null || val === 0) return null;
+          const val = getValue<number>();
+          if (!val) return null;
           return (
             <span style={{ color: theme.positive, fontWeight: 700 }}>
               $ {val.toLocaleString()}
@@ -167,10 +96,10 @@ export default function WalletModal({
       },
       {
         header: "OUT",
-        accessorKey: "out",
+        accessorKey: "wallet_out",
         cell: ({ getValue }) => {
-          const val = getValue<number | null>();
-          if (val == null || val === 0) return null;
+          const val = getValue<number>();
+          if (!val) return null;
           return (
             <span style={{ color: theme.negative, fontWeight: 700 }}>
               $ {val.toLocaleString()}
@@ -179,23 +108,26 @@ export default function WalletModal({
         },
       },
       {
-        header: "FECHA",
-        accessorKey: "fecha",
+        header: "DATE",
+        accessorKey: "date",
+      },
+      {
+        header: "TIME",
+        accessorKey: "time",
       },
       {
         header: "PORTFOLIO",
-        accessorKey: "portfolio",
+        accessorKey: "portfolio_name",
       },
       {
         header: "TOURNAMENT",
-        accessorKey: "tournament",
+        accessorKey: "tournament_name",
         cell: ({ row }) => {
-          const tournament = row.original.tournament;
-          const color =
-            row.original.tournament_color ?? getTournamentColor(tournament);
-          return (
-            <span style={{ color, fontWeight: 700 }}>{tournament ?? ""}</span>
-          );
+          const name = row.original.tournament_name;
+          const color = row.original.sport_hex_color?.trim()
+            ? row.original.sport_hex_color
+            : fallbackTournamentColor(name);
+          return <span style={{ color, fontWeight: 700 }}>{name ?? ""}</span>;
         },
       },
     ],
@@ -249,51 +181,104 @@ export default function WalletModal({
             {participantName.toUpperCase()}
           </Typography>
 
-          <Typography
-            variant="subtitle2"
-            sx={{ color: "#fff", fontWeight: 600, mt: 1, letterSpacing: 1 }}
+          {/* Totals row */}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 4,
+              mt: 2,
+              flexWrap: "wrap",
+            }}
           >
-            TOTAL
-          </Typography>
+            <Box>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "#aaa", letterSpacing: 1 }}
+              >
+                TOTAL IN
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{ color: theme.positive, fontWeight: 800 }}
+              >
+                $ {(totals?.sum_in ?? 0).toLocaleString()}
+              </Typography>
+            </Box>
 
-          <Typography
-            variant="h4"
-            sx={{ color: theme.accent, fontWeight: 800 }}
-          >
-            $ {balance.toLocaleString()}
-          </Typography>
+            <Box>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "#aaa", letterSpacing: 1 }}
+              >
+                TOTAL OUT
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{ color: theme.negative, fontWeight: 800 }}
+              >
+                $ {(totals?.sum_out ?? 0).toLocaleString()}
+              </Typography>
+            </Box>
+
+            <Box>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: "#aaa", letterSpacing: 1 }}
+              >
+                BALANCE
+              </Typography>
+              <Typography
+                variant="h5"
+                sx={{ color: theme.accent, fontWeight: 800 }}
+              >
+                $ {remaining.toLocaleString()}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
 
-        {/* Table */}
-        <Box
-          sx={{
-            border: `1px solid ${theme.accent}33`,
-            borderRadius: "4px",
-            // overflowX: "scroll",
-            // overflowY: "scroll",
-            maxHeight: "420px",
-          }}
-        >
-          {isLoading ? (
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                minHeight: 200,
-              }}
-            >
-              <CircularProgress sx={{ color: theme.accent }} />
-            </Box>
-          ) : (
+        {/* Loading */}
+        {isLoading && (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              minHeight: 200,
+            }}
+          >
+            <CircularProgress sx={{ color: theme.accent }} />
+          </Box>
+        )}
+
+        {/* Empty state — fuera del contenedor de tabla */}
+        {!isLoading && transactions.length === 0 && (
+          <EmptyState
+            icon={MonetizationOnIcon}
+            title="No hay transacciones"
+            subtitle="Cuando tengas movimientos en tu wallet aparecerán aquí."
+            accentColor={theme.accent}
+          />
+        )}
+
+        {/* Tabla — solo se monta cuando hay datos */}
+        {!isLoading && transactions.length > 0 && (
+          <Box
+            sx={{
+              border: `1px solid ${theme.accent}33`,
+              borderRadius: "4px",
+              maxHeight: "420px",
+            }}
+          >
             <TableBase
               data={transactions}
               columns={columns}
               maxHeight="380px"
               theme={theme}
             />
-          )}
-        </Box>
+          </Box>
+        )}
       </DialogContent>
     </Dialog>
   );

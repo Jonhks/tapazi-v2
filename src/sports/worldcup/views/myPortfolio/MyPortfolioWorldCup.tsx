@@ -15,6 +15,7 @@ import { usePortfolioWorldCupActions } from "../../../../hooks/usePortfolioWorld
 import { usePortfolioValidation } from "../../../../hooks/usePortfolioValidation";
 import PortfolioTabWorldCup from "../../components/PortfolioTab/PortfolioTabWorldCup";
 import AddPortfolioButtonWorldCup from "../../components/AddPortfolioButton/AddPortfolioButtonWorldCup";
+import { sportThemes } from "@/shared/theme/colors";
 
 const MyPortfolioWorldCup = () => {
   const params = useParams();
@@ -33,6 +34,7 @@ const MyPortfolioWorldCup = () => {
     isValidTournament,
     winnerTeamValidation,
     currentTournamentWorldCup,
+    portXp,
   } = usePortfolioWorldCupData(userId);
 
   const {
@@ -51,8 +53,9 @@ const MyPortfolioWorldCup = () => {
     refetchTeams,
     tournamentId: currentTournamentWorldCup?.id,
   });
-
-  const { validateTeamSelection } = usePortfolioValidation(winnerTeamValidation);
+  console.log("isValidTournament", isValidTournament, portXp);
+  const { validateTeamSelection } =
+    usePortfolioValidation(winnerTeamValidation);
 
   useEffect(() => {
     if (portfoliosData) setPortfolios(portfoliosData);
@@ -114,15 +117,25 @@ const MyPortfolioWorldCup = () => {
         overflowY: "scroll",
         overflowX: "hidden",
       }}
-      className={`${classes.gridInstructions}`}
     >
       <Grid size={{ xs: 12, sm: 10, lg: 6 }}>
-        <Box component="section" className={classes.boxPortfolio} m={3}>
+        <Box
+          component="section"
+          className={classes.boxPortfolio}
+          m={3}
+        >
           {/* Header */}
           <div className={classes.headerPortfolio}>
             <div>
-              <SportsSoccerIcon sx={{ color: "#00E2F6", fontSize: 36, mr: 1 }} />
-              <h2 style={{ color: "#00E2F6", fontSize: "2.4rem" }}>
+              <SportsSoccerIcon
+                sx={{ color: sportThemes.worldcup.accent, fontSize: 36, mr: 1 }}
+              />
+              <h2
+                style={{
+                  color: sportThemes.worldcup.accent,
+                  fontSize: "2.4rem",
+                }}
+              >
                 MY PORTFOLIO ({portfolios?.length > 0 && portfolios?.length})
               </h2>
             </div>
@@ -131,34 +144,44 @@ const MyPortfolioWorldCup = () => {
           <div>
             <h2 style={{ color: "white", textAlign: "center" }}>
               Tournament:
-              <p style={{ color: "#00E2F6" }}>
+              <p style={{ color: sportThemes.worldcup.accent }}>
                 {currentTournamentWorldCup?.name || ""}
               </p>
             </h2>
-            <Divider
-              sx={{ borderColor: "#00E2F6", mb: 2, width: "70%", margin: "0 auto" }}
-            />
+            {/* <Divider
+              sx={{
+                borderColor: sportThemes.worldcup.accent,
+                mb: 2,
+                width: "70%",
+                margin: "0 auto",
+              }}
+            /> */}
           </div>
 
           <Box>
             <Grid size={12}>
               <Box sx={{ width: "100%" }}>
                 <AddPortfolioButtonWorldCup
-                  canAdd={portfolios?.length < 8 && isValidTournament}
+                  canAdd={portfolios?.length < portXp && isValidTournament}
                   isDisabled={isEditing}
                   onClick={handleAddPortfolio}
                 />
 
                 {portfolios?.length === 0 ? (
                   <Box sx={{ mt: 4, mb: 4, textAlign: "center" }}>
-                    <h3 style={{ color: "#00E2F6" }}>
-                      You don't have any portfolios yet. Click on "Add Portfolio"
-                      to create one.
+                    <h3 style={{ color: sportThemes.worldcup.accent }}>
+                      You don't have any portfolios yet. Click on "Add
+                      Portfolio" to create one.
                     </h3>
                   </Box>
                 ) : (
                   <>
-                    <Box sx={{ borderBottom: 1, borderColor: "#00E2F6" }}>
+                    <Box
+                      sx={{
+                        borderBottom: 1,
+                        borderColor: sportThemes.worldcup.accent,
+                      }}
+                    >
                       <Tabs
                         value={activeTab}
                         onChange={handleTabChange}
@@ -166,18 +189,24 @@ const MyPortfolioWorldCup = () => {
                         scrollButtons="auto"
                         aria-label="portfolio tabs"
                         sx={{
-                          "& .MuiTabs-indicator": { backgroundColor: "#00E2F6" },
+                          "& .MuiTabs-indicator": {
+                            backgroundColor: sportThemes.worldcup.accent,
+                          },
                           "& .MuiTabs-scrollButtons": {
-                            color: "#00E2F6",
+                            color: sportThemes.worldcup.accent,
                             "& svg": { fontSize: "2rem" },
                           },
-                          "& .MuiTabs-scrollButtons.Mui-disabled": { opacity: 0.3 },
+                          "& .MuiTabs-scrollButtons.Mui-disabled": {
+                            opacity: 0.3,
+                          },
                         }}
                       >
                         {portfolios?.map((portfolio, index) => (
                           <Tab
                             key={index}
-                            label={portfolio?.name || `New (Portfolio ${index + 1})`}
+                            label={
+                              portfolio?.name || `New (Portfolio ${index + 1})`
+                            }
                             className={`${classes.tabComponent} ${
                               index === activeTab ? classes.activeTab : ""
                             }`}
@@ -195,7 +224,9 @@ const MyPortfolioWorldCup = () => {
                         teams={teamsData}
                         isValidTournament={isValidTournament}
                         onTeamSelect={handleTeamSelection}
-                        onChampionshipPointsChange={handleChampionshipPointsChange}
+                        onChampionshipPointsChange={
+                          handleChampionshipPointsChange
+                        }
                         onSave={handleSavePortfolio}
                         onRemove={handleRemovePortfolio}
                         onCancel={handleCancelPortfolio}

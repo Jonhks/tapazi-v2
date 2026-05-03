@@ -57,7 +57,8 @@ export const usePortfolioWorldCupActions = ({
     refetchTeams();
     const newPortfolio = {
       newPortfolio: true,
-      teams: Array(8).fill(false),
+      // TODO: Poner el parametro para la cantidad de equipos y no dejarlo fijo
+      teams: Array(7).fill(false),
       championship_points: "",
     };
     const updatedPortfolios = [...portfolios, newPortfolio];
@@ -78,17 +79,14 @@ export const usePortfolioWorldCupActions = ({
       return;
     }
 
-    const championshipPoints = Number(portfolioToSave.championship_points);
-    if (!championshipPoints || championshipPoints < 1) {
-      toast.error("Championship points must be at least 1!");
-      return;
-    }
+    // No validamos championship_points porque para este deporte siempre se enviará como 0
+    const championshipPoints = 0;
 
     const hasUnselectedTeams = portfolioToSave.teams.some(
       (team) => team === false || !team,
     );
     if (hasUnselectedTeams) {
-      toast.error("You must select all 8 teams!");
+      toast.error("You must select all 7 teams!");
       return;
     }
 
@@ -96,8 +94,8 @@ export const usePortfolioWorldCupActions = ({
       .filter((team) => team && typeof team === "object" && team.id)
       .map((team) => ({ id: team.id, seed: 1, streak_multiplier: 1 }));
 
-    if (teamsToSend.length !== 8) {
-      toast.error("All 8 teams must be properly selected!");
+    if (teamsToSend.length !== 7) {
+      toast.error("All 7 teams must be properly selected!");
       return;
     }
 

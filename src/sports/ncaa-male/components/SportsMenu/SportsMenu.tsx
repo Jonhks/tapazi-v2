@@ -5,11 +5,13 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import WalletModal from "@/shared/components/WalletModal/WalletModal";
+import { useWalletRemaining } from "@/hooks/useWalletRemaining";
 
 export default function SportsMenu() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
   const [walletOpen, setWalletOpen] = useState(false);
+  const { remaining } = useWalletRemaining(user.id);
 
   const handleLogout = () => {
     Swal.fire({
@@ -70,7 +72,9 @@ export default function SportsMenu() {
               }}
             >
               <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />
-              <span style={{ color: "#dc903b" }}>$ 1,023</span>
+              <span style={{ color: "#dc903b" }}>
+                $ {remaining.toLocaleString()}
+              </span>
             </Typography>
             <IconButton color="inherit" onClick={handleLogout}>
               <LogoutIcon sx={{ color: "#dc903b" }} />

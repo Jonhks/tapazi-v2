@@ -33,6 +33,7 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import { messagemodalInstall } from "@/utils/app";
 import WalletModal from "@/shared/components/WalletModal/WalletModal";
+import { useWalletRemaining } from "@/hooks/useWalletRemaining";
 
 // ─── tipos exportados para que los wrappers los usen ──────────────────────────
 
@@ -133,6 +134,7 @@ export default function MenuDrawer({
   const userId = params.userId!;
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
+  const { remaining } = useWalletRemaining(user.id);
 
   // Funciona para todas las variantes de ruta: con prefijo de deporte, con slash, sin slash.
   const isActive = (id: string) => {
@@ -248,7 +250,9 @@ export default function MenuDrawer({
               }}
             >
               <MonetizationOnIcon sx={{ color: "#dc903b", mr: 0.5 }} />
-              <span style={{ color: "#dc903b" }}>$ 1,023</span>
+              <span style={{ color: "#dc903b" }}>
+                $ {remaining.toLocaleString()}
+              </span>
             </Typography>
 
             {/* Selector de deporte */}

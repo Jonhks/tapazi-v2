@@ -7,6 +7,7 @@ import {
   getTeamsWorldCup,
   getDATTOUWorldCup,
   getHOUTOUWorldCup,
+  getPortXpWorldCup,
   getWinnerOfTeamWorldCup,
   getWinnerOfTeamHasTeamWorldCup,
 } from "@/api/worldcup/PortfoliosAPIWorldCup";
@@ -17,11 +18,13 @@ export const usePortfolioWorldCupData = (userId: string) => {
   const [isValidTournament, setIsValidTournament] = useState(true);
   const [winnerTeamValidation, setWinnerTeamValidation] = useState([]);
 
-  const { data: tournamentWorldCup, isLoading: isLoadingTournament } = useQuery({
-    queryKey: ["tournamentWorldCup"],
-    queryFn: () => getTournamentWorldCup("4"), // sportId de worldcup
-    enabled: !!userId,
-  });
+  const { data: tournamentWorldCup, isLoading: isLoadingTournament } = useQuery(
+    {
+      queryKey: ["tournamentWorldCup"],
+      queryFn: () => getTournamentWorldCup("4"), // sportId de worldcup
+      enabled: !!userId,
+    },
+  );
 
   const currentTournamentWorldCup = tournamentWorldCup?.[0];
 
@@ -29,7 +32,7 @@ export const usePortfolioWorldCupData = (userId: string) => {
     queryKey: ["portfoliosWorldCup", userId],
     queryFn: () => getPortfoliosWorldCup(userId, currentTournamentWorldCup?.id),
     enabled: !!currentTournamentWorldCup?.id,
-    retry: true,
+    retry: 1,
   });
 
   const {
@@ -48,21 +51,28 @@ export const usePortfolioWorldCupData = (userId: string) => {
     queryKey: ["dattouWorldCup", userId],
     queryFn: () => getDATTOUWorldCup(currentTournamentWorldCup?.id),
     enabled: !!currentTournamentWorldCup?.id,
-    retry: true,
+    retry: 1,
   });
 
   const { data: dataHOUTOU } = useQuery({
     queryKey: ["houtouWorldCup", userId],
     queryFn: () => getHOUTOUWorldCup(currentTournamentWorldCup?.id),
     enabled: !!currentTournamentWorldCup?.id,
-    retry: true,
+    retry: 1,
   });
 
-  const { data: winnerOfTeam } = useQuery({
-    queryKey: ["winnerOfTeamWorldCup", userId],
-    queryFn: () => getWinnerOfTeamWorldCup(currentTournamentWorldCup?.id),
+  // const { data: winnerOfTeam } = useQuery({
+  //   queryKey: ["winnerOfTeamWorldCup", userId],
+  //   queryFn: () => getWinnerOfTeamWorldCup(currentTournamentWorldCup?.id),
+  //   enabled: !!currentTournamentWorldCup?.id,
+  //   retry: 1,
+  // });
+
+  const { data: portXp } = useQuery({
+    queryKey: ["portXpWorldCup", userId],
+    queryFn: () => getPortXpWorldCup(currentTournamentWorldCup?.id),
     enabled: !!currentTournamentWorldCup?.id,
-    retry: false,
+    retry: 1,
   });
 
   useEffect(() => {
@@ -72,21 +82,24 @@ export const usePortfolioWorldCupData = (userId: string) => {
     }
   }, [dataDATTOU, dataHOUTOU]);
 
-  useEffect(() => {
-    if (winnerOfTeam) {
-      Promise.all(
-        winnerOfTeam.map((winner) =>
-          getWinnerOfTeamHasTeamWorldCup(currentTournamentWorldCup?.id, winner.team_id),
-        ),
-      ).then((responses) => {
-        const formattedData = winnerOfTeam.map((winner, index) => ({
-          winnerOfTeam: winner.team_id,
-          winnerOfTeamHasTeam: responses[index]?.map((team) => team.team_id),
-        }));
-        setWinnerTeamValidation(formattedData);
-      });
-    }
-  }, [winnerOfTeam]);
+  // useEffect(() => {
+  //   if (winnerOfTeam) {
+  //     Promise.all(
+  //       winnerOfTeam.map((winner) =>
+  //         getWinnerOfTeamHasTeamWorldCup(
+  //           currentTournamentWorldCup?.id,
+  //           winner.team_id,
+  //         ),
+  //       ),
+  //     ).then((responses) => {
+  //       const formattedData = winnerOfTeam.map((winner, index) => ({
+  //         winnerOfTeam: winner.team_id,
+  //         winnerOfTeamHasTeam: responses[index]?.map((team) => team.team_id),
+  //       }));
+  //       setWinnerTeamValidation(formattedData);
+  //     });
+  //   }
+  // }, [winnerOfTeam]);
 
   return {
     portfoliosData,
@@ -96,5 +109,6 @@ export const usePortfolioWorldCupData = (userId: string) => {
     isValidTournament,
     winnerTeamValidation,
     currentTournamentWorldCup,
+    portXp,
   };
 };

@@ -7,7 +7,7 @@ export const getPortfoliosWorldCup = async (
   tournamentId: string,
 ) => {
   try {
-    const url = `/participants/${participantId}/portfolios?tournament_id=${tournamentId}&sport=world-cup`;
+    const url = `/participants/${participantId}/portfolios?tournament_id=${tournamentId}&sport=wc`;
     const { data } = await apiEnv(url);
     if (!data.portfolios) return [];
     return data.portfolios;
@@ -20,7 +20,8 @@ export const getPortfoliosWorldCup = async (
 
 export const getTeamsWorldCup = async (tournamentId: User["id"]) => {
   try {
-    const url = `/tournaments/${tournamentId}/teams?sport=world-cup&show_all=false`;
+    // const url = `/tournaments/${tournamentId}/teams?sport=world-cup&show_all=false`;
+    const url = `/sports/${4}/teams?sport=wc&tournament_id=${tournamentId}`;
     const { data } = await apiEnv.get(url);
     if (!data.teams) return [];
     return data.teams;
@@ -47,6 +48,19 @@ export const getDATTOUWorldCup = async (tournamentId: User["id"]) => {
 export const getHOUTOUWorldCup = async (tournamentId: User["id"]) => {
   try {
     const url = `/tournaments/${tournamentId}/parameters?key=HOUTOU`;
+    const { data } = await apiEnv(url);
+    if (!data.value) return "Error";
+    return data.value;
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getPortXpWorldCup = async (tournamentId: User["id"]) => {
+  try {
+    const url = `/tournaments/${tournamentId}/parameters?key=PORTXP`;
     const { data } = await apiEnv(url);
     if (!data.value) return "Error";
     return data.value;
@@ -89,11 +103,41 @@ export const getWinnerOfTeamHasTeamWorldCup = async (
 export const postNewPortfolioWorldCup = async (data: PortfolioToSave) => {
   try {
     const { data: responseData } = await apiEnv.post("/portfolios", data);
-    if (responseData.message === "success")
-      return "Successfully created portfolio";
+    return responseData.message ?? "Successfully created portfolio";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error || error.response.data.message);
+    throw error;
+  }
+};
+
+/** PUT /portfolios/:id — actualiza equipos y/o puntos de campeonato */
+export const updatePortfolioWorldCup = async (
+  portId: number,
+  data: PortfolioToSave,
+) => {
+  try {
+    const response = await apiEnv.put(`/portfolios/${portId}`, data);
+    return response.data?.message ?? "Successfully updated portfolio";
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+/** PUT /portfolios/:id/remove — baja lógica del portfolio (soft delete) */
+export const softRemovePortfolioWorldCup = async ({
+  portId,
+}: {
+  portId: number;
+}) => {
+  try {
+    const response = await apiEnv.put(`/portfolios/${portId}/remove`);
+    return response.data?.message ?? "Successfully removed portfolio";
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
     return;
   }
 };

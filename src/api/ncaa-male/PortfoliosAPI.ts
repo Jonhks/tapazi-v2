@@ -56,6 +56,37 @@ export const postNewPortfolio = async (data: CreatePortfolio) => {
   return response.data?.message ?? "Successfully saved portfolio";
 };
 
+/** PUT /portfolios/:id — actualiza equipos y/o puntos de campeonato */
+export const updatePortfolio = async (
+  portId: PortfolioComplete["id"],
+  data: CreatePortfolio,
+) => {
+  try {
+    const response = await apiEnv.put(`/portfolios/${portId}`, data);
+    return response.data?.message ?? "Successfully updated portfolio";
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+/** PUT /portfolios/:id/remove — baja lógica del portfolio (soft delete) */
+export const softRemovePortfolio = async ({
+  portId,
+}: {
+  portId: PortfolioComplete["id"];
+}) => {
+  try {
+    const response = await apiEnv.put(`/portfolios/${portId}/remove`);
+    return response.data?.message ?? "Successfully removed portfolio";
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
 export const removeportfolio = async ({
   portId,
 }: {

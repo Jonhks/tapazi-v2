@@ -35,6 +35,7 @@ const HomeWorldCup = () => {
   const tournamentId = tournament?.[0]?.id;
   // const tournamentId = "4";
   //
+  // console.log(tournamentId);
   const { data: dataScores, isLoading: isLoadingScores } = useQuery({
     queryKey: ["scoresWorldCup", userId, tournamentId],
     queryFn: () => getScores(tournamentId, userId),
