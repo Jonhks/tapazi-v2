@@ -22,6 +22,7 @@ export const sportThemes = {
     // General
     bg: "#000000",
     text: "#ffffff",
+    textSecondary: "#bbbbbb",
     positive: "#05fa87",
     negative: "#ff3636",
     searchBg: "#d6cfcfff",
@@ -38,13 +39,14 @@ export const sportThemes = {
     // Menú
     appBar: "#24253e",
     drawer: "#24253e",
-    accent: "#e040fb",    // magenta — primera columna, íconos, resaltados
+    accent: "#e040fb", // magenta — primera columna, íconos, resaltados
     defaultIcon: "#e040fb",
     // General
     bg: "#111120",
     text: "#ffffff",
-    positive: "#00e676",  // verde brillante para puntos pagados
-    negative: "#ff5252",  // rojo para puntos no pagados
+    textSecondary: "#bbbbbb",
+    positive: "#00e676", // verde brillante para puntos pagados
+    negative: "#ff5252", // rojo para puntos no pagados
     searchBg: "#d6cfcfff",
   },
 
@@ -64,6 +66,7 @@ export const sportThemes = {
     // General
     bg: "#19071F",
     text: "#ffffff",
+    textSecondary: "#bbbbbb",
     positive: "#05fa87",
     negative: "#ff3636",
     searchBg: "#d6cfcfff",
@@ -85,6 +88,7 @@ export const sportThemes = {
     // General
     bg: "#000000",
     text: "#ffffff",
+    textSecondary: "#bbbbbb",
     positive: "#05fa87", // verde — puntaje positivo
     negative: "#ff3636", // rojo  — puntaje negativo
     searchBg: "#d6cfcfff",

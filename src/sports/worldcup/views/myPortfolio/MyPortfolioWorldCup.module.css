@@ -13,7 +13,7 @@
 }
 .addPortFolio button {
   margin: 10px 0;
-  background-color: #00E2F6;
+  background-color: #00e2f6;
   text-transform: capitalize;
   color: #000;
   font-weight: bold;
@@ -26,7 +26,7 @@
 
 .removePortFolio button {
   margin-top: 5px;
-  background-color: #00E2F6;
+  background-color: #00e2f6;
   text-transform: capitalize;
 }
 .removePortFolio button:active,
@@ -40,7 +40,7 @@
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  color: #00E2F6;
+  color: #00e2f6;
 }
 
 .headerPortfolio div h2 {
@@ -52,7 +52,7 @@
 }
 
 .tabComponent {
-  color: #00E2F6 !important;
+  color: #00e2f6 !important;
   font: 20px !important;
   font-weight: bold !important;
 }
@@ -60,7 +60,7 @@
 .activeTab {
   color: #000 !important;
   font: 20px !important;
-  background: #00E2F6 !important;
+  background: #00e2f6 !important;
   font-weight: bold !important;
 }
 
@@ -84,7 +84,7 @@
 
 .championshipPoints,
 .championshipPoints svg {
-  color: #00E2F6 !important;
+  color: #00e2f6 !important;
 }
 
 .btnSubmit,
@@ -107,16 +107,12 @@
 }
 
 .error {
-  color: #00E2F6;
+  color: #00e2f6;
   margin: 5px 0;
   background: #001a1d;
   padding: 5px 10px;
   font-weight: bold;
   text-align: center;
-}
-
-.gridInstructions {
-  background-color: #000;
 }
 
 @media (width < 800px) {

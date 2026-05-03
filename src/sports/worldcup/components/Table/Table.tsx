@@ -58,7 +58,7 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
     () => [
       { header: "Portfolio Entry", accessorKey: "portfolio_name" },
       { header: "Portfolio Weight", accessorKey: "portfolio_weight" },
-      ...[1, 2, 3, 4, 5, 6, 7, 8].map(
+      ...[1, 2, 3, 4, 5, 6, 7].map(
         (n): ColumnDef<OtherScores> => ({
           header: `Team ${n}`,
           accessorKey: `team${n}_name`,

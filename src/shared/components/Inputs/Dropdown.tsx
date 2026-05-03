@@ -15,18 +15,21 @@ export default function Dropdown({
   name,
   menuBgColor = "rgba(0, 0, 0, 0.9)",
   icon,
+  disabledOptions = [],
 }: {
   disabled: boolean;
   indexTeam: number;
   label: string;
   value: string;
-  options: Array<{ name: string }>;
-  handleChange: (option: { name: string }, index: number) => void;
+  options: Array<{ name: string; crest_url?: string; [key: string]: any }>;
+  handleChange: (option: any, index: number) => void;
   name: string;
   /** Color de fondo del menú desplegable. Por defecto: rgba(0,0,0,0.9) */
   menuBgColor?: string;
   /** Ícono opcional que aparece a la izquierda de cada opción (ej. BallIcon) */
   icon?: ReactNode;
+  /** Arreglo de opciones (nombres) que deben estar deshabilitadas */
+  disabledOptions?: string[];
 }) {
   return (
     <FormControl
@@ -51,7 +54,6 @@ export default function Dropdown({
         MenuProps={{
           slotProps: {
             paper: {
-
               sx: {
                 backgroundColor: menuBgColor,
                 color: "#fff",
@@ -64,9 +66,22 @@ export default function Dropdown({
           <MenuItem
             key={index}
             value={option?.name}
-            sx={{ display: "flex", alignItems: "center", gap: icon ? 1 : 0 }}
+            disabled={disabledOptions.includes(option?.name)}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: icon || option?.crest_url ? 1 : 0,
+            }}
           >
-            {icon}
+            {option?.crest_url ? (
+              <img
+                src={option.crest_url}
+                alt={option.name}
+                style={{ width: "24px", height: "24px", objectFit: "contain" }}
+              />
+            ) : (
+              icon
+            )}
             {option.name}
           </MenuItem>
         ))}
