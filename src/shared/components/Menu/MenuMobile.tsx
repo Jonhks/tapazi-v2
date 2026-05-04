@@ -21,6 +21,7 @@ import Swal from "sweetalert2";
 import { messagemodalInstallmobile } from "@/utils/app";
 import WalletModal from "@/shared/components/WalletModal/WalletModal";
 import type { NavItem, SwalConfig } from "./MenuDrawer";
+import { useWalletRemaining } from "@/hooks/useWalletRemaining";
 
 // ─── tipos ────────────────────────────────────────────────────────────────────
 
@@ -74,6 +75,7 @@ export default function MenuMobile({
     setMobileMoreAnchorEl(e.currentTarget);
 
   const userName = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
+  const { remaining } = useWalletRemaining(userName?.id);
 
   const isActive = (id: string) => {
     if (id === "logOut" || isMoreItem(id)) return false;
@@ -175,7 +177,7 @@ export default function MenuMobile({
         <IconButton size="large" color="inherit">
           <MonetizationOnIcon sx={{ color: "#dc903b" }} />
         </IconButton>
-        <p style={{ color: "#dc903b" }}>My Wallet</p>
+        <p style={{ color: "#dc903b" }}>$ {remaining?.toLocaleString()}</p>
       </MenuItem>
 
       {/* Logout */}

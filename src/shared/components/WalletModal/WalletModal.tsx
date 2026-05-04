@@ -276,6 +276,7 @@ export default function WalletModal({
               columns={columns}
               maxHeight="380px"
               theme={theme}
+              invertColorColumns={true}
             />
           </Box>
         )}

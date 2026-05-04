@@ -39,6 +39,8 @@ export interface TableBaseProps<T> {
    * Columnas a ignorar (ej. sticky) deben filtrarse en el callback del consumidor.
    */
   onCellClick?: (cell: Cell<T, unknown>, columnIndex: number) => void;
+  /** Invertir el color oscuro/claro de las columnas (pares se vuelven impares) */
+  invertColorColumns?: boolean;
 }
 
 // ─── TableBase genérica ───────────────────────────────────────────────────────
@@ -55,6 +57,7 @@ export function TableBase<T>({
   hideSearch = false,
   accentFirstColumn = false,
   onCellClick,
+  invertColorColumns = false,
 }: TableBaseProps<T>) {
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [filtered, setFiltered] = useState("");
@@ -77,11 +80,14 @@ export function TableBase<T>({
   const isSticky = (index: number) =>
     index === 0 || (stickyLastColumn && index === totalCols - 1);
 
+  const getColIndexForColor = (index: number) =>
+    invertColorColumns ? index + 1 : index;
+
   const headerBg = (index: number) =>
-    index % 2 === 0 ? theme.headerEven : theme.headerOdd;
+    getColIndexForColor(index) % 2 === 0 ? theme.headerEven : theme.headerOdd;
 
   const cellBg = (colIndex: number, rowIndex: number) => {
-    const isEvenCol = colIndex % 2 === 0;
+    const isEvenCol = getColIndexForColor(colIndex) % 2 === 0;
     const isEvenRow = rowIndex % 2 === 0;
     if (isEvenCol)
       return isEvenRow ? theme.cellEvenColEvenRow : theme.cellEvenColOddRow;
