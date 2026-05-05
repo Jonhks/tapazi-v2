@@ -86,10 +86,11 @@ export const getAllPortfoliosEpl = async (tournamentId: string) => {
 
 export const getScoreHomeEpl = async (
   tournamentId: User["id"],
-  portfolioId: string,
+  participantId: string,
 ) => {
   try {
-    const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}&epl`;
+    // const url = `/tournaments/${tournamentId}/score/home?portfolio_id=${portfolioId}&epl`;
+    const url = `/tournaments/${tournamentId}/score/home?participant_id=${participantId}&sport=epl`;
     const { data } = await apiEnv(url);
     return data.score ?? [];
   } catch (error) {

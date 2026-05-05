@@ -80,8 +80,8 @@ const HomeEPL = () => {
     queryKey: ["scoreHomeEpl", userId, tournamentIdEpl, portfoliosHome],
     queryFn: () =>
       // getScoreHomeEpl("3", "566"),
-      getScoreHomeEpl(tournamentId, portfoliosHome && portfoliosHome[0]?.id),
-    enabled: Boolean(tournamentId && portfoliosHome && portfoliosHome[0]?.id),
+      getScoreHomeEpl(tournamentId, userId),
+    enabled: Boolean(tournamentId && userId),
     retry: 1,
   });
 
