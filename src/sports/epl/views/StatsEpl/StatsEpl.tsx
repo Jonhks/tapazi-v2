@@ -112,7 +112,7 @@ const StatsEpl = () => {
 
   const { data: teamsEplStats } = useQuery({
     queryKey: ["teamsEplStats", userId],
-    queryFn: () => getTeamsEpl("2"),
+    queryFn: () => getTeamsEpl("2", "7"),
   });
 
   const { data: tournamentsEpl } = useQuery({
