@@ -205,8 +205,9 @@ export function TableBase<T>({
       {/* Tabla */}
       <div
         style={{
-          overflowX: "scroll",
+          width: "100%",
           overflowY: maxHeight ? "scroll" : "visible",
+          overflowX: "visible",
           ...(maxHeight ? { maxHeight } : {}),
         }}
       >
