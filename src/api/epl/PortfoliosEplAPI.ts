@@ -7,13 +7,16 @@ import {
   User,
 } from "../../types";
 
-export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
+export const getPortfoliosEpl = async (
+  id: User["id"],
+  portfolioId: string,
+  tournamentId: string,
+) => {
   try {
     const url =
       portfolioId !== "0"
-        ? `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}&epl`
-        : `/participants/${id}/portfolios?tournament_id=3&epl`;
-    // const url = `/participants/${id}/portfolios?tournament_id=3&portfolio_id=${portfolioId}`;
+        ? `/participants/${id}/portfolios?tournament_id=${tournamentId}&portfolio_id=${portfolioId}&epl`
+        : `/participants/${id}/portfolios?tournament_id=${tournamentId}&epl`;
     const { data } = await apiEnv(url);
     return data.portfolios ?? [];
   } catch (error) {
@@ -24,9 +27,9 @@ export const getPortfoliosEpl = async (id: User["id"], portfolioId: string) => {
   }
 };
 
-export const getTeamsEpl = async (sport: User["id"]) => {
+export const getTeamsEpl = async (sport: User["id"], tournamentId: string) => {
   try {
-    const url = `/sports/${sport}/teams`;
+    const url = `/sports/${sport}/teams?sport=epl&tournament_id=${tournamentId}`;
     const { data } = await apiEnv.get(url);
     // console.log(data);
 
@@ -40,12 +43,10 @@ export const getTeamsEpl = async (sport: User["id"]) => {
   }
 };
 
-export const getNumberTEAMXP = async () => {
+export const getNumberTEAMXP = async (tournamentId: string) => {
   try {
-    const url = `tournaments/3/parameters?key=TEAMXP`;
+    const url = `tournaments/${tournamentId}/parameters?key=TEAMXP`;
     const { data } = await apiEnv.get(url);
-    // console.log(data);
-
     return data.value ?? 0;
   } catch (error) {
     if (isAxiosError(error) && error.response)
@@ -54,13 +55,11 @@ export const getNumberTEAMXP = async () => {
   }
 };
 
-export const getTournamentsId = async () => {
+export const getTournamentsId = async (sportId: string) => {
   try {
-    const url = `sports/2/tournaments`;
+    const url = `sports/${sportId}/tournaments`;
     const { data } = await apiEnv.get(url);
-    // console.log(data);
-
-    return data.tournaments ?? 0;
+    return data.tournaments ?? [];
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -93,6 +92,8 @@ export const getTeamsNotAvailable = async (
   sport: User["id"],
   tournamentId: User["id"],
 ) => {
+  // console.log("sport", sport);
+  // console.log("tournamentId", tournamentId);
   try {
     // const url = `/sports/${sport}/teams`;
     const url = `/sports/${sport}/teams/not-available?tournament_id=${tournamentId}`;
@@ -149,10 +150,7 @@ export const postEditPortfolio = async ({
 
   const urlLogin = `/portfolios/${portId}`;
   try {
-    const { data } = await apiEnv.put(
-      urlLogin,
-      { teams: port },
-    );
+    const { data } = await apiEnv.put(urlLogin, { teams: port });
     console.log(data);
     if (
       !data.message &&
@@ -279,12 +277,14 @@ export const getWinnerOfTeamHasTeam = async (id: string) => {
   }
 };
 
-export const getTeamsDynamics = async (id: string, portfolioId: string) => {
-  // portfolioId = "566";
+export const getTeamsDynamics = async (
+  sportId: string,
+  portfolioId: string,
+  tournamentId: string,
+) => {
   try {
-    const url = `/sports/${id}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
+    const url = `/sports/${sportId}/teams/dynamics?tournament_id=${tournamentId}&portfolio_id=${portfolioId}`;
     const { data } = await apiEnv(url);
-
     return data.teams ?? "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)

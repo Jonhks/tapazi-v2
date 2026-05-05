@@ -78,12 +78,12 @@ src/
 ├── sports/           ← módulos por deporte (ncaa-male, female, epl, worldcup)
 ├── shared/           ← componentes, tablas, menús y temas compartidos entre deportes
 ├── api/              ← capa de datos: shared/ + carpeta por deporte
-├── hooks/            ← custom hooks de portfolio y fetching
-├── context/ + providers/   ← PortfolioContext / PortfolioProvider
+├── hooks/            ← custom hooks de portfolio y fetching (uno por deporte)
+├── context/          ← solo AuthUser.ts (auth context)
 ├── types/            ← interfaces TypeScript y esquemas Zod
 ├── utils/            ← helpers puros (fórmulas, dropdowns, transformaciones)
 ├── lib/axios.ts      ← instancia Axios con interceptor Content-Type global
-├── router.tsx        ← rutas lazy-loaded dentro de <PortfolioProvider>
+├── router.tsx        ← rutas lazy-loaded con BrowserRouter
 └── index.css         ← reset global + scrollbar styles
 ```
 
@@ -133,7 +133,16 @@ src/shared/
 
 **Menú:** `MenuDrawer` usa un `<Box position="fixed">` custom en lugar del `<Drawer variant="permanent">` de MUI, lo que permite controlar la altura del sidebar (termina después del último nav item, no va a full viewport height). Cada módulo tiene su propio wrapper de ~10 líneas que configura colores y navItems.
 
-**Colores:** `sportThemes` en `colors.ts` es la fuente de verdad. Props clave: `headerEven`, `headerOdd`, `cellEvenColEvenRow`, `cellEvenColOddRow`, `cellOddColEvenRow`, `cellOddColOddRow`, `accent`, `text`, `searchBg`.
+**Colores:** `sportThemes` en `colors.ts` es la fuente de verdad.
+
+**TableBase — props opcionales avanzadas** (todas con default no-op, no rompen consumidores existentes):
+
+| Prop | Tipo | Para qué |
+| ---- | ---- | -------- |
+| `stickySecondColumn` | `boolean` | Hace sticky la columna 1 (Portfolio ID en EPL) |
+| `col0Width` | `number` (default 120) | Ancho de col 0 para posicionar correctamente col 1 sticky |
+| `highlightColBg` | `(colId, idx) => string \| null` | Resalta columnas por condición (ej. semana activa en verde) |
+| `headerTooltip` | `(colId, idx) => string \| null` | Tooltip en el header de la columna | Props clave: `headerEven`, `headerOdd`, `cellEvenColEvenRow`, `cellEvenColOddRow`, `cellOddColEvenRow`, `cellOddColOddRow`, `accent`, `text`, `searchBg`.
 
 ### Capa de API — `src/api/`
 
@@ -183,7 +192,24 @@ Los aliases están definidos como **array ordenado** en `vite.config.ts` (los es
 
 1. Las funciones en `src/api/` hacen llamadas con Axios y devuelven datos validados con esquemas Zod de `src/types/`.
 2. TanStack Query maneja el estado del servidor (caché, refetching) en toda la app.
-3. `PortfolioContext` mantiene el estado de selección de portfolio compartido entre módulos.
+3. Cada deporte tiene sus propios hooks de portfolio (`usePortfolioXxxData` + `usePortfolioXxxActions`) — no hay estado global compartido entre deportes.
+
+### Patrón de hooks por deporte — `src/hooks/`
+
+Todos los deportes siguen el mismo patrón de dos hooks locales:
+
+| Deporte     | Hook de datos                  | Hook de acciones                  |
+| ----------- | ------------------------------ | --------------------------------- |
+| NCAA Male   | `usePortfolioData.ts`          | `usePortfolioActions.ts`          |
+| NCAA Female | `usePortfolioFemaleData.ts`    | `usePortfolioFemaleActions.ts`    |
+| World Cup   | `usePortfolioWorldCupData.ts`  | `usePortfolioWorldCupActions.ts`  |
+| EPL         | `usePortfolioEplData.ts`       | `usePortfolioEplActions.ts`       |
+
+**Hook de datos** recibe `(userId, sportId)` y devuelve: `validTournament`, `AllPortfolios`, `teamsComplete`, `teamsBloqued`, `selectedTeams`, `teamsDynamics`, `weekParameter`, `numberInputs`, `tournamentId`, `isLoadingData`.
+
+**Hook de acciones** recibe esos datos como props y devuelve: `getSeed`, `getMultiplier`, `areAllInputsValid`, `addportFolioAlert`, `cancelAlert`.
+
+`sportId` y `tournamentId` son **siempre dinámicos** — vienen de los URL params (`useParams`) y de la primera query al backend. Ningún ID está hardcodeado en los hooks ni en la API de EPL.
 
 ### Compensación de sidebar en layouts
 
@@ -321,21 +347,24 @@ git push --force origin refactor/shared-components
 
 | Tarea | Archivos | Detalle |
 | ----- | -------- | ------- |
-| Borrar archivos `*-copia` / `* copy` | `ncaa-male/views/myPortfolio/MyPortfolio-copia.tsx`, `epl/views/myPortfolioEPL/MyPortfolioEPL copy.tsx`, `epl/views/StatsEpl/StatsEpl copy.tsx` | Duplicados sin usar. El copy de StatsEpl está prácticamente entero comentado. |
+| Borrar archivos `*-copia` / `* copy` | `ncaa-male/views/myPortfolio/MyPortfolio-copia.tsx`, `epl/views/myPortfolioEPL/MyPortfolioEPL copy.tsx`, `epl/views/StatsEpl/StatsEpl copy.tsx` | Duplicados sin usar. El copy de StatsEpl está prácticamente entero comentado. `git rm` directo. |
 | SportId hardcodeado en menús como `"1"` | `female/components/Menufemale/MenuFemale.tsx` y `MenuMobilefemale.tsx`, `epl/components/MenuEPL/MenuEPL.tsx` y `MenuMobileEPL.tsx` | Todos usan `params.sportId \|\| "1"` como fallback. Female debería ser `"3"`, EPL `"2"`. Si el param no llega el menú apunta al sport equivocado. |
-| EPL usa Context API en lugar de custom hooks | `epl/views/myPortfolioEPL/MyPortfolioEPL.tsx` y sus hooks | Los 3 deportes restantes (ncaa-male, female, worldcup) usan el patrón `usePortfolioXxxData` + `usePortfolioXxxActions`. EPL todavía usa `usePortfolio()` del PortfolioContext global — arquitectura inconsistente y más difícil de mantener. |
 | WorldCup vistas con TODO sin implementar | `worldcup/views/Stats/StatsWorldCup.tsx`, `worldcup/views/HistoryPortfolios/HistoryWorldCup.tsx`, `api/worldcup/*.ts` | Varias vistas dicen "Adaptar de ncaa-male". Las APIs tienen TODO para confirmar endpoints con el back. Funciona porque comparte lógica de male, pero no está validado. |
+| EPL `Table.tsx` sin uso — borrar | `sports/epl/components/Table/Table.tsx` | El componente existe pero ningún archivo lo importa. `HomeEPL` usa `TablesEpl/TableHomeEpl.tsx` directamente (ya migrado a `TableBase`). Borrar con `git rm`. |
 
 ### Media prioridad
 
 | Tarea | Archivos | Detalle |
 | ----- | -------- | ------- |
-| `@ts-nocheck` en hooks y providers | `hooks/usePortfolioWorldCupData.ts`, `hooks/usePortfolioWorldCupActions.ts`, `hooks/usePortfolioFemaleData.ts`, `providers/PortfolioProvider.tsx`, y las 4 vistas de MyPortfolio | Desactiva completamente el type checker. Reemplazar con tipos correctos de TanStack Query y los propios tipos del proyecto. |
+| `@ts-nocheck` en hooks de portfolio | `hooks/usePortfolioWorldCupData.ts`, `hooks/usePortfolioWorldCupActions.ts`, `hooks/usePortfolioFemaleData.ts`, `hooks/usePortfolioEplData.ts`, `hooks/usePortfolioEplActions.ts`, y las 4 vistas de MyPortfolio | Desactiva completamente el type checker. Reemplazar con tipos correctos de TanStack Query y los propios tipos del proyecto. |
 | `WalletModal` es un placeholder | `shared/components/WalletModal/WalletModal.tsx` | Tiene `FAKE_WALLET` hardcodeado como fallback. Intenta llamar a `getWallet()` pero cae siempre al fake si hay error. Necesita integración real con la API de wallet. |
-| Borrar 4 re-exportadores obsoletos en `src/api/` | `api/HomeAPI.ts`, `api/StatsAPI.ts`, `api/HistoryAPI.ts`, `api/PortfoliosAPI.ts` | Son wrappers vacíos que re-exportan desde `ncaa-male/`. Tienen comentario de borrar pero siguen ahí. `git rm src/api/HomeAPI.ts src/api/StatsAPI.ts src/api/HistoryAPI.ts src/api/PortfoliosAPI.ts` |
+| Borrar 4 re-exportadores obsoletos en `src/api/` | `api/HomeAPI.ts`, `api/StatsAPI.ts`, `api/HistoryAPI.ts`, `api/PortfoliosAPI.ts` | Son wrappers vacíos que re-exportan desde `ncaa-male/`. `git rm src/api/HomeAPI.ts src/api/StatsAPI.ts src/api/HistoryAPI.ts src/api/PortfoliosAPI.ts` |
 | `ErrorMessage` duplicado | `src/components/ErrorMessage/` (global) y `sports/epl/components/ErrorMessage/` | Dos implementaciones del mismo componente. Unificar en shared/ o usar solo el global. |
 | Dependencias posiblemente sin usar | `package.json` | `alertify@0.3.0` (deprecada, no aparece en imports) y `chance@1.1.13` (generación aleatoria — ¿es de debug?) — verificar y borrar si no se usan. |
-| Magic numbers en hooks de portfolio | `hooks/usePortfolioActions.ts`, `hooks/usePortfolioWorldCupActions.ts` | `Array(8).fill(false)` sin constante nombrada. NCAA/Female/WorldCup = 8 equipos, EPL = 5. Crear constante `TEAM_COUNT` por deporte. |
+| Magic numbers en hooks de portfolio | `hooks/usePortfolioActions.ts`, `hooks/usePortfolioWorldCupActions.ts` | `Array(8).fill(false)` sin constante nombrada. NCAA/Female/WorldCup = 8 equipos, EPL = variable (viene de API). Crear constante `TEAM_COUNT` por deporte. |
+| `console.log` activos en API de EPL | `api/epl/PortfoliosEplAPI.ts` | 7 `console.log` sin comentar: en `getTeamsNotAvailable` (sport/tournamentId), `postNewPortfolioEpl` (nombre de función + data), `postEditPortfolio` (nombre de función + data), `removeportfolio` (data). Borrar todos. |
+| Función huérfana `getTeamsDynamic` (singular) | `api/epl/PortfoliosEplAPI.ts` línea ~70 | Existe `getTeamsDynamic` (sin "s") que no tiene ningún uso en el proyecto — la versión correcta y usada es `getTeamsDynamics` (con "s"). Borrar la huérfana. |
+| Imports sin usar en `HomeEPL.tsx` | `epl/views/HomeEPL/HomeEPL.tsx` líneas 16, 20 | `getScoreHomeEpl` importado pero no referenciado en el JSX; `TableHomeEpl` importado pero tampoco renderizado actualmente. Limpiar o reconectar. |
 
 ### Baja prioridad
 
@@ -343,5 +372,4 @@ git push --force origin refactor/shared-components
 | ----- | -------- | ------- |
 | MUI class selectors hardcodeados en CSS | `src/index.css` | `.css-1tktgsa-...` y `.css-d1xm6m` son clases generadas por MUI — pueden cambiar entre versiones. Reemplazar con `sx` props en los componentes correspondientes. |
 | `eslint-disable` sin justificación | `ncaa-male/views/myPortfolio/MyPortfolio.tsx`, `female/views/PortfolioFemale/PortfolioFemale.tsx`, `epl/views/myPortfolioEPL/MyPortfolioEPL.tsx`, `worldcup/views/myPortfolio/MyPortfolioWorldCup.tsx` | Deshabilitan `no-extra-boolean-cast` y `no-unsafe-optional-chaining` sin comentario de por qué. Idealmente arreglar el código subyacente. |
-| EPL `Table.tsx` no usa `TableBase` compartida | `sports/epl/components/Table/Table.tsx` | Usa MUI styled con patrón diferente al resto. Migrar cuando se refactorice EPL a fondo. |
 | Código comentado masivo | `ncaa-male/views/Stats/Stats.tsx` (imports comentados al inicio) | Imports de funciones que ya no se usan, dejados como referencia. Limpiar. |
