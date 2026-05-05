@@ -110,14 +110,17 @@ const StatsEpl = () => {
     enabled: !!weekType,
   });
 
-  const { data: teamsEplStats } = useQuery({
-    queryKey: ["teamsEplStats", userId],
-    queryFn: () => getTeamsEpl("2", "7"),
-  });
-
   const { data: tournamentsEpl } = useQuery({
     queryKey: ["tournamentsEpl", userId],
     queryFn: () => getTournaments("2"),
+  });
+
+  const tournamentIdStats = String(tournamentsEpl?.[0]?.id ?? "");
+
+  const { data: teamsEplStats } = useQuery({
+    queryKey: ["teamsEplStats", tournamentIdStats],
+    queryFn: () => getTeamsEpl("2", tournamentIdStats),
+    enabled: !!tournamentIdStats,
   });
 
   const { data: getScoreWeeks } = useQuery({
@@ -142,7 +145,7 @@ const StatsEpl = () => {
     return (
       teamsEplStats?.reduce(
         (acc: Record<string, string>, team: TeamStat) => {
-          acc[team.name] = team.crest_url;
+          acc[team.name.toUpperCase()] = team.crest_url;
           return acc;
         },
         {} as Record<string, string>,
@@ -166,7 +169,7 @@ const StatsEpl = () => {
       const teamsWithCrests: TeamWithCrest[] = teams.map(
         (teamName: string) => ({
           name: teamName,
-          crest: teamsMap[teamName] ?? null,
+          crest: teamsMap[teamName.toUpperCase()] ?? null,
         }),
       );
 
