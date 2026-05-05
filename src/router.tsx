@@ -125,16 +125,10 @@ const PortfolioFemale = lazy(
   () => import("./sports/female/views/PortfolioFemale/PortfolioFemale"),
 );
 
-// ? --------------------------  URL Parameter Handler -------------------------- ? //
-
-import { PortfolioProvider } from "./providers/PortfolioProvider";
-
 const Router = () => {
   return (
     <BrowserRouter>
-      {/* <URLParameterHandler> */}
-      <PortfolioProvider>
-        <Routes>
+      <Routes>
           {/* Portfolio Pool Routes */}
           <Route
             path="/"
@@ -355,9 +349,6 @@ const Router = () => {
             />
           </Route>
         </Routes>
-      </PortfolioProvider>
-
-      {/* </URLParameterHandler> */}
     </BrowserRouter>
   );
 };

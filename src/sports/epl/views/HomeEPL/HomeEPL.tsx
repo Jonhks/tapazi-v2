@@ -14,64 +14,92 @@ import {
   getHOINFOEpl,
   getAllPortfoliosEpl,
   getScoreHomeEpl,
+  getTournaments,
 } from "@/api/epl/HomeEplApiEpl";
 import { PayOut } from "@/types/index";
-import { getTournamentsId, getPortfoliosEpl } from "@/api/epl/PortfoliosEplAPI";
+import { getPortfoliosEpl } from "@/api/epl/PortfoliosEplAPI";
 import TableHomeEpl from "@/epl/components/Table/TablesEpl/TableHomeEpl";
+import EmptyState from "@/shared/components/EmptyState/EmptyState";
 
 const HomeEPL = () => {
   const isMobile = useMediaQuery("(max-width:900px)");
 
   const params = useParams();
   const userId = params.userId!;
+  const sportId = params.sportId!;
 
   const [selected, setSelected] = useState("first");
 
+  const { data: tournamentIdEpl } = useQuery({
+    queryKey: ["tournamentIdEpl", sportId],
+    queryFn: () => getTournaments(sportId),
+    enabled: Boolean(sportId),
+    retry: 1,
+  });
+
+  const tournamentId = tournamentIdEpl?.[0]?.id;
+
   const { data: dataGetAllPortfoliosEpl } = useQuery({
     queryKey: ["AllportfoliosEpl", userId],
-    queryFn: () => getAllPortfoliosEpl(),
+    queryFn: () => getAllPortfoliosEpl(tournamentId),
+    enabled: Boolean(tournamentId),
+    retry: 1,
   });
 
   const { data: DataPoponaEpl, isLoading: isLoadingPopons } = useQuery({
     queryKey: ["poponaEpl", userId],
-    queryFn: () => getPoponaEpl(),
+    queryFn: () => getPoponaEpl(tournamentId),
+    enabled: Boolean(tournamentId),
+    retry: 1,
   });
 
   const { data: dataHOINFOEpl, isLoading: isLoadingHOINFOEpl } = useQuery({
     queryKey: ["HOINFOEpl", userId],
-    queryFn: () => getHOINFOEpl(),
+    queryFn: () => getHOINFOEpl(tournamentId),
+    enabled: Boolean(tournamentId),
+    retry: 1,
   });
 
-  const { data: tournamentId, isLoading: isLoadingTournamentId } = useQuery({
-    queryKey: ["tournamentId", userId],
-    queryFn: () => getTournamentsId(),
-  });
+  // const { data: tournamentId, isLoading: isLoadingTournamentId } = useQuery({
+  //   queryKey: ["tournamentId", userId],
+  //   queryFn: () => getTournamentsId(sportId),
+  //   enabled: Boolean(sportId),
+  // });
+
+  const activeTournamentId = String(tournamentIdEpl?.[0]?.id ?? "");
 
   const { data: portfoliosHome, isLoading: isLoadingPortfoliosHome } = useQuery(
     {
-      queryKey: ["portfoliosHome", userId, tournamentId],
-      queryFn: () => getPortfoliosEpl(userId, tournamentId[0]?.id || "0"),
+      queryKey: ["portfoliosHome", userId, activeTournamentId],
+      queryFn: () => getPortfoliosEpl(userId, "0", activeTournamentId),
+      enabled: Boolean(activeTournamentId),
     },
   );
 
   const { data: scoreHomeEpl, isLoading: isLoadingScoreHomeEpl } = useQuery({
-    queryKey: ["scoreHomeEpl", userId, tournamentId, portfoliosHome],
-    queryFn: () => getScoreHomeEpl("3", portfoliosHome && portfoliosHome[0].id),
-    // retry: false,|
+    queryKey: ["scoreHomeEpl", userId, tournamentIdEpl, portfoliosHome],
+    queryFn: () =>
+      // getScoreHomeEpl("3", "566"),
+      getScoreHomeEpl(tournamentId, portfoliosHome && portfoliosHome[0].id),
+    enabled: Boolean(tournamentId && portfoliosHome && portfoliosHome[0].id),
+    retry: 1,
   });
 
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payoutEpl", userId, dataGetAllPortfoliosEpl],
-    queryFn: () => getPayoutEpl("3", dataGetAllPortfoliosEpl?.participants),
-    enabled: !!dataGetAllPortfoliosEpl?.participants,
+    queryFn: () =>
+      getPayoutEpl(tournamentId, dataGetAllPortfoliosEpl?.participants),
+    enabled: Boolean(tournamentId && dataGetAllPortfoliosEpl?.participants),
     retry: false,
   });
+
+  console.log(scoreHomeEpl);
 
   if (
     isLoadingPopons ||
     isLoadingHOINFOEpl ||
     // isLoadingParticipantsEpl ||
-    isLoadingTournamentId ||
+    // isLoadingTournamentId ||
     isLoadingPortfoliosHome ||
     isLoadingPayout ||
     isLoadingScoreHomeEpl
@@ -220,10 +248,16 @@ const HomeEPL = () => {
               backgroundColor: "transparent",
             }}
           >
-            {scoreHomeEpl && (
+            {scoreHomeEpl?.length > 0 ? (
               <TableHomeEpl
                 data={scoreHomeEpl}
-                tournament={tournamentId[0]}
+                tournament={tournamentIdEpl?.[0]}
+              />
+            ) : (
+              <EmptyState
+                title="There are no scores yet"
+                accentColor="#FFFFFF"
+                subtitleColor="#FFFFFF"
               />
             )}
           </div>

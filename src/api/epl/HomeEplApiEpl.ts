@@ -2,6 +2,25 @@ import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User } from "../../types";
 
+export const getTournaments = async (id: string) => {
+  const urlGetTournaments = `/sports/${id}/tournaments`;
+  try {
+    const { data } = await apiEnv.get(urlGetTournaments);
+
+    if (!data.tournaments) {
+      return "Error";
+    }
+
+    if (data.tournaments) {
+      return data.tournaments;
+    }
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
 export const getPayoutEpl = async (
   tournamentId: User["id"],
   portfolioCount: number,
@@ -29,9 +48,9 @@ export const getParticipantsEpl = async (tournamentId: User["id"]) => {
   }
 };
 
-export const getPoponaEpl = async () => {
+export const getPoponaEpl = async (tournamentId: string) => {
   try {
-    const url = `/tournaments/3/parameters?key=POPONA`;
+    const url = `/tournaments/${tournamentId}/parameters?key=POPONA`;
     const { data } = await apiEnv(url);
     return data.value ?? "Error popona";
   } catch (error) {
@@ -41,9 +60,9 @@ export const getPoponaEpl = async () => {
   }
 };
 
-export const getHOINFOEpl = async () => {
+export const getHOINFOEpl = async (tournamentId: string) => {
   try {
-    const url = `/tournaments/3/parameters?key=HOINFO`;
+    const url = `/tournaments/${tournamentId}/parameters?key=HOINFO`;
     const { data } = await apiEnv(url);
     return data.value ?? "Error Hinfo";
   } catch (error) {
@@ -53,9 +72,9 @@ export const getHOINFOEpl = async () => {
   }
 };
 
-export const getAllPortfoliosEpl = async () => {
+export const getAllPortfoliosEpl = async (tournamentId: string) => {
   try {
-    const url = `/tournaments/3/stats`;
+    const url = `/tournaments/${tournamentId}/stats`;
     const { data } = await apiEnv(url);
     return data.data ?? [];
   } catch (error) {

@@ -10,7 +10,7 @@ import {
   Cell,
 } from "@tanstack/react-table";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { Input, InputAdornment, useMediaQuery } from "@mui/material";
+import { Input, InputAdornment, Tooltip, useMediaQuery } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { SportTheme } from "@/shared/theme/colors";
 
@@ -39,6 +39,30 @@ export interface TableBaseProps<T> {
    * Columnas a ignorar (ej. sticky) deben filtrarse en el callback del consumidor.
    */
   onCellClick?: (cell: Cell<T, unknown>, columnIndex: number) => void;
+  /** Invertir el color oscuro/claro de las columnas (pares se vuelven impares) */
+  invertColorColumns?: boolean;
+  /**
+   * Hace que la segunda columna (índice 1) también sea sticky.
+   * Requiere saber el ancho de la primera columna — ver col0Width.
+   */
+  stickySecondColumn?: boolean;
+  /**
+   * Ancho en px de la primera columna cuando stickySecondColumn=true.
+   * Determina en qué punto se posiciona la segunda columna sticky.
+   * Por defecto: 120.
+   */
+  col0Width?: number;
+  /**
+   * Devuelve el color de fondo de una columna concreta, o null para usar el default.
+   * Útil para resaltar la semana activa en EPL.
+   * Recibe el id de columna (accessorKey) y su índice.
+   */
+  highlightColBg?: (colId: string, colIndex: number) => string | null;
+  /**
+   * Devuelve el texto del tooltip del header, o null si no hay tooltip.
+   * Recibe el id de columna (accessorKey) y su índice.
+   */
+  headerTooltip?: (colId: string, colIndex: number) => string | null;
 }
 
 // ─── TableBase genérica ───────────────────────────────────────────────────────
@@ -55,6 +79,11 @@ export function TableBase<T>({
   hideSearch = false,
   accentFirstColumn = false,
   onCellClick,
+  invertColorColumns = false,
+  stickySecondColumn = false,
+  col0Width = 120,
+  highlightColBg,
+  headerTooltip,
 }: TableBaseProps<T>) {
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [filtered, setFiltered] = useState("");
@@ -75,13 +104,25 @@ export function TableBase<T>({
   const totalCols = columns.length;
 
   const isSticky = (index: number) =>
-    index === 0 || (stickyLastColumn && index === totalCols - 1);
+    index === 0 ||
+    (stickySecondColumn && index === 1) ||
+    (stickyLastColumn && index === totalCols - 1);
+
+  // Posición left para columnas sticky
+  const getStickyLeft = (index: number): number | string | undefined => {
+    if (index === 0) return 0;
+    if (stickySecondColumn && index === 1) return col0Width;
+    return undefined;
+  };
+
+  const getColIndexForColor = (index: number) =>
+    invertColorColumns ? index + 1 : index;
 
   const headerBg = (index: number) =>
-    index % 2 === 0 ? theme.headerEven : theme.headerOdd;
+    getColIndexForColor(index) % 2 === 0 ? theme.headerEven : theme.headerOdd;
 
   const cellBg = (colIndex: number, rowIndex: number) => {
-    const isEvenCol = colIndex % 2 === 0;
+    const isEvenCol = getColIndexForColor(colIndex) % 2 === 0;
     const isEvenRow = rowIndex % 2 === 0;
     if (isEvenCol)
       return isEvenRow ? theme.cellEvenColEvenRow : theme.cellEvenColOddRow;
@@ -175,74 +216,95 @@ export function TableBase<T>({
           <thead style={{ position: "sticky", top: 0, zIndex: 2 }}>
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
-                {headerGroup.headers.map((header, index) => (
-                  <th
-                    key={header.id}
-                    onClick={header.column.getToggleSortingHandler()}
-                    style={{
-                      position: isSticky(index) ? "sticky" : "static",
-                      left: index === 0 ? 0 : undefined,
+                {headerGroup.headers.map((header, index) => {
+                  const bg =
+                    highlightColBg?.(header.id, index) ?? headerBg(index);
+                  const tip = headerTooltip?.(header.id, index);
+
+                  const thProps = {
+                    onClick: header.column.getToggleSortingHandler(),
+                    style: {
+                      position: isSticky(index)
+                        ? ("sticky" as const)
+                        : ("static" as const),
+                      left: getStickyLeft(index),
                       right:
                         stickyLastColumn && index === totalCols - 1
                           ? 0
                           : undefined,
-                      backgroundColor: headerBg(index),
+                      minWidth:
+                        stickySecondColumn && index === 0
+                          ? col0Width
+                          : undefined,
+                      backgroundColor: bg,
                       color: firstColColor(index),
-                      fontWeight: "bold",
+                      fontWeight: "bold" as const,
                       fontSize: isMobile ? "9px" : "10px",
-                      textAlign:
+                      textAlign: (
                         index === 0 || index === totalCols - 1
                           ? "center"
-                          : "left",
-                      textTransform: "uppercase",
+                          : "left"
+                      ) as "center" | "left",
+                      textTransform: "uppercase" as const,
                       padding: isMobile ? "8px 4px" : "14px 10px",
-                      cursor: "pointer",
+                      cursor: "pointer" as const,
                       zIndex: isSticky(index) ? 3 : 2,
-                      whiteSpace: "pre-wrap",
-                    }}
-                  >
-                    {header.isPlaceholder ? null : (
-                      <div
-                        style={{
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent:
-                            index === 0 || index === totalCols - 1
-                              ? "center"
-                              : "flex-start",
-                          gap: 4,
-                        }}
-                      >
-                        {flexRender(
-                          header.column.columnDef.header,
-                          header.getContext(),
-                        )}
-                        {{
-                          asc: (
-                            <ArrowUpwardIcon
-                              style={{ fontSize: isMobile ? 12 : 16 }}
-                            />
-                          ),
-                          desc: (
-                            <ArrowUpwardIcon
-                              style={{
-                                transform: "rotate(180deg)",
-                                fontSize: isMobile ? 12 : 16,
-                              }}
-                            />
-                          ),
-                        }[header.column.getIsSorted() as string] ?? (
+                      whiteSpace: "pre-wrap" as const,
+                    },
+                  };
+
+                  const thContent = header.isPlaceholder ? null : (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent:
+                          index === 0 || index === totalCols - 1
+                            ? "center"
+                            : "flex-start",
+                        gap: 4,
+                      }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
+                      {{
+                        asc: (
+                          <ArrowUpwardIcon
+                            style={{ fontSize: isMobile ? 12 : 16 }}
+                          />
+                        ),
+                        desc: (
                           <ArrowUpwardIcon
                             style={{
-                              color: "gray",
+                              transform: "rotate(180deg)",
                               fontSize: isMobile ? 12 : 16,
                             }}
                           />
-                        )}
-                      </div>
-                    )}
-                  </th>
-                ))}
+                        ),
+                      }[header.column.getIsSorted() as string] ?? (
+                        <ArrowUpwardIcon
+                          style={{ color: "gray", fontSize: isMobile ? 12 : 16 }}
+                        />
+                      )}
+                    </div>
+                  );
+
+                  if (tip) {
+                    return (
+                      <Tooltip key={header.id} title={tip} placement="top">
+                        <th {...thProps}>{thContent}</th>
+                      </Tooltip>
+                    );
+                  }
+
+                  return (
+                    <th key={header.id} {...thProps}>
+                      {thContent}
+                    </th>
+                  );
+                })}
               </tr>
             ))}
           </thead>
@@ -250,36 +312,50 @@ export function TableBase<T>({
           <tbody>
             {table.getRowModel().rows.map((row, rowIndex) => (
               <tr key={row.id}>
-                {row.getVisibleCells().map((cell, index) => (
-                  <td
-                    key={cell.id}
-                    onClick={
-                      onCellClick ? () => onCellClick(cell, index) : undefined
-                    }
-                    style={{
-                      position: isSticky(index) ? "sticky" : "static",
-                      left: index === 0 ? 0 : undefined,
-                      right:
-                        stickyLastColumn && index === totalCols - 1
-                          ? 0
-                          : undefined,
-                      backgroundColor: cellBg(index, rowIndex),
-                      color: firstColColor(index),
-                      fontWeight: "bold",
-                      fontSize: isMobile ? "12px" : "11px",
-                      textAlign:
-                        index === 0 || index === totalCols - 1
-                          ? "center"
-                          : "left",
-                      padding: isMobile ? "8px 4px" : "12px 10px",
-                      zIndex: isSticky(index) ? 1 : 0,
-                      whiteSpace: "nowrap",
-                      cursor: onCellClick ? "pointer" : "default",
-                    }}
-                  >
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </td>
-                ))}
+                {row.getVisibleCells().map((cell, index) => {
+                  const bg =
+                    highlightColBg?.(cell.column.id, index) ??
+                    cellBg(index, rowIndex);
+
+                  return (
+                    <td
+                      key={cell.id}
+                      onClick={
+                        onCellClick
+                          ? () => onCellClick(cell, index)
+                          : undefined
+                      }
+                      style={{
+                        position: isSticky(index)
+                          ? ("sticky" as const)
+                          : ("static" as const),
+                        left: getStickyLeft(index),
+                        right:
+                          stickyLastColumn && index === totalCols - 1
+                            ? 0
+                            : undefined,
+                        minWidth:
+                          stickySecondColumn && index === 0
+                            ? col0Width
+                            : undefined,
+                        backgroundColor: bg,
+                        color: firstColColor(index),
+                        fontWeight: "bold",
+                        fontSize: isMobile ? "12px" : "11px",
+                        textAlign:
+                          index === 0 || index === totalCols - 1
+                            ? "center"
+                            : "left",
+                        padding: isMobile ? "8px 4px" : "12px 10px",
+                        zIndex: isSticky(index) ? 1 : 0,
+                        whiteSpace: "nowrap",
+                        cursor: onCellClick ? "pointer" : "default",
+                      }}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  );
+                })}
               </tr>
             ))}
           </tbody>
