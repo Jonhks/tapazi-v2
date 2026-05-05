@@ -1,13 +1,23 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React from "react";
-import { Box, Button, Input, InputAdornment } from "@mui/material";
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  CircularProgress,
+  IconButton,
+} from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import Grid from "@mui/material/Grid2";
-import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
 // import { BallIcon } from "@/assets/icons/icons";
 import Dropdown from "@/shared/components/Inputs/Dropdown";
 import classes from "../../views/myPortfolio/MyPortfolioWorldCup.module.css";
 import { sportThemes } from "@/shared/theme/colors";
+import { getMatchProbabilitiesWorldCup } from "@/api/worldcup/PortfoliosAPIWorldCup";
 
 interface PortfolioTabWorldCupProps {
   portfolio;
@@ -15,6 +25,7 @@ interface PortfolioTabWorldCupProps {
   isActive: boolean;
   teams;
   isValidTournament: boolean;
+  tournamentId?: string;
   onTeamSelect: (teamData, teamIndex: number) => void;
   onChampionshipPointsChange: (value: string) => void;
   onSave: () => void;
@@ -28,16 +39,33 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
   isActive,
   teams,
   isValidTournament,
+  tournamentId,
   onTeamSelect,
   onChampionshipPointsChange,
   onSave,
   onRemove,
   onCancel,
 }) => {
+  const [modalGroup, setModalGroup] = useState<string | null>(null);
+  const [probData, setProbData] = useState([]);
+  const [probLoading, setProbLoading] = useState(false);
+
   if (!isActive) return null;
 
   const isNewPortfolio = portfolio.newPortfolio;
   const isReadOnly = !isNewPortfolio;
+
+  const handleGroupClick = async (groupName: string) => {
+    if (!tournamentId) return;
+    setModalGroup(groupName);
+    setProbLoading(true);
+    try {
+      const result = await getMatchProbabilitiesWorldCup(tournamentId, groupName);
+      setProbData(result);
+    } finally {
+      setProbLoading(false);
+    }
+  };
 
   const handleTeamChange = (teamData, teamIndex: number) => {
     if (!isReadOnly) onTeamSelect(teamData, teamIndex);
@@ -53,7 +81,7 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
       .filter(Boolean) || [];
 
   return (
-    <Box sx={{ p: 3 }}>
+    <Box sx={{ py: 3 }}>
       {teams &&
         teams?.length > 0 &&
         teams[0]?.seed !== undefined &&
@@ -135,17 +163,26 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
               />
             </div>
             {typeof fullTeamData === "object" && fullTeamData?.group_name ? (
-              <span
-                style={{
-                  color: sportThemes.worldcup.textSecondary,
-                  fontSize: "0.9rem",
-                  marginLeft: "16px",
+              <Chip
+                label={`Group ${fullTeamData.group_name}`}
+                size="small"
+                clickable
+                onClick={() => handleGroupClick(fullTeamData.group_name)}
+                sx={{
+                  ml: 2,
                   minWidth: "60px",
-                  textAlign: "right",
+                  color: sportThemes.worldcup.accent,
+                  border: `1px solid ${sportThemes.worldcup.accent}80`,
+                  bgcolor: `${sportThemes.worldcup.accent}15`,
+                  fontSize: "0.78rem",
+                  fontWeight: 600,
+                  "&:hover": {
+                    bgcolor: `${sportThemes.worldcup.accent}35`,
+                    border: `1px solid ${sportThemes.worldcup.accent}`,
+                    boxShadow: `0 0 6px ${sportThemes.worldcup.accent}60`,
+                  },
                 }}
-              >
-                Group {fullTeamData.group_name}
-              </span>
+              />
             ) : (
               <span style={{ marginLeft: "16px", minWidth: "60px" }}></span>
             )}
@@ -231,6 +268,102 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
           </>
         )}
       </Grid>
+      <Dialog
+        open={!!modalGroup}
+        onClose={() => setModalGroup(null)}
+        PaperProps={{
+          sx: {
+            bgcolor: "#00292c",
+            border: `1px solid ${sportThemes.worldcup.accent}`,
+            borderRadius: "8px",
+            minWidth: 320,
+          },
+        }}
+      >
+        <DialogTitle
+          sx={{
+            color: sportThemes.worldcup.accent,
+            fontWeight: "bold",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            pb: 1,
+          }}
+        >
+          Group {modalGroup} — Match Probabilities
+          <IconButton
+            onClick={() => setModalGroup(null)}
+            size="small"
+            sx={{ color: sportThemes.worldcup.accent }}
+          >
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 0 }}>
+          {probLoading ? (
+            <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>
+              <CircularProgress sx={{ color: sportThemes.worldcup.accent }} size={32} />
+            </Box>
+          ) : (
+            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+              <thead>
+                <tr>
+                  <th
+                    style={{
+                      color: sportThemes.worldcup.accent,
+                      textAlign: "left",
+                      padding: "6px 8px",
+                      borderBottom: `1px solid ${sportThemes.worldcup.accent}4D`,
+                      fontSize: "0.85rem",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    Place
+                  </th>
+                  <th
+                    style={{
+                      color: sportThemes.worldcup.accent,
+                      textAlign: "left",
+                      padding: "6px 8px",
+                      borderBottom: `1px solid ${sportThemes.worldcup.accent}4D`,
+                      fontSize: "0.85rem",
+                    }}
+                  >
+                    Opponent Probabilities
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {probData.map((row: any, i: number) => (
+                  <tr key={i}>
+                    <td
+                      style={{
+                        color: "#fff",
+                        padding: "6px 8px",
+                        borderBottom: `1px solid ${sportThemes.worldcup.accent}1A`,
+                        fontSize: "0.85rem",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {row.place}
+                    </td>
+                    <td
+                      style={{
+                        color: "rgba(255,255,255,0.8)",
+                        padding: "6px 8px",
+                        borderBottom: `1px solid ${sportThemes.worldcup.accent}1A`,
+                        fontSize: "0.85rem",
+                      }}
+                    >
+                      {row.vs_probabilities}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </DialogContent>
+      </Dialog>
     </Box>
   );
 };

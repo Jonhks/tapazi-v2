@@ -223,6 +223,7 @@ const MyPortfolioWorldCup = () => {
                         isActive={activeTab === index}
                         teams={teamsData}
                         isValidTournament={isValidTournament}
+                        tournamentId={currentTournamentWorldCup?.id?.toString()}
                         onTeamSelect={handleTeamSelection}
                         onChampionshipPointsChange={
                           handleChampionshipPointsChange

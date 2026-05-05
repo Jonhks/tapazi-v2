@@ -6,14 +6,25 @@ import { useParams } from "react-router-dom";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import type { Instructions } from "@/types/index";
 import { getInstructionsEpl } from "@/api/epl/InstructionsEplApi";
+import { getTournaments } from "@/api/epl/HomeEplApiEpl";
 
 const InstructionsEpl = () => {
   const params = useParams();
   const userId = params.userId!;
+  const sportId = params.sportId!;
+
+  const { data: tournamentsEpl } = useQuery({
+    queryKey: ["tournaments", userId],
+    queryFn: () => getTournaments(sportId),
+    refetchOnWindowFocus: "always",
+  });
+
+  const tournamentIdEpl = tournamentsEpl && tournamentsEpl[0]?.id;
 
   const { data: instructionsData, isLoading } = useQuery({
-    queryKey: ["instructions", userId],
-    queryFn: () => getInstructionsEpl("3"),
+    queryKey: ["instructions", userId, tournamentIdEpl],
+    queryFn: () => getInstructionsEpl(tournamentIdEpl),
+    enabled: Boolean(tournamentIdEpl),
   });
 
   if (isLoading) return <Loader />;
