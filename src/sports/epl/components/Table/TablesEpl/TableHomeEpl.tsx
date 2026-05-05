@@ -73,6 +73,7 @@ const TableHomeEpl = ({
         week={week}
         portfolioId={portfolioId}
         portfolio={portfolio}
+        tournamentId={String(tournament?.id ?? "")}
       />
       <TableBase
         data={rows}

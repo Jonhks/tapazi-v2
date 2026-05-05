@@ -18,12 +18,14 @@ export default function ModalTableHome({
   week,
   portfolioId,
   portfolio,
+  tournamentId,
 }: {
   openModal: boolean;
   setOpenModal: (open: boolean) => void;
   week: string;
   portfolioId: string;
   portfolio: NewPortfolio;
+  tournamentId?: string;
 }) {
   const params = useParams<{ userId: string }>();
   const userId = params.userId!;
@@ -50,7 +52,7 @@ export default function ModalTableHome({
     // isError,
   } = useQuery({
     queryKey: ["teamsEplHome", userId],
-    queryFn: () => getTeamsEpl("2"),
+    queryFn: () => getTeamsEpl("2", tournamentId ?? ""),
     // enabled: Boolean(userId && week && portfolioId !== "1"), // Solo ejecuta la consulta si estos valores son válidos
   });
 
@@ -99,10 +101,10 @@ export default function ModalTableHome({
     if (isError) {
       component = <ErrorModal />;
     }
-    if (scorePeerWeekHomeEpl && teamsEplComplete && !isLoading && !isError) {
+    if (scorePeerWeekHomeEpl && !isLoading && !isError) {
       component = (
         <TableModal
-          data={teamsEplComplete ? teamsEplComplete : scorePeerWeekHomeEpl}
+          data={teamsEplComplete.length > 0 ? teamsEplComplete : scorePeerWeekHomeEpl}
         />
       );
     }
