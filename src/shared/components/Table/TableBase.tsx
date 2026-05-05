@@ -133,7 +133,7 @@ export function TableBase<T>({
     accentFirstColumn && index === 0 ? theme.accent : theme.text;
 
   return (
-    <div style={{ width: "100%", height: "47vh", overflow: "hidden" }}>
+    <div style={{ width: "100%", height: "47vh", overflow: "scroll" }}>
       {/* Título sticky opcional */}
       {title && (
         <div
@@ -240,11 +240,9 @@ export function TableBase<T>({
                       color: firstColColor(index),
                       fontWeight: "bold" as const,
                       fontSize: isMobile ? "9px" : "10px",
-                      textAlign: (
-                        index === 0 || index === totalCols - 1
-                          ? "center"
-                          : "left"
-                      ) as "center" | "left",
+                      textAlign: (index === 0 || index === totalCols - 1
+                        ? "center"
+                        : "left") as "center" | "left",
                       textTransform: "uppercase" as const,
                       padding: isMobile ? "8px 4px" : "14px 10px",
                       cursor: "pointer" as const,
@@ -285,7 +283,10 @@ export function TableBase<T>({
                         ),
                       }[header.column.getIsSorted() as string] ?? (
                         <ArrowUpwardIcon
-                          style={{ color: "gray", fontSize: isMobile ? 12 : 16 }}
+                          style={{
+                            color: "gray",
+                            fontSize: isMobile ? 12 : 16,
+                          }}
                         />
                       )}
                     </div>
@@ -293,14 +294,21 @@ export function TableBase<T>({
 
                   if (tip) {
                     return (
-                      <Tooltip key={header.id} title={tip} placement="top">
+                      <Tooltip
+                        key={header.id}
+                        title={tip}
+                        placement="top"
+                      >
                         <th {...thProps}>{thContent}</th>
                       </Tooltip>
                     );
                   }
 
                   return (
-                    <th key={header.id} {...thProps}>
+                    <th
+                      key={header.id}
+                      {...thProps}
+                    >
                       {thContent}
                     </th>
                   );
@@ -321,9 +329,7 @@ export function TableBase<T>({
                     <td
                       key={cell.id}
                       onClick={
-                        onCellClick
-                          ? () => onCellClick(cell, index)
-                          : undefined
+                        onCellClick ? () => onCellClick(cell, index) : undefined
                       }
                       style={{
                         position: isSticky(index)
@@ -352,7 +358,10 @@ export function TableBase<T>({
                         cursor: onCellClick ? "pointer" : "default",
                       }}
                     >
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </td>
                   );
                 })}
