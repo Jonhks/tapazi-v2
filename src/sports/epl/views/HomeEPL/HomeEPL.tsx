@@ -129,7 +129,7 @@ const HomeEPL = () => {
           justifyContent={"space-around"}
           flexDirection={"row"}
           height={"auto"}
-          mb={5}
+          mb={2}
           className="subboxes-wrapper"
         >
           <Grid
