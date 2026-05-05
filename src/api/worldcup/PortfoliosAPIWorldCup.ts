@@ -155,3 +155,19 @@ export const removePortfolioWorldCup = async ({
     return;
   }
 };
+
+export const getMatchProbabilitiesWorldCup = async (
+  tournamentId: string,
+  group: string,
+) => {
+  try {
+    const { data } = await apiEnv(
+      `/tournaments/${tournamentId}/match-probabilities?sport=wc&group=${group}`,
+    );
+    return data.data ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
+  }
+};

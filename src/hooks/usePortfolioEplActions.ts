@@ -149,7 +149,7 @@ export const usePortfolioEplActions = ({
       if (team) {
         seed = currentTeamPortfolios?.current_seed
           ? currentTeamPortfolios?.current_seed
-          : currentTeamDynamics?.current_seed;
+          : currentTeamDynamics?.current_seed || team?.seed;
         return seed;
       }
     }
@@ -188,7 +188,7 @@ export const usePortfolioEplActions = ({
     ) {
       multiplier = currentTeamPortfolios?.current_streak
         ? currentTeamPortfolios?.current_streak
-        : currentTeamDynamics?.current_streak;
+        : currentTeamDynamics?.current_streak || team?.multiplier || 1;
       return multiplier;
     }
 
@@ -200,7 +200,7 @@ export const usePortfolioEplActions = ({
     ) {
       multiplier = currentTeamPortfolios?.current_streak
         ? currentTeamPortfolios?.current_streak
-        : currentTeamDynamics?.current_streak;
+        : currentTeamDynamics?.current_streak || team?.multiplier || 1;
       return multiplier;
     }
 
@@ -212,7 +212,7 @@ export const usePortfolioEplActions = ({
       if (team) {
         multiplier = currentTeamPortfolios?.current_streak
           ? currentTeamPortfolios?.current_streak
-          : currentTeamDynamics?.current_streak;
+          : currentTeamDynamics?.current_streak || team?.multiplier || 1;
         return multiplier;
       }
     }

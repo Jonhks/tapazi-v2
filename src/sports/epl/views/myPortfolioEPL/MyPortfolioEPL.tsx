@@ -92,7 +92,7 @@ const MyPortfolioEPL = () => {
       );
     }
 
-    console.log(AllPortfolios);
+    // console.log(AllPortfolios);
 
     return selectedTeams?.map((team, idx: number) => (
       <div
