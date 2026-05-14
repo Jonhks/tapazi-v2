@@ -79,7 +79,7 @@ export function TableBase<T>({
   hideSearch = false,
   accentFirstColumn = false,
   onCellClick,
-  invertColorColumns = false,
+  invertColorColumns: _invertColorColumns = false,
   stickySecondColumn = false,
   col0Width = 120,
   highlightColBg,
@@ -89,6 +89,8 @@ export function TableBase<T>({
   const [filtered, setFiltered] = useState("");
   const deferredFiltered = useDeferredValue(filtered);
   const isMobile = useMediaQuery("(max-width:900px)");
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
+  const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
 
   const table = useReactTable({
     data: data ?? [],
@@ -115,19 +117,9 @@ export function TableBase<T>({
     return undefined;
   };
 
-  const getColIndexForColor = (index: number) =>
-    invertColorColumns ? index + 1 : index;
-
-  const headerBg = (index: number) =>
-    getColIndexForColor(index) % 2 === 0 ? theme.headerEven : theme.headerOdd;
-
-  const cellBg = (colIndex: number, rowIndex: number) => {
-    const isEvenCol = getColIndexForColor(colIndex) % 2 === 0;
-    const isEvenRow = rowIndex % 2 === 0;
-    if (isEvenCol)
-      return isEvenRow ? theme.cellEvenColEvenRow : theme.cellEvenColOddRow;
-    return isEvenRow ? theme.cellOddColEvenRow : theme.cellOddColOddRow;
-  };
+  // Dos colores: fuerte (header + sticky + hover) y suave (contenido)
+  const strongBg = theme.headerEven;
+  const softBg = theme.cellOddColOddRow;
 
   const firstColColor = (index: number) =>
     accentFirstColumn && index === 0 ? theme.accent : theme.text;
@@ -219,7 +211,7 @@ export function TableBase<T>({
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header, index) => {
                   const bg =
-                    highlightColBg?.(header.id, index) ?? headerBg(index);
+                    highlightColBg?.(header.id, index) ?? strongBg;
                   const tip = headerTooltip?.(header.id, index);
 
                   const thProps = {
@@ -319,12 +311,23 @@ export function TableBase<T>({
           </thead>
 
           <tbody>
-            {table.getRowModel().rows.map((row, rowIndex) => (
-              <tr key={row.id}>
+            {table.getRowModel().rows.map((row) => (
+              <tr
+                key={row.id}
+                onMouseEnter={() => setHoveredRowId(row.id)}
+                onMouseLeave={() => setHoveredRowId(null)}
+              >
                 {row.getVisibleCells().map((cell, index) => {
-                  const bg =
-                    highlightColBg?.(cell.column.id, index) ??
-                    cellBg(index, rowIndex);
+                  const sticky = isSticky(index);
+                  const isRowHovered = hoveredRowId === row.id;
+                  const isCellHovered = !sticky && hoveredCellId === cell.id;
+
+                  const bg = isCellHovered
+                    ? strongBg
+                    : isRowHovered
+                      ? theme.rowHoverBg
+                      : (highlightColBg?.(cell.column.id, index) ??
+                        (sticky ? strongBg : softBg));
 
                   return (
                     <td
@@ -332,8 +335,16 @@ export function TableBase<T>({
                       onClick={
                         onCellClick ? () => onCellClick(cell, index) : undefined
                       }
+                      onMouseEnter={
+                        !sticky
+                          ? () => setHoveredCellId(cell.id)
+                          : undefined
+                      }
+                      onMouseLeave={
+                        !sticky ? () => setHoveredCellId(null) : undefined
+                      }
                       style={{
-                        position: isSticky(index)
+                        position: sticky
                           ? ("sticky" as const)
                           : ("static" as const),
                         left: getStickyLeft(index),
@@ -354,9 +365,10 @@ export function TableBase<T>({
                             ? "center"
                             : "left",
                         padding: isMobile ? "8px 4px" : "12px 10px",
-                        zIndex: isSticky(index) ? 1 : 0,
+                        zIndex: sticky ? 1 : 0,
                         whiteSpace: "nowrap",
                         cursor: onCellClick ? "pointer" : "default",
+                        transition: "background-color 0.15s ease",
                       }}
                     >
                       {flexRender(

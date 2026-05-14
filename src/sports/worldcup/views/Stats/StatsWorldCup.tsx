@@ -50,8 +50,8 @@ type PortfolioWithCrests = {
 };
 
 const CYAN = "#00E2F6";
-const HEADER_BG = "#001a1d";
-const CELL_BG = "#002730";
+const HEADER_BG = "#001A1D"; // worldcup headerEven — fuerte
+const CELL_BG = "#003440";   // worldcup cellOddColOddRow — suave
 
 const TeamDisplay = ({
   name,

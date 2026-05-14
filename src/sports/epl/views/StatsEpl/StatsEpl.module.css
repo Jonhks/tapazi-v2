@@ -69,14 +69,3 @@
   color: red !important;
 }
 
-.tableRow:hover td {
-  background-color: #240e36 !important;
-}
-
-.tableRow:hover td:first-child {
-  background-color: #240e36 !important;
-}
-
-.tableRow:hover td:last-child {
-  background-color: #240e36 !important;
-}
