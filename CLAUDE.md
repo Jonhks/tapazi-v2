@@ -54,14 +54,19 @@ overflow-x: auto;
 
 ## Comandos
 
+El proyecto usa **pnpm** (no npm). Usar siempre `pnpm` — no mezclar con `npm install`.
+
 ```bash
-npm run dev       # Inicia el servidor Vite con HMR
-npm run build     # Compilación TypeScript + build de producción con Vite
-npm run lint      # Revisa ESLint (sin auto-fix)
-npm run preview   # Previsualiza el build de producción localmente
+pnpm dev          # Inicia el servidor Vite con HMR
+pnpm build        # Build web/PWA para Vercel (rutas absolutas)
+pnpm lint         # Revisa ESLint (sin auto-fix)
+pnpm preview      # Previsualiza el build de producción localmente
+
+# Build para Capacitor (Android/iOS) — rutas relativas
+CAPACITOR=true pnpm build && npx cap sync
 ```
 
-Verificación de tipos: `npx tsc -b --noEmit` (debe pasar sin errores antes de hacer commit).
+Verificación de tipos: `pnpm exec tsc -b --noEmit` (debe pasar sin errores antes de hacer commit).
 
 No hay framework de pruebas configurado.
 
