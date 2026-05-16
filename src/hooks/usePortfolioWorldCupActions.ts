@@ -6,7 +6,11 @@ import Swal from "sweetalert2";
 import {
   postNewPortfolioWorldCup,
   removePortfolioWorldCup,
+  softRemovePortfolioWorldCup,
+  getPortfoliosWorldCup,
 } from "@/api/worldcup/PortfoliosAPIWorldCup";
+import { getWalletRemaining, buyPortfolio } from "@/api/WalletAPI";
+import { getParameter } from "@/api/shared/TournamentsAPI";
 
 interface UsePortfolioWorldCupActionsProps {
   userId: string;
@@ -31,17 +35,6 @@ export const usePortfolioWorldCupActions = ({
   refetchTeams,
   tournamentId,
 }: UsePortfolioWorldCupActionsProps) => {
-  const { mutate: createPortfolio } = useMutation({
-    mutationFn: postNewPortfolioWorldCup,
-    onSuccess: (response) => {
-      toast.success(response);
-      queryClient.invalidateQueries(["portfoliosWorldCup", userId]);
-    },
-    onError: (error) => {
-      toast.error(error.message);
-    },
-  });
-
   const { mutate: deletePortfolio } = useMutation({
     mutationFn: removePortfolioWorldCup,
     onSuccess: () => {
@@ -53,7 +46,33 @@ export const usePortfolioWorldCupActions = ({
     },
   });
 
-  const handleAddPortfolio = () => {
+  const handleAddPortfolio = async () => {
+    if (!tournamentId) return;
+
+    try {
+      const [walletRemaining, prcxpo] = await Promise.all([
+        getWalletRemaining(userId),
+        getParameter(String(tournamentId), "PRCXPO"),
+      ]);
+
+      const price = Number(prcxpo) || 0;
+
+      if (walletRemaining < price) {
+        await Swal.fire({
+          title: "Insufficient Balance",
+          text: `You need $${price} to add a portfolio. Your current balance is $${walletRemaining}.`,
+          icon: "error",
+          confirmButtonColor: "#00929e",
+          background: "rgba(0, 41, 44, 0.95)",
+          color: "#fff",
+        });
+        return;
+      }
+    } catch (error) {
+      toast.error(error?.message || "Could not verify wallet balance.");
+      return;
+    }
+
     refetchTeams();
     const newPortfolio = {
       newPortfolio: true,
@@ -113,22 +132,66 @@ export const usePortfolioWorldCupActions = ({
     });
 
     if (result.isConfirmed) {
-      createPortfolio({
-        tournament_id: tournamentId,
-        participant_id: Number(userId),
-        championship_points: championshipPoints,
-        teams: teamsToSend,
-      });
-      setIsEditing(false);
+      try {
+        const oldIds = new Set(portfolios.filter((p) => p.id).map((p) => p.id));
 
-      await Swal.fire({
-        title: "Saved!",
-        text: "Your portfolio has been saved.",
-        icon: "success",
-        confirmButtonColor: "#00929e",
-        background: "rgba(0, 41, 44, 0.95)",
-        color: "#fff",
-      });
+        await postNewPortfolioWorldCup({
+          tournament_id: tournamentId,
+          participant_id: Number(userId),
+          championship_points: championshipPoints,
+          teams: teamsToSend,
+        });
+
+        const freshPortfolios = await getPortfoliosWorldCup(
+          userId,
+          String(tournamentId),
+        );
+
+        const newPortfolio = freshPortfolios?.find((p) => !oldIds.has(p.id));
+
+        if (!newPortfolio?.id) {
+          toast.error("Portfolio created but could not retrieve its ID.");
+          return;
+        }
+
+        const buyResult = await buyPortfolio(
+          userId,
+          String(tournamentId),
+          newPortfolio.id,
+        );
+
+        if (!buyResult.success) {
+          await softRemovePortfolioWorldCup({
+            portId: newPortfolio.id,
+            tournamentId: String(tournamentId),
+          });
+          await queryClient.invalidateQueries(["portfoliosWorldCup", userId]);
+          await Swal.fire({
+            title: "Purchase Failed",
+            text: buyResult.message || "Could not complete the purchase.",
+            icon: "error",
+            confirmButtonColor: "#00929e",
+            background: "rgba(0, 41, 44, 0.95)",
+            color: "#fff",
+          });
+          return;
+        }
+
+        queryClient.invalidateQueries(["portfoliosWorldCup", userId]);
+        queryClient.invalidateQueries(["walletRemaining", userId]);
+        setIsEditing(false);
+
+        await Swal.fire({
+          title: "Saved!",
+          text: "Your portfolio has been saved.",
+          icon: "success",
+          confirmButtonColor: "#00929e",
+          background: "rgba(0, 41, 44, 0.95)",
+          color: "#fff",
+        });
+      } catch (error) {
+        toast.error(error?.message || "Error saving portfolio");
+      }
     } else if (result.dismiss === Swal.DismissReason.cancel) {
       await Swal.fire({
         title: "Cancelled",

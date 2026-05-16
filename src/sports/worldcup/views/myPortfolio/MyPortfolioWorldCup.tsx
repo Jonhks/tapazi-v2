@@ -53,7 +53,7 @@ const MyPortfolioWorldCup = () => {
     refetchTeams,
     tournamentId: currentTournamentWorldCup?.id,
   });
-  console.log("isValidTournament", isValidTournament, portXp);
+  // console.log("isValidTournament", isValidTournament, portXp);
   const { validateTeamSelection } =
     usePortfolioValidation(winnerTeamValidation);
 

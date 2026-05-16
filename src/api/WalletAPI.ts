@@ -57,6 +57,36 @@ export const getWalletTotals = async (
   }
 };
 
+export interface BuyPortfolioResult {
+  code: string;
+  success: boolean;
+  message: string;
+  amount?: number;
+  portfolio_id?: number;
+  tournament_id?: number;
+  participant_id?: number;
+  required?: number;
+  available?: number;
+}
+
+/** POST /participants/:userId/buy-portfolio?tournament_id=X&portfolio_id=Y */
+export const buyPortfolio = async (
+  userId: string,
+  tournamentId: string,
+  portfolioId: number,
+): Promise<BuyPortfolioResult> => {
+  try {
+    const { data } = await apiEnv.post(
+      `/participants/${userId}/buy-portfolio?tournament_id=${tournamentId}&portfolio_id=${portfolioId}`,
+    );
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error ?? error.response.data.message);
+    throw error;
+  }
+};
+
 /** GET /participants/:participantId/wallet-remaining
  *  Respuesta: { wallet_remaining: 50.0 }
  */

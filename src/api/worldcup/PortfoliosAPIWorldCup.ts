@@ -126,14 +126,18 @@ export const updatePortfolioWorldCup = async (
   }
 };
 
-/** PUT /portfolios/:id/remove — baja lógica del portfolio (soft delete) */
+/** PUT /portfolios/:id/remove?tournament_id= — baja lógica del portfolio (soft delete) */
 export const softRemovePortfolioWorldCup = async ({
   portId,
+  tournamentId,
 }: {
   portId: number;
+  tournamentId: string;
 }) => {
   try {
-    const response = await apiEnv.put(`/portfolios/${portId}/remove`);
+    const response = await apiEnv.put(
+      `/portfolios/${portId}/remove?tournament_id=${tournamentId}`,
+    );
     return response.data?.message ?? "Successfully removed portfolio";
   } catch (error) {
     if (isAxiosError(error) && error.response)

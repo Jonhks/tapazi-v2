@@ -4,6 +4,12 @@ Guía de referencia para Claude al trabajar en este repositorio.
 
 ---
 
+## Idioma de comunicación
+
+Claude **siempre responde en español** en este proyecto, independientemente del idioma en que escriba el usuario.
+
+---
+
 ## Reglas de colaboración
 
 ### Antes de mover o reorganizar archivos
