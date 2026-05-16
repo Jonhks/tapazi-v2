@@ -47,6 +47,7 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
   onCancel,
 }) => {
   const [modalGroup, setModalGroup] = useState<string | null>(null);
+  const [modalTeam, setModalTeam] = useState<{ name: string; crest: string | null } | null>(null);
   const [probData, setProbData] = useState([]);
   const [probLoading, setProbLoading] = useState(false);
 
@@ -55,9 +56,10 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
   const isNewPortfolio = portfolio.newPortfolio;
   const isReadOnly = !isNewPortfolio;
 
-  const handleGroupClick = async (groupName: string) => {
+  const handleGroupClick = async (groupName: string, teamName: string, teamCrest: string | null) => {
     if (!tournamentId) return;
     setModalGroup(groupName);
+    setModalTeam({ name: teamName, crest: teamCrest });
     setProbLoading(true);
     try {
       const result = await getMatchProbabilitiesWorldCup(tournamentId, groupName);
@@ -167,7 +169,7 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
                 label={`Group ${fullTeamData.group_name}`}
                 size="small"
                 clickable
-                onClick={() => handleGroupClick(fullTeamData.group_name)}
+                onClick={() => handleGroupClick(fullTeamData.group_name, fullTeamData.name, fullTeamData.crest_url ?? null)}
                 sx={{
                   ml: 2,
                   minWidth: "60px",
@@ -270,7 +272,7 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
       </Grid>
       <Dialog
         open={!!modalGroup}
-        onClose={() => setModalGroup(null)}
+        onClose={() => { setModalGroup(null); setModalTeam(null); }}
         PaperProps={{
           sx: {
             bgcolor: "#00292c",
@@ -292,13 +294,37 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
         >
           Group {modalGroup} — Match Probabilities
           <IconButton
-            onClick={() => setModalGroup(null)}
+            onClick={() => { setModalGroup(null); setModalTeam(null); }}
             size="small"
             sx={{ color: sportThemes.worldcup.accent }}
           >
             <CloseIcon fontSize="small" />
           </IconButton>
         </DialogTitle>
+        {modalTeam && (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1.5,
+              px: 3,
+              pb: 1.5,
+              borderBottom: `1px solid ${sportThemes.worldcup.accent}4D`,
+            }}
+          >
+            {modalTeam.crest && (
+              <Box
+                component="img"
+                src={modalTeam.crest}
+                alt={modalTeam.name}
+                sx={{ width: 32, height: 32, objectFit: "contain" }}
+              />
+            )}
+            <Box sx={{ color: "#fff", fontWeight: 600, fontSize: "1rem" }}>
+              {modalTeam.name}
+            </Box>
+          </Box>
+        )}
         <DialogContent sx={{ pt: 0 }}>
           {probLoading ? (
             <Box sx={{ display: "flex", justifyContent: "center", py: 3 }}>

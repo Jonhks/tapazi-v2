@@ -15,6 +15,7 @@ export default function BasicSelect({
   handleChange: handleChange,
   name,
   options,
+  menuBgColor = "rgba(36, 37, 62, 0.9)",
 }: {
   label: string;
   className: string;
@@ -22,6 +23,7 @@ export default function BasicSelect({
   handleChange: ChangeHandler;
   name: string;
   options: { id: string; name: string }[] | undefined;
+  menuBgColor?: string;
 }) {
   return (
     <Box
@@ -44,7 +46,7 @@ export default function BasicSelect({
             slotProps: {
               paper: {
                 sx: {
-                  backgroundColor: "rgba(36, 37, 62, 0.9)",
+                  backgroundColor: menuBgColor,
                   color: "#fff",
                 },
               },
