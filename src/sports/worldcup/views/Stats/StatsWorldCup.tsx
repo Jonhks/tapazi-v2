@@ -138,16 +138,12 @@ const StatsWorldCup = () => {
     enabled: !!tournamentIdStats,
   });
 
-  // ─── Query tabla (round numérico → API) ────────────────────────────────────
-  // ENDPOINT A (activo): roundType ya es el número limpio, se manda directo.
-  // ENDPOINT B (alternativo): descomentar la línea con regex y comentar la de arriba.
   const { data: statsWorldCupData, isLoading } = useQuery({
     queryKey: ["statsWorldCup", userId, roundType, tournamentIdStats],
     queryFn: () =>
       getStatsWorldCup({
         tournamentId: tournamentIdStats,
-        round: roundType, // ENDPOINT A
-        // round: roundType.match(/\d+/)?.[0] ?? roundType, // ENDPOINT B
+        round: roundType,
       }),
     enabled: !!roundType && !!tournamentIdStats,
   });
@@ -158,14 +154,10 @@ const StatsWorldCup = () => {
     }
   }, [tournamentsWC, tournament]);
 
-  // ─── Init rounds ────────────────────────────────────────────────────────────
-  // ENDPOINT A: r.round = 1 (número), r.name = "GROUP ROUND 1" (display)
-  // ENDPOINT B: r.round = "GROUP ROUND 3" (string — sirve como display y como fuente del número)
   useEffect(() => {
     if (getScoreRounds && getScoreRounds.length > 0 && !roundType) {
-      setRoundType(String(getScoreRounds[0].round)); // ENDPOINT A y B
-      setRoundLabel(getScoreRounds[0].name); // ENDPOINT A — comentar en B
-      // setRoundLabel(String(getScoreRounds[0].round)); // ENDPOINT B — descomentar en B
+      setRoundType(String(getScoreRounds[0].consecutive));
+      setRoundLabel(String(getScoreRounds[0].round));
     }
   }, [getScoreRounds, roundType]);
 
@@ -341,16 +333,6 @@ const StatsWorldCup = () => {
                     </Typography>
                   </Grid>
                   <Grid size={8}>
-                    {/* ── Round dropdown ─────────────────────────────────────
-                        ENDPOINT A (activo):
-                          options → name: r.name  |  find por r.name
-                          roundType = String(r.round) (número limpio)
-                        ENDPOINT B (alternativo — descomentar bloque B):
-                          options → name: r.round  |  find por r.round
-                          roundType = r.round (string con el nombre, extraer número en queryFn)
-                    ─────────────────────────────────────────────────────── */}
-
-                    {/* ENDPOINT A: */}
                     <DropDownHistory
                       name="round"
                       label=""
@@ -358,35 +340,18 @@ const StatsWorldCup = () => {
                       value={roundLabel || ""}
                       handleChange={(e) => {
                         const selected = getScoreRounds?.find(
-                          (r: any) => r.name === e.target.value,
+                          (r: any) => r.round === e.target.value,
                         );
                         if (selected) {
-                          setRoundType(String(selected.round));
-                          setRoundLabel(selected.name);
+                          setRoundType(String(selected.consecutive));
+                          setRoundLabel(String(selected.round));
                         }
                       }}
                       options={getScoreRounds?.map((r: any) => ({
-                        id: String(r.round),
-                        name: r.name,
-                      }))}
-                    />
-
-                    {/* ENDPOINT B (descomentar y comentar bloque A):
-                    <DropDownHistory
-                      name="round"
-                      label=""
-                      className={classes.DropDownHistory}
-                      value={roundLabel || ""}
-                      handleChange={(e) => {
-                        setRoundType(e.target.value as string);
-                        setRoundLabel(e.target.value as string);
-                      }}
-                      options={getScoreRounds?.map((r: any) => ({
-                        id: String(r.round),
+                        id: String(r.consecutive),
                         name: r.round,
                       }))}
                     />
-                    */}
                   </Grid>
                 </Grid>
               </Grid>

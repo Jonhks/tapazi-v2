@@ -24,32 +24,18 @@ export const getStatsWorldCup = async ({
 };
 
 // ─── Rounds dropdown ──────────────────────────────────────────────────────────
-//
-// ENDPOINT A — score/points-per-round (activo)
-//   Respuesta: [{ name: "GROUP ROUND 1", round: 1, consecutive, teams, points }]
-//   En la vista: name: r.name  |  roundType = String(r.round)
-//
-// ENDPOINT B — score/rounds (alternativo)
-//   Respuesta: [{ round: "GROUP ROUND 3" }]  ← round es string con el nombre
-//   En la vista: name: r.round  |  roundType = r.round (extraer número con regex)
-//
+// Respuesta: [{ consecutive: 3, round: "GROUP ROUND 3" }]
+//   consecutive = número para la API  |  round = display label
 export const getScoreRoundsWorldCup = async ({
   tournamentId,
 }: {
   tournamentId: string;
 }) => {
   try {
-    // ENDPOINT A (activo):
     const { data } = await apiEnv.get(
-      `tournaments/${tournamentId}/score/points-per-round?sport=wc`,
+      `tournaments/${tournamentId}/score/rounds?sport=wc`,
     );
-    return data.data ?? data ?? [];
-
-    // ENDPOINT B (alternativo — descomentar y comentar bloque A):
-    // const { data } = await apiEnv.get(
-    //   `tournaments/${tournamentId}/score/rounds?sport=wc`,
-    // );
-    // return data.rounds ?? [];
+    return data.rounds ?? [];
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

@@ -22,16 +22,33 @@ export const getScores = async (
   tournamentId: string,
   participantId: string,
 ) => {
-  console.log(tournamentId, participantId);
   try {
-    // TODO: Verificar si el endpoint cambia para worldcup (sport param)
-    const url = `/tournaments/${5}/score/home?participant_id=${participantId}&sport=ncaa`;
-    const { data } = await apiEnv(url);
+    const { data } = await apiEnv.get(
+      `tournaments/${tournamentId}/score/home?participant_id=${participantId}&sport=wc`,
+    );
     return data;
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
     return;
+  }
+};
+
+// Trae la composición de equipos por portfolio (team1-7) para la tabla home.
+// Usa el consecutive del round más bajo disponible (GROUP ROUND 1 = "1").
+export const getHomePortfolioTeams = async (
+  tournamentId: string,
+  round: string,
+) => {
+  try {
+    const { data } = await apiEnv.get(
+      `tournaments/${tournamentId}/score/stats/portfolios?round=${round}&sport=wc`,
+    );
+    return data.data ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
   }
 };
 
