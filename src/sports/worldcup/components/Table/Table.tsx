@@ -45,19 +45,20 @@ const TeamDisplay = ({
   crest: string | null;
   eliminated: boolean;
 }) => (
-  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, opacity: eliminated ? 0.4 : 1, whiteSpace: "nowrap" }}>
+  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
     {crest ? (
       <span style={{
         width: 20, height: 20, flexShrink: 0, borderRadius: "50%",
-        backgroundImage: `url(${crest})`, backgroundSize: "cover",
-        backgroundPosition: "center", backgroundColor: "rgba(255,255,255,0.1)",
-        filter: eliminated ? "grayscale(1)" : "none",
+        backgroundImage: `url(${crest})`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundColor: "rgba(255,255,255,0.1)",
         display: "inline-block",
+        filter: eliminated ? "grayscale(1)" : "none",
+        opacity: eliminated ? 0.5 : 1,
       }} />
-    ) : name ? (
-      <SoccerBallSvg />
     ) : null}
-    <span style={{ color: eliminated ? "#888" : "inherit", textDecoration: eliminated ? "line-through" : "none", fontSize: "0.75rem" }}>
+    <span style={{ fontSize: "0.75rem", textDecoration: eliminated ? "line-through" : "none", color: eliminated ? "#888" : "inherit" }}>
       {name}
     </span>
   </span>

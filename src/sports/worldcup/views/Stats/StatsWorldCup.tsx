@@ -10,6 +10,7 @@ import {
   getStatsWorldCup,
   getTournaments,
 } from "@/api/worldcup/StatsAPIWorldCup";
+import { sportThemes } from "@/shared/theme/colors";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import BallLoader from "../../components/BallLoader/BallLoader";
@@ -302,6 +303,7 @@ const StatsWorldCup = () => {
                         setTournament(e.target.value as string)
                       }
                       options={tournamentsWC}
+                      menuBgColor={sportThemes.worldcup.headerEven}
                     />
                   </Grid>
 
@@ -322,6 +324,7 @@ const StatsWorldCup = () => {
                         setDataType(e.target.value as string)
                       }
                       options={dataTypes}
+                      menuBgColor={sportThemes.worldcup.headerEven}
                     />
                   </Grid>
 
@@ -351,6 +354,7 @@ const StatsWorldCup = () => {
                         id: String(r.consecutive),
                         name: r.round,
                       }))}
+                      menuBgColor={sportThemes.worldcup.headerEven}
                     />
                   </Grid>
                 </Grid>
