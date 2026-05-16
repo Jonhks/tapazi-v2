@@ -7,13 +7,14 @@
 
 export const sportThemes = {
   ncaaMale: {
-    // Tabla
+    // Tabla — strongBg=headerEven, softBg=cellOddColOddRow, rowHoverBg=punto medio
     headerEven: "#0d0d0d",
     headerOdd: "#1a1a1a",
     cellEvenColEvenRow: "#0d0d0d",
     cellEvenColOddRow: "#141414",
     cellOddColEvenRow: "#1a1a1a",
     cellOddColOddRow: "#212121",
+    rowHoverBg: "#1a1a1a",
     // Menú
     appBar: "#000000",
     drawer: "#000000",
@@ -29,13 +30,14 @@ export const sportThemes = {
   },
 
   ncaaFemale: {
-    // Tabla (tema morado/navy con acento magenta)
+    // Tabla (tema morado/navy con acento magenta) — strongBg=headerEven, softBg=cellOddColOddRow
     headerEven: "#24253e",
     headerOdd: "#2d2d44",
     cellEvenColEvenRow: "#111120",
     cellEvenColOddRow: "#1c1c2e",
     cellOddColEvenRow: "#252538",
     cellOddColOddRow: "#303048",
+    rowHoverBg: "#2d2d44",
     // Menú
     appBar: "#24253e",
     drawer: "#24253e",
@@ -51,13 +53,14 @@ export const sportThemes = {
   },
 
   epl: {
-    // Tabla (tema morado)
-    headerEven: "#380F55",
-    headerOdd: "#2C0C37",
+    // Tabla (tema morado) — strongBg=headerEven, softBg=cellOddColOddRow, rowHoverBg=punto medio
+    headerEven: "#2C0C37",
+    headerOdd: "#380F55",
     cellEvenColEvenRow: "#220931",
     cellEvenColOddRow: "#19071F",
     cellOddColEvenRow: "#2C0C37",
     cellOddColOddRow: "#380F55",
+    rowHoverBg: "#320D46",
     // Menú
     appBar: "#19071F",
     drawer: "#19071F",
@@ -73,13 +76,14 @@ export const sportThemes = {
   },
 
   worldcup: {
-    // Tabla (tema teal/cyan oscuro — imagen de diseño)
-    headerEven: "#00292C",
+    // Tabla (tema teal/cyan oscuro) — strongBg=headerEven, softBg=cellOddColOddRow, rowHoverBg=punto medio
+    headerEven: "#001A1D",
     headerOdd: "#003B40",
     cellEvenColEvenRow: "#001A1D",
     cellEvenColOddRow: "#00292C",
     cellOddColEvenRow: "#002730",
     cellOddColOddRow: "#003440",
+    rowHoverBg: "#00292C",
     // Menú
     appBar: "#00292C",
     drawer: "#00292C",

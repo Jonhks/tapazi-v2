@@ -103,6 +103,8 @@ const StatsEpl = () => {
     { id: "week_score", desc: true },
   ]);
   const [filtered, setFiltered] = useState<string>("");
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
+  const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
 
   const { data: statsEplData, isLoading } = useQuery({
     queryKey: ["statsEpl", userId, weekType],
@@ -532,7 +534,7 @@ const StatsEpl = () => {
                               left: index === 0 ? 0 : undefined,
                               right:
                                 index === columns.length - 1 ? 0 : undefined,
-                              backgroundColor: "#200930",
+                              backgroundColor: "#2C0C37",
                               zIndex:
                                 index === 0 || index === columns.length - 1
                                   ? 4
@@ -602,51 +604,54 @@ const StatsEpl = () => {
                     ))}
                   </thead>
                   <tbody>
-                    {table.getRowModel().rows.map((row) => (
-                      <tr
-                        key={row.id}
-                        className={classes.tableRow}
-                      >
-                        {row.getVisibleCells().map((cell, index) => (
-                          <td
-                            key={cell.id}
-                            className={
-                              index !== 0 && index !== columns.length - 1
-                                ? classes.cell
-                                : undefined
-                            }
-                            style={{
-                              position:
-                                index === 0 || index === columns.length - 1
-                                  ? "sticky"
-                                  : "static",
-                              left: index === 0 ? 0 : undefined,
-                              right:
-                                index === columns.length - 1 ? 0 : undefined,
-                              backgroundColor:
-                                index === 0 || index === columns.length - 1
-                                  ? "#200930"
-                                  : "#380f51",
-                              zIndex:
-                                index === 0 || index === columns.length - 1
-                                  ? 3
-                                  : 1,
-                              color: "white",
-                              fontWeight: "bold",
-                              fontSize: "12px",
-                              textAlign: "center",
-                              padding: "8px",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {flexRender(
-                              cell.column.columnDef.cell,
-                              cell.getContext(),
-                            )}
-                          </td>
-                        ))}
-                      </tr>
-                    ))}
+                    {table.getRowModel().rows.map((row) => {
+                      const isRowHovered = hoveredRowId === row.id;
+                      return (
+                        <tr
+                          key={row.id}
+                          onMouseEnter={() => setHoveredRowId(row.id)}
+                          onMouseLeave={() => setHoveredRowId(null)}
+                        >
+                          {row.getVisibleCells().map((cell, index) => {
+                            const isSticky =
+                              index === 0 || index === columns.length - 1;
+                            const isCellHovered = !isSticky && hoveredCellId === cell.id;
+                            const bg = isCellHovered
+                              ? "#2C0C37"
+                              : isRowHovered
+                                ? "#320D46"
+                                : isSticky ? "#2C0C37" : "#380F55";
+                            return (
+                              <td
+                                key={cell.id}
+                                onMouseEnter={!isSticky ? () => setHoveredCellId(cell.id) : undefined}
+                                onMouseLeave={!isSticky ? () => setHoveredCellId(null) : undefined}
+                                style={{
+                                  position: isSticky ? "sticky" : "static",
+                                  left: index === 0 ? 0 : undefined,
+                                  right:
+                                    index === columns.length - 1 ? 0 : undefined,
+                                  backgroundColor: bg,
+                                  zIndex: isSticky ? 3 : 1,
+                                  color: "white",
+                                  fontWeight: "bold",
+                                  fontSize: "12px",
+                                  textAlign: "center",
+                                  padding: "8px",
+                                  whiteSpace: "nowrap",
+                                  transition: "background-color 0.15s ease",
+                                }}
+                              >
+                                {flexRender(
+                                  cell.column.columnDef.cell,
+                                  cell.getContext(),
+                                )}
+                              </td>
+                            );
+                          })}
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

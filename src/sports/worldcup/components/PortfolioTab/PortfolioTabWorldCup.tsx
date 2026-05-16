@@ -305,7 +305,14 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
               <CircularProgress sx={{ color: sportThemes.worldcup.accent }} size={32} />
             </Box>
           ) : (
-            <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <>
+              <style>{`
+                .wc-prob-table tr:hover td {
+                  background-color: rgba(0, 226, 246, 0.12);
+                  transition: background-color 0.15s ease;
+                }
+              `}</style>
+              <table className="wc-prob-table" style={{ width: "100%", borderCollapse: "collapse" }}>
               <thead>
                 <tr>
                   <th
@@ -361,6 +368,7 @@ const PortfolioTabWorldCup: React.FC<PortfolioTabWorldCupProps> = ({
                 ))}
               </tbody>
             </table>
+            </>
           )}
         </DialogContent>
       </Dialog>

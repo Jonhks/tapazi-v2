@@ -1,14 +1,41 @@
+import { getTournaments as getTournamentsShared } from "@/api/shared/TournamentsAPI";
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 
-// TODO: Confirmar con el back los endpoints específicos de worldcup para stats
+export const getTournaments = () => getTournamentsShared("4");
 
-export const getStatsWorldCup = async (tournamentId: string) => {
+export const getStatsWorldCup = async ({
+  tournamentId,
+  round,
+}: {
+  tournamentId: string;
+  round: string;
+}) => {
   try {
-    const url = `/tournaments/${tournamentId}/stats`;
-    const { data } = await apiEnv(url);
-    if (!data.data) return "Error";
-    if (data.data) return data.data;
+    const { data } = await apiEnv.get(
+      `tournaments/${tournamentId}/score/stats/portfolios?round=${round}&sport=wc`,
+    );
+    return data.data ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+// ─── Rounds dropdown ──────────────────────────────────────────────────────────
+// Respuesta: [{ consecutive: 3, round: "GROUP ROUND 3" }]
+//   consecutive = número para la API  |  round = display label
+export const getScoreRoundsWorldCup = async ({
+  tournamentId,
+}: {
+  tournamentId: string;
+}) => {
+  try {
+    const { data } = await apiEnv.get(
+      `tournaments/${tournamentId}/score/rounds?sport=wc`,
+    );
+    return data.rounds ?? [];
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

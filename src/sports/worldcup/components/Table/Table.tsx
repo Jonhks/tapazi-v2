@@ -5,11 +5,9 @@ import {
   TableBaseProps,
 } from "@/shared/components/Table/TableBase";
 import { sportThemes } from "@/shared/theme/colors";
-import { OtherScores, ParticipantsScores } from "@/types/index";
-import classes from "./Table.module.css";
+import { HomeScoreWC } from "@/types/index";
 
 // ─── Wrapper pre-configurado con el tema Copa del Mundo ───────────────────────
-// accentFirstColumn activa el color cyan en la primera columna
 
 export function TableBase<T>(props: Omit<TableBaseProps<T>, "theme">) {
   return (
@@ -36,70 +34,87 @@ export const SoccerBallSvg = () => (
   </svg>
 );
 
-// ─── TableParticipants — tabla principal de la home worldcup ─────────────────
+// ─── TeamDisplay — celda de equipo con escudo y estado eliminado ──────────────
+
+const TeamDisplay = ({
+  name,
+  crest,
+  eliminated,
+}: {
+  name: string;
+  crest: string | null;
+  eliminated: boolean;
+}) => (
+  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, opacity: eliminated ? 0.4 : 1, whiteSpace: "nowrap" }}>
+    {crest ? (
+      <span style={{
+        width: 20, height: 20, flexShrink: 0, borderRadius: "50%",
+        backgroundImage: `url(${crest})`, backgroundSize: "cover",
+        backgroundPosition: "center", backgroundColor: "rgba(255,255,255,0.1)",
+        filter: eliminated ? "grayscale(1)" : "none",
+        display: "inline-block",
+      }} />
+    ) : name ? (
+      <SoccerBallSvg />
+    ) : null}
+    <span style={{ color: eliminated ? "#888" : "inherit", textDecoration: eliminated ? "line-through" : "none", fontSize: "0.75rem" }}>
+      {name}
+    </span>
+  </span>
+);
+
+// ─── TableHomeWC — tabla principal de la home worldcup ───────────────────────
 
 interface Props {
-  participantScore: ParticipantsScores;
-  othersParticipants: OtherScores[];
+  data: HomeScoreWC[];
 }
 
-const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
-  const mergedData: OtherScores[] = useMemo(() => {
-    const participantArray = Array.isArray(participantScore)
-      ? (participantScore as OtherScores[])
-      : [];
-    const othersArray = Array.isArray(othersParticipants)
-      ? othersParticipants
-      : [];
-    return [...participantArray, ...othersArray];
-  }, [participantScore, othersParticipants]);
+const ROUND_COLS: { header: string; key: keyof HomeScoreWC }[] = [
+  { header: "Group Round 1",        key: "group_round_1" },
+  { header: "Group Round 2",        key: "group_round_2" },
+  { header: "Group Round 3",        key: "group_round_3" },
+  { header: "Round of 32",          key: "round_of_32" },
+  { header: "Round of 16",          key: "round_of_16" },
+  { header: "Quarter-Finals",       key: "quarter_finals" },
+  { header: "Semi-Finals",          key: "semi_finals" },
+  { header: "Third-place play-off", key: "third_place_playoff" },
+  { header: "Final",                key: "final" },
+];
 
-  const columns = useMemo<ColumnDef<OtherScores>[]>(
+const TableHomeWC = ({ data }: Props) => {
+  const columns = useMemo<ColumnDef<HomeScoreWC>[]>(
     () => [
-      { header: "Portfolio Entry", accessorKey: "portfolio_name" },
-      { header: "Portfolio Weight", accessorKey: "portfolio_weight" },
+      { header: "Portfolio Name", accessorKey: "portfolio_name" },
+      { header: "Portfolio ID",   accessorKey: "portfolio_id" },
       ...[1, 2, 3, 4, 5, 6, 7].map(
-        (n): ColumnDef<OtherScores> => ({
+        (n): ColumnDef<HomeScoreWC> => ({
           header: `Team ${n}`,
           accessorKey: `team${n}_name`,
-          cell: ({ row }) => {
-            const teamName =
-              row.original[`team${n}_name` as keyof OtherScores];
-            return (
-              <span
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                {teamName && <SoccerBallSvg />}
-                {teamName}
-              </span>
-            );
-          },
+          cell: ({ row }) => (
+            <TeamDisplay
+              name={row.original[`team${n}_name` as keyof HomeScoreWC] as string}
+              crest={row.original[`team${n}_crest` as keyof HomeScoreWC] as string | null}
+              eliminated={row.original[`team${n}_eliminated` as keyof HomeScoreWC] as boolean}
+            />
+          ),
         }),
       ),
-      { header: "Score", accessorKey: "score" },
-      {
-        header: "Championship Game Point",
-        accessorKey: "championship_points",
+      ...ROUND_COLS.map(({ header, key }): ColumnDef<HomeScoreWC> => ({
+        header,
+        accessorKey: key as string,
         cell: ({ row }) => {
-          const { paid, championship_points } = row.original;
-          return (
-            <span className={paid ? classes.green : classes.red}>
-              {championship_points}
-            </span>
-          );
+          const val = row.original[key];
+          return val != null ? String(val) : "";
         },
-      },
+      })),
+      { header: "Score", accessorKey: "score" },
     ],
     [],
   );
 
   return (
     <TableBase
-      data={mergedData}
+      data={data}
       columns={columns}
       maxHeight="600px"
       stickyLastColumn
@@ -107,4 +122,4 @@ const TableParticipants = ({ participantScore, othersParticipants }: Props) => {
   );
 };
 
-export default TableParticipants;
+export default TableHomeWC;

@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -44,17 +44,11 @@ const TableHistoryAllRounds = ({
 }: Props) => {
   const isMobile = useMediaQuery("(max-width:900px)");
   const scrollRef = useRef<HTMLDivElement>(null);
+  const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
+  const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
 
-  const headerBgColor = (index: number) =>
-    index % 2 === 0 ? theme.headerEven : theme.headerOdd;
-
-  const cellBgColor = (colIndex: number, rowIndex: number) => {
-    const isEvenCol = colIndex % 2 === 0;
-    const isEvenRow = rowIndex % 2 === 0;
-    if (isEvenCol)
-      return isEvenRow ? theme.cellEvenColEvenRow : theme.cellEvenColOddRow;
-    return isEvenRow ? theme.cellOddColEvenRow : theme.cellOddColOddRow;
-  };
+  const strongBg = theme.headerEven;
+  const softBg = theme.cellOddColOddRow;
 
   const columns = useMemo(() => {
     if (!arrHistory?.[0]) return [];
@@ -157,7 +151,7 @@ const TableHistoryAllRounds = ({
                     style={{
                       position: index === 0 ? "sticky" : "static",
                       left: index === 0 ? 0 : undefined,
-                      backgroundColor: headerBgColor(index),
+                      backgroundColor: strongBg,
                       color: index === 0 ? theme.accent : theme.text,
                       fontWeight: "bold",
                       fontSize: isMobile ? "9px" : "10px",
@@ -186,25 +180,39 @@ const TableHistoryAllRounds = ({
             )}
             {virtualRows.map((virtualRow) => {
               const row = rows[virtualRow.index];
+              const isRowHovered = hoveredRowId === row.id;
               return (
                 <tr
                   key={row.id}
                   style={{ height: ROW_HEIGHT }}
+                  onMouseEnter={() => setHoveredRowId(row.id)}
+                  onMouseLeave={() => setHoveredRowId(null)}
                 >
-                  {row.getVisibleCells().map((cell, index) => (
+                  {row.getVisibleCells().map((cell, index) => {
+                    const sticky = index === 0;
+                    const isCellHovered = !sticky && hoveredCellId === cell.id;
+                    const bg = isCellHovered
+                      ? strongBg
+                      : isRowHovered
+                        ? theme.rowHoverBg
+                        : sticky ? strongBg : softBg;
+                    return (
                     <td
                       key={cell.id}
+                      onMouseEnter={!sticky ? () => setHoveredCellId(cell.id) : undefined}
+                      onMouseLeave={!sticky ? () => setHoveredCellId(null) : undefined}
                       style={{
-                        position: index === 0 ? "sticky" : "static",
-                        left: index === 0 ? 0 : undefined,
-                        backgroundColor: cellBgColor(index, virtualRow.index),
-                        color: index === 0 ? theme.accent : theme.text,
+                        position: sticky ? "sticky" : "static",
+                        left: sticky ? 0 : undefined,
+                        backgroundColor: bg,
+                        color: sticky ? theme.accent : theme.text,
                         fontWeight: "bold",
                         fontSize: isMobile ? "12px" : "11px",
-                        textAlign: index === 0 ? "center" : "left",
+                        textAlign: sticky ? "center" : "left",
                         padding: isMobile ? "8px 4px" : "12px 10px",
-                        zIndex: index === 0 ? 1 : 0,
+                        zIndex: sticky ? 1 : 0,
                         whiteSpace: "nowrap",
+                        transition: "background-color 0.15s ease",
                       }}
                     >
                       {flexRender(
@@ -212,7 +220,8 @@ const TableHistoryAllRounds = ({
                         cell.getContext(),
                       )}
                     </td>
-                  ))}
+                  );
+                  })}
                 </tr>
               );
             })}
