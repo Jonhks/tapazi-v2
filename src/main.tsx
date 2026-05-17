@@ -7,7 +7,14 @@ import Router from "./router.tsx";
 import { ToastContainer } from "react-toastify";
 import PWABadge from "./PWABadge.tsx";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 2, // 2 minutos
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

@@ -6,11 +6,7 @@ export const getSports = async () => {
     // const url = `/participants/${id}/sports`;
     // const url = "/participants/login";
     const url = "/sports";
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if (!data.sports) {
       return "Error en sports";
     }
@@ -28,11 +24,7 @@ export const getSports = async () => {
 export const getSportsDisponible = async (participant_id: string) => {
   try {
     const url = `/participants/${participant_id}/sports`;
-    const { data } = await apiEnv(url, {
-      headers: {
-        "Content-Type": "application/json;charset=utf-8",
-      },
-    });
+    const { data } = await apiEnv(url);
     if (!data.sports) {
       return "Error en sports";
     }

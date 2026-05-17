@@ -1,0 +1,9 @@
+{
+	"appId": "com.tapazi.app",
+	"appName": "Tapazi",
+	"webDir": "dist",
+	"server": {
+		"androidScheme": "https"
+	},
+	"packageClassList": []
+}

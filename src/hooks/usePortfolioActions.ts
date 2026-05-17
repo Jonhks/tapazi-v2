@@ -3,7 +3,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
-import { postNewPortfolio, removeportfolio } from "@/api/PortfoliosAPI";
+import { postNewPortfolio, removeportfolio } from "@/api/ncaa-male/PortfoliosAPI";
 
 interface UsePortfolioActionsProps {
   userId: string;

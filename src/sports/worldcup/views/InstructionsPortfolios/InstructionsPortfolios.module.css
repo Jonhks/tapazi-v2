@@ -1,0 +1,54 @@
+.boxInstructions {
+  background-color: black;
+  height: auto;
+  padding: 20px;
+  opacity: 0.9;
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: bold;
+  opacity: 0.7;
+}
+
+.titleInstructions {
+  color: white;
+  font-size: 30px;
+  text-align: center;
+}
+
+.subBoxInstructions p {
+  padding: 16px;
+}
+
+.subBoxInstructions {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border: 2px solid #00e2f6;
+  padding: 16px;
+  border-radius: 20px;
+  overflow-y: scroll;
+  overflow-x: scroll;
+}
+
+.highlighted {
+  background-color: #003b40;
+  color: #00e2f6 !important;
+  border-radius: 10px;
+  font-family: Arial, Helvetica, sans-serif;
+  opacity: 0.9;
+}
+
+.paragraph {
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@media (width < 900px) {
+  .gridInstructions {
+    min-height: 102vh;
+    align-content: start !important;
+    padding-top: 2rem;
+  }
+}

@@ -56,6 +56,44 @@ export type ScoresOthers = z.infer<typeof scoresSchema>;
 export type OtherScores = z.infer<typeof otherSchema>;
 export type ParticipantsScores = z.infer<typeof participantSchema>;
 
+export const homeScoreWCSchema = z.object({
+  portfolio_name: z.string(),
+  portfolio_id: z.number(),
+  team1_name: z.string(),
+  team1_crest: z.string().nullable(),
+  team1_eliminated: z.boolean(),
+  team2_name: z.string(),
+  team2_crest: z.string().nullable(),
+  team2_eliminated: z.boolean(),
+  team3_name: z.string(),
+  team3_crest: z.string().nullable(),
+  team3_eliminated: z.boolean(),
+  team4_name: z.string(),
+  team4_crest: z.string().nullable(),
+  team4_eliminated: z.boolean(),
+  team5_name: z.string(),
+  team5_crest: z.string().nullable(),
+  team5_eliminated: z.boolean(),
+  team6_name: z.string(),
+  team6_crest: z.string().nullable(),
+  team6_eliminated: z.boolean(),
+  team7_name: z.string(),
+  team7_crest: z.string().nullable(),
+  team7_eliminated: z.boolean(),
+  group_round_1: z.number().nullable(),
+  group_round_2: z.number().nullable(),
+  group_round_3: z.number().nullable(),
+  round_of_32: z.number().nullable(),
+  round_of_16: z.number().nullable(),
+  quarter_finals: z.number().nullable(),
+  semi_finals: z.number().nullable(),
+  third_place_playoff: z.number().nullable(),
+  final: z.number().nullable(),
+  score: z.number(),
+});
+
+export type HomeScoreWC = z.infer<typeof homeScoreWCSchema>;
+
 export const PayOutSchema = z.object({
   place: z.number(),
   percentage: z.number(),

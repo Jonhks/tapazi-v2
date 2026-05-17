@@ -6,7 +6,10 @@ import { VitePWA } from "vite-plugin-pwa";
 import { version } from "./package.json";
 
 // https://vite.dev/config/
-export default defineConfig({
+export default defineConfig(({ command }) => ({
+  esbuild: {
+    drop: command === "build" ? ["console", "debugger"] : [],
+  },
   define: {
     "import.meta.env.VITE_APP_VERSION": JSON.stringify(version),
   },
@@ -74,10 +77,16 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url)),
-      "@/epl": fileURLToPath(new URL("./src/epl", import.meta.url)),
-    },
+    alias: [
+      // Aliases específicos primero — deben resolverse antes que "@" genérico
+      { find: "@/epl",      replacement: fileURLToPath(new URL("./src/sports/epl",      import.meta.url)) },
+      { find: "@/ncaa-male",replacement: fileURLToPath(new URL("./src/sports/ncaa-male",import.meta.url)) },
+      { find: "@/female",   replacement: fileURLToPath(new URL("./src/sports/female",   import.meta.url)) },
+      { find: "@/worldcup", replacement: fileURLToPath(new URL("./src/sports/worldcup", import.meta.url)) },
+      { find: "@/shared",   replacement: fileURLToPath(new URL("./src/shared",          import.meta.url)) },
+      // Alias genérico al final
+      { find: "@",          replacement: fileURLToPath(new URL("./src",                 import.meta.url)) },
+    ],
   },
   build: {
     rollupOptions: {
@@ -89,4 +98,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));
