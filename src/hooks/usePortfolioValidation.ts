@@ -12,6 +12,11 @@ export const usePortfolioValidation = (winnerTeamValidation) => {
         setHasWinnerConflict(false);
         return true;
       }
+      
+      if (!selectedTeamIds || !Array.isArray(selectedTeamIds)) {
+        setHasWinnerConflict(false);
+        return true;
+      }
 
       // Verificar si algún equipo seleccionado pertenece a un "winner of team" que también está seleccionado
       for (let i = 0; i < selectedTeamIds.length; i++) {

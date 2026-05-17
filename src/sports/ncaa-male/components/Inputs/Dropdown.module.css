@@ -1,0 +1,24 @@
+.formControl label,
+.formControl label::after,
+.formControl label:active,
+.formControl label:disabled,
+.formControl div svg,
+.formControl div div {
+  color: white;
+}
+
+.formControl label:disabled {
+  color: red;
+}
+
+.formControl div::before {
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.4) !important;
+}
+
+.formControl div:hover:not(.Mui-disabled)::before {
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.7) !important;
+}
+
+.formControl div::after {
+  border-bottom: 0.5px solid rgba(255, 255, 255, 0.7) !important;
+}

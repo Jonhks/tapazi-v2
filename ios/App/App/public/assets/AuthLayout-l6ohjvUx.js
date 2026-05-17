@@ -1,0 +1,1 @@
+import{j as s,O as t}from"./index-KloTv4Qz.js";import{c as r}from"./AuthLayout.module-nctBfx5J.js";import"./vendor-qi4rByLO.js";const i=()=>s.jsx("div",{className:r.container,children:s.jsx(t,{})});export{i as default};
