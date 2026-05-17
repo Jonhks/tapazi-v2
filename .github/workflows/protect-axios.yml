@@ -1,0 +1,42 @@
+name: Protect Prod Axios
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  protect-axios:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Permiso para que el bot empuje commits a la rama del PR
+    steps:
+      - name: Checkout PR Branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Enforce Main's axios.ts
+        run: |
+          # Traemos la información más reciente de la master/main en la nube
+          git fetch origin main
+
+          # Sobreescribimos el axios.ts que viene en este PR con el oficial dictado por origin/main
+          git checkout origin/main -- src/lib/axios.ts
+
+          # Revisamos si hubo diferencia. Si git diff starea cambios, hacemos un commit forzado
+          if ! git diff --staged --quiet; then
+            echo "⚠️ Detectado intento de alterar axios.ts hacia main."
+            echo "🛡️ Restaurando automáticamente a la versión de producción..."
+            git commit -m "chore(security): preservando axios.ts de producción [skip ci]"
+            git push origin ${{ github.head_ref }}
+          else
+            echo "✅ axios.ts no fue alterado en este PR o es idéntico a main. Todo seguro."
+          fi
