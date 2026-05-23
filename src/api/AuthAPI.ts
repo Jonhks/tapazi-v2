@@ -1,6 +1,6 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
-import { User, UserForgot, UserLogin } from "types";
+import { User, UserForgot, UserLogin } from "@/types";
 
 export const getSignUp = async (user: User) => {
   user.name = user.name.toUpperCase();

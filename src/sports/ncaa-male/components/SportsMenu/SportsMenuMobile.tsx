@@ -12,11 +12,13 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import WalletModal from "@/shared/components/WalletModal/WalletModal";
+import { useWalletRemaining } from "@/hooks/useWalletRemaining";
 
 export default function SportsMenuMobile() {
   const navigate = useNavigate();
   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
   const [walletOpen, setWalletOpen] = useState(false);
+  const { remaining } = useWalletRemaining(user.id);
 
   const handleLogout = () => {
     Swal.fire({
@@ -75,7 +77,7 @@ export default function SportsMenuMobile() {
             >
               <MonetizationOnIcon sx={{ color: "#dc903b" }} />
               <Typography variant="caption" sx={{ color: "#dc903b" }}>
-                Wallet
+                $ {remaining.toLocaleString()}
               </Typography>
             </IconButton>
 

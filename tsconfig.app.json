@@ -9,58 +9,60 @@
     ],
     "module": "ESNext",
     "skipLibCheck": true,
-    "baseUrl": "src",
     "paths": {
       // Portfolio paths
       "@/components/*": [
-        "components/*"
+        "./src/components/*"
       ],
       "@/views/*": [
-        "views/*"
+        "./src/views/*"
       ],
       "@/layouts/*": [
-        "layouts/*"
+        "./src/layouts/*"
       ],
       // EPL paths
       "@/epl/components/*": [
-        "sports/epl/components/*"
+        "./src/sports/epl/components/*"
       ],
       "@/epl/views/*": [
-        "sports/epl/views/*"
+        "./src/sports/epl/views/*"
       ],
       "@/epl/layouts/*": [
-        "sports/epl/layouts/*"
+        "./src/sports/epl/layouts/*"
       ],
       // Global paths
       "@/assets/*": [
-        "assets/*"
+        "./src/assets/*"
       ],
       "@/api/*": [
-        "api/*"
+        "./src/api/*"
       ],
       "@/lib/*": [
-        "lib/*"
+        "./src/lib/*"
+      ],
+      "@/types": [
+        "./src/types/index.ts"
       ],
       "@/types/*": [
-        "types/*"
+        "./src/types/*"
       ],
       "@/hooks/*": [
-        "hooks/*"
+        "./src/hooks/*"
       ],
       "@/utils/*": [
-        "utils/*"
+        "./src/utils/*"
       ],
       "@/worldcup/*": [
-        "sports/worldcup/*"
+        "./src/sports/worldcup/*"
       ],
       "@/shared/*": [
-        "shared/*"
+        "./src/shared/*"
       ],
       "@/ncaa-male/*": [
-        "sports/ncaa-male/*"
+        "./src/sports/ncaa-male/*"
       ],
       "@/female/*": [
-        "sports/female/*"
+        "./src/sports/female/*"
       ]
     },
     /* Bundler mode */

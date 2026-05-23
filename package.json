@@ -1,7 +1,7 @@
 {
   "name": "tapazi-v2",
   "private": true,
-  "version": "3.0.2",
+  "version": "3.0.1",
   "type": "module",
   "scripts": {
     "dev": "vite --host",
@@ -59,10 +59,6 @@
     "sharp-ico": "0.1.5"
   },
   "pnpm": {
-    "onlyBuiltDependencies": [
-      "@swc/core",
-      "esbuild",
-      "sharp"
-    ]
+    "onlyBuiltDependencies": ["@swc/core", "esbuild", "sharp"]
   }
 }

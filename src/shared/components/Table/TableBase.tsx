@@ -57,7 +57,7 @@ export interface TableBaseProps<T> {
    * Útil para resaltar la semana activa en EPL.
    * Recibe el id de columna (accessorKey) y su índice.
    */
-  highlightColBg?: (colId: string, colIndex: number) => string | null;
+  highlightColBg?: (colId: string, colIndex: number, isHeader?: boolean) => string | null;
   /**
    * Devuelve el texto del tooltip del header, o null si no hay tooltip.
    * Recibe el id de columna (accessorKey) y su índice.
@@ -211,7 +211,7 @@ export function TableBase<T>({
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header, index) => {
                   const bg =
-                    highlightColBg?.(header.id, index) ?? strongBg;
+                    highlightColBg?.(header.id, index, true) ?? strongBg;
                   const tip = headerTooltip?.(header.id, index);
 
                   const thProps = {
@@ -326,7 +326,7 @@ export function TableBase<T>({
                     ? strongBg
                     : isRowHovered
                       ? theme.rowHoverBg
-                      : (highlightColBg?.(cell.column.id, index) ??
+                      : (highlightColBg?.(cell.column.id, index, false) ??
                         (sticky ? strongBg : softBg));
 
                   return (
