@@ -17,6 +17,7 @@ import {
   getTournamentWorldCup,
 } from "@/api/worldcup/HomeAPIWorldCup";
 import { getTeamsWorldCup } from "@/api/worldcup/PortfoliosAPIWorldCup";
+import { getParameter } from "@/api/shared/TournamentsAPI";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { HomeScoreWC, PayOut } from "@/types/index";
 
@@ -90,6 +91,25 @@ const HomeWorldCup = () => {
     enabled: !!tournamentId,
   });
 
+  const { data: datTou } = useQuery({
+    queryKey: ["datTouWC", tournamentId],
+    queryFn: () => getParameter(String(tournamentId), "DATTOU"),
+    enabled: !!tournamentId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const { data: houTou } = useQuery({
+    queryKey: ["houTouWC", tournamentId],
+    queryFn: () => getParameter(String(tournamentId), "HOUTOU"),
+    enabled: !!tournamentId,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const tableVisible = useMemo(() => {
+    if (!datTou || !houTou) return false;
+    return new Date() >= new Date(`${datTou}T${houTou}`);
+  }, [datTou, houTou]);
+
   const renderDescription = (dataHOINFO: string) => {
     return dataHOINFO.split("\n").map((line, index) => (
       <p
@@ -125,13 +145,25 @@ const HomeWorldCup = () => {
       let teamIds: number[] = [];
       let eliminated: boolean[] = [];
       if (teamRow?.teams) {
-        try { teamNames = JSON.parse(teamRow.teams as string); } catch { /* empty */ }
+        try {
+          teamNames = JSON.parse(teamRow.teams as string);
+        } catch {
+          /* empty */
+        }
       }
       if (teamRow?.teams_ids) {
-        try { teamIds = JSON.parse(teamRow.teams_ids as string); } catch { /* empty */ }
+        try {
+          teamIds = JSON.parse(teamRow.teams_ids as string);
+        } catch {
+          /* empty */
+        }
       }
       if (teamRow?.eliminated_teams) {
-        try { eliminated = JSON.parse(teamRow.eliminated_teams as string); } catch { /* empty */ }
+        try {
+          eliminated = JSON.parse(teamRow.eliminated_teams as string);
+        } catch {
+          /* empty */
+        }
       }
       return {
         portfolio_name: String(row.name ?? ""),
@@ -295,7 +327,33 @@ const HomeWorldCup = () => {
                 size={11}
                 className="subboxes-wrapper"
               >
-                <TableHomeWC data={tableData} />
+                {tableVisible ? (
+                  <TableHomeWC data={tableData} />
+                ) : (
+                  <div
+                    style={{
+                      textAlign: "center",
+                      padding: "2.5rem 1rem",
+                      color: "#00E2F6",
+                      border: "1px solid rgba(0, 226, 246, 0.25)",
+                      borderRadius: 8,
+                      background: "rgba(0, 41, 44, 0.6)",
+                    }}
+                  >
+                    <p
+                      style={{
+                        fontSize: "1rem",
+                        marginBottom: 8,
+                        opacity: 0.7,
+                      }}
+                    >
+                      Scores available from
+                    </p>
+                    <p style={{ fontSize: "1.4rem", fontWeight: "bold" }}>
+                      {datTou} · {houTou?.slice(0, 5)}
+                    </p>
+                  </div>
+                )}
               </Grid>
             </Zoom>
           </Grid>

@@ -1,0 +1,1469 @@
+{
+  "info": {
+    "_postman_id": "c1f1259a-fcde-44b5-b305-7811d82eab6a",
+    "name": "PortfolioPool",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "526554"
+  },
+  "item": [
+    {
+      "name": "Countries",
+      "item": [
+        {
+          "name": "countries",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/countries",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "countries"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "states",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/countries/1/states",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "countries",
+                "1",
+                "states"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Participants",
+      "item": [
+        {
+          "name": "signup",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"code\": 123456,\n    \"name\": \"Gustavo\",\n    \"surname\": \"Calderón\",\n    \"email\": \"tavo@ercom.tech\",\n    \"username\": \"tavo.tech\",\n    \"password\": \"pass1234\",\n    \"country_id\": 1,\n    \"state_id\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/signup",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "signup"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"gcalderon.7\",\n    \"password\": \"tesxuc-futpAm-qitna3\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/login",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "forgot",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"gcalderon.7\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/forgot",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "forgot"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "portfolios",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"gcalderon.7\"\n}"
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/121/portfolios?tournament_id=2&sport=wc",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "121",
+                "portfolios"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "2"
+                },
+                {
+                  "key": "sport",
+                  "value": "wc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "sports",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"gcalderon.7\"\n}"
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/121/sports",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "121",
+                "sports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "wallet-transactions",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/121/wallet-transactions",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "121",
+                "wallet-transactions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "wallet-totals",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/121/wallet-totals",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "121",
+                "wallet-totals"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "wallet-remaining",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/121/wallet-remaining",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "121",
+                "wallet-remaining"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "buy-portfolio",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/1/buy-portfolio?tournament_id=3&portfolio_id=123",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "1",
+                "buy-portfolio"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "3"
+                },
+                {
+                  "key": "portfolio_id",
+                  "value": "123"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "remove-portfolio",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/1/remove-portfolio?tournament_id=3&portfolio_id=123",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "1",
+                "remove-portfolio"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "3"
+                },
+                {
+                  "key": "portfolio_id",
+                  "value": "123"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "show-terms-of-use",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"gcalderon.7\"\n}"
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/121/show-terms-of-use?sport=wc",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "121",
+                "show-terms-of-use"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "wc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "accept-terms-of-use",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"user\": \"gcalderon.7\"\n}"
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/participants/121/accept-terms-of-use?sport=wc",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "participants",
+                "121",
+                "accept-terms-of-use"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "wc"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Portfolios",
+      "item": [
+        {
+          "name": "portfolios/per-week",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/portfolios/566/per-week?week=1",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "portfolios",
+                "566",
+                "per-week"
+              ],
+              "query": [
+                {
+                  "key": "week",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "portfolios",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tournament_id\": 2,\n    \"participant_id\": 134,\n    \"championship_points\": 0,\n    \"teams\": [\n        {\n            \"id\": 145,\n            \"seed\": 1,\n            \"streak_multiplier\": 1\n        },\n        {\n            \"id\": 146,\n            \"seed\": 2,\n            \"streak_multiplier\": 2\n        },\n        {\n            \"id\": 147,\n            \"seed\": 3,\n            \"streak_multiplier\": 3\n        },\n        {\n            \"id\": 148,\n            \"seed\": 4,\n            \"streak_multiplier\": 4\n        },\n        {\n            \"id\": 149,\n            \"seed\": 5,\n            \"streak_multiplier\": 5\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/portfolios",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "portfolios"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "portfolios",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"teams\": [\n        {\n            \"id\": 1,\n            \"seed\": 91,\n            \"streak_multiplier\": 91\n        },\n        {\n            \"id\": 3,\n            \"seed\": 92,\n            \"streak_multiplier\": 92\n        },\n        {\n            \"id\": 5,\n            \"seed\": 93,\n            \"streak_multiplier\": 93\n        },\n        {\n            \"id\": 7,\n            \"seed\": 94,\n            \"streak_multiplier\": 94\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/portfolios/570",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "portfolios",
+                "570"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "portfolios/remove",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/portfolios/266/remove?tournament_id=2",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "portfolios",
+                "266",
+                "remove"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "portfolios",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"tournament_id\": 999,\n    \"participant_id\": 999,\n    \"championshipPoints\": 123,\n    \"teams\": [\n        {\n            \"id\": 2\n        },\n        {\n            \"id\": 4\n        },\n        {\n            \"id\": 6\n        },\n        {\n            \"id\": 8\n        },\n        {\n            \"id\": 10\n        },\n        {\n            \"id\": 12\n        },\n        {\n            \"id\": 14\n        },\n        {\n            \"id\": 16\n        }\n    ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{host}}:{{port}}/portfolios/565",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "portfolios",
+                "565"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Sports",
+      "item": [
+        {
+          "name": "sports",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/sports",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "sports"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/sports/2/teams?sport=epl&tournament_id=7",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "sports",
+                "2",
+                "teams"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "epl"
+                },
+                {
+                  "key": "tournament_id",
+                  "value": "7"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams/not-available",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/sports/3/teams/not-available?tournament_id=5&sport=ncaa",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "sports",
+                "3",
+                "teams",
+                "not-available"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "5"
+                },
+                {
+                  "key": "sport",
+                  "value": "ncaa"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams/dynamics",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/sports/2/teams/dynamics?tournament_id=3&portfolio_id=561",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "sports",
+                "2",
+                "teams",
+                "dynamics"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "3"
+                },
+                {
+                  "key": "portfolio_id",
+                  "value": "561"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "tournaments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/sports/1/tournaments",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "sports",
+                "1",
+                "tournaments"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tournaments",
+      "item": [
+        {
+          "name": "tournaments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/1",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "instructions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/2/instructions",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "2",
+                "instructions"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "match-probabilities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/6/match-probabilities?sport=wc&group=A",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "6",
+                "match-probabilities"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "wc"
+                },
+                {
+                  "key": "group",
+                  "value": "A"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "payouts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/2/payouts?portfolios=99",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "2",
+                "payouts"
+              ],
+              "query": [
+                {
+                  "key": "portfolios",
+                  "value": "99"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "parameters",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/0/parameters?key=RECODE",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "0",
+                "parameters"
+              ],
+              "query": [
+                {
+                  "key": "key",
+                  "value": "RECODE"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "score/home",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/6/score/home?sport=wc",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "6",
+                "score",
+                "home"
+              ],
+              "query": [
+                {
+                  "key": "portfolio_id",
+                  "value": "0",
+                  "disabled": true
+                },
+                {
+                  "key": "participant_id",
+                  "value": "2",
+                  "disabled": true
+                },
+                {
+                  "key": "sport",
+                  "value": "wc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "score/stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/2/score/stats?sport=ncaa&round=1&order=1",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "2",
+                "score",
+                "stats"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "ncaa"
+                },
+                {
+                  "key": "round",
+                  "value": "1"
+                },
+                {
+                  "key": "order",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "score/points-per-round",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/2/score/points-per-round?sport=ncaa",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "2",
+                "score",
+                "points-per-round"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "ncaa"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "score/rounds",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/6/score/rounds?sport=wc",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "6",
+                "score",
+                "rounds"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "wc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "score/weeks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/3/score/weeks",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "3",
+                "score",
+                "weeks"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "score/stats/portfolio",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/6/score/stats/portfolios?round=3&sport=wc",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "6",
+                "score",
+                "stats",
+                "portfolios"
+              ],
+              "query": [
+                {
+                  "key": "week",
+                  "value": "6",
+                  "disabled": true
+                },
+                {
+                  "key": "round",
+                  "value": "3",
+                  "type": "text"
+                },
+                {
+                  "key": "sport",
+                  "value": "wc",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "stats",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/1/stats",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "1",
+                "stats"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/3/teams?sport=ncaa&show_all=false",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "3",
+                "teams"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "ncaa"
+                },
+                {
+                  "key": "show_all",
+                  "value": "false"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "terms-of-use",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/3/terms-of-use?sport=wc",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "3",
+                "terms-of-use"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "wc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "winner-of-team",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/2/winner-of-team?sport=ncaa&limit=10",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "2",
+                "winner-of-team"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "ncaa",
+                  "type": "text"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "winner-of-team-has-team",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/tournaments/2/winner-of-team-has-team?sport=ncaa&winner_of_team_id=1",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "tournaments",
+                "2",
+                "winner-of-team-has-team"
+              ],
+              "query": [
+                {
+                  "key": "sport",
+                  "value": "ncaa"
+                },
+                {
+                  "key": "winner_of_team_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "least-picked-teams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/least-picked-teams?tournament_id=2",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "least-picked-teams"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "most-picked-teams",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/most-picked-teams?tournament_id=2",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "most-picked-teams"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams-picked-log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/teams-picked-log?tournament_id=2",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "teams-picked-log"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams-picked-log-history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/teams-picked-log-history?tournament_id=1&year=2024",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "teams-picked-log-history"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "1"
+                },
+                {
+                  "key": "year",
+                  "value": "2024"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams-not-picked-log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/teams-not-picked-log?tournament_id=2",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "teams-not-picked-log"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "portfolio-seed-selections",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/portfolio-seed-selections?tournament_id=1",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "portfolio-seed-selections"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "seed-pick-totals",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/seed-pick-totals?tournament_id=1",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "seed-pick-totals"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "historical-perfect-portfolios-header",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/historical-perfect-portfolios-header",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "historical-perfect-portfolios-header"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "historical-perfect-portfolios-history",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/historical-perfect-portfolios-history?year=2024",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "historical-perfect-portfolios-history"
+              ],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2024"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "historical-perfect-portfolios-weight",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/historical-perfect-portfolios-weight?year=2024",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "historical-perfect-portfolios-weight"
+              ],
+              "query": [
+                {
+                  "key": "year",
+                  "value": "2024"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "teams-per-year-log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/teams-per-year-log?tournament_id=1",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "teams-per-year-log"
+              ],
+              "query": [
+                {
+                  "key": "tournament_id",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "historical-all-rounds",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{host}}:{{port}}/reports/historical-all-rounds?order-by=risk",
+              "host": [
+                "{{host}}"
+              ],
+              "port": "{{port}}",
+              "path": [
+                "reports",
+                "historical-all-rounds"
+              ],
+              "query": [
+                {
+                  "key": "order-by",
+                  "value": "risk"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Test",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{host}}:{{port}}",
+          "host": [
+            "{{host}}"
+          ],
+          "port": "{{port}}"
+        }
+      },
+      "response": []
+    }
+  ]
+}

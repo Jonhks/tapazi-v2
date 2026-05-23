@@ -9,7 +9,11 @@ import {
   softRemovePortfolioWorldCup,
   getPortfoliosWorldCup,
 } from "@/api/worldcup/PortfoliosAPIWorldCup";
-import { getWalletRemaining, buyPortfolio } from "@/api/WalletAPI";
+import {
+  getWalletRemaining,
+  buyPortfolio,
+  participantRemovePortfolio,
+} from "@/api/WalletAPI";
 import { getParameter } from "@/api/shared/TournamentsAPI";
 
 interface UsePortfolioWorldCupActionsProps {
@@ -225,6 +229,17 @@ export const usePortfolioWorldCupActions = ({
     });
 
     if (result.isConfirmed) {
+      try {
+        await participantRemovePortfolio(
+          userId,
+          String(tournamentId),
+          portfolioId,
+        );
+      } catch (error) {
+        toast.error(error?.message || "Error removing portfolio from participant");
+        return;
+      }
+
       const updatedPortfolios = portfolios.filter((p) => p.id !== portfolioId);
       setPortfolios(updatedPortfolios);
       setActiveTab(portfolioIndex > 0 ? portfolioIndex - 1 : 0);

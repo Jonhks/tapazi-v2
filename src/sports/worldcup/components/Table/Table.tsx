@@ -45,20 +45,38 @@ const TeamDisplay = ({
   crest: string | null;
   eliminated: boolean;
 }) => (
-  <span style={{ display: "inline-flex", alignItems: "center", gap: 4, whiteSpace: "nowrap" }}>
+  <span
+    style={{
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4,
+      whiteSpace: "nowrap",
+    }}
+  >
     {crest ? (
-      <span style={{
-        width: 20, height: 20, flexShrink: 0, borderRadius: "50%",
-        backgroundImage: `url(${crest})`,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundColor: "rgba(255,255,255,0.1)",
-        display: "inline-block",
-        filter: eliminated ? "grayscale(1)" : "none",
-        opacity: eliminated ? 0.5 : 1,
-      }} />
+      <span
+        style={{
+          width: 20,
+          height: 20,
+          flexShrink: 0,
+          borderRadius: "50%",
+          backgroundImage: `url(${crest})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundColor: "rgba(255,255,255,0.1)",
+          display: "inline-block",
+          filter: eliminated ? "grayscale(1)" : "none",
+          opacity: eliminated ? 0.5 : 1,
+        }}
+      />
     ) : null}
-    <span style={{ fontSize: "0.75rem", textDecoration: eliminated ? "line-through" : "none", color: eliminated ? "#888" : "inherit" }}>
+    <span
+      style={{
+        fontSize: "0.75rem",
+        textDecoration: eliminated ? "line-through" : "none",
+        color: eliminated ? "#888" : "inherit",
+      }}
+    >
       {name}
     </span>
   </span>
@@ -71,43 +89,55 @@ interface Props {
 }
 
 const ROUND_COLS: { header: string; key: keyof HomeScoreWC }[] = [
-  { header: "Group Round 1",        key: "group_round_1" },
-  { header: "Group Round 2",        key: "group_round_2" },
-  { header: "Group Round 3",        key: "group_round_3" },
-  { header: "Round of 32",          key: "round_of_32" },
-  { header: "Round of 16",          key: "round_of_16" },
-  { header: "Quarter-Finals",       key: "quarter_finals" },
-  { header: "Semi-Finals",          key: "semi_finals" },
+  { header: "Group Match 1", key: "group_round_1" },
+  { header: "Group Match 2", key: "group_round_2" },
+  { header: "Group Match 3", key: "group_round_3" },
+  { header: "Round of 32", key: "round_of_32" },
+  { header: "Round of 16", key: "round_of_16" },
+  { header: "Quarter-Finals", key: "quarter_finals" },
+  { header: "Semi-Finals", key: "semi_finals" },
   { header: "Third-place play-off", key: "third_place_playoff" },
-  { header: "Final",                key: "final" },
+  { header: "Final", key: "final" },
 ];
 
 const TableHomeWC = ({ data }: Props) => {
   const columns = useMemo<ColumnDef<HomeScoreWC>[]>(
     () => [
       { header: "Portfolio Name", accessorKey: "portfolio_name" },
-      { header: "Portfolio ID",   accessorKey: "portfolio_id" },
+      { header: "Portfolio ID", accessorKey: "portfolio_id" },
       ...[1, 2, 3, 4, 5, 6, 7].map(
         (n): ColumnDef<HomeScoreWC> => ({
           header: `Team ${n}`,
           accessorKey: `team${n}_name`,
           cell: ({ row }) => (
             <TeamDisplay
-              name={row.original[`team${n}_name` as keyof HomeScoreWC] as string}
-              crest={row.original[`team${n}_crest` as keyof HomeScoreWC] as string | null}
-              eliminated={row.original[`team${n}_eliminated` as keyof HomeScoreWC] as boolean}
+              name={
+                row.original[`team${n}_name` as keyof HomeScoreWC] as string
+              }
+              crest={
+                row.original[`team${n}_crest` as keyof HomeScoreWC] as
+                  | string
+                  | null
+              }
+              eliminated={
+                row.original[
+                  `team${n}_eliminated` as keyof HomeScoreWC
+                ] as boolean
+              }
             />
           ),
         }),
       ),
-      ...ROUND_COLS.map(({ header, key }): ColumnDef<HomeScoreWC> => ({
-        header,
-        accessorKey: key as string,
-        cell: ({ row }) => {
-          const val = row.original[key];
-          return val != null ? String(val) : "";
-        },
-      })),
+      ...ROUND_COLS.map(
+        ({ header, key }): ColumnDef<HomeScoreWC> => ({
+          header,
+          accessorKey: key as string,
+          cell: ({ row }) => {
+            const val = row.original[key];
+            return val != null ? String(val) : "";
+          },
+        }),
+      ),
       { header: "Score", accessorKey: "score" },
     ],
     [],
@@ -119,6 +149,14 @@ const TableHomeWC = ({ data }: Props) => {
       columns={columns}
       maxHeight="600px"
       stickyLastColumn
+      highlightColBg={(colId, _idx, isHeader) => {
+        if (isHeader) return null;
+        return colId === "group_round_1" ||
+          colId === "group_round_2" ||
+          colId === "group_round_3"
+          ? "rgba(0, 226, 246, 0.38)"
+          : null;
+      }}
     />
   );
 };
