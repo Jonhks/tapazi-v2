@@ -2,6 +2,16 @@ import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 import { User, UserForgot, UserLogin } from "@/types";
 
+export interface ShowTermsOfUseResponse {
+  enable_terms_of_use: boolean;
+  tournament_id?: number;
+}
+
+export interface TermsEntry {
+  description: string;
+  highlighted?: boolean;
+}
+
 export const getSignUp = async (user: User) => {
   user.name = user.name.toUpperCase();
   user.surname = user.surname.toUpperCase();
@@ -76,6 +86,67 @@ export const getStates = async (countryId: User["id"]) => {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
     return;
+  }
+};
+
+/** GET /participants/:id/show-terms-of-use?sport=wc */
+export const getShowTermsOfUseWC = async (
+  participantId: string,
+): Promise<ShowTermsOfUseResponse> => {
+  try {
+    const { data } = await apiEnv(
+      `/participants/${participantId}/show-terms-of-use?sport=wc`,
+    );
+    return {
+      enable_terms_of_use: data.enable_terms_of_use ?? false,
+      tournament_id: data.tournament_id,
+    };
+  } catch {
+    return { enable_terms_of_use: false };
+  }
+};
+
+/** GET /sports/4/tournaments — obtiene el torneo activo de WC cuando show-terms no devuelve tournament_id */
+export const getActiveWCTournamentId = async (): Promise<number | undefined> => {
+  try {
+    const { data } = await apiEnv(`/sports/4/tournaments`);
+    return data.tournaments?.[0]?.id;
+  } catch {
+    return undefined;
+  }
+};
+
+/** GET /tournaments/:id/terms-of-use?sport=wc */
+export const getTermsOfUseWC = async (
+  tournamentId: string,
+): Promise<TermsEntry[]> => {
+  try {
+    const { data } = await apiEnv(
+      `/tournaments/${tournamentId}/terms-of-use?sport=wc`,
+    );
+    if (Array.isArray(data.data)) return data.data;
+    if (Array.isArray(data.terms)) return data.terms;
+    if (Array.isArray(data)) return data;
+    return [];
+  } catch {
+    return [];
+  }
+};
+
+/** POST /participants/:id/accept-terms-of-use?sport=wc */
+export const postAcceptTermsOfUseWC = async (
+  participantId: string,
+): Promise<void> => {
+  try {
+    await apiEnv.post(
+      `/participants/${participantId}/accept-terms-of-use?sport=wc`,
+    );
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(
+        error.response.data.error ?? error.response.data.message,
+      );
+    throw error;
   }
 };
 

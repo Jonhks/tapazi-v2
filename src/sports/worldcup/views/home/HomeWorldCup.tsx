@@ -110,6 +110,16 @@ const HomeWorldCup = () => {
     return new Date() >= new Date(`${datTou}T${houTou}`);
   }, [datTou, houTou]);
 
+  const formattedGoLiveDate = useMemo(() => {
+    if (!datTou || !houTou) return null;
+    const [year, month, day] = datTou.split("-").map(Number);
+    const dateLabel = new Date(year, month - 1, day).toLocaleDateString(
+      "en-US",
+      { month: "long", day: "numeric", year: "numeric" },
+    );
+    return { date: `${dateLabel} at ${houTou.slice(0, 5)}` };
+  }, [datTou, houTou]);
+
   const renderDescription = (dataHOINFO: string) => {
     return dataHOINFO.split("\n").map((line, index) => (
       <p
@@ -327,30 +337,49 @@ const HomeWorldCup = () => {
                 size={11}
                 className="subboxes-wrapper"
               >
-                {tableVisible ? (
+                {!tableVisible ? (
                   <TableHomeWC data={tableData} />
                 ) : (
                   <div
                     style={{
                       textAlign: "center",
-                      padding: "2.5rem 1rem",
+                      padding: "2.5rem 1.5rem",
                       color: "#00E2F6",
-                      border: "1px solid rgba(0, 226, 246, 0.25)",
-                      borderRadius: 8,
-                      background: "rgba(0, 41, 44, 0.6)",
+                      border: "1px solid rgba(0, 226, 246, 0.3)",
+                      borderRadius: 12,
+                      background:
+                        "linear-gradient(135deg, rgba(0, 41, 44, 0.8) 0%, rgba(0, 20, 30, 0.9) 100%)",
+                      boxShadow: "0 4px 24px rgba(0, 226, 246, 0.08)",
                     }}
                   >
                     <p
                       style={{
-                        fontSize: "1rem",
-                        marginBottom: 8,
-                        opacity: 0.7,
+                        fontSize: "0.8rem",
+                        letterSpacing: "0.12em",
+                        textTransform: "uppercase",
+                        opacity: 0.55,
+                        marginBottom: 12,
                       }}
                     >
-                      Scores available from
+                      Coming soon
                     </p>
-                    <p style={{ fontSize: "1.4rem", fontWeight: "bold" }}>
-                      {datTou} · {houTou?.slice(0, 5)}
+                    <p
+                      style={{
+                        fontSize: "1rem",
+                        opacity: 0.75,
+                        marginBottom: 4,
+                      }}
+                    >
+                      Match scores go live on
+                    </p>
+                    <p
+                      style={{
+                        fontSize: "1.25rem",
+                        fontWeight: 700,
+                        letterSpacing: "0.02em",
+                      }}
+                    >
+                      {formattedGoLiveDate?.date}
                     </p>
                   </div>
                 )}

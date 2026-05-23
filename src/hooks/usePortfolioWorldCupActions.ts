@@ -1,11 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import Swal from "sweetalert2";
 import {
   postNewPortfolioWorldCup,
-  removePortfolioWorldCup,
   softRemovePortfolioWorldCup,
   getPortfoliosWorldCup,
 } from "@/api/worldcup/PortfoliosAPIWorldCup";
@@ -39,17 +37,6 @@ export const usePortfolioWorldCupActions = ({
   refetchTeams,
   tournamentId,
 }: UsePortfolioWorldCupActionsProps) => {
-  const { mutate: deletePortfolio } = useMutation({
-    mutationFn: removePortfolioWorldCup,
-    onSuccess: () => {
-      toast.success("Portfolio removed successfully!");
-      queryClient.invalidateQueries(["portfoliosWorldCup", userId]);
-    },
-    onError: (error) => {
-      toast.error(error.message || "Error removing portfolio");
-    },
-  });
-
   const handleAddPortfolio = async () => {
     if (!tournamentId) return;
 
@@ -230,29 +217,31 @@ export const usePortfolioWorldCupActions = ({
 
     if (result.isConfirmed) {
       try {
-        await participantRemovePortfolio(
-          userId,
-          String(tournamentId),
-          portfolioId,
-        );
+        // 1. POST /participants/:userId/remove-portfolio
+        await participantRemovePortfolio(userId, String(tournamentId), portfolioId);
+
+        // 2. PUT /portfolios/:id/remove?tournament_id=
+        await softRemovePortfolioWorldCup({ portId: portfolioId, tournamentId: String(tournamentId) });
+
+        // 3. GET /participants/:userId/wallet-remaining
+        queryClient.invalidateQueries(["walletRemaining", userId]);
+
+        const updatedPortfolios = portfolios.filter((p) => p.id !== portfolioId);
+        setPortfolios(updatedPortfolios);
+        setActiveTab(portfolioIndex > 0 ? portfolioIndex - 1 : 0);
+        queryClient.invalidateQueries(["portfoliosWorldCup", userId]);
+
+        await Swal.fire({
+          title: "Deleted!",
+          text: "Your portfolio has been deleted.",
+          icon: "success",
+          confirmButtonColor: "#00929e",
+          background: "rgba(0, 41, 44, 0.95)",
+          color: "#fff",
+        });
       } catch (error) {
-        toast.error(error?.message || "Error removing portfolio from participant");
-        return;
+        toast.error(error?.message || "Error removing portfolio");
       }
-
-      const updatedPortfolios = portfolios.filter((p) => p.id !== portfolioId);
-      setPortfolios(updatedPortfolios);
-      setActiveTab(portfolioIndex > 0 ? portfolioIndex - 1 : 0);
-      deletePortfolio({ portId: portfolioId });
-
-      await Swal.fire({
-        title: "Deleted!",
-        text: "Your portfolio has been deleted.",
-        icon: "success",
-        confirmButtonColor: "#00929e",
-        background: "rgba(0, 41, 44, 0.95)",
-        color: "#fff",
-      });
     }
   };
 
