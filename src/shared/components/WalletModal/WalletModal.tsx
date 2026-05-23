@@ -81,7 +81,7 @@ export default function WalletModal({
 
   const cancelStyle = (canceled: boolean): React.CSSProperties =>
     canceled
-      ? { color: "#888", textDecoration: "line-through", opacity: 0.4 }
+      ? { color: "#b4b0b0", textDecoration: "line-through", opacity: 0.6 }
       : {};
 
   const columns = useMemo<ColumnDef<WalletTransaction>[]>(
