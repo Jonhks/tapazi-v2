@@ -1,0 +1,37 @@
+name: Fix axios URL on main
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - src/lib/axios.ts
+
+jobs:
+  fix-axios-url:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Replace test URL with prod URL if needed
+        run: |
+          PROD_URL="https://portfolio-pool-prod.damnserver.com:443"
+          TEST_URL="https://portfolio-pool-test.damnserver.com:443"
+
+          if grep -q "$TEST_URL" src/lib/axios.ts; then
+            echo "URL de test detectada en main — corrigiendo a prod..."
+            sed -i "s|$TEST_URL|$PROD_URL|g" src/lib/axios.ts
+
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add src/lib/axios.ts
+            git commit -m "chore(ci): auto-fix axios URL to production [skip ci]"
+            git push
+          else
+            echo "URL de prod ya correcta — sin cambios."
+          fi

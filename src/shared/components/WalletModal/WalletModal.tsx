@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -79,16 +79,28 @@ export default function WalletModal({
 
   const isLoading = loadingTx || loadingTotals || loadingRemaining;
 
+  const cancelStyle = (canceled: boolean): React.CSSProperties =>
+    canceled
+      ? { color: "#888", textDecoration: "line-through", opacity: 0.4 }
+      : {};
+
   const columns = useMemo<ColumnDef<WalletTransaction>[]>(
     () => [
       {
         header: "IN",
         accessorKey: "wallet_in",
-        cell: ({ getValue }) => {
+        cell: ({ getValue, row }) => {
           const val = getValue<number>();
+          const canceled = row.original.canceled;
           if (!val) return null;
           return (
-            <span style={{ color: theme.positive, fontWeight: 700 }}>
+            <span
+              style={{
+                color: canceled ? "#888" : theme.positive,
+                fontWeight: 700,
+                ...cancelStyle(canceled),
+              }}
+            >
               $ {val.toLocaleString()}
             </span>
           );
@@ -97,11 +109,18 @@ export default function WalletModal({
       {
         header: "OUT",
         accessorKey: "wallet_out",
-        cell: ({ getValue }) => {
+        cell: ({ getValue, row }) => {
           const val = getValue<number>();
+          const canceled = row.original.canceled;
           if (!val) return null;
           return (
-            <span style={{ color: theme.negative, fontWeight: 700 }}>
+            <span
+              style={{
+                color: canceled ? "#888" : theme.negative,
+                fontWeight: 700,
+                ...cancelStyle(canceled),
+              }}
+            >
               $ {val.toLocaleString()}
             </span>
           );
@@ -110,24 +129,46 @@ export default function WalletModal({
       {
         header: "DATE",
         accessorKey: "date",
+        cell: ({ getValue, row }) => (
+          <span style={cancelStyle(row.original.canceled)}>
+            {getValue<string>()}
+          </span>
+        ),
       },
       {
         header: "TIME",
         accessorKey: "time",
+        cell: ({ getValue, row }) => (
+          <span style={cancelStyle(row.original.canceled)}>
+            {getValue<string>()}
+          </span>
+        ),
       },
       {
         header: "PORTFOLIO",
         accessorKey: "portfolio_name",
+        cell: ({ getValue, row }) => (
+          <span style={cancelStyle(row.original.canceled)}>
+            {getValue<string>()}
+          </span>
+        ),
       },
       {
         header: "TOURNAMENT",
         accessorKey: "tournament_name",
         cell: ({ row }) => {
           const name = row.original.tournament_name;
-          const color = row.original.sport_hex_color?.trim()
-            ? row.original.sport_hex_color
-            : fallbackTournamentColor(name);
-          return <span style={{ color, fontWeight: 700 }}>{name ?? ""}</span>;
+          const canceled = row.original.canceled;
+          const color = canceled
+            ? "#888"
+            : row.original.sport_hex_color?.trim()
+              ? row.original.sport_hex_color
+              : fallbackTournamentColor(name);
+          return (
+            <span style={{ color, fontWeight: 700, ...cancelStyle(canceled) }}>
+              {name ?? ""}
+            </span>
+          );
         },
       },
     ],

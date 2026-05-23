@@ -10,6 +10,7 @@ export interface WalletTransaction {
   portfolio_name: string;
   tournament_name: string;
   sport_hex_color: string;
+  canceled: boolean;
 }
 
 export interface WalletTotals {
@@ -80,6 +81,23 @@ export const buyPortfolio = async (
       `/participants/${userId}/buy-portfolio?tournament_id=${tournamentId}&portfolio_id=${portfolioId}`,
     );
     return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error ?? error.response.data.message);
+    throw error;
+  }
+};
+
+/** POST /participants/:userId/remove-portfolio?tournament_id=X&portfolio_id=Y */
+export const participantRemovePortfolio = async (
+  userId: string,
+  tournamentId: string,
+  portfolioId: number,
+): Promise<void> => {
+  try {
+    await apiEnv.post(
+      `/participants/${userId}/remove-portfolio?tournament_id=${tournamentId}&portfolio_id=${portfolioId}`,
+    );
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error ?? error.response.data.message);

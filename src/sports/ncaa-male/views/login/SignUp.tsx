@@ -23,7 +23,7 @@ import FlagIcon from "@mui/icons-material/Flag";
 import PersonIcon from "@mui/icons-material/Person";
 import SecurityIcon from "@mui/icons-material/Security";
 import classes from "./Login.module.css";
-import { State } from "types";
+import { State } from "@/types";
 
 // Define Country type if not imported
 type Country = {
@@ -108,7 +108,7 @@ const Login = () => {
         });
       }
     },
-    onError: (err: any) =>
+    onError: (err: Error) =>
       toast.error(err.message || "An error has occurred"),
   });
 
