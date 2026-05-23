@@ -74,15 +74,14 @@ const Login = () => {
           await getShowTermsOfUseWC(String(data.id));
 
         if (enable_terms_of_use) {
+          const tid = tournament_id ?? (await getActiveWCTournamentId());
+          const terms = tid ? await getTermsOfUseWC(String(tid)) : [];
+          setTermsContent(terms);
+          setPendingUser(data);
+          setTermsOpen(true);
+        } else {
           doNavigate(data);
-          return;
         }
-
-        const tid = tournament_id ?? (await getActiveWCTournamentId());
-        const terms = tid ? await getTermsOfUseWC(String(tid)) : [];
-        setTermsContent(terms);
-        setPendingUser(data);
-        setTermsOpen(true);
       } catch {
         doNavigate(data);
       } finally {

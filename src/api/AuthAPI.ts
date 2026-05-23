@@ -97,9 +97,10 @@ export const getShowTermsOfUseWC = async (
     const { data } = await apiEnv(
       `/participants/${participantId}/show-terms-of-use?sport=wc`,
     );
+    const payload = data.data ?? data;
     return {
-      enable_terms_of_use: data.enable_terms_of_use ?? false,
-      tournament_id: data.tournament_id,
+      enable_terms_of_use: payload.enable_terms_of_use ?? false,
+      tournament_id: payload.tournament_id,
     };
   } catch {
     return { enable_terms_of_use: false };
