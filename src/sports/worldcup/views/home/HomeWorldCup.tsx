@@ -337,7 +337,7 @@ const HomeWorldCup = () => {
                 size={11}
                 className="subboxes-wrapper"
               >
-                {!tableVisible ? (
+                {tableVisible ? (
                   <TableHomeWC data={tableData} />
                 ) : (
                   <div
