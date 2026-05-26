@@ -297,8 +297,8 @@ export default function WalletModal({
         {!isLoading && transactions.length === 0 && (
           <EmptyState
             icon={MonetizationOnIcon}
-            title="No hay transacciones"
-            subtitle="Cuando tengas movimientos en tu wallet aparecerán aquí."
+            title="No transactions"
+            subtitle="When you have transactions in your wallet, they will appear here."
             accentColor={theme.accent}
           />
         )}

@@ -59,6 +59,7 @@ const Login = () => {
   } = useForm<UserLogin>({ defaultValues: initialValues });
 
   const doNavigate = (userData: Record<string, unknown>) => {
+    Object.keys(localStorage).filter(k => k.startsWith("userTapaszi")).forEach(k => localStorage.removeItem(k));
     localStorage.setItem("userTapaszi", JSON.stringify(userData));
     navigate(`/sports/${userData.id}`, { replace: true });
     localStorage.removeItem("datoProv");
