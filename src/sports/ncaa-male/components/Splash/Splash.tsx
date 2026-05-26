@@ -14,7 +14,7 @@ const Splash = () => {
           }
         }
       } catch {
-        // localStorage corrupto — ir a login
+        // storage corrupto — ir a login
       }
       window.location.pathname = "/login";
     }, 2000);
