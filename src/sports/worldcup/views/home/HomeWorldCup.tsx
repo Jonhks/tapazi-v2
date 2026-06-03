@@ -76,6 +76,8 @@ const HomeWorldCup = () => {
     enabled: !!tournamentId,
   });
 
+  // console.log("Participants:", participants.portfolios);
+
   const { data: portfoliosHome, isLoading: isLoadingPortfoliosHome } = useQuery(
     {
       queryKey: ["portfoliosHomeWorldCup", userId, tournamentId],
@@ -86,9 +88,9 @@ const HomeWorldCup = () => {
 
   const { data: payout, isLoading: isLoadingPayout } = useQuery({
     queryKey: ["payoutWorldCup", userId, tournamentId],
-    queryFn: () => gatPayout(tournamentId),
+    queryFn: () => gatPayout(tournamentId, participants?.portfolios),
     retry: true,
-    enabled: !!tournamentId,
+    enabled: !!tournamentId && !!participants?.portfolios,
   });
 
   const { data: datTou } = useQuery({
