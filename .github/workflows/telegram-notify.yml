@@ -18,27 +18,30 @@ jobs:
         id: version
         run: echo "value=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
 
-      - name: Map branch to environment
+      - name: Set environment label
         id: env
         run: |
-          if [[ "${{ github.ref_name }}" == "main" ]]; then
+          BRANCH="${{ github.ref_name }}"
+          if [ "$BRANCH" = "main" ]; then
             echo "label=🟢 PRODUCCIÓN" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
+          elif [ "$BRANCH" = "qa" ]; then
             echo "label=🟡 QA" >> $GITHUB_OUTPUT
-          elif [[ "${{ github.ref_name }}" == "dev" ]]; then
+          else
             echo "label=🔵 DEV" >> $GITHUB_OUTPUT
           fi
 
       - name: Send Telegram message
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          LABEL: ${{ steps.env.outputs.label }}
+          VERSION: ${{ steps.version.outputs.value }}
+          BRANCH: ${{ github.ref_name }}
+          ACTOR: ${{ github.actor }}
+          COMMIT_MSG: ${{ github.event.head_commit.message }}
+          COMMIT_URL: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
         run: |
-          MESSAGE="${{ steps.env.outputs.label }} — Nuevo deploy
-
-🏷 Versión: ${{ steps.version.outputs.value }}
-🌿 Rama: ${{ github.ref_name }}
-👤 Por: ${{ github.actor }}
-📝 ${{ github.event.head_commit.message }}
-🔗 https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
-
-          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
-            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
-            -d text="$MESSAGE"
+          TEXT="${LABEL} — Nuevo deploy%0A%0A🏷 Versión: ${VERSION}%0A🌿 Rama: ${BRANCH}%0A👤 Por: ${ACTOR}%0A📝 ${COMMIT_MSG}%0A🔗 ${COMMIT_URL}"
+          curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${CHAT_ID}" \
+            -d "text=${TEXT}"
