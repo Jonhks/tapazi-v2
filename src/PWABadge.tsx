@@ -18,12 +18,19 @@ function PWABadge() {
     dismiss();
   }
 
-  function handleReload() {
+  async function handleReload() {
     if (needRefresh) {
       updateServiceWorker(true);
-    } else {
-      window.location.reload();
+      return;
     }
+    // Desregistrar SW y limpiar caché para que el reload traiga contenido fresco
+    try {
+      const regs = await navigator.serviceWorker?.getRegistrations() ?? [];
+      await Promise.all(regs.map((r) => r.unregister()));
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    } catch { /* ignore */ }
+    window.location.reload();
   }
 
   return (
