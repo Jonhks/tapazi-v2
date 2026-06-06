@@ -262,15 +262,7 @@ const HomeWorldCup = () => {
               <p className={classes.titleBox}>
                 {DataPopona?.toUpperCase()} IS HERE!!!
               </p>
-              <div
-                className={`${classes.subBox}`}
-                style={{
-                  display: "flex",
-                  alignItems: "center", // Centra verticalmente
-                  justifyContent: "center", // Centra horizontalmente el contenedor
-                  height: "100%", // Opcional, para ocupar todo el alto
-                }}
-              >
+              <div className={`${classes.subBox}`}>
                 <div
                   style={{
                     margin: 0,
