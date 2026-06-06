@@ -1,30 +1,29 @@
 import classes from "./PWABadge.module.css";
 
 import { useRegisterSW } from "virtual:pwa-register/react";
+import { useVersionCheck } from "./hooks/useVersionCheck";
 
 function PWABadge() {
-  // check for updates every hour
-  const period = 60 * 60 * 1000;
-
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
-  } = useRegisterSW({
-    onRegisteredSW(swUrl, r) {
-      if (period <= 0) return;
-      if (r?.active?.state === "activated") {
-        registerPeriodicSync(period, swUrl, r);
-      } else if (r?.installing) {
-        r.installing.addEventListener("statechange", (e) => {
-          const sw = e.target as ServiceWorker;
-          if (sw.state === "activated") registerPeriodicSync(period, swUrl, r);
-        });
-      }
-    },
-  });
+  } = useRegisterSW();
+
+  const { needUpdate, dismiss } = useVersionCheck();
+
+  const showToast = needRefresh || needUpdate;
 
   function close() {
     setNeedRefresh(false);
+    dismiss();
+  }
+
+  function handleReload() {
+    if (needRefresh) {
+      updateServiceWorker(true);
+    } else {
+      window.location.reload();
+    }
   }
 
   return (
@@ -33,7 +32,7 @@ function PWABadge() {
       role="alert"
       aria-labelledby="toast-message"
     >
-      {needRefresh && (
+      {showToast && (
         <div className={classes.PWABadgeToast}>
           <div className={classes.PWABadgeMessage}>
             <span
@@ -47,13 +46,13 @@ function PWABadge() {
           <div className={classes.PWABadgeButtons}>
             <button
               className={classes.PWABadgeToastButton}
-              onClick={() => updateServiceWorker(true)}
+              onClick={handleReload}
             >
               Reload
             </button>
             <button
               className={classes.PWABadgeToastButtonCancel}
-              onClick={() => close()}
+              onClick={close}
             >
               Close
             </button>
@@ -65,28 +64,3 @@ function PWABadge() {
 }
 
 export default PWABadge;
-
-/**
- * This function will register a periodic sync check every hour, you can modify the interval as needed.
- */
-function registerPeriodicSync(
-  period: number,
-  swUrl: string,
-  r: ServiceWorkerRegistration
-) {
-  if (period <= 0) return;
-
-  setInterval(async () => {
-    if ("onLine" in navigator && !navigator.onLine) return;
-
-    const resp = await fetch(swUrl, {
-      cache: "no-store",
-      headers: {
-        cache: "no-store",
-        "cache-control": "no-cache",
-      },
-    });
-
-    if (resp?.status === 200) await r.update();
-  }, period);
-}

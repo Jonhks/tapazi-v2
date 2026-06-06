@@ -29,3 +29,6 @@ dist-ssr
 lib/axios.ts
 
 PortfolioPool.postman_collection.json
+
+# Generated at build time — do not commit
+public/version.json

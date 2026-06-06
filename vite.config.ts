@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from "vite-plugin-pwa";
 import { execSync } from "child_process";
+import fs from "node:fs";
 
 import { version } from "./package.json";
 
@@ -21,6 +22,15 @@ export default defineConfig(({ command }) => ({
     "import.meta.env.VITE_APP_COMMIT": JSON.stringify(commitHash),
   },
   plugins: [
+    {
+      name: "generate-version-json",
+      buildStart() {
+        fs.writeFileSync(
+          fileURLToPath(new URL("./public/version.json", import.meta.url)),
+          JSON.stringify({ version, commit: commitHash }),
+        );
+      },
+    },
     react(),
     VitePWA({
       manifest: {
