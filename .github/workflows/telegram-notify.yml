@@ -10,29 +10,15 @@ on:
 jobs:
   notify:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Bump patch version on qa
-        if: github.ref_name == 'qa'
+      - name: Get version and commit hash
+        id: meta
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          npm version patch --no-git-tag-version
-          NEW_VERSION=$(node -p "require('./package.json').version")
-          git add package.json
-          git commit -m "chore(release): bump version to $NEW_VERSION [skip ci]"
-          git push origin qa
-
-      - name: Get version
-        id: version
-        run: echo "value=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+          echo "hash=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
       - name: Set environment label
         id: env
@@ -51,13 +37,14 @@ jobs:
           BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           LABEL: ${{ steps.env.outputs.label }}
-          VERSION: ${{ steps.version.outputs.value }}
+          VERSION: ${{ steps.meta.outputs.version }}
+          HASH: ${{ steps.meta.outputs.hash }}
           BRANCH: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
           COMMIT_URL: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
         run: |
-          TEXT="${LABEL} — Nuevo deploy%0A%0A🏷 Versión: ${VERSION}%0A🌿 Rama: ${BRANCH}%0A👤 Por: ${ACTOR}%0A📝 ${COMMIT_MSG}%0A🔗 ${COMMIT_URL}"
+          TEXT="${LABEL} — Nuevo deploy%0A%0A🏷 Versión: ${VERSION} (${HASH})%0A🌿 Rama: ${BRANCH}%0A👤 Por: ${ACTOR}%0A📝 ${COMMIT_MSG}%0A🔗 ${COMMIT_URL}"
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -d "chat_id=${CHAT_ID}" \
             -d "text=${TEXT}"

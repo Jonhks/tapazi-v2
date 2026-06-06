@@ -2,8 +2,14 @@ import { defineConfig } from "vite";
 import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from "vite-plugin-pwa";
+import { execSync } from "child_process";
 
 import { version } from "./package.json";
+
+const commitHash = (() => {
+  try { return execSync("git rev-parse --short HEAD").toString().trim(); }
+  catch { return "dev"; }
+})();
 
 // https://vite.dev/config/
 export default defineConfig(({ command }) => ({
@@ -12,6 +18,7 @@ export default defineConfig(({ command }) => ({
   },
   define: {
     "import.meta.env.VITE_APP_VERSION": JSON.stringify(version),
+    "import.meta.env.VITE_APP_COMMIT": JSON.stringify(commitHash),
   },
   plugins: [
     react(),

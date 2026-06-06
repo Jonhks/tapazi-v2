@@ -321,6 +321,11 @@ export default function WalletModal({
             />
           </Box>
         )}
+        <Box sx={{ textAlign: "right", mt: 1 }}>
+          <Typography sx={{ fontSize: 10, color: "#555" }}>
+            v{import.meta.env.VITE_APP_VERSION} ({import.meta.env.VITE_APP_COMMIT})
+          </Typography>
+        </Box>
       </DialogContent>
     </Dialog>
   );
