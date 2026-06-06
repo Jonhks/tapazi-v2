@@ -1,0 +1,44 @@
+name: Telegram Deploy Notification
+
+on:
+  push:
+    branches:
+      - qa
+      - dev
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Get version
+        id: version
+        run: echo "value=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Map branch to environment
+        id: env
+        run: |
+          if [[ "${{ github.ref_name }}" == "main" ]]; then
+            echo "label=🟢 PRODUCCIÓN" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == "qa" ]]; then
+            echo "label=🟡 QA" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.ref_name }}" == "dev" ]]; then
+            echo "label=🔵 DEV" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Send Telegram message
+        run: |
+          MESSAGE="${{ steps.env.outputs.label }} — Nuevo deploy
+
+🏷 Versión: ${{ steps.version.outputs.value }}
+🌿 Rama: ${{ github.ref_name }}
+👤 Por: ${{ github.actor }}
+📝 ${{ github.event.head_commit.message }}
+🔗 https://github.com/${{ github.repository }}/commit/${{ github.sha }}"
+
+          curl -s -X POST "https://api.telegram.org/bot${{ secrets.TELEGRAM_BOT_TOKEN }}/sendMessage" \
+            -d chat_id="${{ secrets.TELEGRAM_CHAT_ID }}" \
+            -d text="$MESSAGE"
