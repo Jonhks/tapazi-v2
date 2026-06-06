@@ -39,9 +39,9 @@ jobs:
           BRANCH: ${{ github.ref_name }}
           ACTOR: ${{ github.actor }}
           COMMIT_MSG: ${{ github.event.head_commit.message }}
-          REPO_URL: https://github.com/${{ github.repository }}
+          COMMIT_URL: https://github.com/${{ github.repository }}/commit/${{ github.sha }}
         run: |
-          TEXT="${LABEL} — Nuevo deploy%0A%0A🏷 Versión: ${VERSION}%0A🌿 Rama: ${BRANCH}%0A👤 Por: ${ACTOR}%0A📝 ${COMMIT_MSG}%0A🔗 ${REPO_URL}"
+          TEXT="${LABEL} — Nuevo deploy%0A%0A🏷 Versión: ${VERSION}%0A🌿 Rama: ${BRANCH}%0A👤 Por: ${ACTOR}%0A📝 ${COMMIT_MSG}%0A🔗 ${COMMIT_URL}"
           curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
             -d "chat_id=${CHAT_ID}" \
             -d "text=${TEXT}"
