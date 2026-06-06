@@ -46,7 +46,7 @@ function PWABadge() {
               id="toastMessage"
               className={classes.toastMessage}
             >
-              New version available: {import.meta.env.VITE_APP_VERSION}
+              New version available: {import.meta.env.VITE_APP_VERSION} ({import.meta.env.VITE_APP_COMMIT})
               {"\n"}Click Reload to update.
             </span>
           </div>
