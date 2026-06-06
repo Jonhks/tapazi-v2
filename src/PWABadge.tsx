@@ -40,7 +40,8 @@ function PWABadge() {
               id="toastMessage"
               className={classes.toastMessage}
             >
-              New content available, click on reload button to update.
+              New version available: {import.meta.env.VITE_APP_VERSION}
+              {"\n"}Click Reload to update.
             </span>
           </div>
           <div className={classes.PWABadgeButtons}>
