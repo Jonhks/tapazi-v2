@@ -197,8 +197,6 @@ export const TablePortfoliosHomeWC = ({ data }: { data: PortfolioHomeRowWC[] }) 
           ),
         }),
       ),
-      { header: "Total Wins", accessorKey: "total_wins"       },
-      { header: "Elim.",      accessorKey: "eliminated_teams" },
     ],
     [],
   );
