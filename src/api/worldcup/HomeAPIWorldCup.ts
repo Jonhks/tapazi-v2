@@ -116,6 +116,35 @@ export const gatPayout = async (tournamentId: string, portfolios: string) => {
   }
 };
 
+export const getScoreRounds = async (
+  tournamentId: string,
+): Promise<{ rounds: unknown[] }> => {
+  try {
+    const { data } = await apiEnv(
+      `/tournaments/${tournamentId}/score/rounds?sport=wc`,
+    );
+    return data ?? { rounds: [] };
+  } catch {
+    return { rounds: [] };
+  }
+};
+
+export const getPortfoliosHome = async (
+  tournamentId: string,
+  participantId: string,
+): Promise<{ portfolios: Record<string, unknown>[] }> => {
+  try {
+    const { data } = await apiEnv(
+      `/tournaments/${tournamentId}/portfolios/home?participant_id=${participantId}`,
+    );
+    return data ?? { portfolios: [] };
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return { portfolios: [] };
+  }
+};
+
 export const getInstructions = async (tournamentId: string) => {
   try {
     const url = `tournaments/${tournamentId}/instructions`;

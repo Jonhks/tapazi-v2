@@ -162,3 +162,52 @@ const TableHomeWC = ({ data }: Props) => {
 };
 
 export default TableHomeWC;
+
+// ─── TablePortfoliosHomeWC — portfolios registrados (pre-rondas) ──────────────
+
+export interface PortfolioHomeRowWC {
+  portfolio_name: string;
+  portfolio_id: number;
+  team1_name: string; team1_crest: string | null;
+  team2_name: string; team2_crest: string | null;
+  team3_name: string; team3_crest: string | null;
+  team4_name: string; team4_crest: string | null;
+  team5_name: string; team5_crest: string | null;
+  team6_name: string; team6_crest: string | null;
+  team7_name: string; team7_crest: string | null;
+  total_wins: number;
+  eliminated_teams: number;
+}
+
+export const TablePortfoliosHomeWC = ({ data }: { data: PortfolioHomeRowWC[] }) => {
+  const columns = useMemo<ColumnDef<PortfolioHomeRowWC>[]>(
+    () => [
+      { header: "Portfolio Name", accessorKey: "portfolio_name" },
+      { header: "Portfolio ID",   accessorKey: "portfolio_id"   },
+      ...[1, 2, 3, 4, 5, 6, 7].map(
+        (n): ColumnDef<PortfolioHomeRowWC> => ({
+          header: `Team ${n}`,
+          accessorKey: `team${n}_name`,
+          cell: ({ row }) => (
+            <TeamDisplay
+              name={row.original[`team${n}_name` as keyof PortfolioHomeRowWC] as string}
+              crest={row.original[`team${n}_crest` as keyof PortfolioHomeRowWC] as string | null}
+              eliminated={false}
+            />
+          ),
+        }),
+      ),
+      { header: "Total Wins", accessorKey: "total_wins"       },
+      { header: "Elim.",      accessorKey: "eliminated_teams" },
+    ],
+    [],
+  );
+
+  return (
+    <TableBase
+      data={data}
+      columns={columns}
+      containerHeight="auto"
+    />
+  );
+};

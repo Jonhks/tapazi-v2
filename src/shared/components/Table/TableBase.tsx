@@ -63,6 +63,8 @@ export interface TableBaseProps<T> {
    * Recibe el id de columna (accessorKey) y su índice.
    */
   headerTooltip?: (colId: string, colIndex: number) => string | null;
+  /** Altura del contenedor externo. Por defecto "47vh". Pasar "auto" para tablas cortas. */
+  containerHeight?: string;
 }
 
 // ─── TableBase genérica ───────────────────────────────────────────────────────
@@ -84,6 +86,7 @@ export function TableBase<T>({
   col0Width = 120,
   highlightColBg,
   headerTooltip,
+  containerHeight = "47vh",
 }: TableBaseProps<T>) {
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [filtered, setFiltered] = useState("");
@@ -125,7 +128,7 @@ export function TableBase<T>({
     accentFirstColumn && index === 0 ? theme.accent : theme.text;
 
   return (
-    <div style={{ width: "100%", height: "47vh", overflow: "scroll" }}>
+    <div style={{ width: "100%", height: containerHeight, overflow: "scroll" }}>
       {/* Título sticky opcional */}
       {title && (
         <div
