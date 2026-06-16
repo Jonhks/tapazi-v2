@@ -339,7 +339,6 @@ const HomeWorldCup = () => {
                 </div>
               </div>
             </Grid>
-
             <Grid
               size={{ xs: 11.4, md: 3 }}
               m={1}
@@ -358,7 +357,6 @@ const HomeWorldCup = () => {
                 ))}
               </div>
             </Grid>
-
             <Grid
               size={{ xs: 11.4, md: 3 }}
               m={1}
@@ -388,6 +386,7 @@ const HomeWorldCup = () => {
           <Grid
             size={11}
             style={{ marginBottom: 16 }}
+            className="subboxes-wrapper"
           >
             <TablePortfoliosHomeWC data={portfoliosTableData} />
           </Grid>

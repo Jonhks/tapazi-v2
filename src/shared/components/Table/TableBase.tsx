@@ -217,9 +217,12 @@ export function TableBase<T>({
                     highlightColBg?.(header.id, index, true) ?? strongBg;
                   const tip = headerTooltip?.(header.id, index);
 
+                  const isHidden = (header.column.columnDef.meta as Record<string, unknown>)?.hidden === true;
+
                   const thProps = {
                     onClick: header.column.getToggleSortingHandler(),
                     style: {
+                      display: isHidden ? ("none" as const) : undefined,
                       position: isSticky(index)
                         ? ("sticky" as const)
                         : ("static" as const),
@@ -322,6 +325,7 @@ export function TableBase<T>({
               >
                 {row.getVisibleCells().map((cell, index) => {
                   const sticky = isSticky(index);
+                  const isCellHidden = (cell.column.columnDef.meta as Record<string, unknown>)?.hidden === true;
                   const isRowHovered = hoveredRowId === row.id;
                   const isCellHovered = !sticky && hoveredCellId === cell.id;
 
@@ -347,6 +351,7 @@ export function TableBase<T>({
                         !sticky ? () => setHoveredCellId(null) : undefined
                       }
                       style={{
+                        display: isCellHidden ? ("none" as const) : undefined,
                         position: sticky
                           ? ("sticky" as const)
                           : ("static" as const),

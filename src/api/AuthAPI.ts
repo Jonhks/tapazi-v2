@@ -4,6 +4,7 @@ import { User, UserForgot, UserLogin } from "@/types";
 
 export interface ShowTermsOfUseResponse {
   enable_terms_of_use: boolean;
+  accepted_terms_of_use: boolean;
   tournament_id?: number;
 }
 
@@ -93,10 +94,11 @@ export const getShowTermsOfUseWC = async (
     const payload = data.data ?? data;
     return {
       enable_terms_of_use: payload.enable_terms_of_use ?? false,
+      accepted_terms_of_use: payload.accepted_terms_of_use ?? false,
       tournament_id: payload.tournament_id,
     };
   } catch {
-    return { enable_terms_of_use: false };
+    return { enable_terms_of_use: false, accepted_terms_of_use: false };
   }
 };
 

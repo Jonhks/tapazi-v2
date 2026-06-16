@@ -71,17 +71,17 @@ const Login = () => {
       toast.success("User successfully logged in");
       setIsCheckingTerms(true);
       try {
-        const { enable_terms_of_use, tournament_id } =
+        const { enable_terms_of_use, accepted_terms_of_use, tournament_id } =
           await getShowTermsOfUseWC(String(data.id));
 
-        if (enable_terms_of_use) {
+        if (accepted_terms_of_use || !enable_terms_of_use) {
+          doNavigate(data);
+        } else {
           const tid = tournament_id ?? (await getActiveWCTournamentId());
           const terms = tid ? await getTermsOfUseWC(String(tid)) : [];
           setTermsContent(terms);
           setPendingUser(data);
           setTermsOpen(true);
-        } else {
-          doNavigate(data);
         }
       } catch {
         doNavigate(data);
