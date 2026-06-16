@@ -1,8 +1,9 @@
 import axios from "axios";
 
-const url = window.location.hostname === "theportfoliopool.com"
-  ? "https://portfolio-pool-prod.damnserver.com:443"
-  : "https://portfolio-pool-test.damnserver.com:443";
+const url =
+  window.location.hostname === "theportfoliopool.com"
+    ? "https://portfolio-pool-prod.damnserver.com:443"
+    : "https://portfolio-pool-test.damnserver.com:443";
 
 const apiEnv = axios.create({
   baseURL: url,
@@ -13,3 +14,4 @@ apiEnv.defaults.headers.common["Content-Type"] =
   "application/json;charset=utf-8";
 
 export { apiEnv };
+console.log("API URL:", url);
