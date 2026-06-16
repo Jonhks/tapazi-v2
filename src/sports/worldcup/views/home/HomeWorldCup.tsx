@@ -17,7 +17,7 @@ import {
   getPopona,
   getPortfoliosCount,
   getPortfoliosHome,
-  getScoreRounds,
+  // getScoreRounds,
   getScores,
   getTournamentWorldCup,
 } from "@/api/worldcup/HomeAPIWorldCup";
@@ -112,11 +112,11 @@ const HomeWorldCup = () => {
     staleTime: 1000 * 60 * 5,
   });
 
-  const { data: scoreRoundsData } = useQuery({
-    queryKey: ["scoreRoundsWC", tournamentId],
-    queryFn: () => getScoreRounds(String(tournamentId)),
-    enabled: !!tournamentId,
-  });
+  // const { data: scoreRoundsData } = useQuery({
+  //   queryKey: ["scoreRoundsWC", tournamentId],
+  //   queryFn: () => getScoreRounds(String(tournamentId)),
+  //   enabled: !!tournamentId,
+  // });
 
   const { data: portfoliosHomeData } = useQuery({
     queryKey: ["portfoliosHomeWC", userId, tournamentId],
@@ -124,7 +124,7 @@ const HomeWorldCup = () => {
     enabled: !!tournamentId && !!userId,
   });
 
-  const hasRounds = (scoreRoundsData?.rounds?.length ?? 0) > 0;
+  // const hasRounds = (scoreRoundsData?.rounds?.length ?? 0) > 0;
 
   const portfoliosTableData = useMemo<PortfolioHomeRowWC[]>(() => {
     const list = portfoliosHomeData?.portfolios;
@@ -339,7 +339,6 @@ const HomeWorldCup = () => {
                 </div>
               </div>
             </Grid>
-
             <Grid
               size={{ xs: 11.4, md: 3 }}
               m={1}
@@ -358,7 +357,6 @@ const HomeWorldCup = () => {
                 ))}
               </div>
             </Grid>
-
             <Grid
               size={{ xs: 11.4, md: 3 }}
               m={1}
@@ -384,14 +382,15 @@ const HomeWorldCup = () => {
               </div>
             </Grid>
           </Grid>
-          {!hasRounds && portfoliosTableData.length > 0 && (
-            <Grid
-              size={11}
-              style={{ marginBottom: 16 }}
-            >
-              <TablePortfoliosHomeWC data={portfoliosTableData} />
-            </Grid>
-          )}
+          {/* {!hasRounds && portfoliosTableData.length > 0 && ( */}
+          <Grid
+            size={11}
+            style={{ marginBottom: 16 }}
+            className="subboxes-wrapper"
+          >
+            <TablePortfoliosHomeWC data={portfoliosTableData} />
+          </Grid>
+          {/* )} */}
           <Grid
             container
             spacing={2}

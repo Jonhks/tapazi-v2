@@ -79,6 +79,9 @@ export default function WalletModal({
 
   const isLoading = loadingTx || loadingTotals || loadingRemaining;
 
+  const isRowDisabled = (tx: WalletTransaction): boolean =>
+    tx.canceled || (tx.wallet_in > 0 && !!tx.portfolio_name?.trim());
+
   const cancelStyle = (canceled: boolean): React.CSSProperties =>
     canceled
       ? { color: "#b4b0b0", textDecoration: "line-through", opacity: 0.6 }
@@ -91,14 +94,14 @@ export default function WalletModal({
         accessorKey: "wallet_in",
         cell: ({ getValue, row }) => {
           const val = getValue<number>();
-          const canceled = row.original.canceled;
+          const disabled = isRowDisabled(row.original);
           if (!val) return null;
           return (
             <span
               style={{
-                color: canceled ? "#888" : theme.positive,
+                color: disabled ? "#888" : theme.positive,
                 fontWeight: 700,
-                ...cancelStyle(canceled),
+                ...cancelStyle(disabled),
               }}
             >
               $ {val.toLocaleString()}
@@ -111,14 +114,14 @@ export default function WalletModal({
         accessorKey: "wallet_out",
         cell: ({ getValue, row }) => {
           const val = getValue<number>();
-          const canceled = row.original.canceled;
+          const disabled = isRowDisabled(row.original);
           if (!val) return null;
           return (
             <span
               style={{
-                color: canceled ? "#888" : theme.negative,
+                color: disabled ? "#888" : theme.negative,
                 fontWeight: 700,
-                ...cancelStyle(canceled),
+                ...cancelStyle(disabled),
               }}
             >
               $ {val.toLocaleString()}
@@ -130,7 +133,7 @@ export default function WalletModal({
         header: "DATE",
         accessorKey: "date",
         cell: ({ getValue, row }) => (
-          <span style={cancelStyle(row.original.canceled)}>
+          <span style={cancelStyle(isRowDisabled(row.original))}>
             {getValue<string>()}
           </span>
         ),
@@ -139,7 +142,7 @@ export default function WalletModal({
         header: "TIME",
         accessorKey: "time",
         cell: ({ getValue, row }) => (
-          <span style={cancelStyle(row.original.canceled)}>
+          <span style={cancelStyle(isRowDisabled(row.original))}>
             {getValue<string>()}
           </span>
         ),
@@ -148,7 +151,7 @@ export default function WalletModal({
         header: "PORTFOLIO",
         accessorKey: "portfolio_name",
         cell: ({ getValue, row }) => (
-          <span style={cancelStyle(row.original.canceled)}>
+          <span style={cancelStyle(isRowDisabled(row.original))}>
             {getValue<string>()}
           </span>
         ),
@@ -158,14 +161,14 @@ export default function WalletModal({
         accessorKey: "tournament_name",
         cell: ({ row }) => {
           const name = row.original.tournament_name;
-          const canceled = row.original.canceled;
-          const color = canceled
+          const disabled = isRowDisabled(row.original);
+          const color = disabled
             ? "#888"
             : row.original.sport_hex_color?.trim()
               ? row.original.sport_hex_color
               : fallbackTournamentColor(name);
           return (
-            <span style={{ color, fontWeight: 700, ...cancelStyle(canceled) }}>
+            <span style={{ color, fontWeight: 700, ...cancelStyle(disabled) }}>
               {name ?? ""}
             </span>
           );

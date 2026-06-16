@@ -57,18 +57,15 @@ const CELL_BG = "#003440";   // worldcup cellOddColOddRow — suave
 const TeamDisplay = ({
   name,
   crest,
-  eliminated,
 }: {
   name: string;
   crest: string;
-  eliminated: boolean;
 }) => (
   <Box
     display="flex"
     alignItems="center"
     justifyContent="start"
     gap={1}
-    sx={{ opacity: eliminated ? 0.4 : 1 }}
   >
     <Box
       sx={{
@@ -79,7 +76,6 @@ const TeamDisplay = ({
         backgroundSize: "cover",
         backgroundPosition: "center",
         borderRadius: "50%",
-        filter: eliminated ? "grayscale(1)" : "none",
       }}
     />
     <Typography
@@ -87,8 +83,6 @@ const TeamDisplay = ({
       sx={{
         fontSize: "0.75rem",
         whiteSpace: "nowrap",
-        color: eliminated ? "#888" : "inherit",
-        textDecoration: eliminated ? "line-through" : "none",
       }}
     >
       {name}
@@ -218,7 +212,6 @@ const StatsWorldCup = () => {
             <TeamDisplay
               name={teamName}
               crest={fullTeam.crest || ""}
-              eliminated={fullTeam.eliminated}
             />
           );
         },
