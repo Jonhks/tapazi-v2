@@ -138,20 +138,35 @@ const HomeWorldCup = () => {
     return list.map((p) => {
       let teamNames: string[] = [];
       let teamIds: number[] = [];
-      try { teamNames = JSON.parse(p.teams as string); } catch { /* */ }
-      try { teamIds = JSON.parse(p.teams_ids as string); } catch { /* */ }
+      try {
+        teamNames = JSON.parse(p.teams as string);
+      } catch {
+        /* */
+      }
+      try {
+        teamIds = JSON.parse(p.teams_ids as string);
+      } catch {
+        /* */
+      }
       return {
-        portfolio_name:   String(p.portfolio_name   ?? ""),
-        portfolio_id:     Number(p.portfolio_id     ?? 0),
-        total_wins:       Number(p.total_wins        ?? 0),
-        eliminated_teams: Number(p.eliminated_teams  ?? 0),
-        team1_name: teamNames[0] ?? "", team1_crest: crestMap.get(teamIds[0]) ?? null,
-        team2_name: teamNames[1] ?? "", team2_crest: crestMap.get(teamIds[1]) ?? null,
-        team3_name: teamNames[2] ?? "", team3_crest: crestMap.get(teamIds[2]) ?? null,
-        team4_name: teamNames[3] ?? "", team4_crest: crestMap.get(teamIds[3]) ?? null,
-        team5_name: teamNames[4] ?? "", team5_crest: crestMap.get(teamIds[4]) ?? null,
-        team6_name: teamNames[5] ?? "", team6_crest: crestMap.get(teamIds[5]) ?? null,
-        team7_name: teamNames[6] ?? "", team7_crest: crestMap.get(teamIds[6]) ?? null,
+        portfolio_name: String(p.portfolio_name ?? ""),
+        portfolio_id: Number(p.portfolio_id ?? 0),
+        total_wins: Number(p.total_wins ?? 0),
+        eliminated_teams: Number(p.eliminated_teams ?? 0),
+        team1_name: teamNames[0] ?? "",
+        team1_crest: crestMap.get(teamIds[0]) ?? null,
+        team2_name: teamNames[1] ?? "",
+        team2_crest: crestMap.get(teamIds[1]) ?? null,
+        team3_name: teamNames[2] ?? "",
+        team3_crest: crestMap.get(teamIds[2]) ?? null,
+        team4_name: teamNames[3] ?? "",
+        team4_crest: crestMap.get(teamIds[3]) ?? null,
+        team5_name: teamNames[4] ?? "",
+        team5_crest: crestMap.get(teamIds[4]) ?? null,
+        team6_name: teamNames[5] ?? "",
+        team6_crest: crestMap.get(teamIds[5]) ?? null,
+        team7_name: teamNames[6] ?? "",
+        team7_crest: crestMap.get(teamIds[6]) ?? null,
       };
     });
   }, [portfoliosHomeData, allTeams]);
@@ -370,7 +385,10 @@ const HomeWorldCup = () => {
             </Grid>
           </Grid>
           {!hasRounds && portfoliosTableData.length > 0 && (
-            <Grid size={11} style={{ marginBottom: 16 }}>
+            <Grid
+              size={11}
+              style={{ marginBottom: 16 }}
+            >
               <TablePortfoliosHomeWC data={portfoliosTableData} />
             </Grid>
           )}
