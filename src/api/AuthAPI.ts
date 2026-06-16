@@ -44,20 +44,13 @@ export const getLogin = async (user: UserLogin) => {
   };
 
   try {
-    const url = "/participants/login";
-    const { data } = await apiEnv.post(url, formData);
-
-    if (!data.participant) {
-      return "error";
-    }
-    if (data.participant) {
-      // console.log(data.participant);
-      return data.participant;
-    }
+    const { data } = await apiEnv.post("/participants/login", formData);
+    if (!data.participant) throw new Error("Invalid credentials");
+    return data.participant;
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
-    return;
+    throw error;
   }
 };
 
@@ -108,7 +101,9 @@ export const getShowTermsOfUseWC = async (
 };
 
 /** GET /sports/4/tournaments — obtiene el torneo activo de WC cuando show-terms no devuelve tournament_id */
-export const getActiveWCTournamentId = async (): Promise<number | undefined> => {
+export const getActiveWCTournamentId = async (): Promise<
+  number | undefined
+> => {
   try {
     const { data } = await apiEnv(`/sports/4/tournaments`);
     return data.tournaments?.[0]?.id;
@@ -144,9 +139,7 @@ export const postAcceptTermsOfUseWC = async (
     );
   } catch (error) {
     if (isAxiosError(error) && error.response)
-      throw new Error(
-        error.response.data.error ?? error.response.data.message,
-      );
+      throw new Error(error.response.data.error ?? error.response.data.message);
     throw error;
   }
 };
