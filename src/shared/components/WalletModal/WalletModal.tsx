@@ -320,13 +320,14 @@ export default function WalletModal({
               columns={columns}
               maxHeight="380px"
               theme={theme}
-              invertColorColumns={true}
+              // invertColorColumns={true}
             />
           </Box>
         )}
         <Box sx={{ textAlign: "right", mt: 1 }}>
           <Typography sx={{ fontSize: 10, color: "#555" }}>
-            v{import.meta.env.VITE_APP_VERSION} ({import.meta.env.VITE_APP_COMMIT})
+            v{import.meta.env.VITE_APP_VERSION} (
+            {import.meta.env.VITE_APP_COMMIT})
           </Typography>
         </Box>
       </DialogContent>

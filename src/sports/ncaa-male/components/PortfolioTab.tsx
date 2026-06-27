@@ -53,29 +53,32 @@ const PortfolioTab: React.FC<PortfolioTabProps> = ({
   return (
     <Box sx={{ p: 3 }}>
       {/* Selección de equipos */}
-      {portfolio?.teams?.map((team, teamIndex: number) => (
-        <div
-          key={teamIndex}
-          className={classes.containerDropdown}
-        >
-          <BallIcon />
-          <Dropdown
-            disabled={isReadOnly}
-            indexPortfolio={portfolioIndex}
-            indexTeam={teamIndex}
-            name={`team-${teamIndex}`}
-            label={`Selection ${teamIndex + 1}`}
-            value={typeof team === "object" && team ? team.name : ""}
-            options={isReadOnly ? portfolio.teams : teams}
-            style={{
-              enableVerticalScroll: true,
-            }}
-            handleChange={(selectedTeam) =>
-              handleTeamChange(selectedTeam, teamIndex)
-            }
-          />
-        </div>
-      ))}
+      {portfolio?.teams?.map((team, teamIndex: number) => {
+        const disabledOptions = portfolio.teams
+          .filter((t, i) => i !== teamIndex && typeof t === "object" && t?.name)
+          .map((t) => t.name);
+        return (
+          <div
+            key={teamIndex}
+            className={classes.containerDropdown}
+          >
+            <BallIcon />
+            <Dropdown
+              disabled={isReadOnly}
+              indexPortfolio={portfolioIndex}
+              indexTeam={teamIndex}
+              name={`team-${teamIndex}`}
+              label={`Selection ${teamIndex + 1}`}
+              value={typeof team === "object" && team ? team.name : ""}
+              options={isReadOnly ? portfolio.teams : teams}
+              disabledOptions={isReadOnly ? [] : disabledOptions}
+              handleChange={(selectedTeam) =>
+                handleTeamChange(selectedTeam, teamIndex)
+              }
+            />
+          </div>
+        );
+      })}
       {/* Championship Points Input */}
       <Grid
         container
