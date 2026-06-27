@@ -179,24 +179,30 @@ const MyPortfolio = () => {
     const currentPortfolio = portfolios[indexPortfolio];
     if (!currentPortfolio) return null;
 
-    return currentPortfolio.teams.map((team, indexTeam) => (
-      <div
-        key={indexTeam}
-        className={classes.containerDropdown}
-      >
-        <BallIcon />
-        <Dropdown
-          disabled={!!currentPortfolio.id}
-          indexPortfolio={indexPortfolio}
-          indexTeam={indexTeam}
-          name={`${team}`}
-          label={`Selection ${indexTeam + 1}`}
-          value={typeof team === "object" ? team.name : ""}
-          options={!!currentPortfolio.id ? currentPortfolio.teams : teamsFemale}
-          handleChange={handleChangeSelect}
-        />
-      </div>
-    ));
+    return currentPortfolio.teams.map((team, indexTeam) => {
+      const disabledOptions = currentPortfolio.teams
+        .filter((t, i) => i !== indexTeam && typeof t === "object" && t?.name)
+        .map((t) => t.name);
+      return (
+        <div
+          key={indexTeam}
+          className={classes.containerDropdown}
+        >
+          <BallIcon />
+          <Dropdown
+            disabled={!!currentPortfolio.id}
+            indexPortfolio={indexPortfolio}
+            indexTeam={indexTeam}
+            name={`${team}`}
+            label={`Selection ${indexTeam + 1}`}
+            value={typeof team === "object" ? team.name : ""}
+            options={!!currentPortfolio.id ? currentPortfolio.teams : teamsFemale}
+            disabledOptions={currentPortfolio.id ? [] : disabledOptions}
+            handleChange={handleChangeSelect}
+          />
+        </div>
+      );
+    });
   };
   // console.log(isValidTournament);
 

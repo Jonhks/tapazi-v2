@@ -2,10 +2,9 @@ import { useState, useMemo } from "react";
 import Grid from "@mui/material/Grid2";
 import { Zoom } from "@mui/material";
 import classes from "./Home.module.css";
-import TableHomeWC, {
-  TablePortfoliosHomeWC,
-  type PortfolioHomeRowWC,
-} from "../../components/Table/Table";
+import TableHomeWC from // TablePortfoliosHomeWC,
+// type PortfolioHomeRowWC,
+"../../components/Table/Table";
 import BallLoader from "../../components/BallLoader/BallLoader";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
@@ -16,7 +15,7 @@ import {
   getParticipants,
   getPopona,
   getPortfoliosCount,
-  getPortfoliosHome,
+  // getPortfoliosHome,
   // getScoreRounds,
   getScores,
   getTournamentWorldCup,
@@ -118,58 +117,58 @@ const HomeWorldCup = () => {
   //   enabled: !!tournamentId,
   // });
 
-  const { data: portfoliosHomeData } = useQuery({
-    queryKey: ["portfoliosHomeWC", userId, tournamentId],
-    queryFn: () => getPortfoliosHome(String(tournamentId), userId),
-    enabled: !!tournamentId && !!userId,
-  });
+  // const { data: portfoliosHomeData } = useQuery({
+  //   queryKey: ["portfoliosHomeWC", userId, tournamentId],
+  //   queryFn: () => getPortfoliosHome(String(tournamentId), userId),
+  //   enabled: !!tournamentId && !!userId,
+  // });
 
   // const hasRounds = (scoreRoundsData?.rounds?.length ?? 0) > 0;
 
-  const portfoliosTableData = useMemo<PortfolioHomeRowWC[]>(() => {
-    const list = portfoliosHomeData?.portfolios;
-    if (!list?.length) return [];
-    const crestMap = new Map<number, string>(
-      (allTeams ?? []).map((t: Record<string, unknown>) => [
-        t.id as number,
-        t.crest_url as string,
-      ]),
-    );
-    return list.map((p) => {
-      let teamNames: string[] = [];
-      let teamIds: number[] = [];
-      try {
-        teamNames = JSON.parse(p.teams as string);
-      } catch {
-        /* */
-      }
-      try {
-        teamIds = JSON.parse(p.teams_ids as string);
-      } catch {
-        /* */
-      }
-      return {
-        portfolio_name: String(p.portfolio_name ?? ""),
-        portfolio_id: Number(p.portfolio_id ?? 0),
-        total_wins: Number(p.total_wins ?? 0),
-        eliminated_teams: Number(p.eliminated_teams ?? 0),
-        team1_name: teamNames[0] ?? "",
-        team1_crest: crestMap.get(teamIds[0]) ?? null,
-        team2_name: teamNames[1] ?? "",
-        team2_crest: crestMap.get(teamIds[1]) ?? null,
-        team3_name: teamNames[2] ?? "",
-        team3_crest: crestMap.get(teamIds[2]) ?? null,
-        team4_name: teamNames[3] ?? "",
-        team4_crest: crestMap.get(teamIds[3]) ?? null,
-        team5_name: teamNames[4] ?? "",
-        team5_crest: crestMap.get(teamIds[4]) ?? null,
-        team6_name: teamNames[5] ?? "",
-        team6_crest: crestMap.get(teamIds[5]) ?? null,
-        team7_name: teamNames[6] ?? "",
-        team7_crest: crestMap.get(teamIds[6]) ?? null,
-      };
-    });
-  }, [portfoliosHomeData, allTeams]);
+  // const portfoliosTableData = useMemo<PortfolioHomeRowWC[]>(() => {
+  //   const list = portfoliosHomeData?.portfolios;
+  //   if (!list?.length) return [];
+  //   const crestMap = new Map<number, string>(
+  //     (allTeams ?? []).map((t: Record<string, unknown>) => [
+  //       t.id as number,
+  //       t.crest_url as string,
+  //     ]),
+  //   );
+  //   return list.map((p) => {
+  //     let teamNames: string[] = [];
+  //     let teamIds: number[] = [];
+  //     try {
+  //       teamNames = JSON.parse(p.teams as string);
+  //     } catch {
+  //       /* */
+  //     }
+  //     try {
+  //       teamIds = JSON.parse(p.teams_ids as string);
+  //     } catch {
+  //       /* */
+  //     }
+  //     return {
+  //       portfolio_name: String(p.portfolio_name ?? ""),
+  //       portfolio_id: Number(p.portfolio_id ?? 0),
+  //       total_wins: Number(p.total_wins ?? 0),
+  //       eliminated_teams: Number(p.eliminated_teams ?? 0),
+  //       team1_name: teamNames[0] ?? "",
+  //       team1_crest: crestMap.get(teamIds[0]) ?? null,
+  //       team2_name: teamNames[1] ?? "",
+  //       team2_crest: crestMap.get(teamIds[1]) ?? null,
+  //       team3_name: teamNames[2] ?? "",
+  //       team3_crest: crestMap.get(teamIds[2]) ?? null,
+  //       team4_name: teamNames[3] ?? "",
+  //       team4_crest: crestMap.get(teamIds[3]) ?? null,
+  //       team5_name: teamNames[4] ?? "",
+  //       team5_crest: crestMap.get(teamIds[4]) ?? null,
+  //       team6_name: teamNames[5] ?? "",
+  //       team6_crest: crestMap.get(teamIds[5]) ?? null,
+  //       team7_name: teamNames[6] ?? "",
+  //       team7_crest: crestMap.get(teamIds[6]) ?? null,
+  //     };
+  //   });
+  // }, [portfoliosHomeData, allTeams]);
 
   const tableVisible = useMemo(() => {
     if (!datTou || !houTou) return false;
@@ -383,13 +382,13 @@ const HomeWorldCup = () => {
             </Grid>
           </Grid>
           {/* {!hasRounds && portfoliosTableData.length > 0 && ( */}
-          <Grid
+          {/* <Grid
             size={11}
             style={{ marginBottom: 16 }}
             className="subboxes-wrapper"
           >
             <TablePortfoliosHomeWC data={portfoliosTableData} />
-          </Grid>
+          </Grid> */}
           {/* )} */}
           <Grid
             container

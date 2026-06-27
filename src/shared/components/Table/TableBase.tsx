@@ -40,7 +40,7 @@ export interface TableBaseProps<T> {
    */
   onCellClick?: (cell: Cell<T, unknown>, columnIndex: number) => void;
   /** Invertir el color oscuro/claro de las columnas (pares se vuelven impares) */
-  invertColorColumns?: boolean;
+  // invertColorColumns?: boolean;
   /**
    * Hace que la segunda columna (índice 1) también sea sticky.
    * Requiere saber el ancho de la primera columna — ver col0Width.
@@ -57,7 +57,11 @@ export interface TableBaseProps<T> {
    * Útil para resaltar la semana activa en EPL.
    * Recibe el id de columna (accessorKey) y su índice.
    */
-  highlightColBg?: (colId: string, colIndex: number, isHeader?: boolean) => string | null;
+  highlightColBg?: (
+    colId: string,
+    colIndex: number,
+    isHeader?: boolean,
+  ) => string | null;
   /**
    * Devuelve el texto del tooltip del header, o null si no hay tooltip.
    * Recibe el id de columna (accessorKey) y su índice.
@@ -81,7 +85,7 @@ export function TableBase<T>({
   hideSearch = false,
   accentFirstColumn = false,
   onCellClick,
-  invertColorColumns: _invertColorColumns = false,
+  // invertColorColumns = false,
   stickySecondColumn = false,
   col0Width = 120,
   highlightColBg,
@@ -217,7 +221,9 @@ export function TableBase<T>({
                     highlightColBg?.(header.id, index, true) ?? strongBg;
                   const tip = headerTooltip?.(header.id, index);
 
-                  const isHidden = (header.column.columnDef.meta as Record<string, unknown>)?.hidden === true;
+                  const isHidden =
+                    (header.column.columnDef.meta as Record<string, unknown>)
+                      ?.hidden === true;
 
                   const thProps = {
                     onClick: header.column.getToggleSortingHandler(),
@@ -325,7 +331,9 @@ export function TableBase<T>({
               >
                 {row.getVisibleCells().map((cell, index) => {
                   const sticky = isSticky(index);
-                  const isCellHidden = (cell.column.columnDef.meta as Record<string, unknown>)?.hidden === true;
+                  const isCellHidden =
+                    (cell.column.columnDef.meta as Record<string, unknown>)
+                      ?.hidden === true;
                   const isRowHovered = hoveredRowId === row.id;
                   const isCellHovered = !sticky && hoveredCellId === cell.id;
 
@@ -343,9 +351,7 @@ export function TableBase<T>({
                         onCellClick ? () => onCellClick(cell, index) : undefined
                       }
                       onMouseEnter={
-                        !sticky
-                          ? () => setHoveredCellId(cell.id)
-                          : undefined
+                        !sticky ? () => setHoveredCellId(cell.id) : undefined
                       }
                       onMouseLeave={
                         !sticky ? () => setHoveredCellId(null) : undefined
