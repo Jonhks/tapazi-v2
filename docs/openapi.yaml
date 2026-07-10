@@ -12,7 +12,7 @@ info:
     | EPL         | `epl`         | 2        |
     | World Cup   | `world-cup`   | 4        |
 
-  version: 3.0.1
+  version: 3.1.0
   contact:
     email: jonhgx@gmail.com
 
@@ -40,17 +40,19 @@ tags:
   - name: NCAA Female - History
     description: Historical reports for NCAA Women's Basketball.
   - name: EPL - Home
-    description: Home screen — `sport=epl`, tournament_id 3.
+    description: Home screen — `sport=epl`.
   - name: EPL - Portfolios
     description: Portfolio CRUD for the English Premier League.
   - name: EPL - Stats
     description: Score and stats for the English Premier League.
   - name: World Cup - Home
-    description: Home screen — `sport=world-cup`, sport_id 4.
+    description: Home screen — `sport=wc`, sport_id 4.
   - name: World Cup - Portfolios
     description: Portfolio CRUD for FIFA World Cup.
+  - name: World Cup - Stats
+    description: Score and stats for FIFA World Cup, by group round.
   - name: World Cup - History
-    description: Historical reports for FIFA World Cup.
+    description: Historical reports for FIFA World Cup (not wired up in the frontend yet).
 
 x-tagGroups:
   - name: Auth
@@ -74,7 +76,13 @@ x-tagGroups:
   - name: EPL
     tags: [EPL - Home, EPL - Portfolios, EPL - Stats]
   - name: World Cup
-    tags: [World Cup - Home, World Cup - Portfolios, World Cup - History]
+    tags:
+      [
+        World Cup - Home,
+        World Cup - Portfolios,
+        World Cup - Stats,
+        World Cup - History,
+      ]
 
 paths:
   /countries:
@@ -291,7 +299,9 @@ paths:
       tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
       summary: Get tournament parameter by key
       description: |
-        Common keys: `POPONA`, `HOINFO`, `DATTOU`, `HOUTOU`, `TEAMXP` (EPL), `RECODE`
+        Common keys: `POPONA`, `HOINFO`, `DATTOU`, `HOUTOU`, `RECODE`,
+        `TEAMXP` (EPL — team slots per portfolio), `WEETOU` (EPL — current week),
+        `PORTXP` (World Cup — portfolio XP), `PRCXPO` (all sports — portfolio price, used for wallet balance check)
       parameters:
         - name: tournamentId
           in: path
@@ -303,7 +313,8 @@ paths:
           required: true
           schema:
             type: string
-            enum: [POPONA, HOINFO, DATTOU, HOUTOU, TEAMXP, RECODE]
+            enum:
+              [POPONA, HOINFO, DATTOU, HOUTOU, RECODE, TEAMXP, WEETOU, PORTXP, PRCXPO]
           example: POPONA
       responses:
         "200":
@@ -371,8 +382,8 @@ paths:
       summary: Get home screen score
       description: |
         - **NCAA Male/Female:** `?participant_id={id}&sport=ncaa`
-        - **EPL:** `?portfolio_id={id}&epl`
-        - **World Cup:** `?participant_id={id}&sport=ncaa` *(TBD)*
+        - **EPL:** `?participant_id={id}&sport=epl`
+        - **World Cup:** `?participant_id={id}&sport=wc`
       parameters:
         - name: tournamentId
           in: path
@@ -383,21 +394,12 @@ paths:
           in: query
           schema: { type: integer }
           example: 121
-        - name: portfolio_id
-          in: query
-          description: EPL only
-          schema: { type: integer }
-          example: 566
         - name: sport
           in: query
           schema:
             type: string
-            enum: [ncaa, epl, world-cup]
+            enum: [ncaa, epl, wc]
           example: ncaa
-        - name: epl
-          in: query
-          description: Pass without value for EPL
-          schema: { type: boolean }
       responses:
         "200":
           description: Home score data
@@ -414,8 +416,8 @@ paths:
       summary: Get participant portfolios
       description: |
         - **NCAA:** `?tournament_id={id}&sport=ncaa`
-        - **EPL:** `?tournament_id=3&epl`
-        - **World Cup:** `?tournament_id={id}&sport=world-cup`
+        - **EPL:** `?tournament_id={id}&sport=epl` (add `&portfolio_id={id}` to filter by portfolio)
+        - **World Cup:** `?tournament_id={id}&sport=wc`
       parameters:
         - name: participantId
           in: path
@@ -430,12 +432,8 @@ paths:
           in: query
           schema:
             type: string
-            enum: [ncaa, world-cup]
+            enum: [ncaa, epl, wc]
           example: ncaa
-        - name: epl
-          in: query
-          description: EPL only
-          schema: { type: boolean }
         - name: portfolio_id
           in: query
           description: EPL only — filter by portfolio
@@ -478,8 +476,14 @@ paths:
 
   /portfolios/{portfolioId}:
     put:
-      tags: [EPL - Portfolios]
-      summary: Update portfolio — EPL only
+      tags: [NCAA Male - Portfolios, EPL - Portfolios, World Cup - Portfolios]
+      summary: Update portfolio
+      description: |
+        Not available for NCAA Female (female only creates/removes portfolios, never edits).
+
+        Body shape differs by sport:
+        - **NCAA Male / World Cup:** full object, same shape as `POST /portfolios` (`PortfolioCreateRequest`).
+        - **EPL:** `{ teams: [...] }` only (`PortfolioUpdateRequest`).
       parameters:
         - name: portfolioId
           in: path
@@ -491,7 +495,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PortfolioUpdateRequest"
+              oneOf:
+                - $ref: "#/components/schemas/PortfolioUpdateRequest"
+                - $ref: "#/components/schemas/PortfolioCreateRequest"
       responses:
         "200":
           description: Portfolio updated
@@ -520,16 +526,12 @@ paths:
 
   /tournaments/{tournamentId}/teams:
     get:
-      tags:
-        [
-          NCAA Male - Portfolios,
-          NCAA Female - Portfolios,
-          World Cup - Portfolios,
-        ]
+      tags: [NCAA Male - Portfolios, NCAA Female - Portfolios]
       summary: Get teams available for a tournament
       description: |
         - **NCAA:** `?sport=ncaa&show_all=false`
-        - **World Cup:** `?sport=world-cup&show_all=false`
+
+        Not used by EPL or World Cup — both use `GET /sports/{sportId}/teams` instead.
       parameters:
         - name: tournamentId
           in: path
@@ -540,7 +542,7 @@ paths:
           in: query
           schema:
             type: string
-            enum: [ncaa, world-cup]
+            enum: [ncaa]
           example: ncaa
         - name: show_all
           in: query
@@ -688,8 +690,18 @@ paths:
 
   /portfolios/{portfolioId}/remove:
     put:
-      tags: [EPL - Portfolios]
-      summary: Remove EPL portfolio from tournament (legacy)
+      tags:
+        [
+          NCAA Male - Portfolios,
+          NCAA Female - Portfolios,
+          EPL - Portfolios,
+          World Cup - Portfolios,
+        ]
+      summary: Soft-remove portfolio from tournament
+      description: |
+        Standard soft-delete used by all 4 sports (unregisters the portfolio from the
+        tournament without deleting the record). `DELETE /portfolios/{id}` is the
+        harder, permanent alternative — see below.
       parameters:
         - name: portfolioId
           in: path
@@ -732,11 +744,19 @@ paths:
 
   /sports/{sportId}/teams:
     get:
-      tags: [NCAA Male - Stats, NCAA Female - Stats, EPL - Portfolios]
+      tags:
+        [
+          NCAA Male - Stats,
+          NCAA Female - Stats,
+          EPL - Portfolios,
+          EPL - Stats,
+          World Cup - Portfolios,
+        ]
       summary: Get teams by sport
       description: |
-        - **NCAA:** `?sport=ncaa&tournament_id={id}` — Stats view.
-        - **EPL:** `sportId=2`, no extra params — Portfolios view.
+        - **NCAA:** `sportId=1|3`, `?sport=ncaa&tournament_id={id}` — Stats view.
+        - **EPL:** `sportId=2`, `?sport=epl&tournament_id={id}` — used by both Portfolios and Stats views.
+        - **World Cup:** `sportId=4` (hardcoded in the frontend pending backend confirmation), `?sport=wc&tournament_id={id}` — Portfolios view.
       parameters:
         - name: sportId
           in: path
@@ -745,7 +765,9 @@ paths:
           example: 2
         - name: sport
           in: query
-          schema: { type: string }
+          schema:
+            type: string
+            enum: [ncaa, epl, wc]
           example: ncaa
         - name: tournament_id
           in: query
@@ -831,6 +853,83 @@ paths:
       responses:
         "200":
           description: Portfolio statistics per week
+
+  /tournaments/{tournamentId}/score/stats/portfolios:
+    get:
+      tags: [World Cup - Home, World Cup - Stats]
+      summary: Get portfolio team composition by round — World Cup only
+      description: |
+        World Cup equivalent of `score/stats/portfolio` (singular), but keyed by
+        group `round` instead of `week`. Used by the Home view (fixed at
+        `round=1`, the first group round) to render team compositions, and by the
+        Stats view for the selected round.
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 4
+        - name: round
+          in: query
+          required: true
+          schema: { type: string }
+          example: "1"
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [wc] }
+          example: wc
+      responses:
+        "200":
+          description: Portfolio team composition per round
+
+  /tournaments/{tournamentId}/score/rounds:
+    get:
+      tags: [World Cup - Stats]
+      summary: Get available group rounds — World Cup only
+      description: |
+        Rounds dropdown data. Response shape: `[{ consecutive: 3, round: "GROUP ROUND 3" }]`
+        — `consecutive` is the numeric value sent back as `round` in other endpoints,
+        `round` is the display label.
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 4
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [wc] }
+          example: wc
+      responses:
+        "200":
+          description: List of group rounds
+
+  /tournaments/{tournamentId}/match-probabilities:
+    get:
+      tags: [World Cup - Portfolios]
+      summary: Get match win probabilities by group — World Cup only
+      description: Used in the portfolio tab to help pick teams within a group.
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 4
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [wc] }
+          example: wc
+        - name: group
+          in: query
+          required: true
+          schema: { type: string }
+          example: A
+      responses:
+        "200":
+          description: Match probabilities for the group
 
   /tournaments/{tournamentId}/score/points-per-round:
     get:

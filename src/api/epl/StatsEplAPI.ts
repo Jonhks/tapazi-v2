@@ -1,9 +1,15 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
 
-export const getStatsEpl = async ({ week }: { week: string }) => {
+export const getStatsEpl = async ({
+  tournamentId,
+  week,
+}: {
+  tournamentId: string;
+  week: string;
+}) => {
   try {
-    const url = `tournaments/3/score/stats/portfolio?week=${week}`;
+    const url = `tournaments/${tournamentId}/score/stats/portfolios?week=${week}`;
     const { data } = await apiEnv.get(url);
     return data.data ?? [];
   } catch (error) {
