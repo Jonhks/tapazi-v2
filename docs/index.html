@@ -6,9 +6,23 @@
     <title>Portfolio Pool API Docs</title>
     <style>
       body { margin: 0; padding: 0; }
+      #version-badge {
+        position: fixed;
+        bottom: 12px;
+        left: 12px;
+        z-index: 9999;
+        font-family: system-ui, sans-serif;
+        font-size: 12px;
+        color: #8b8b8f;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 4px 10px;
+        border-radius: 6px;
+        pointer-events: none;
+      }
     </style>
   </head>
   <body>
+    <div id="version-badge"></div>
     <script
       id="api-reference"
       data-url="./openapi.yaml"
@@ -20,5 +34,17 @@
         "searchHotKey": "k"
       }'
       src="https://cdn.jsdelivr.net/npm/@scalar/api-reference"></script>
+    <script>
+      fetch("./openapi.yaml")
+        .then((res) => res.text())
+        .then((text) => {
+          const match = text.match(/^\s*version:\s*(.+)$/m);
+          if (match) {
+            document.getElementById("version-badge").textContent =
+              "v" + match[1].trim();
+          }
+        })
+        .catch(() => {});
+    </script>
   </body>
 </html>
