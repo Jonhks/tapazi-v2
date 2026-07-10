@@ -1,11 +1,6 @@
 import { apiEnv } from "@/lib/axios";
 import { isAxiosError } from "axios";
-import {
-  CreatePortfolio,
-  PortfolioComplete,
-  Portfolios,
-  User,
-} from "../../types";
+import { CreatePortfolio, User } from "../../types";
 
 export const getPortfoliosEpl = async (
   id: User["id"],
@@ -15,8 +10,8 @@ export const getPortfoliosEpl = async (
   try {
     const url =
       portfolioId !== "0"
-        ? `/participants/${id}/portfolios?tournament_id=${tournamentId}&portfolio_id=${portfolioId}&epl`
-        : `/participants/${id}/portfolios?tournament_id=${tournamentId}&epl`;
+        ? `/participants/${id}/portfolios?tournament_id=${tournamentId}&portfolio_id=${portfolioId}&sport=epl`
+        : `/participants/${id}/portfolios?tournament_id=${tournamentId}&sport=epl`;
     const { data } = await apiEnv(url);
     return data.portfolios ?? [];
   } catch (error) {
@@ -60,27 +55,6 @@ export const getTournamentsId = async (sportId: string) => {
     const url = `sports/${sportId}/tournaments`;
     const { data } = await apiEnv.get(url);
     return data.tournaments ?? [];
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getTeamsDynamic = async (
-  sport: User["id"],
-  portfolioId: string,
-) => {
-  portfolioId = portfolioId || "0";
-  try {
-    // const url = `/sports/${sport}/teams`;
-    const url = `/sports/${sport}/teams/dynamics?tournament_id=3&portfolio_id=${portfolioId}`;
-    const { data } = await apiEnv.get(url);
-    // console.log(data);
-
-    if (data.teams) {
-      return data.teams;
-    }
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);
@@ -163,113 +137,6 @@ export const postEditPortfolio = async ({
     if (data.message === "success") {
       return "Successfully edited portfolio";
     }
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const removeportfolio = async ({
-  portId,
-  portfolios,
-  userId,
-}: {
-  portId: PortfolioComplete["id"];
-  portfolios: Portfolios;
-  userId: User["id"];
-}) => {
-  const urlRemovePortfolio = `/portfolios/remove?api-key=TESTAPIKEY&portfolio-id=${portId}&participant-id=${userId}`;
-  const newData = [...portfolios];
-
-  newData.filter((el) => el?.id !== portId);
-  const postPortfolio = {
-    championshipPoints: 123,
-    teams: [
-      {
-        id: 1,
-      },
-      {
-        id: 12,
-      },
-      {
-        id: 13,
-      },
-      {
-        id: 14,
-      },
-      {
-        id: 15,
-      },
-      {
-        id: 16,
-      },
-      {
-        id: 17,
-      },
-      {
-        id: 18,
-      },
-    ],
-  };
-  try {
-    const { data } = await apiEnv.post(
-      urlRemovePortfolio,
-      JSON.stringify(postPortfolio),
-    );
-    console.log(data);
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getDATTOU = async () => {
-  try {
-    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=DATTOU`;
-    const { data } = await apiEnv(url);
-
-    return data.success ? data.data.value : "Error";
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getHOUTOU = async () => {
-  try {
-    const url = `/parameters?api-key=TESTAPIKEY&parameter-key=HOUTOU`;
-    const { data } = await apiEnv(url);
-
-    return data.success ? data.data.value : "Error";
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getWinnerOfTeam = async () => {
-  try {
-    const url = `/winner-of-team?api-key=TESTAPIKEY&limit=99`;
-    const { data } = await apiEnv(url);
-
-    return data.success ? data.data.winnerOfTeam : "Error";
-  } catch (error) {
-    if (isAxiosError(error) && error.response)
-      throw new Error(error.response.data.error);
-    return;
-  }
-};
-
-export const getWinnerOfTeamHasTeam = async (id: string) => {
-  try {
-    const url = `/winner-of-team-has-team?api-key=TESTAPIKEY&id=${id}`;
-    const { data } = await apiEnv(url);
-
-    return data.success ? data.data.winnerOfTeamHasTeam : "Error";
   } catch (error) {
     if (isAxiosError(error) && error.response)
       throw new Error(error.response.data.error);

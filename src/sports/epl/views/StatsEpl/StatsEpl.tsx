@@ -85,7 +85,7 @@ const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
 );
 
 const StatsEpl = () => {
-  const [tournament, setTournament] = useState("EPL TOURNAMENT 2025");
+  const [tournament, setTournament] = useState<string>("");
   const [dataType, setDataType] = useState("PORTFOLIO");
   const [weekType, setWeekType] = useState<string>("");
 
@@ -106,18 +106,18 @@ const StatsEpl = () => {
   const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
   const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
 
-  const { data: statsEplData, isLoading } = useQuery({
-    queryKey: ["statsEpl", userId, weekType],
-    queryFn: () => getStatsEpl({ week: weekType }),
-    enabled: !!weekType,
-  });
-
   const { data: tournamentsEpl } = useQuery({
     queryKey: ["tournamentsEpl", userId],
     queryFn: () => getTournaments("2"),
   });
 
   const tournamentIdStats = String(tournamentsEpl?.[0]?.id ?? "");
+
+  const { data: statsEplData, isLoading } = useQuery({
+    queryKey: ["statsEpl", userId, tournamentIdStats, weekType],
+    queryFn: () => getStatsEpl({ tournamentId: tournamentIdStats, week: weekType }),
+    enabled: !!weekType && !!tournamentIdStats,
+  });
 
   const { data: teamsEplStats } = useQuery({
     queryKey: ["teamsEplStats", tournamentIdStats],
@@ -126,9 +126,9 @@ const StatsEpl = () => {
   });
 
   const { data: getScoreWeeks } = useQuery({
-    queryKey: ["getScoreWeeksEpl", userId],
-    queryFn: () => getScoreWeeksEpl({ tournamentId: "3" }),
-    enabled: !!tournamentsEpl,
+    queryKey: ["getScoreWeeksEpl", userId, tournamentIdStats],
+    queryFn: () => getScoreWeeksEpl({ tournamentId: tournamentIdStats }),
+    enabled: !!tournamentIdStats,
   });
 
   useEffect(() => {
@@ -138,6 +138,13 @@ const StatsEpl = () => {
       setWeekType(String(getScoreWeeks[0].week));
     }
   }, [getScoreWeeks, weekType]);
+
+  useEffect(() => {
+    // Selecciona el primer torneo por defecto (mismo patrón que weekType arriba)
+    if (tournamentsEpl && tournamentsEpl.length > 0 && !tournament) {
+      setTournament(tournamentsEpl[0].name);
+    }
+  }, [tournamentsEpl, tournament]);
 
   console.log(getScoreWeeks);
   // ✅ FIX 2: teamsMap con useMemo
