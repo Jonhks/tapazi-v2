@@ -22,6 +22,7 @@ import { messagemodalInstallmobile } from "@/utils/app";
 import WalletModal from "@/shared/components/WalletModal/WalletModal";
 import type { NavItem, SwalConfig } from "./MenuDrawer";
 import { useWalletRemaining } from "@/hooks/useWalletRemaining";
+import type { SportKey } from "@/shared/theme/colors";
 
 // ─── tipos ────────────────────────────────────────────────────────────────────
 
@@ -32,7 +33,7 @@ export interface MenuMobileProps {
   appBarBgColor: string;
   /** Color de fondo del popup "More". */
   menuPaperBgColor: string;
-  sportKey: "ncaaMale" | "ncaaFemale" | "epl" | "worldcup";
+  sportKey: SportKey;
   sportFrom: string;
   /** Color del label de username en el popup. Default: "inherit". */
   usernameLabelColor?: string;

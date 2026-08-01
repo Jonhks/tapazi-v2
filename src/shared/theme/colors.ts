@@ -97,6 +97,29 @@ export const sportThemes = {
     negative: "#ff3636", // rojo  — puntaje negativo
     searchBg: "#d6cfcfff",
   },
+
+  nfl: {
+    // Tabla (tema negro/dorado) — strongBg=headerEven, softBg=cellOddColOddRow, rowHoverBg=punto medio
+    headerEven: "#0a0a0a",
+    headerOdd: "#141414",
+    cellEvenColEvenRow: "#0a0a0a",
+    cellEvenColOddRow: "#111111",
+    cellOddColEvenRow: "#141414",
+    cellOddColOddRow: "#1c1c1c",
+    rowHoverBg: "#1c1c1c",
+    // Menú
+    appBar: "#0a0a0a",
+    drawer: "#0a0a0a",
+    accent: "#D4AF37", // dorado — ítem activo, textos destacados
+    defaultIcon: "#D4AF37",
+    // General
+    bg: "#0a0a0a",
+    text: "#ffffff",
+    textSecondary: "#bbbbbb",
+    positive: "#05fa87", // verde — puntaje positivo
+    negative: "#ff3636", // rojo  — puntaje negativo
+    searchBg: "#d6cfcfff",
+  },
 } as const;
 
 export type SportTheme = (typeof sportThemes)[keyof typeof sportThemes];

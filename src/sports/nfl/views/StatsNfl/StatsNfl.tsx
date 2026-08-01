@@ -1,10 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
-import classes from "./StatsEpl.module.css";
+import classes from "./StatsNfl.module.css";
 import {
-  // FormControl,
-  // FormControlLabel,
-  // Radio,
-  // RadioGroup,
   Typography,
   Zoom,
   Box,
@@ -15,11 +11,11 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SearchIcon from "@mui/icons-material/Search";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
-import { getScoreWeeksEpl, getStatsEpl } from "@/api/epl/StatsEplAPI";
+import { getScoreWeeksNfl, getStatsNfl } from "@/api/nfl/StatsNflAPI";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "../../components/EPLBallLoader/EPLBallLoader";
-import { getTeamsEpl } from "@/api/epl/PortfoliosEplAPI";
+import Loader from "../../components/NFLBallLoader/NFLBallLoader";
+import { getTeamsNfl } from "@/api/nfl/PortfoliosNflAPI";
 import {
   useReactTable,
   getCoreRowModel,
@@ -30,7 +26,7 @@ import {
   ColumnDef,
   CellContext,
 } from "@tanstack/react-table";
-import { getTournaments } from "@/api/epl/HistoryEPLAPI";
+import { getTournaments } from "@/api/nfl/HistoryNFLAPI";
 
 type TeamStat = {
   id: number;
@@ -45,12 +41,6 @@ type PortfolioStat = {
   portfolio: string;
   teams: string;
   week_score: number;
-};
-
-type ScoreWeek = {
-  id: string;
-  week: number;
-  label: string;
 };
 
 type TeamWithCrest = {
@@ -91,21 +81,17 @@ const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
   </Box>
 );
 
-const StatsEpl = () => {
+const StatsNfl = () => {
   const [tournament, setTournament] = useState<string>("");
   const [dataType, setDataType] = useState("PORTFOLIO");
   const [weekType, setWeekType] = useState<string>("");
 
-  // const [sortOrder, setSortOrder] = useState("Score (Desc)");
-
   const dataTypes = [{ id: "1", name: "PORTFOLIO" }];
-  // const weekTypes = [{ id: "1", name: "WEEK" }];
 
   const params = useParams();
   const userId = params.userId!;
+  const sportId = params.sportId!;
 
-  // ✅ FIX 1: SortingState inicializado con el valor por defecto correcto
-  // ANTES: useState([]) — la tabla no sabía que debía ordenar por score al inicio
   const [sorting, setSorting] = useState<SortingState>([
     { id: "week_score", desc: true },
   ]);
@@ -113,28 +99,29 @@ const StatsEpl = () => {
   const [hoveredRowId, setHoveredRowId] = useState<string | null>(null);
   const [hoveredCellId, setHoveredCellId] = useState<string | null>(null);
 
-  const { data: tournamentsEpl } = useQuery({
-    queryKey: ["tournamentsEpl", userId],
-    queryFn: () => getTournaments("2"),
+  const { data: tournamentsNfl } = useQuery({
+    queryKey: ["tournamentsNfl", userId],
+    queryFn: () => getTournaments(sportId),
+    enabled: Boolean(sportId),
   });
 
-  const tournamentIdStats = String(tournamentsEpl?.[0]?.id ?? "");
+  const tournamentIdStats = String(tournamentsNfl?.[0]?.id ?? "");
 
-  const { data: statsEplData, isLoading } = useQuery({
-    queryKey: ["statsEpl", userId, tournamentIdStats, weekType],
-    queryFn: () => getStatsEpl({ tournamentId: tournamentIdStats, week: weekType }),
+  const { data: statsNflData, isLoading } = useQuery({
+    queryKey: ["statsNfl", userId, tournamentIdStats, weekType],
+    queryFn: () => getStatsNfl({ tournamentId: tournamentIdStats, week: weekType }),
     enabled: !!weekType && !!tournamentIdStats,
   });
 
-  const { data: teamsEplStats } = useQuery({
-    queryKey: ["teamsEplStats", tournamentIdStats],
-    queryFn: () => getTeamsEpl("2", tournamentIdStats),
+  const { data: teamsNflStats } = useQuery({
+    queryKey: ["teamsNflStats", tournamentIdStats],
+    queryFn: () => getTeamsNfl(sportId, tournamentIdStats),
     enabled: !!tournamentIdStats,
   });
 
   const { data: getScoreWeeks } = useQuery({
-    queryKey: ["getScoreWeeksEpl", userId, tournamentIdStats],
-    queryFn: () => getScoreWeeksEpl({ tournamentId: tournamentIdStats }),
+    queryKey: ["getScoreWeeksNfl", userId, tournamentIdStats],
+    queryFn: () => getScoreWeeksNfl({ tournamentId: tournamentIdStats }),
     enabled: !!tournamentIdStats,
   });
 
@@ -148,18 +135,14 @@ const StatsEpl = () => {
 
   useEffect(() => {
     // Selecciona el primer torneo por defecto (mismo patrón que weekType arriba)
-    if (tournamentsEpl && tournamentsEpl.length > 0 && !tournament) {
-      setTournament(tournamentsEpl[0].name);
+    if (tournamentsNfl && tournamentsNfl.length > 0 && !tournament) {
+      setTournament(tournamentsNfl[0].name);
     }
-  }, [tournamentsEpl, tournament]);
+  }, [tournamentsNfl, tournament]);
 
-  console.log(getScoreWeeks);
-  // ✅ FIX 2: teamsMap con useMemo
-  // ANTES: se recalculaba en cada render → nuevo objeto en memoria → re-render → loop infinito
-  // AHORA: solo se recalcula cuando cambia teamsEplStats (dato real de la API)
   const teamsMap: Record<string, string> = useMemo(() => {
     return (
-      teamsEplStats?.reduce(
+      teamsNflStats?.reduce(
         (acc: Record<string, string>, team: TeamStat) => {
           acc[team.name.toUpperCase()] = team.crest_url;
           return acc;
@@ -167,19 +150,12 @@ const StatsEpl = () => {
         {} as Record<string, string>,
       ) ?? {}
     );
-  }, [teamsEplStats]);
-  // ⚠️ Sin useMemo: cada render crea un {} nuevo → React lo detecta como cambio
-  //    → vuelve a renderizar → {} nuevo → render → {} nuevo → LOOP SILENCIOSO
+  }, [teamsNflStats]);
 
-  // ✅ FIX 3: statsWithCrests con useMemo
-  // ANTES: se calculaba directamente en el cuerpo del componente
-  //        → nuevo array en cada render → useReactTable detecta nueva data
-  //        → re-render → nuevo array → re-render → LOOP INFINITO
-  // AHORA: solo se recalcula cuando cambian los datos reales de la API
   const statsWithCrests: PortfolioWithCrests[] = useMemo(() => {
-    if (!statsEplData || !teamsMap) return [];
+    if (!statsNflData || !teamsMap) return [];
 
-    return statsEplData.map((item: PortfolioStat) => {
+    return statsNflData.map((item: PortfolioStat) => {
       const teams: string[] = JSON.parse(item.teams);
 
       const teamsWithCrests: TeamWithCrest[] = teams.map(
@@ -195,14 +171,8 @@ const StatsEpl = () => {
         teams: teamsWithCrests,
       };
     });
-  }, [statsEplData, teamsMap]);
-  // ⚠️ Nota: usamos teamsMap (ya memoizado) como dependencia, NO teamsEplStats directamente
-  //    Si usáramos teamsEplStats aquí y no estuviera memoizado el teamsMap,
-  //    igualmente tendríamos el problema
+  }, [statsNflData, teamsMap]);
 
-  // ✅ FIX 4: columns con useMemo (ya estaba, pero era incompleto)
-  // ANTES: useMemo sin dependencias [] está bien para columnas estáticas
-  // AHORA: igual, sin cambios necesarios aquí
   const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
     () => [
       {
@@ -242,33 +212,11 @@ const StatsEpl = () => {
     [],
   );
 
-  // ✅ FIX 5: handleSortChange conectado al sorting de useReactTable
-  // ANTES: solo actualizaba sortOrder (estado local del radio button)
-  //        pero NUNCA llamaba a setSorting → la tabla nunca ordenaba nada
-  //        Había DOS sistemas de sorting completamente desconectados entre sí
-  // AHORA: sortOrder controla la UI del radio, setSorting controla la tabla
-  // const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   // setSortOrder(value);
-
-  //   // Conectamos el radio button con el sorting real de TanStack Table
-  //   if (value === "Score (Desc)") {
-  //     setSorting([{ id: "week_score", desc: true }]);
-  //   } else if (value === "gap (Asc)") {
-  //     // "Portfolio (Asc)" en la UI
-  //     setSorting([{ id: "portfolio", desc: false }]);
-  //   } else if (value === "Weight (Desc)") {
-  //     setSorting([{ id: "week_score", desc: true }]);
-  //   } else if (value === "Weight (Asc)") {
-  //     setSorting([{ id: "week_score", desc: false }]);
-  //   }
-  // };
-
   const table = useReactTable({
-    data: statsWithCrests, // ✅ Ahora es estable gracias a useMemo
-    columns, // ✅ Ya era estable
+    data: statsWithCrests,
+    columns,
     state: {
-      sorting, // ✅ Ahora sorting se actualiza desde los radio buttons
+      sorting,
       globalFilter: filtered,
     },
     onSortingChange: setSorting,
@@ -334,7 +282,7 @@ const StatsEpl = () => {
                       handleChange={(e) =>
                         setTournament(e.target.value as string)
                       }
-                      options={tournamentsEpl}
+                      options={tournamentsNfl}
                     />
                   </Grid>
 
@@ -374,7 +322,7 @@ const StatsEpl = () => {
                       handleChange={(e) =>
                         setWeekType(e.target.value as string)
                       }
-                      options={getScoreWeeks?.map((week: ScoreWeek) => {
+                      options={getScoreWeeks?.map((week: { week: number; label: string }) => {
                         return {
                           ...week,
                           name: week.label,
@@ -385,79 +333,6 @@ const StatsEpl = () => {
                   </Grid>
                 </Grid>
               </Grid>
-
-              {/* Right Column: Radio Buttons */}
-              {/* <Grid
-                size={{ xs: 12, md: 5 }}
-                display="flex"
-                justifyContent="center"
-              >
-                <FormControl>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    name="radio-buttons-group"
-                    value={sortOrder}
-                    onChange={handleSortChange} // ✅ Ahora sí actualiza la tabla
-                  >
-                    <FormControlLabel
-                      value="Score (Desc)"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "white",
-                            "&.Mui-checked": { color: "#05fa87" },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography color="white">Score (Desc)</Typography>
-                      }
-                    />
-                    <FormControlLabel
-                      value="gap (Asc)"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "white",
-                            "&.Mui-checked": { color: "#05fa87" },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography color="white">Portfolio (Asc)</Typography>
-                      }
-                    />
-                    <FormControlLabel
-                      value="Weight (Desc)"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "white",
-                            "&.Mui-checked": { color: "#05fa87" },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography color="white">Weight (Desc)</Typography>
-                      }
-                    />
-                    <FormControlLabel
-                      value="Weight (Asc)"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "white",
-                            "&.Mui-checked": { color: "#05fa87" },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography color="white">Weight (Asc)</Typography>
-                      }
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Grid> */}
             </Grid>
           </div>
         </div>
@@ -548,7 +423,7 @@ const StatsEpl = () => {
                               left: index === 0 ? 0 : undefined,
                               right:
                                 index === columns.length - 1 ? 0 : undefined,
-                              backgroundColor: "#2C0C37",
+                              backgroundColor: "#1c1c1c",
                               zIndex:
                                 index === 0 || index === columns.length - 1
                                   ? 4
@@ -631,10 +506,10 @@ const StatsEpl = () => {
                               index === 0 || index === columns.length - 1;
                             const isCellHovered = !isSticky && hoveredCellId === cell.id;
                             const bg = isCellHovered
-                              ? "#2C0C37"
+                              ? "#1c1c1c"
                               : isRowHovered
-                                ? "#320D46"
-                                : isSticky ? "#2C0C37" : "#380F55";
+                                ? "#262626"
+                                : isSticky ? "#1c1c1c" : "#141414";
                             return (
                               <td
                                 key={cell.id}
@@ -677,4 +552,4 @@ const StatsEpl = () => {
   );
 };
 
-export default StatsEpl;
+export default StatsNfl;

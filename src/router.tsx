@@ -66,6 +66,26 @@ const InstructionsEPL = lazy(
 );
 const StatsEpl = lazy(() => import("./sports/epl/views/StatsEpl/StatsEpl"));
 
+// ? --------------------------  NFL Router -------------------------- ? //
+const AppLayoutNFL = lazy(() => import("./sports/nfl/layouts/AppLayoutNFL"));
+const StatsLayoutNfl = lazy(
+  () => import("./sports/nfl/layouts/StatsLayoutNfl"),
+);
+const HistoryLayoutNfl = lazy(
+  () => import("./sports/nfl/layouts/HistoryLayoutNfl"),
+);
+const HomeNFL = lazy(() => import("./sports/nfl/views/HomeNFL/HomeNFL"));
+const MyPortfolioNFL = lazy(
+  () => import("./sports/nfl/views/myPortfolioNFL/MyPortfolioNFL"),
+);
+const InstructionsNfl = lazy(
+  () => import("./sports/nfl/views/InstructionsNfl/InstructionsNfl"),
+);
+const StatsNfl = lazy(() => import("./sports/nfl/views/StatsNfl/StatsNfl"));
+const HistoryNfl = lazy(
+  () => import("./sports/nfl/views/HistoryPortfolios/HistoryPortfolios"),
+);
+
 // ? --------------------------  World Cup Router -------------------------- ? //
 const AppLayoutWorldCup = lazy(
   () => import("./sports/worldcup/layouts/AppLayoutWorldCup"),
@@ -344,6 +364,53 @@ const Router = () => {
               element={
                 <PrivateRoute>
                   <InstructionsWorldCup />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          {/* NFL Routes */}
+          <Route element={<AppLayoutNFL />}>
+            <Route
+              path="/nfl/home/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <HomeNFL />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/nfl/myPortfolio/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <MyPortfolioNFL />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/nfl/instructions/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <InstructionsNfl />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<StatsLayoutNfl />}>
+            <Route
+              path="/nfl/stats/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <StatsNfl />
+                </PrivateRoute>
+              }
+            />
+          </Route>
+          <Route element={<HistoryLayoutNfl />}>
+            <Route
+              path="/nfl/history/:userId/:sportId"
+              element={
+                <PrivateRoute>
+                  <HistoryNfl />
                 </PrivateRoute>
               }
             />

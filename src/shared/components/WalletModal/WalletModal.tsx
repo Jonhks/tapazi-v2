@@ -34,6 +34,7 @@ const fallbackTournamentColor = (name: string): string => {
   if (t.includes("women") || t.includes("female")) return "#b060f0";
   if (t.includes("epl")) return "#9c6ff5";
   if (t.includes("world cup") || t.includes("worldcup")) return "#00bcd4";
+  if (t.includes("nfl")) return "#D4AF37";
   if (t.includes("men") || t.includes("male") || t.includes("ncaa"))
     return "#dc903b";
   return "#ffffff";

@@ -1,0 +1,30 @@
+.containerApp {
+  background-color: #0a0a0a;
+  background-image: url("../../../assets/img/nfl_home.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+@media (max-width: 800px) {
+  .containerApp {
+    padding-bottom: 70px;
+  }
+}
+
+.containerHistory {
+  background-color: #0a0a0a;
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.containerStats {
+  background-color: #0a0a0a;
+  height: 100vh;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
