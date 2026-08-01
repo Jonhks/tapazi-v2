@@ -23,7 +23,13 @@
 }
 
 .containerStats {
+  /* TODO: placeholder temporal (misma imagen que Home) hasta tener un
+     fondo propio para Stats */
   background-color: #0a0a0a;
+  background-image: url("../../../assets/img/nfl_home.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
   height: 100vh;
   overflow-x: scroll;
   overflow-y: scroll;

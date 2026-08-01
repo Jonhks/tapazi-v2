@@ -27,67 +27,73 @@ const InstructionsNfl = () => {
     enabled: Boolean(tournamentIdNfl),
   });
 
-  if (isLoading) return <Loader />;
+  return (
+    <div
+      className={classes.gridInstructions}
+      style={{ minHeight: "calc(100vh - 56px)" }}
+    >
+      {isLoading && <Loader />}
 
-  if (instructionsData)
-    return (
-      <Grid
-        container
-        justifyContent={"center"}
-        alignContent={"center"}
-        size={12}
-        style={{
-          minHeight: "700px",
-          height: "calc(100vh - 56px)",
-          overflow: "scroll",
-        }}
-        className={`${classes.gridInstructions}`}
-      >
-        <Grid size={{ xs: 11, md: 8 }}>
-          <Box
-            component="section"
-            className={classes.boxInstructions}
-          >
-            <p className={classes.titleInstructions}>
-              {instructionsData[0].description || "Sin información disponible"}
-            </p>
-            <Grid
-              size={12}
-              className={`${classes.subBoxInstructions}`}
+      {!isLoading && instructionsData && (
+        <Grid
+          container
+          justifyContent={"center"}
+          alignContent={"center"}
+          size={12}
+          style={{
+            minHeight: "700px",
+            height: "calc(100vh - 56px)",
+            overflow: "scroll",
+          }}
+        >
+          <Grid size={{ xs: 11, md: 8 }}>
+            <Box
+              component="section"
+              className={classes.boxInstructions}
             >
-              {instructionsData.map((paragrpah: Instructions, i: number) => (
-                <div
-                  key={i}
-                  className={
-                    paragrpah.highlighted
-                      ? classes.highlighted
-                      : classes.paragraph
-                  }
-                >
-                  {i !== 0 && (
-                    <p
-                      style={{
-                        margin: 0,
-                        whiteSpace: "pre-wrap",
-                        wordBreak: "break-word",
-                        textAlign: "center",
-                        padding: "4px 8px",
-                        fontSize: "14px",
-                        fontFamily: "Raleway, sans-serif monospace",
-                      }}
-                    >
-                      {(
-                        paragrpah.description || "Sin información disponible"
-                      ).replace(/\t/g, "  ")}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </Grid>
-          </Box>
+              <p className={classes.titleInstructions}>
+                {instructionsData[0].description ||
+                  "Sin información disponible"}
+              </p>
+              <Grid
+                size={12}
+                className={`${classes.subBoxInstructions}`}
+              >
+                {instructionsData.map((paragrpah: Instructions, i: number) => (
+                  <div
+                    key={i}
+                    className={
+                      paragrpah.highlighted
+                        ? classes.highlighted
+                        : classes.paragraph
+                    }
+                  >
+                    {i !== 0 && (
+                      <p
+                        style={{
+                          margin: 0,
+                          whiteSpace: "pre-wrap",
+                          wordBreak: "break-word",
+                          textAlign: "center",
+                          padding: "4px 8px",
+                          fontSize: "14px",
+                          fontFamily: "Raleway, sans-serif monospace",
+                        }}
+                      >
+                        {(
+                          paragrpah.description || "Sin información disponible"
+                        ).replace(/\t/g, "  ")}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </Grid>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    );
+      )}
+    </div>
+  );
 };
 
 export default InstructionsNfl;
