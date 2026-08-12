@@ -81,6 +81,8 @@ export default function TableTeamsPicked({
       title={title}
       maxHeight="500px"
       stickyLastColumn
+      enableCsvExport
+      csvFilename={title || "teams-picked"}
     />
   );
 }

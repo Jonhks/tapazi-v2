@@ -10,9 +10,17 @@ import {
   Cell,
 } from "@tanstack/react-table";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { Input, InputAdornment, Tooltip, useMediaQuery } from "@mui/material";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
+import {
+  IconButton,
+  Input,
+  InputAdornment,
+  Tooltip,
+  useMediaQuery,
+} from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { SportTheme } from "@/shared/theme/colors";
+import { downloadTableAsCsv } from "@/utils/exportCsv";
 
 // ─── Props ────────────────────────────────────────────────────────────────────
 
@@ -69,6 +77,10 @@ export interface TableBaseProps<T> {
   headerTooltip?: (colId: string, colIndex: number) => string | null;
   /** Altura del contenedor externo. Por defecto "47vh". Pasar "auto" para tablas cortas. */
   containerHeight?: string;
+  /** Muestra un botón para descargar la tabla (filtrada/ordenada) como CSV. Por defecto: false */
+  enableCsvExport?: boolean;
+  /** Nombre del archivo CSV descargado. Por defecto usa `title`, o "data" si no hay title. */
+  csvFilename?: string;
 }
 
 // ─── TableBase genérica ───────────────────────────────────────────────────────
@@ -91,6 +103,8 @@ export function TableBase<T>({
   highlightColBg,
   headerTooltip,
   containerHeight = "47vh",
+  enableCsvExport = false,
+  csvFilename,
 }: TableBaseProps<T>) {
   const [sorting, setSorting] = useState<SortingState>(defaultSorting);
   const [filtered, setFiltered] = useState("");
@@ -157,47 +171,69 @@ export function TableBase<T>({
       )}
 
       {/* Buscador */}
-      {!hideSearch && (
+      {(!hideSearch || enableCsvExport) && (
         <div
           style={{
             width: "100%",
             backgroundColor: theme.headerEven,
             padding: "4px 0",
+            position: "relative",
           }}
         >
-          <div
-            style={{
-              position: "sticky",
-              left: 0,
-              top: 0,
-              zIndex: 3,
-              backgroundColor: theme.searchBg,
-              color: "black",
-              width: searchWidth ?? (isMobile ? 150 : 250),
-              borderRadius: 5,
-              display: "flex",
-              alignItems: "center",
-              padding: "4px",
-              height: isMobile ? 20 : 30,
-            }}
-          >
-            <Input
-              type="search"
-              fullWidth
-              placeholder="Search..."
-              value={filtered ?? ""}
-              onChange={(e) => setFiltered(String(e.target.value))}
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              }
-              inputProps={{
-                style: { textTransform: "lowercase" },
-                autoCapitalize: "none",
+          {enableCsvExport && (
+            <Tooltip title="Descargar CSV">
+              <IconButton
+                onClick={() =>
+                  downloadTableAsCsv(csvFilename || title || "data", table)
+                }
+                size="small"
+                sx={{
+                  color: theme.accent,
+                  position: "absolute",
+                  right: 8,
+                  top: "50%",
+                  transform: "translateY(-50%)",
+                }}
+              >
+                <FileDownloadOutlinedIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
+          {!hideSearch && (
+            <div
+              style={{
+                position: "sticky",
+                left: 0,
+                top: 0,
+                zIndex: 3,
+                backgroundColor: theme.searchBg,
+                color: "black",
+                width: searchWidth ?? (isMobile ? 150 : 250),
+                borderRadius: 5,
+                display: "flex",
+                alignItems: "center",
+                padding: "4px",
+                height: isMobile ? 20 : 30,
               }}
-            />
-          </div>
+            >
+              <Input
+                type="search"
+                fullWidth
+                placeholder="Search..."
+                value={filtered ?? ""}
+                onChange={(e) => setFiltered(String(e.target.value))}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                }
+                inputProps={{
+                  style: { textTransform: "lowercase" },
+                  autoCapitalize: "none",
+                }}
+              />
+            </div>
+          )}
         </div>
       )}
 

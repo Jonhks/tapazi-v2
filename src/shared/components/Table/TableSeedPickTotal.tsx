@@ -53,6 +53,8 @@ export default function TableSeedPickTotal({ arrHistory, score, theme }: Props) 
       title={score}
       maxHeight="50vh"
       searchWidth="100%"
+      enableCsvExport
+      csvFilename={score}
     />
   );
 }

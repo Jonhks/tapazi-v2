@@ -53,6 +53,8 @@ export default function TablePortfolioSeedSelections({ arrHistory, score, theme 
       title={score}
       maxHeight="50vh"
       searchWidth="100%"
+      enableCsvExport
+      csvFilename={score}
     />
   );
 }

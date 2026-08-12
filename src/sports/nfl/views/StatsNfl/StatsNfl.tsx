@@ -4,13 +4,17 @@ import {
   Typography,
   Zoom,
   Box,
+  IconButton,
   Input,
   InputAdornment,
+  Tooltip,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SearchIcon from "@mui/icons-material/Search";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
+import { downloadTableAsCsv } from "@/utils/exportCsv";
 import { getScoreWeeksNfl, getStatsNfl } from "@/api/nfl/StatsNflAPI";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -361,7 +365,22 @@ const StatsNfl = () => {
                 Portfolios - Week: {weekType}
               </Typography>
             </Box>
-            <Box sx={{ width: "100%", borderRadius: "4px" }}>
+            <Box sx={{ width: "100%", borderRadius: "4px", position: "relative" }}>
+              <Tooltip title="Descargar CSV">
+                <IconButton
+                  onClick={() =>
+                    downloadTableAsCsv(`Stats NFL - Week ${weekType}`, table)
+                  }
+                  sx={{
+                    color: "white",
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                  }}
+                >
+                  <FileDownloadOutlinedIcon />
+                </IconButton>
+              </Tooltip>
               <div
                 style={{
                   position: "sticky",

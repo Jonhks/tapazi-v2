@@ -40,6 +40,8 @@ export default function TableHistoryTeamsNotPicked({ arrHistory, score, theme }:
       theme={theme}
       title={score}
       maxHeight="35vh"
+      enableCsvExport
+      csvFilename={score}
     />
   );
 }
