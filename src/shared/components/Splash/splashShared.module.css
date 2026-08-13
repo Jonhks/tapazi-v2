@@ -1,0 +1,75 @@
+/*
+ * Primitivas de layout compartidas por cada concepto de splash:
+ * capas de cancha apiladas y logo centrado.
+ */
+
+.fieldFrame {
+  position: relative;
+  height: min(78vh, 680px);
+  aspect-ratio: 300 / 620;
+}
+
+@media (min-width: 900px) {
+  .fieldFrame {
+    /* en desktop la cancha se ve acostada y más grande — el frame ocupa
+       el espacio ya en su forma horizontal (620x300) */
+    aspect-ratio: auto;
+    height: min(56vh, 520px);
+    width: min(calc(min(56vh, 520px) * 620 / 300), 90vw);
+  }
+}
+
+.fieldLayer {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  color: rgba(242, 246, 238, 0.65);
+  will-change: transform, opacity, filter;
+}
+
+/*
+ * Wrapper de solo-CSS para la rotación en desktop. Va SEPARADO de
+ * [data-field-layer] a propósito: ese nodo lo anima GSAP (scale/opacity vía
+ * crossMorph), y GSAP pisa cualquier `transform` de CSS la primera vez que
+ * escribe el suyo. Rotando este wrapper interno en cambio, nunca choca.
+ */
+.fieldRotate {
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 900px) {
+  .fieldRotate {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(56vh, 520px);
+    height: min(calc(min(56vh, 520px) * 620 / 300), 90vw);
+    transform: translate(-50%, -50%) rotate(90deg);
+  }
+}
+
+.fieldSvg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 0 7px rgba(255, 255, 255, 0.25));
+}
+
+.particlesAbove {
+  z-index: 2;
+}
+
+.logoWrap {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  z-index: 3;
+}
+
+.logo {
+  width: min(56%, 260px);
+  max-width: 70vw;
+  color: #ffffff;
+  opacity: 0;
+}

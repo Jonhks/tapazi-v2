@@ -1,17 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import {
-  Box,
-  Button,
-  Divider,
-  FormControl,
-  InputLabel,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioNFL.module.css";
 import EmojiEventsOutlinedIcon from "@mui/icons-material/EmojiEventsOutlined";
@@ -19,9 +9,27 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import Loader from "../../components/NFLBallLoader/NFLBallLoader";
+import { TeamSeedGrid } from "../../components/TeamSeedGrid/TeamSeedGrid";
+import { ByeTeamsList } from "../../components/TeamSeedGrid/ByeTeamsList";
 import { usePortfolioNflData } from "@/hooks/usePortfolioNflData";
 import { usePortfolioNflActions } from "@/hooks/usePortfolioNflActions";
-import type { Team } from "@/types/index";
+
+// TODO: el backend de NFL aún no expone un campo de "bye week" por equipo
+// (ni en teamSchema ni en las respuestas de /teams, /teams/dynamics, etc.).
+// Mientras tanto usamos esta lista fija (equipos de bye del mockup/ticket)
+// para poder mostrar la sección completa en el muck up. Reemplazar por el
+// campo real (ej. team.bye_week) en cuanto el backend lo entregue.
+const MOCK_BYE_TEAM_NAMES = [
+  "atlanta",
+  "cleveland",
+  "green bay",
+  "seattle",
+  "los angeles rams",
+  "new england",
+];
+
+const isMockByeTeam = (team) =>
+  MOCK_BYE_TEAM_NAMES.some((name) => team?.name?.toLowerCase().includes(name));
 
 const MyPortfolioNFL = () => {
   const params = useParams();
@@ -61,165 +69,40 @@ const MyPortfolioNFL = () => {
     weekParameter,
   });
 
-  const checkNotValidTeam = (team: Team) =>
-    teamsBloqued.some((bloquedTeam) => bloquedTeam.id === team.id);
+  const teams = teamsComplete ?? [];
+  const selected = selectedTeams ?? [];
 
-  const checkTeamSelected = (team: Team) =>
-    !!selectedTeams?.some((selectedTeam) => selectedTeam.id === team.id);
+  const isTeamSelected = (team) => selected.some((t) => t && t.id === team.id);
 
-  const handleChangeSelect = (value: string, index: number) => {
-    const newSelectedTeams = [...selectedTeams];
-    newSelectedTeams[index] = teamsComplete.filter(
-      (team) => team.name === value,
-    )[0];
-    setSelectedTeams(newSelectedTeams);
-  };
+  const isTeamBlocked = (team) =>
+    (teamsBloqued ?? []).some((t) => t.id === team.id);
 
-  const renderTeams = () => {
-    if (numberInputs === 0) {
-      return (
-        <p
-          style={{
-            color: "white",
-            fontWeight: "bold",
-            textAlign: "center",
-            fontSize: "24px",
-          }}
-        >
-          No teams are available for selection.
-        </p>
-      );
+  const isGridFull = selected.length > 0 && selected.every((t) => t && t.name);
+
+  const byeTeams = teams.filter(isMockByeTeam);
+
+  const handleToggleTeam = (team) => {
+    if (isTeamBlocked(team) || isMockByeTeam(team)) return;
+
+    const alreadySelectedIndex = selected.findIndex(
+      (t) => t && t.id === team.id,
+    );
+    if (alreadySelectedIndex !== -1) {
+      const next = [...selected];
+      next[alreadySelectedIndex] = "";
+      setSelectedTeams(next);
+      return;
     }
 
-    return selectedTeams?.map((team, idx: number) => (
-      <div
-        key={idx}
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          alignItems: "center",
-          marginBottom: "20px",
-          backgroundColor: idx % 2 === 0 ? "#1c1c1c" : "#0a0a0a",
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: idx % 2 === 0 ? "#1c1c1c" : "#0a0a0a",
-            width: "80px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#05fa87",
-            fontWeight: "bold",
-          }}
-        >
-          {getSeed(team)}
-        </div>
-        <FormControl
-          fullWidth
-          sx={{
-            backgroundColor: idx % 2 === 0 ? "#1c1c1c" : "#0a0a0a",
-            "& .MuiInputLabel-root": {
-              color: "white",
-              fontWeight: "bold",
-              fontSize: "18px",
-            },
-          }}
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            if (team.disabled) {
-              toast.error("This team is not available");
-            }
-          }}
-        >
-          <InputLabel
-            id={`select-label-${idx}`}
-            shrink={selectedTeams[idx] !== ""}
-            sx={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: "18px",
-              transition: "opacity 0.2s",
-            }}
-          >
-            Team
-          </InputLabel>
-          <Select
-            labelId={`select-label-${idx}`}
-            value={team.name || ""}
-            label="Team"
-            readOnly={checkNotValidTeam(team)}
-            disabled={checkNotValidTeam(team)}
-            onChange={(e) => handleChangeSelect(e.target.value, idx)}
-            sx={{
-              backgroundColor: checkNotValidTeam(team) && "#3a3a3a",
-              opacity: checkNotValidTeam(team) && 0.7,
-              "& .MuiSelect-icon": {
-                color: checkNotValidTeam(team) ? "gray" : "white",
-              },
-            }}
-          >
-            {teamsComplete.map((opt) => (
-              <MenuItem
-                key={opt.id}
-                value={opt.name || ""}
-                disabled={checkNotValidTeam(opt) || checkTeamSelected(opt)}
-                style={{ color: "white" }}
-              >
-                <div
-                  className={classes.selectMio}
-                  style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "white",
-                    fontWeight: "bold",
-                    fontSize: "18px",
-                  }}
-                >
-                  <ListItemIcon style={{ color: "white" }}>
-                    <img
-                      src={opt.crest_url}
-                      alt={opt.name}
-                      style={{
-                        width: 28,
-                        height: 28,
-                        objectFit: "contain",
-                        marginRight: 8,
-                      }}
-                    />
-                  </ListItemIcon>
-                  <ListItemText
-                    style={{
-                      color: opt.disabled ? "#595757ff" : "white",
-                      textAlign: "left",
-                      fontWeight: "bold",
-                    }}
-                  >
-                    {opt.name}
-                  </ListItemText>
-                </div>
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <div
-          style={{
-            backgroundColor: idx % 2 === 0 ? "#1c1c1c" : "#0a0a0a",
-            width: "80px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            color: "#05fa87",
-            fontWeight: "bold",
-          }}
-        >
-          {getMultiplier(team)}
-        </div>
-      </div>
-    ));
+    const emptyIndex = selected.findIndex((t) => !t || !t.name);
+    if (emptyIndex === -1) {
+      toast.info("You already selected the maximum number of teams.");
+      return;
+    }
+
+    const next = [...selected];
+    next[emptyIndex] = team;
+    setSelectedTeams(next);
   };
 
   if (isLoadingData) {
@@ -240,7 +123,7 @@ const MyPortfolioNFL = () => {
       }}
       className={`${classes.gridInstructions}`}
     >
-      <Grid size={{ xs: 12, sm: 10, lg: 8 }}>
+      <Grid size={{ xs: 12, sm: 10, lg: 10 }}>
         <Box
           component="section"
           className={classes.boxPortfolio}
@@ -290,34 +173,53 @@ const MyPortfolioNFL = () => {
             <Divider style={{ backgroundColor: "white", width: "60%" }} />
           </div>
 
-          <Grid
-            size={12}
-            style={{ marginTop: "30px" }}
-          >
-            <div style={{ width: "80%", margin: "0 auto" }}>
-              <Grid
-                size={{ xs: 12 }}
-                style={{
-                  marginTop: "30px",
-                  margin: "10px 0",
-                  padding: "5px 10px",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  backgroundColor: "#0a0a0a",
-                }}
-              >
-                <Grid size={12}>Seed</Grid>
-                <Grid
-                  size={12}
-                  style={{ textAlign: "right", fontWeight: "bold" }}
-                >
-                  Multiplier
-                </Grid>
-              </Grid>
-              {renderTeams()}
-            </div>
-          </Grid>
+          {numberInputs === 0 ? (
+            <p
+              style={{
+                color: "white",
+                fontWeight: "bold",
+                textAlign: "center",
+                fontSize: "24px",
+              }}
+            >
+              No teams are available for selection.
+            </p>
+          ) : (
+            <Grid
+              size={12}
+              style={{ marginTop: "30px" }}
+            >
+              <div className={classes.sectionLabel}>
+                Normal Week
+                <span className={classes.sectionCount}>
+                  {selected.filter((t) => t && t.name).length} / {numberInputs}{" "}
+                  selected
+                </span>
+              </div>
+              <TeamSeedGrid
+                teams={teams}
+                isTeamSelected={isTeamSelected}
+                isTeamBlocked={isTeamBlocked}
+                isTeamOnBye={isMockByeTeam}
+                isGridFull={isGridFull}
+                onToggleTeam={handleToggleTeam}
+                getSeed={getSeed}
+                getMultiplier={getMultiplier}
+              />
+
+              {byeTeams.length > 0 && (
+                <>
+                  <div className={classes.sectionLabel}>Bye</div>
+                  <ByeTeamsList
+                    teams={byeTeams}
+                    isTeamSelected={isTeamSelected}
+                    getSeed={getSeed}
+                    getMultiplier={getMultiplier}
+                  />
+                </>
+              )}
+            </Grid>
+          )}
 
           <Grid
             mt={3}

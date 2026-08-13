@@ -102,6 +102,25 @@
   text-align: center;
 }
 
+.sectionLabel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #D4AF37;
+  font-weight: bold;
+  font-size: 18px;
+  text-transform: uppercase;
+  margin: 20px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.sectionCount {
+  color: white;
+  font-size: 14px;
+  text-transform: none;
+}
+
 .clasePrueba {
   text-align: left;
   color: white;

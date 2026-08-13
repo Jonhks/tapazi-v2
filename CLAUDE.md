@@ -137,8 +137,9 @@ src/shared/
 │   ├── Menu/
 │   │   ├── MenuDrawer.tsx                      ← sidebar de escritorio genérico
 │   │   └── MenuMobile.tsx                      ← barra inferior móvil genérica
-│   └── WalletModal/
-│       └── WalletModal.tsx
+│   ├── WalletModal/
+│   │   └── WalletModal.tsx
+│   └── Splash/                                 ← splash de arranque (GSAP), ver detalle abajo
 └── theme/
     └── colors.ts                               ← tokens de color por deporte (sportThemes)
 ```
@@ -157,6 +158,25 @@ src/shared/
 | `col0Width` | `number` (default 120) | Ancho de col 0 para posicionar correctamente col 1 sticky |
 | `highlightColBg` | `(colId, idx) => string \| null` | Resalta columnas por condición (ej. semana activa en verde) |
 | `headerTooltip` | `(colId, idx) => string \| null` | Tooltip en el header de la columna | Props clave: `headerEven`, `headerOdd`, `cellEvenColEvenRow`, `cellEvenColOddRow`, `cellOddColEvenRow`, `cellOddColOddRow`, `accent`, `text`, `searchBg`.
+| `enableCsvExport` | `boolean` (default `false`) | Muestra un botón para descargar la tabla (filtrada/ordenada) como CSV, junto al buscador |
+| `csvFilename` | `string` | Nombre del archivo descargado. Si no se pasa, usa `title`, o `"data"` |
+
+**Descarga CSV:** `src/utils/exportCsv.ts` expone `downloadTableAsCsv(filename, table)` — genérico, arma el CSV directo desde la instancia de TanStack Table (respeta filtro/orden actual). Usado por `TableBase` (props arriba, habilitado puntualmente en las 7 tablas que solo viven dentro de Stats de ncaa-male/female) y a mano en las tablas hand-rolled de StatsEpl/StatsNfl/StatsWorldCup.
+
+**Splash (`src/shared/components/Splash/`):** splash de arranque animado con **GSAP** (única dependencia de animación del proyecto). Estructura tipo "lab" portada de un prototipo externo:
+```
+Splash/
+├── SplashMorph/            ← el concepto en uso: SplashMorph.tsx + morphTimeline.ts
+├── Fields/                 ← 4 canchas SVG (viewBox compartido 300×620): BasketballCourt, SoccerField (reusada para EPL y WorldCup), NFLField
+├── Lights/Glow.tsx         ← glow radial reutilizable
+├── Particles/ParticleField.tsx
+├── Stage/SplashStage.tsx   ← escenario negro + viñeta, compartido
+├── Logo/PortfolioPoolLogo.tsx  ← placeholder — TODO: reemplazar por el SVG oficial (mantener data-logo-mark/data-logo-word)
+├── hooks/useSplashTimeline.ts  ← gsap.context + cleanup automático al desmontar
+├── utils/                  ← crossMorph, logoReveal, samplePoints, random (PRNG determinista)
+└── splashShared.module.css
+```
+El color del glow ambiental cambia por deporte usando `sportThemes` de `colors.ts` (NCAA usa el acento de `ncaaFemale`, no `ncaaMale`, por decisión de diseño). `src/sports/ncaa-male/components/Splash/Splash.tsx` es un wrapper delgado que monta `SplashMorph` y conecta `onComplete` con el redirect a `/sports/:id` o `/login`. Quedaron sueltos sin usar en esa misma carpeta los assets de iteraciones previas del splash (`basketball.png`, `ball-epl.png`, `ball-wc.png`, `fondo-nuevo.webp`, `wall.png`/`wall.jpg`, `Splash.module.css`) — borrar cuando se confirme que no se vuelve a ninguna versión anterior.
 
 ### Capa de API — `src/api/`
 

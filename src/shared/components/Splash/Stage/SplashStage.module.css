@@ -1,0 +1,21 @@
+.stage {
+  position: absolute;
+  inset: 0;
+  background: #050505;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  perspective: 1200px;
+}
+
+/* Caída cinematográfica en los bordes — mantiene la vista en el centro. */
+.vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 45%,
+    rgba(0, 0, 0, 0.55) 100%
+  );
+  pointer-events: none;
+}
