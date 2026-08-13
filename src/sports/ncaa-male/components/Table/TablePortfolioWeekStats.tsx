@@ -116,6 +116,8 @@ export default function TablePortfolioWeekStats({
         columns={columns}
         defaultSorting={[{ id: "week_score", desc: true }]}
         stickyLastColumn
+        enableCsvExport
+        csvFilename={`Portfolios - ${weekLabel}`}
       />
     </Box>
   );

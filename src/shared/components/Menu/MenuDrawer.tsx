@@ -33,6 +33,7 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
 import { messagemodalInstall } from "@/utils/app";
 import WalletModal from "@/shared/components/WalletModal/WalletModal";
+import type { SportKey } from "@/shared/theme/colors";
 import { useWalletRemaining } from "@/hooks/useWalletRemaining";
 
 // ─── tipos exportados para que los wrappers los usen ──────────────────────────
@@ -55,7 +56,7 @@ export interface MenuDrawerProps {
   navItems: NavItem[];
   activeColor: string;
   defaultColor: string;
-  sportKey: "ncaaMale" | "ncaaFemale" | "epl" | "worldcup";
+  sportKey: SportKey;
   /** Valor del parámetro ?from= al redirigir al selector de deportes. */
   sportFrom: string;
   appBarBgColor: string;

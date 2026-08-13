@@ -86,7 +86,7 @@ No hay framework de pruebas configurado.
 
 ```
 src/
-├── sports/           ← módulos por deporte (ncaa-male, female, epl, worldcup)
+├── sports/           ← módulos por deporte (ncaa-male, female, epl, worldcup, nfl)
 ├── shared/           ← componentes, tablas, menús y temas compartidos entre deportes
 ├── api/              ← capa de datos: shared/ + carpeta por deporte
 ├── hooks/            ← custom hooks de portfolio y fetching (uno por deporte)
@@ -108,8 +108,11 @@ Cada módulo tiene su propia carpeta con `components/`, `layouts/` y `views/`:
 | `src/sports/female/`     | `/ncaa-female/...`                                             | `@/female`      |
 | `src/sports/epl/`        | `/epl/...`                                                     | `@/epl`         |
 | `src/sports/worldcup/`   | `/worldcup/...`                                                | `@/worldcup`    |
+| `src/sports/nfl/`        | `/nfl/...`                                                     | `@/nfl`         |
 
 Las rutas de autenticación (`/login`, `/signup`, `/forgot`) y el selector de deporte (`/sports/:userId`) son compartidas y usan layouts de `ncaa-male/layouts/`.
+
+> **NFL — sportId pendiente de confirmar:** el módulo se construyó asumiendo `sportId=5` (siguiente disponible tras ncaa-male=1, epl=2, ncaa-female=3, worldcup=4), marcado con comentarios `// TODO: confirmar sportId real con el backend` en los archivos que lo referencian directamente (`Modal.tsx`, `Error404.tsx`). El resto del módulo NO hardcodea sportId — lo toma dinámico de `useParams`/`GET /sports`, así que ajustar el id real (cuando el backend lo confirme) no debería requerir más cambios que esos dos TODOs. A diferencia de EPL, la vista de **History** de NFL sí está conectada en el router desde el día 1. El selector de deportes (`Sports.tsx`) usa una columna dedicada para NFL con un gradiente de placeholder — falta el asset de fondo real (equivalente a `fondo_basket.png`/`fondo_soccer.png`) y el ícono de loader (`NFLBallLoader` reutiliza temporalmente el balón de EPL).
 
 ### Código compartido — `src/shared/`
 
@@ -134,8 +137,9 @@ src/shared/
 │   ├── Menu/
 │   │   ├── MenuDrawer.tsx                      ← sidebar de escritorio genérico
 │   │   └── MenuMobile.tsx                      ← barra inferior móvil genérica
-│   └── WalletModal/
-│       └── WalletModal.tsx
+│   ├── WalletModal/
+│   │   └── WalletModal.tsx
+│   └── Splash/                                 ← splash de arranque (GSAP), ver detalle abajo
 └── theme/
     └── colors.ts                               ← tokens de color por deporte (sportThemes)
 ```
@@ -154,6 +158,25 @@ src/shared/
 | `col0Width` | `number` (default 120) | Ancho de col 0 para posicionar correctamente col 1 sticky |
 | `highlightColBg` | `(colId, idx) => string \| null` | Resalta columnas por condición (ej. semana activa en verde) |
 | `headerTooltip` | `(colId, idx) => string \| null` | Tooltip en el header de la columna | Props clave: `headerEven`, `headerOdd`, `cellEvenColEvenRow`, `cellEvenColOddRow`, `cellOddColEvenRow`, `cellOddColOddRow`, `accent`, `text`, `searchBg`.
+| `enableCsvExport` | `boolean` (default `false`) | Muestra un botón para descargar la tabla (filtrada/ordenada) como CSV, junto al buscador |
+| `csvFilename` | `string` | Nombre del archivo descargado. Si no se pasa, usa `title`, o `"data"` |
+
+**Descarga CSV:** `src/utils/exportCsv.ts` expone `downloadTableAsCsv(filename, table)` — genérico, arma el CSV directo desde la instancia de TanStack Table (respeta filtro/orden actual). Usado por `TableBase` (props arriba, habilitado puntualmente en las 7 tablas que solo viven dentro de Stats de ncaa-male/female) y a mano en las tablas hand-rolled de StatsEpl/StatsNfl/StatsWorldCup.
+
+**Splash (`src/shared/components/Splash/`):** splash de arranque animado con **GSAP** (única dependencia de animación del proyecto). Estructura tipo "lab" portada de un prototipo externo:
+```
+Splash/
+├── SplashMorph/            ← el concepto en uso: SplashMorph.tsx + morphTimeline.ts
+├── Fields/                 ← 4 canchas SVG (viewBox compartido 300×620): BasketballCourt, SoccerField (reusada para EPL y WorldCup), NFLField
+├── Lights/Glow.tsx         ← glow radial reutilizable
+├── Particles/ParticleField.tsx
+├── Stage/SplashStage.tsx   ← escenario negro + viñeta, compartido
+├── Logo/PortfolioPoolLogo.tsx  ← placeholder — TODO: reemplazar por el SVG oficial (mantener data-logo-mark/data-logo-word)
+├── hooks/useSplashTimeline.ts  ← gsap.context + cleanup automático al desmontar
+├── utils/                  ← crossMorph, logoReveal, samplePoints, random (PRNG determinista)
+└── splashShared.module.css
+```
+El color del glow ambiental cambia por deporte usando `sportThemes` de `colors.ts` (NCAA usa el acento de `ncaaFemale`, no `ncaaMale`, por decisión de diseño). `src/sports/ncaa-male/components/Splash/Splash.tsx` es un wrapper delgado que monta `SplashMorph` y conecta `onComplete` con el redirect a `/sports/:id` o `/login`. Quedaron sueltos sin usar en esa misma carpeta los assets de iteraciones previas del splash (`basketball.png`, `ball-epl.png`, `ball-wc.png`, `fondo-nuevo.webp`, `wall.png`/`wall.jpg`, `Splash.module.css`) — borrar cuando se confirme que no se vuelve a ninguna versión anterior.
 
 ### Capa de API — `src/api/`
 
@@ -215,6 +238,7 @@ Todos los deportes siguen el mismo patrón de dos hooks locales:
 | NCAA Female | `usePortfolioFemaleData.ts`    | `usePortfolioFemaleActions.ts`    |
 | World Cup   | `usePortfolioWorldCupData.ts`  | `usePortfolioWorldCupActions.ts`  |
 | EPL         | `usePortfolioEplData.ts`       | `usePortfolioEplActions.ts`       |
+| NFL         | `usePortfolioNflData.ts`       | `usePortfolioNflActions.ts`       |
 
 **Hook de datos** recibe `(userId, sportId)` y devuelve: `validTournament`, `AllPortfolios`, `teamsComplete`, `teamsBloqued`, `selectedTeams`, `teamsDynamics`, `weekParameter`, `numberInputs`, `tournamentId`, `isLoadingData`.
 
@@ -367,8 +391,10 @@ git push --force origin refactor/shared-components
 
 | Tarea | Archivos | Detalle |
 | ----- | -------- | ------- |
-| `@ts-nocheck` en hooks de portfolio | `hooks/usePortfolioWorldCupData.ts`, `hooks/usePortfolioWorldCupActions.ts`, `hooks/usePortfolioFemaleData.ts`, `hooks/usePortfolioEplData.ts`, `hooks/usePortfolioEplActions.ts`, y las 4 vistas de MyPortfolio | Desactiva completamente el type checker. Reemplazar con tipos correctos de TanStack Query y los propios tipos del proyecto. |
+| `@ts-nocheck` en hooks de portfolio | `hooks/usePortfolioWorldCupData.ts`, `hooks/usePortfolioWorldCupActions.ts`, `hooks/usePortfolioFemaleData.ts`, `hooks/usePortfolioEplData.ts`, `hooks/usePortfolioEplActions.ts`, `hooks/usePortfolioNflData.ts`, `hooks/usePortfolioNflActions.ts`, y las 5 vistas de MyPortfolio | Desactiva completamente el type checker. Reemplazar con tipos correctos de TanStack Query y los propios tipos del proyecto. |
 | `WalletModal` es un placeholder | `shared/components/WalletModal/WalletModal.tsx` | Tiene `FAKE_WALLET` hardcodeado como fallback. Intenta llamar a `getWallet()` pero cae siempre al fake si hay error. Necesita integración real con la API de wallet. |
+| `sportId=2` (EPL) hardcodeado en el 404 | `ncaa-male/views/Error404/Error404.tsx` línea ~65 | El botón "Back Home" navega siempre a `/epl/home/${user.id}/2` sin importar el deporte real donde el usuario cayó en el 404. Hallazgo suelto detectado al construir el módulo NFL, no relacionado directamente — idealmente leer el sport real desde algún estado persistido en vez de hardcodear. |
+| Asset visual pendiente en selector de deportes | `ncaa-male/views/Sports/Sports.tsx` (columna NFL) | La columna de NFL en el selector de deportes usa un gradiente CSS en vez de una imagen de fondo real (equivalente a `fondo_basket.png`/`fondo_soccer.png`). Reemplazar cuando diseño entregue el asset — marcado con `// TODO` en el código. (El loader de NFL ya no es placeholder: `NFLFootballIcon.tsx` es un balón de NFL propio en SVG, no depende de ningún asset externo.) |
 | Borrar 4 re-exportadores obsoletos en `src/api/` | `api/HomeAPI.ts`, `api/StatsAPI.ts`, `api/HistoryAPI.ts`, `api/PortfoliosAPI.ts` | Son wrappers vacíos que re-exportan desde `ncaa-male/`. `git rm src/api/HomeAPI.ts src/api/StatsAPI.ts src/api/HistoryAPI.ts src/api/PortfoliosAPI.ts` |
 | `ErrorMessage` duplicado | `src/components/ErrorMessage/` (global) y `sports/epl/components/ErrorMessage/` | Dos implementaciones del mismo componente. Unificar en shared/ o usar solo el global. |
 | Dependencias posiblemente sin usar | `package.json` | `alertify@0.3.0` (deprecada, no aparece en imports) y `chance@1.1.13` (generación aleatoria — ¿es de debug?) — verificar y borrar si no se usan. |

@@ -97,6 +97,7 @@ export default defineConfig(({ command }) => ({
     alias: [
       // Aliases específicos primero — deben resolverse antes que "@" genérico
       { find: "@/epl",      replacement: fileURLToPath(new URL("./src/sports/epl",      import.meta.url)) },
+      { find: "@/nfl",      replacement: fileURLToPath(new URL("./src/sports/nfl",      import.meta.url)) },
       { find: "@/ncaa-male",replacement: fileURLToPath(new URL("./src/sports/ncaa-male",import.meta.url)) },
       { find: "@/female",   replacement: fileURLToPath(new URL("./src/sports/female",   import.meta.url)) },
       { find: "@/worldcup", replacement: fileURLToPath(new URL("./src/sports/worldcup", import.meta.url)) },
