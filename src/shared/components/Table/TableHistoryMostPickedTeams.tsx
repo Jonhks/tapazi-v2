@@ -53,6 +53,8 @@ export default function TableHistoryMostPickedTeams({
       theme={theme}
       title={score}
       maxHeight="40vh"
+      enableCsvExport
+      csvFilename={score}
     />
   );
 }

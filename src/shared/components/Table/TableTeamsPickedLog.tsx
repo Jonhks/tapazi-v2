@@ -45,6 +45,8 @@ export default function TableTeamsPickedLog({ arrHistory, score, theme }: Props)
       theme={theme}
       title={score}
       maxHeight="95vh"
+      enableCsvExport
+      csvFilename={score}
     />
   );
 }

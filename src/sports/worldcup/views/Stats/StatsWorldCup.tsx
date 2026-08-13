@@ -1,10 +1,20 @@
 import { useMemo, useState, useEffect } from "react";
 import classes from "./StatsWorldCup.module.css";
-import { Typography, Zoom, Box, Input, InputAdornment } from "@mui/material";
+import {
+  Typography,
+  Zoom,
+  Box,
+  IconButton,
+  Input,
+  InputAdornment,
+  Tooltip,
+} from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SearchIcon from "@mui/icons-material/Search";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DropDownHistory from "@/female/components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
+import { downloadTableAsCsv } from "@/utils/exportCsv";
 import {
   getScoreRoundsWorldCup,
   getStatsWorldCup,
@@ -380,7 +390,25 @@ const StatsWorldCup = () => {
                 Portfolios - Round: {roundLabel || roundType}
               </Typography>
             </Box>
-            <Box sx={{ width: "100%", borderRadius: "4px" }}>
+            <Box sx={{ width: "100%", borderRadius: "4px", position: "relative" }}>
+              <Tooltip title="Descargar CSV">
+                <IconButton
+                  onClick={() =>
+                    downloadTableAsCsv(
+                      `Stats WorldCup - Round ${roundLabel || roundType}`,
+                      table,
+                    )
+                  }
+                  sx={{
+                    color: "white",
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                  }}
+                >
+                  <FileDownloadOutlinedIcon />
+                </IconButton>
+              </Tooltip>
               <div
                 style={{
                   position: "sticky",

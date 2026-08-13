@@ -1,0 +1,169 @@
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 28px repeat(4, 1fr);
+  align-items: center;
+  gap: 8px;
+}
+
+.seedLabel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 44px;
+  color: #D4AF37;
+  font-weight: bold;
+  font-size: 16px;
+}
+
+/* usado por ByeTeamsList: grid plano de 4 columnas, sin columna de seed */
+.cells {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  height: 44px;
+  padding: 0 10px;
+  background-color: #1c1c1c;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  cursor: pointer;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.cell:hover:not(:disabled) {
+  border-color: #D4AF37;
+}
+
+.crest {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.crestFallback {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #D4AF37;
+}
+
+.selected .crestFallback {
+  color: black;
+}
+
+.teamName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.available {
+  background-color: #1c1c1c;
+}
+
+.selected {
+  background-color: #D4AF37;
+  border-color: #D4AF37;
+  color: black;
+}
+
+.seedBadge,
+.multiplierBadge {
+  flex-shrink: 0;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #D4AF37;
+  font-size: 11px;
+}
+
+.full {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.blocked {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #3a1c1c;
+  color: #b98d8d;
+}
+
+.bye {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #26262f;
+  color: #9a9ab0;
+}
+
+@media (width < 800px) {
+  /* las 4 celdas de equipo no caben en el ancho del celular — en vez de
+     encogerlas hasta ilegibles, la fila completa se vuelve scrolleable y
+     cada celda mantiene un ancho fijo y legible */
+  .row,
+  .cells {
+    display: flex;
+    overflow-x: scroll;
+    gap: 4px;
+    padding-bottom: 2px;
+  }
+
+  .seedLabel {
+    position: sticky;
+    left: 0;
+    z-index: 1;
+    flex: 0 0 20px;
+    height: 46px;
+    font-size: 12px;
+    background-color: #0a0a0a;
+  }
+
+  .cell {
+    flex: 0 0 128px;
+    width: 128px;
+    height: 46px;
+    padding: 0 6px;
+    gap: 4px;
+    font-size: 10px;
+  }
+
+  .crest,
+  .crestFallback {
+    width: 16px;
+    height: 16px;
+  }
+
+  .seedBadge,
+  .multiplierBadge {
+    min-width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+}

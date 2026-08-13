@@ -1,0 +1,12 @@
+.glow {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  border-radius: 50%;
+  filter: blur(28px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  opacity: 0; /* los timelines lo hacen aparecer — nunca visible en el primer paint */
+  will-change: transform, opacity;
+}

@@ -1,0 +1,16 @@
+.formControl label,
+.formControl label::after,
+.formControl label:active,
+.formControl label:disabled,
+.formControl div svg,
+.formControl div div {
+  color: white;
+}
+
+.formControl label:disabled {
+  color: red;
+}
+
+.formControl div::after {
+  border-bottom: 2px solid white;
+}

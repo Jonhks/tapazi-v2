@@ -8,13 +8,17 @@ import {
   Typography,
   Zoom,
   Box,
+  IconButton,
   Input,
   InputAdornment,
+  Tooltip,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SearchIcon from "@mui/icons-material/Search";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
+import { downloadTableAsCsv } from "@/utils/exportCsv";
 import { getScoreWeeksEpl, getStatsEpl } from "@/api/epl/StatsEplAPI";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -28,6 +32,7 @@ import {
   flexRender,
   SortingState,
   ColumnDef,
+  CellContext,
 } from "@tanstack/react-table";
 import { getTournaments } from "@/api/epl/HistoryEPLAPI";
 
@@ -44,6 +49,12 @@ type PortfolioStat = {
   portfolio: string;
   teams: string;
   week_score: number;
+};
+
+type ScoreWeek = {
+  id: string;
+  week: number;
+  label: string;
 };
 
 type TeamWithCrest = {
@@ -201,7 +212,7 @@ const StatsEpl = () => {
       {
         header: "Portfolio",
         accessorKey: "portfolio",
-        cell: (info: any) => (
+        cell: (info: CellContext<PortfolioWithCrests, unknown>) => (
           <span style={{ color: "#05fa87" }}>{info.getValue() as string}</span>
         ),
       },
@@ -209,7 +220,7 @@ const StatsEpl = () => {
         header: `Team ${i + 1}`,
         accessorFn: (row: PortfolioWithCrests) => row.teams?.[i]?.name || "",
         id: `team_${i}`,
-        cell: (info: any) => {
+        cell: (info: CellContext<PortfolioWithCrests, unknown>) => {
           const teamName = info.getValue() as string;
           const originalRow = info.row.original as PortfolioWithCrests;
           const fullTeam = originalRow.teams?.[i];
@@ -367,7 +378,7 @@ const StatsEpl = () => {
                       handleChange={(e) =>
                         setWeekType(e.target.value as string)
                       }
-                      options={getScoreWeeks?.map((week: any) => {
+                      options={getScoreWeeks?.map((week: ScoreWeek) => {
                         return {
                           ...week,
                           name: week.label,
@@ -479,7 +490,22 @@ const StatsEpl = () => {
                 Portfolios - Week: {weekType}
               </Typography>
             </Box>
-            <Box sx={{ width: "100%", borderRadius: "4px" }}>
+            <Box sx={{ width: "100%", borderRadius: "4px", position: "relative" }}>
+              <Tooltip title="Descargar CSV">
+                <IconButton
+                  onClick={() =>
+                    downloadTableAsCsv(`Stats EPL - Week ${weekType}`, table)
+                  }
+                  sx={{
+                    color: "white",
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                  }}
+                >
+                  <FileDownloadOutlinedIcon />
+                </IconButton>
+              </Tooltip>
               <div
                 style={{
                   position: "sticky",
