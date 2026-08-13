@@ -82,7 +82,16 @@ const MyPortfolioNFL = () => {
   const byeTeams = teams.filter(isMockByeTeam);
 
   const handleToggleTeam = (team) => {
-    if (isTeamBlocked(team) || isMockByeTeam(team)) return;
+    // un equipo bloqueado/bye no se puede tocar, ni para seleccionarlo ni
+    // para quitarlo si ya estaba elegido de antes.
+    if (isTeamBlocked(team)) {
+      toast.info("This team is not available and cannot be modified.");
+      return;
+    }
+    if (isMockByeTeam(team)) {
+      toast.info("This team is on a bye week and cannot be modified.");
+      return;
+    }
 
     const alreadySelectedIndex = selected.findIndex(
       (t) => t && t.id === team.id,

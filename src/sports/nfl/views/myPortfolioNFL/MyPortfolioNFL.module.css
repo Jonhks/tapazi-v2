@@ -1,3 +1,10 @@
+.gridInstructions {
+  background-image: url("../../../../assets/img/nfl_myportfolio.png");
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
 .boxPortfolio {
   background-color: #0a0a0a;
   height: auto;
