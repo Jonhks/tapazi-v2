@@ -12,6 +12,32 @@
   gap: 8px;
 }
 
+/* solo se aplica a la última fila cuando queda incompleta (menos de 4
+   equipos) — cambia de grid a flex para poder centrar el grupo restante
+   sin afectar el ancho de celda de las filas completas */
+@media (width >= 800px) {
+  .rowCentered {
+    display: flex;
+  }
+
+  .rowCentered .seedLabel {
+    flex: 0 0 28px;
+  }
+
+  .rowCellsCentered {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .rowCellsCentered .cell {
+    flex: 0 1 calc(25% - 6px);
+    min-width: 0;
+  }
+}
+
 .seedLabel {
   display: flex;
   align-items: center;
@@ -123,6 +149,17 @@
   color: #9a9ab0;
 }
 
+/* en bye pero seleccionable (ya estaba en el portfolio de una semana anterior) */
+.byeAvailable {
+  background-color: #103a3f;
+  border-color: #00e2f6;
+  color: #b6f2fa;
+}
+
+.byeAvailable:hover:not(:disabled) {
+  border-color: #00e2f6;
+}
+
 @media (width < 800px) {
   /* las 4 celdas de equipo no caben en el ancho del celular — en vez de
      encogerlas hasta ilegibles, la fila completa se vuelve scrolleable y
@@ -133,6 +170,13 @@
     overflow-x: scroll;
     gap: 4px;
     padding-bottom: 2px;
+  }
+
+  /* en mobile la última fila incompleta no se centra — se desarma para que
+     sus celdas queden como hermanas directas de .seedLabel, igual que
+     cualquier otra fila (necesario para el scroll y el sticky del label) */
+  .rowCellsCentered {
+    display: contents;
   }
 
   .seedLabel {

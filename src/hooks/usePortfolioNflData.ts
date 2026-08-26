@@ -10,9 +10,11 @@ import {
   getTeamsNotAvailable,
   getTeamsDynamics,
   getParameterWeek,
+  getAvailableByeTeamsPerPortfolio,
 } from "@/api/nfl/PortfoliosNflAPI";
 
 const WEEK_PARAM_KEY = "WEETOU";
+const MAX_BYE_TEAMS_PARAM_KEY = "BYTEPO";
 
 export const usePortfolioNflData = (userId: string, sportId: string) => {
   const [validTournament, setValidTournament] = useState([]);
@@ -22,6 +24,8 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
   const [teamsBloqued, setTeamsBloqued] = useState([]);
   const [selectedTeams, setSelectedTeams] = useState([]);
   const [weekParameter, setWeekParameter] = useState(null);
+  const [availableByeTeams, setAvailableByeTeams] = useState([]);
+  const [maxByeTeams, setMaxByeTeams] = useState(0);
 
   // 1. Torneos del sport → de aquí sacamos el tournamentId dinámico
   const { data: tournament, isLoading: isLoadingTournament } = useQuery({
@@ -95,6 +99,32 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
       enabled: Boolean(tournamentId),
     });
 
+  // 8. Equipos de bye que sí se pueden seleccionar en este portfolio
+  // (porque ya estaban seleccionados en una semana anterior)
+  const {
+    data: availableByeTeamsData,
+    isLoading: isLoadingAvailableByeTeams,
+  } = useQuery({
+    queryKey: ["nflAvailableByeTeams", userId, portfolios, tournamentId],
+    queryFn: () =>
+      getAvailableByeTeamsPerPortfolio(
+        sportId,
+        tournamentId!,
+        portfolios?.[0]?.id || "0",
+      ),
+    refetchOnWindowFocus: "always",
+    retry: 1,
+    enabled: Boolean(userId && sportId && tournamentId && portfolios?.length > 0),
+  });
+
+  // 9. Máximo de equipos de bye seleccionables por portfolio (parámetro BYTEPO)
+  const { data: maxByeTeamsData, isLoading: isLoadingMaxByeTeams } = useQuery({
+    queryKey: ["nflMaxByeTeams", tournamentId],
+    queryFn: () => getParameterWeek(tournamentId!, MAX_BYE_TEAMS_PARAM_KEY),
+    refetchOnWindowFocus: "always",
+    enabled: Boolean(tournamentId),
+  });
+
   // --- Sincronización de estados ---
 
   useEffect(() => {
@@ -137,6 +167,17 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     if (weekParameterData) setWeekParameter(weekParameterData);
   }, [weekParameterData]);
 
+  useEffect(() => {
+    if (availableByeTeamsData) setAvailableByeTeams(availableByeTeamsData);
+  }, [availableByeTeamsData]);
+
+  useEffect(() => {
+    if (maxByeTeamsData !== undefined) {
+      const parsed = Number(maxByeTeamsData);
+      setMaxByeTeams(Number.isNaN(parsed) ? 0 : parsed);
+    }
+  }, [maxByeTeamsData]);
+
   // Carga equipos seleccionados desde el portfolio guardado, o inicializa vacíos
   useEffect(() => {
     if (
@@ -163,7 +204,9 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     isLoadingNumberInputs ||
     isLoadingTeamsDynamics ||
     isLoadingWeekParameter ||
-    isLoadingTeamsNotAvailable;
+    isLoadingTeamsNotAvailable ||
+    isLoadingAvailableByeTeams ||
+    isLoadingMaxByeTeams;
 
   return {
     validTournament,
@@ -175,6 +218,8 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    availableByeTeams,
+    maxByeTeams,
     weekParameter,
     tournamentId,
     isLoadingData,

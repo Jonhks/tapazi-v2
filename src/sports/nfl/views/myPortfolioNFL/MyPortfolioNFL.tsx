@@ -14,23 +14,6 @@ import { ByeTeamsList } from "../../components/TeamSeedGrid/ByeTeamsList";
 import { usePortfolioNflData } from "@/hooks/usePortfolioNflData";
 import { usePortfolioNflActions } from "@/hooks/usePortfolioNflActions";
 
-// TODO: el backend de NFL aún no expone un campo de "bye week" por equipo
-// (ni en teamSchema ni en las respuestas de /teams, /teams/dynamics, etc.).
-// Mientras tanto usamos esta lista fija (equipos de bye del mockup/ticket)
-// para poder mostrar la sección completa en el muck up. Reemplazar por el
-// campo real (ej. team.bye_week) en cuanto el backend lo entregue.
-const MOCK_BYE_TEAM_NAMES = [
-  "atlanta",
-  "cleveland",
-  "green bay",
-  "seattle",
-  "los angeles rams",
-  "new england",
-];
-
-const isMockByeTeam = (team) =>
-  MOCK_BYE_TEAM_NAMES.some((name) => team?.name?.toLowerCase().includes(name));
-
 const MyPortfolioNFL = () => {
   const params = useParams();
   const userId = params.userId!;
@@ -46,6 +29,8 @@ const MyPortfolioNFL = () => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    availableByeTeams,
+    maxByeTeams,
     weekParameter,
     tournamentId,
     isLoadingData,
@@ -79,17 +64,36 @@ const MyPortfolioNFL = () => {
 
   const isGridFull = selected.length > 0 && selected.every((t) => t && t.name);
 
-  const byeTeams = teams.filter(isMockByeTeam);
+  const isTeamOnBye = (team) => !!team?.bye_team_current_week;
+
+  const availableByeTeamIds = new Set(
+    (availableByeTeams ?? []).map((t) =>
+      typeof t === "object" && t !== null ? t.id : t,
+    ),
+  );
+
+  const currentByeCount = selected.filter((t) => t && isTeamOnBye(t)).length;
+
+  // un bye team solo se muestra como seleccionable si además todavía hay
+  // cupo disponible (BYTEPO) — si ya se llegó al máximo, se ve bloqueado
+  // aunque el equipo en sí sea elegible.
+  const isByeTeamSelectable = (team) =>
+    availableByeTeamIds.has(team.id) && currentByeCount < maxByeTeams;
+
+  const byeTeams = teams.filter(isTeamOnBye);
+  const weekTeams = teams.filter((t) => !isTeamOnBye(t));
 
   const handleToggleTeam = (team) => {
-    // un equipo bloqueado/bye no se puede tocar, ni para seleccionarlo ni
-    // para quitarlo si ya estaba elegido de antes.
     if (isTeamBlocked(team)) {
       toast.info("This team is not available and cannot be modified.");
       return;
     }
-    if (isMockByeTeam(team)) {
-      toast.info("This team is on a bye week and cannot be modified.");
+
+    const onBye = isTeamOnBye(team);
+    if (onBye && !isByeTeamSelectable(team)) {
+      toast.info(
+        "This team is on a bye week and was not part of a previous selection.",
+      );
       return;
     }
 
@@ -100,6 +104,13 @@ const MyPortfolioNFL = () => {
       const next = [...selected];
       next[alreadySelectedIndex] = "";
       setSelectedTeams(next);
+      return;
+    }
+
+    if (onBye && currentByeCount >= maxByeTeams) {
+      toast.info(
+        `You can only select up to ${maxByeTeams} bye-week team${maxByeTeams === 1 ? "" : "s"}.`,
+      );
       return;
     }
 
@@ -199,17 +210,16 @@ const MyPortfolioNFL = () => {
               style={{ marginTop: "30px" }}
             >
               <div className={classes.sectionLabel}>
-                Normal Week
+                Week
                 <span className={classes.sectionCount}>
                   {selected.filter((t) => t && t.name).length} / {numberInputs}{" "}
                   selected
                 </span>
               </div>
               <TeamSeedGrid
-                teams={teams}
+                teams={weekTeams}
                 isTeamSelected={isTeamSelected}
                 isTeamBlocked={isTeamBlocked}
-                isTeamOnBye={isMockByeTeam}
                 isGridFull={isGridFull}
                 onToggleTeam={handleToggleTeam}
                 getSeed={getSeed}
@@ -218,10 +228,19 @@ const MyPortfolioNFL = () => {
 
               {byeTeams.length > 0 && (
                 <>
-                  <div className={classes.sectionLabel}>Bye</div>
+                  <div className={classes.sectionLabel}>
+                    Bye
+                    {maxByeTeams > 0 && (
+                      <span className={classes.sectionCount}>
+                        {currentByeCount} selected
+                      </span>
+                    )}
+                  </div>
                   <ByeTeamsList
                     teams={byeTeams}
                     isTeamSelected={isTeamSelected}
+                    isByeTeamSelectable={isByeTeamSelectable}
+                    onToggleTeam={handleToggleTeam}
                     getSeed={getSeed}
                     getMultiplier={getMultiplier}
                   />

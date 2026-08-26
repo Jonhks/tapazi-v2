@@ -149,6 +149,22 @@ export const getTeamsDynamics = async (
   }
 };
 
+export const getAvailableByeTeamsPerPortfolio = async (
+  sportId: string,
+  tournamentId: string,
+  portfolioId: string,
+) => {
+  try {
+    const url = `/sports/${sportId}/teams/available-bye-teams-per-portfolio?sport=nfl&tournament_id=${tournamentId}&portfolio_id=${portfolioId}`;
+    const { data } = await apiEnv.get(url);
+    return data.teams ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
+  }
+};
+
 export const getParameterWeek = async (id: string, parameter: string) => {
   try {
     const url = `/tournaments/${id}/parameters?key=${parameter}`;
