@@ -19,6 +19,7 @@ import {
   getScoreWeeksNfl,
   getScoreSeedWeeksNfl,
   getSchedulePerWeekNfl,
+  getSeedPerWeekNfl,
   getStatsNfl,
 } from "@/api/nfl/StatsNflAPI";
 import { useParams } from "react-router-dom";
@@ -74,6 +75,13 @@ type ScheduleMatch = {
 type ScheduleWithCrests = ScheduleMatch & {
   home_crest: string | null;
   away_crest: string | null;
+};
+
+type SeedTeamStat = {
+  id: number;
+  name: string;
+  seed: number;
+  bye_team_current_week: boolean;
 };
 
 const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
@@ -271,6 +279,7 @@ const StatsNfl = () => {
   const dataTypes = [
     { id: "1", name: "PORTFOLIO" },
     { id: "2", name: "SCHEDULE" },
+    { id: "3", name: "SEED" },
   ];
 
   const params = useParams();
@@ -309,6 +318,17 @@ const StatsNfl = () => {
     enabled: dataType === "SCHEDULE" && !!weekType && !!tournamentIdStats,
   });
 
+  const { data: seedPerWeekNflData, isLoading: isLoadingSeed } = useQuery({
+    queryKey: ["seedPerWeekNfl", userId, sportId, tournamentIdStats, weekType],
+    queryFn: () =>
+      getSeedPerWeekNfl({
+        sportId,
+        tournamentId: tournamentIdStats,
+        week: weekType,
+      }),
+    enabled: dataType === "SEED" && !!weekType && !!tournamentIdStats,
+  });
+
   const { data: teamsNflStats } = useQuery({
     queryKey: ["teamsNflStats", tournamentIdStats],
     queryFn: () => getTeamsNfl(sportId, tournamentIdStats),
@@ -316,8 +336,7 @@ const StatsNfl = () => {
   });
 
   // PORTFOLIO usa un WS de semanas propio (tournaments/:id/score/weeks);
-  // el resto de las opciones de Data (SCHEDULE, y a futuro SEED) comparten
-  // el WS genérico tournaments/:id/score/seed/weeks.
+  // SCHEDULE y SEED comparten el WS genérico tournaments/:id/score/seed/weeks.
   const { data: getScoreWeeks } = useQuery({
     queryKey: ["getScoreWeeksNfl", userId, tournamentIdStats, dataType],
     queryFn: () =>
@@ -350,13 +369,15 @@ const StatsNfl = () => {
   }, [tournamentsNfl, tournament]);
 
   useEffect(() => {
-    // las columnas de PORTFOLIO y SCHEDULE no comparten ids — se reinicia el
+    // las columnas de cada Data no comparten ids — se reinicia el
     // orden/búsqueda para no arrastrar un sort que no aplica a la otra tabla
-    setSorting(
-      dataType === "SCHEDULE"
-        ? [{ id: "match_date", desc: false }]
-        : [{ id: "week_score", desc: true }],
-    );
+    if (dataType === "SCHEDULE") {
+      setSorting([{ id: "match_date", desc: false }]);
+    } else if (dataType === "SEED") {
+      setSorting([{ id: "seed", desc: false }]);
+    } else {
+      setSorting([{ id: "week_score", desc: true }]);
+    }
     setFiltered("");
   }, [dataType]);
 
@@ -441,6 +462,31 @@ const StatsNfl = () => {
     [],
   );
 
+  const seedRows: SeedTeamStat[] = useMemo(() => {
+    if (!Array.isArray(seedPerWeekNflData)) return [];
+    return seedPerWeekNflData;
+  }, [seedPerWeekNflData]);
+
+  const seedColumns = useMemo<ColumnDef<SeedTeamStat>[]>(
+    () => [
+      {
+        header: "Team",
+        accessorKey: "name",
+      },
+      {
+        header: "Seed",
+        accessorKey: "seed",
+      },
+      {
+        header: "Bye Week",
+        accessorKey: "bye_team_current_week",
+        cell: (info: CellContext<SeedTeamStat, unknown>) =>
+          info.getValue() ? "Yes" : "No",
+      },
+    ],
+    [],
+  );
+
   const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
     () => [
       {
@@ -508,9 +554,25 @@ const StatsNfl = () => {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  const isSchedule = dataType === "SCHEDULE";
+  const seedTable = useReactTable({
+    data: seedRows,
+    columns: seedColumns,
+    state: {
+      sorting,
+      globalFilter: filtered,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setFiltered,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
 
-  if (isLoading || isLoadingSchedule) return <Loader />;
+  const isSchedule = dataType === "SCHEDULE";
+  const isSeed = dataType === "SEED";
+  const isNarrowTable = isSchedule || isSeed;
+
+  if (isLoading || isLoadingSchedule || isLoadingSeed) return <Loader />;
 
   return (
     <Grid
@@ -642,13 +704,14 @@ const StatsNfl = () => {
                   textTransform: "uppercase",
                 }}
               >
-                {isSchedule ? "Schedule" : "Portfolios"} - Week: {weekType}
+                {isSchedule ? "Schedule" : isSeed ? "Seed" : "Portfolios"} - Week:{" "}
+                {weekType}
               </Typography>
             </Box>
             <Box
               sx={{
-                width: isSchedule ? { xs: "100%", md: "50%" } : "100%",
-                mx: isSchedule ? "auto" : 0,
+                width: isNarrowTable ? { xs: "100%", md: "50%" } : "100%",
+                mx: isNarrowTable ? "auto" : 0,
                 borderRadius: "4px",
                 position: "relative",
               }}
@@ -656,8 +719,14 @@ const StatsNfl = () => {
               <Tooltip title="Descargar CSV">
                 <IconButton
                   onClick={() => {
-                    const filename = `Stats NFL - ${isSchedule ? "Schedule" : "Portfolios"} - Week ${weekType}`;
+                    const label = isSchedule
+                      ? "Schedule"
+                      : isSeed
+                        ? "Seed"
+                        : "Portfolios";
+                    const filename = `Stats NFL - ${label} - Week ${weekType}`;
                     if (isSchedule) downloadTableAsCsv(filename, scheduleTable);
+                    else if (isSeed) downloadTableAsCsv(filename, seedTable);
                     else downloadTableAsCsv(filename, table);
                   }}
                   sx={{
@@ -712,6 +781,15 @@ const StatsNfl = () => {
                 <ScoreTable
                   table={scheduleTable}
                   columnsLength={scheduleColumns.length}
+                  hoveredRowId={hoveredRowId}
+                  setHoveredRowId={setHoveredRowId}
+                  hoveredCellId={hoveredCellId}
+                  setHoveredCellId={setHoveredCellId}
+                />
+              ) : isSeed ? (
+                <ScoreTable
+                  table={seedTable}
+                  columnsLength={seedColumns.length}
                   hoveredRowId={hoveredRowId}
                   setHoveredRowId={setHoveredRowId}
                   hoveredCellId={hoveredCellId}
