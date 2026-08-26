@@ -15,7 +15,12 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
 import { downloadTableAsCsv } from "@/utils/exportCsv";
-import { getScoreWeeksNfl, getStatsNfl } from "@/api/nfl/StatsNflAPI";
+import {
+  getScoreWeeksNfl,
+  getScoreSeedWeeksNfl,
+  getSchedulePerWeekNfl,
+  getStatsNfl,
+} from "@/api/nfl/StatsNflAPI";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/NFLBallLoader/NFLBallLoader";
@@ -29,6 +34,7 @@ import {
   SortingState,
   ColumnDef,
   CellContext,
+  Table,
 } from "@tanstack/react-table";
 import { getTournaments } from "@/api/nfl/HistoryNFLAPI";
 
@@ -58,6 +64,18 @@ type PortfolioWithCrests = {
   teams: TeamWithCrest[];
 };
 
+type ScheduleMatch = {
+  home_team: string;
+  away_team: string;
+  match_date: string | null;
+  match_time: string | null;
+};
+
+type ScheduleWithCrests = ScheduleMatch & {
+  home_crest: string | null;
+  away_crest: string | null;
+};
+
 const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
   <Box
     display="flex"
@@ -85,12 +103,175 @@ const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
   </Box>
 );
 
+function ScoreTable<TData>({
+  table,
+  columnsLength,
+  hoveredRowId,
+  setHoveredRowId,
+  hoveredCellId,
+  setHoveredCellId,
+}: {
+  table: Table<TData>;
+  columnsLength: number;
+  hoveredRowId: string | null;
+  setHoveredRowId: (id: string | null) => void;
+  hoveredCellId: string | null;
+  setHoveredCellId: (id: string | null) => void;
+}) {
+  return (
+    <div style={{ width: "100%", overflowX: "scroll" }}>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          minWidth: "max-content",
+        }}
+      >
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header, index) => (
+                <th
+                  key={header.id}
+                  onClick={header.column.getToggleSortingHandler()}
+                  style={{
+                    position:
+                      index === 0 || index === columnsLength - 1
+                        ? "sticky"
+                        : "static",
+                    left: index === 0 ? 0 : undefined,
+                    right: index === columnsLength - 1 ? 0 : undefined,
+                    backgroundColor: "#1c1c1c",
+                    zIndex: index === 0 || index === columnsLength - 1 ? 4 : 2,
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    textAlign: "center",
+                    padding: "12px",
+                    cursor: "pointer",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  {header.isPlaceholder ? null : (
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <div>
+                        {flexRender(
+                          header.column.columnDef.header,
+                          header.getContext(),
+                        )}
+                      </div>
+                      <span
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                        }}
+                      >
+                        {{
+                          asc: (
+                            <ArrowUpwardIcon
+                              style={{
+                                fontSize: "20px",
+                                marginLeft: "4px",
+                              }}
+                            />
+                          ),
+                          desc: (
+                            <ArrowUpwardIcon
+                              style={{
+                                transform: "rotate(180deg)",
+                                fontSize: "20px",
+                                marginLeft: "4px",
+                              }}
+                            />
+                          ),
+                        }[header.column.getIsSorted() as string] ?? (
+                          <ArrowUpwardIcon
+                            style={{
+                              color: "gray",
+                              fontSize: "18px",
+                              marginLeft: "4px",
+                            }}
+                          />
+                        )}
+                      </span>
+                    </div>
+                  )}
+                </th>
+              ))}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => {
+            const isRowHovered = hoveredRowId === row.id;
+            return (
+              <tr
+                key={row.id}
+                onMouseEnter={() => setHoveredRowId(row.id)}
+                onMouseLeave={() => setHoveredRowId(null)}
+              >
+                {row.getVisibleCells().map((cell, index) => {
+                  const isSticky = index === 0 || index === columnsLength - 1;
+                  const isCellHovered = !isSticky && hoveredCellId === cell.id;
+                  const bg = isCellHovered
+                    ? "#1c1c1c"
+                    : isRowHovered
+                      ? "#262626"
+                      : isSticky
+                        ? "#1c1c1c"
+                        : "#141414";
+                  return (
+                    <td
+                      key={cell.id}
+                      onMouseEnter={
+                        !isSticky ? () => setHoveredCellId(cell.id) : undefined
+                      }
+                      onMouseLeave={
+                        !isSticky ? () => setHoveredCellId(null) : undefined
+                      }
+                      style={{
+                        position: isSticky ? "sticky" : "static",
+                        left: index === 0 ? 0 : undefined,
+                        right: index === columnsLength - 1 ? 0 : undefined,
+                        backgroundColor: bg,
+                        zIndex: isSticky ? 3 : 1,
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "12px",
+                        textAlign: "center",
+                        padding: "8px",
+                        whiteSpace: "nowrap",
+                        transition: "background-color 0.15s ease",
+                      }}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 const StatsNfl = () => {
   const [tournament, setTournament] = useState<string>("");
   const [dataType, setDataType] = useState("PORTFOLIO");
   const [weekType, setWeekType] = useState<string>("");
 
-  const dataTypes = [{ id: "1", name: "PORTFOLIO" }];
+  const dataTypes = [
+    { id: "1", name: "PORTFOLIO" },
+    { id: "2", name: "SCHEDULE" },
+  ];
 
   const params = useParams();
   const userId = params.userId!;
@@ -114,7 +295,18 @@ const StatsNfl = () => {
   const { data: statsNflData, isLoading } = useQuery({
     queryKey: ["statsNfl", userId, tournamentIdStats, weekType],
     queryFn: () => getStatsNfl({ tournamentId: tournamentIdStats, week: weekType }),
-    enabled: !!weekType && !!tournamentIdStats,
+    enabled: dataType === "PORTFOLIO" && !!weekType && !!tournamentIdStats,
+  });
+
+  const { data: scheduleNflData, isLoading: isLoadingSchedule } = useQuery({
+    queryKey: ["scheduleNfl", userId, sportId, tournamentIdStats, weekType],
+    queryFn: () =>
+      getSchedulePerWeekNfl({
+        sportId,
+        tournamentId: tournamentIdStats,
+        week: weekType,
+      }),
+    enabled: dataType === "SCHEDULE" && !!weekType && !!tournamentIdStats,
   });
 
   const { data: teamsNflStats } = useQuery({
@@ -123,11 +315,24 @@ const StatsNfl = () => {
     enabled: !!tournamentIdStats,
   });
 
+  // PORTFOLIO usa un WS de semanas propio (tournaments/:id/score/weeks);
+  // el resto de las opciones de Data (SCHEDULE, y a futuro SEED) comparten
+  // el WS genérico tournaments/:id/score/seed/weeks.
   const { data: getScoreWeeks } = useQuery({
-    queryKey: ["getScoreWeeksNfl", userId, tournamentIdStats],
-    queryFn: () => getScoreWeeksNfl({ tournamentId: tournamentIdStats }),
+    queryKey: ["getScoreWeeksNfl", userId, tournamentIdStats, dataType],
+    queryFn: () =>
+      dataType === "PORTFOLIO"
+        ? getScoreWeeksNfl({ tournamentId: tournamentIdStats })
+        : getScoreSeedWeeksNfl({ tournamentId: tournamentIdStats }),
     enabled: !!tournamentIdStats,
   });
+
+  useEffect(() => {
+    // al cambiar de Data, la lista de semanas cambia de fuente — se limpia
+    // la semana elegida para que el efecto de abajo tome la primera de la
+    // nueva lista en vez de arrastrar una semana que puede no existir ahí.
+    setWeekType("");
+  }, [dataType]);
 
   useEffect(() => {
     // Si tenemos semanas cargadas y el tipo de score (semana) no está definido
@@ -143,6 +348,17 @@ const StatsNfl = () => {
       setTournament(tournamentsNfl[0].name);
     }
   }, [tournamentsNfl, tournament]);
+
+  useEffect(() => {
+    // las columnas de PORTFOLIO y SCHEDULE no comparten ids — se reinicia el
+    // orden/búsqueda para no arrastrar un sort que no aplica a la otra tabla
+    setSorting(
+      dataType === "SCHEDULE"
+        ? [{ id: "match_date", desc: false }]
+        : [{ id: "week_score", desc: true }],
+    );
+    setFiltered("");
+  }, [dataType]);
 
   const teamsMap: Record<string, string> = useMemo(() => {
     return (
@@ -176,6 +392,54 @@ const StatsNfl = () => {
       };
     });
   }, [statsNflData, teamsMap]);
+
+  const scheduleWithCrests: ScheduleWithCrests[] = useMemo(() => {
+    if (!Array.isArray(scheduleNflData)) return [];
+
+    return scheduleNflData.map((item: ScheduleMatch) => ({
+      ...item,
+      home_crest: teamsMap[item.home_team?.toUpperCase()] ?? null,
+      away_crest: teamsMap[item.away_team?.toUpperCase()] ?? null,
+    }));
+  }, [scheduleNflData, teamsMap]);
+
+  const scheduleColumns = useMemo<ColumnDef<ScheduleWithCrests>[]>(
+    () => [
+      {
+        header: "Home",
+        accessorKey: "home_team",
+        cell: (info: CellContext<ScheduleWithCrests, unknown>) => (
+          <TeamDisplay
+            name={info.getValue() as string}
+            crest={info.row.original.home_crest || ""}
+          />
+        ),
+      },
+      {
+        header: "Away",
+        accessorKey: "away_team",
+        cell: (info: CellContext<ScheduleWithCrests, unknown>) => (
+          <TeamDisplay
+            name={info.getValue() as string}
+            crest={info.row.original.away_crest || ""}
+          />
+        ),
+      },
+      {
+        header: "Date",
+        accessorKey: "match_date",
+        cell: (info: CellContext<ScheduleWithCrests, unknown>) =>
+          (info.getValue() as string | null) || "—",
+      },
+      {
+        header: "Time",
+        accessorKey: "match_time",
+        cell: (info: CellContext<ScheduleWithCrests, unknown>) =>
+          (info.getValue() as string | null) || "—",
+      },
+    ],
+    [],
+  );
 
   const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
     () => [
@@ -230,7 +494,23 @@ const StatsNfl = () => {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  if (isLoading) return <Loader />;
+  const scheduleTable = useReactTable({
+    data: scheduleWithCrests,
+    columns: scheduleColumns,
+    state: {
+      sorting,
+      globalFilter: filtered,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setFiltered,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
+  const isSchedule = dataType === "SCHEDULE";
+
+  if (isLoading || isLoadingSchedule) return <Loader />;
 
   return (
     <Grid
@@ -362,15 +642,24 @@ const StatsNfl = () => {
                   textTransform: "uppercase",
                 }}
               >
-                Portfolios - Week: {weekType}
+                {isSchedule ? "Schedule" : "Portfolios"} - Week: {weekType}
               </Typography>
             </Box>
-            <Box sx={{ width: "100%", borderRadius: "4px", position: "relative" }}>
+            <Box
+              sx={{
+                width: isSchedule ? { xs: "100%", md: "50%" } : "100%",
+                mx: isSchedule ? "auto" : 0,
+                borderRadius: "4px",
+                position: "relative",
+              }}
+            >
               <Tooltip title="Descargar CSV">
                 <IconButton
-                  onClick={() =>
-                    downloadTableAsCsv(`Stats NFL - Week ${weekType}`, table)
-                  }
+                  onClick={() => {
+                    const filename = `Stats NFL - ${isSchedule ? "Schedule" : "Portfolios"} - Week ${weekType}`;
+                    if (isSchedule) downloadTableAsCsv(filename, scheduleTable);
+                    else downloadTableAsCsv(filename, table);
+                  }}
                   sx={{
                     color: "white",
                     position: "absolute",
@@ -419,150 +708,25 @@ const StatsNfl = () => {
                   }}
                 />
               </div>
-              <div style={{ width: "100%", overflowX: "scroll" }}>
-                <table
-                  style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    minWidth: "max-content",
-                  }}
-                >
-                  <thead>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <tr key={headerGroup.id}>
-                        {headerGroup.headers.map((header, index) => (
-                          <th
-                            key={header.id}
-                            onClick={header.column.getToggleSortingHandler()}
-                            style={{
-                              position:
-                                index === 0 || index === columns.length - 1
-                                  ? "sticky"
-                                  : "static",
-                              left: index === 0 ? 0 : undefined,
-                              right:
-                                index === columns.length - 1 ? 0 : undefined,
-                              backgroundColor: "#1c1c1c",
-                              zIndex:
-                                index === 0 || index === columns.length - 1
-                                  ? 4
-                                  : 2,
-                              color: "white",
-                              fontWeight: "bold",
-                              fontSize: "14px",
-                              textAlign: "center",
-                              padding: "12px",
-                              cursor: "pointer",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {header.isPlaceholder ? null : (
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <div>
-                                  {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext(),
-                                  )}
-                                </div>
-                                <span
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  {{
-                                    asc: (
-                                      <ArrowUpwardIcon
-                                        style={{
-                                          fontSize: "20px",
-                                          marginLeft: "4px",
-                                        }}
-                                      />
-                                    ),
-                                    desc: (
-                                      <ArrowUpwardIcon
-                                        style={{
-                                          transform: "rotate(180deg)",
-                                          fontSize: "20px",
-                                          marginLeft: "4px",
-                                        }}
-                                      />
-                                    ),
-                                  }[header.column.getIsSorted() as string] ?? (
-                                    <ArrowUpwardIcon
-                                      style={{
-                                        color: "gray",
-                                        fontSize: "18px",
-                                        marginLeft: "4px",
-                                      }}
-                                    />
-                                  )}
-                                </span>
-                              </div>
-                            )}
-                          </th>
-                        ))}
-                      </tr>
-                    ))}
-                  </thead>
-                  <tbody>
-                    {table.getRowModel().rows.map((row) => {
-                      const isRowHovered = hoveredRowId === row.id;
-                      return (
-                        <tr
-                          key={row.id}
-                          onMouseEnter={() => setHoveredRowId(row.id)}
-                          onMouseLeave={() => setHoveredRowId(null)}
-                        >
-                          {row.getVisibleCells().map((cell, index) => {
-                            const isSticky =
-                              index === 0 || index === columns.length - 1;
-                            const isCellHovered = !isSticky && hoveredCellId === cell.id;
-                            const bg = isCellHovered
-                              ? "#1c1c1c"
-                              : isRowHovered
-                                ? "#262626"
-                                : isSticky ? "#1c1c1c" : "#141414";
-                            return (
-                              <td
-                                key={cell.id}
-                                onMouseEnter={!isSticky ? () => setHoveredCellId(cell.id) : undefined}
-                                onMouseLeave={!isSticky ? () => setHoveredCellId(null) : undefined}
-                                style={{
-                                  position: isSticky ? "sticky" : "static",
-                                  left: index === 0 ? 0 : undefined,
-                                  right:
-                                    index === columns.length - 1 ? 0 : undefined,
-                                  backgroundColor: bg,
-                                  zIndex: isSticky ? 3 : 1,
-                                  color: "white",
-                                  fontWeight: "bold",
-                                  fontSize: "12px",
-                                  textAlign: "center",
-                                  padding: "8px",
-                                  whiteSpace: "nowrap",
-                                  transition: "background-color 0.15s ease",
-                                }}
-                              >
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext(),
-                                )}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+              {isSchedule ? (
+                <ScoreTable
+                  table={scheduleTable}
+                  columnsLength={scheduleColumns.length}
+                  hoveredRowId={hoveredRowId}
+                  setHoveredRowId={setHoveredRowId}
+                  hoveredCellId={hoveredCellId}
+                  setHoveredCellId={setHoveredCellId}
+                />
+              ) : (
+                <ScoreTable
+                  table={table}
+                  columnsLength={columns.length}
+                  hoveredRowId={hoveredRowId}
+                  setHoveredRowId={setHoveredRowId}
+                  hoveredCellId={hoveredCellId}
+                  setHoveredCellId={setHoveredCellId}
+                />
+              )}
             </Box>
           </Grid>
         </Zoom>
