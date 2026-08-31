@@ -13,9 +13,9 @@ interface Props {
 }
 
 /**
- * Equipos que descansan esta semana (bye week). La mayoría son solo
- * informativos, pero los que ya estaban en el portfolio de una semana
- * anterior sí se pueden seleccionar/quitar desde aquí también.
+ * Equipos que descansan esta semana (bye week) — se pueden seleccionar/
+ * quitar libremente desde acá hasta llegar al tope (BYTEPO); una vez
+ * alcanzado, los que no están elegidos quedan bloqueados.
  */
 export function ByeTeamsList({
   teams,
@@ -36,7 +36,7 @@ export function ByeTeamsList({
         const stateClass = selected
           ? classes.selected
           : selectable
-            ? classes.byeAvailable
+            ? classes.available
             : classes.bye;
 
         const cell = (
@@ -64,7 +64,7 @@ export function ByeTeamsList({
           return (
             <Tooltip
               key={team.id}
-              title="This team is on a bye week and was not part of a previous selection"
+              title="You already selected the maximum number of bye-week teams"
             >
               <span>{cell}</span>
             </Tooltip>

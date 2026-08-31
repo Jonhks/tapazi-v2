@@ -1,7 +1,10 @@
 import { useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { SplashMorph } from "@/shared/components/Splash/SplashMorph/SplashMorph";
 
 const Splash = () => {
+  const navigate = useNavigate();
+
   const handleComplete = useCallback(() => {
     if (window.location.pathname !== "/") return;
     try {
@@ -9,15 +12,15 @@ const Splash = () => {
       if (raw) {
         const user = JSON.parse(raw);
         if (user?.id && user?.email) {
-          window.location.pathname = `/sports/${user.id}`;
+          navigate(`/sports/${user.id}`);
           return;
         }
       }
     } catch {
       // storage corrupto — ir a login
     }
-    window.location.pathname = "/login";
-  }, []);
+    navigate("/login");
+  }, [navigate]);
 
   return (
     <SplashMorph

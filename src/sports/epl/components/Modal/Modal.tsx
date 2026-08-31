@@ -11,6 +11,7 @@ import TableModal from "./TableModal";
 import { NewPortfolio, ScorePortfoliosTable } from "@/types/index";
 import { getTeamsEpl } from "@/api/epl/PortfoliosEplAPI";
 import { useEffect, useState } from "react";
+import { useDraggable } from "@/shared/hooks/useDraggable";
 
 export default function ModalTableHome({
   openModal,
@@ -30,6 +31,13 @@ export default function ModalTableHome({
   const params = useParams<{ userId: string }>();
   const userId = params.userId!;
   const isMobile = useMediaQuery("(max-width:700px)");
+  const { position, reset, handleProps } = useDraggable();
+
+  // Resetea la posición al ABRIR (no al cerrar) para evitar un salto
+  // visible al centro si el modal llegara a animar su cierre.
+  useEffect(() => {
+    if (openModal) reset();
+  }, [openModal, reset]);
 
   const [teamsEplComplete, setTeamsEplComplete] = useState<
     ScorePortfoliosTable[]
@@ -124,7 +132,7 @@ export default function ModalTableHome({
             position: "absolute",
             top: "50%",
             left: "50%",
-            transform: "translate(-50%, -50%)",
+            transform: `translate(-50%, -50%) translate(${position.x}px, ${position.y}px)`,
             width: "auto",
             minWidth: isMobile ? "90%" : 600,
             maxWidth: "90%",
@@ -137,7 +145,10 @@ export default function ModalTableHome({
             color: "white",
           }}
         >
-          <div style={{ textAlign: "center", marginBottom: 10 }}>
+          <div
+            {...handleProps}
+            style={{ textAlign: "center", marginBottom: 10, ...handleProps.style }}
+          >
             <h3>Portfolio: {portfolio?.name || "Unknown Portfolio"}</h3>
             <h3>Week: {week}</h3>
           </div>

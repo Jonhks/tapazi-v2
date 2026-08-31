@@ -12,9 +12,8 @@
   gap: 8px;
 }
 
-/* solo se aplica a la última fila cuando queda incompleta (menos de 4
-   equipos) — cambia de grid a flex para poder centrar el grupo restante
-   sin afectar el ancho de celda de las filas completas */
+/* filas con menos de 4 equipos (la seed tiene menos miembros) — se centran
+   en vez de quedar pegadas a la izquierda con huecos a la derecha */
 @media (width >= 800px) {
   .rowCentered {
     display: flex;
@@ -32,9 +31,16 @@
     min-width: 0;
   }
 
-  .rowCellsCentered .cell {
-    flex: 0 1 calc(25% - 6px);
-    min-width: 0;
+  /* los equipos bloqueados (bye/blocked/full) se renderizan envueltos en
+     <Tooltip><span>...</span></Tooltip> — ese span, no el botón, es el que
+     realmente participa en el flex, así que el ancho fijo tiene que ir en
+     el hijo directo (sea span o botón) y no en .cell por descendencia,
+     o el envoltorio se encoge al tamaño de su texto (shrink:0 — siempre
+     hay espacio de sobra en una fila incompleta, nunca debe achicarse). */
+  .rowCellsCentered > .cell,
+  .rowCellsCentered > span {
+    flex: 0 0 calc(25% - 6px);
+    width: auto;
   }
 }
 
@@ -48,16 +54,29 @@
   font-size: 16px;
 }
 
-/* usado por ByeTeamsList: grid plano de 4 columnas, sin columna de seed */
+/* usado por ByeTeamsList: lista plana sin columna de seed — flex-wrap en
+   vez de grid para poder centrar la última línea si queda incompleta,
+   igual que .rowCellsCentered arriba (mismo motivo: los equipos bloqueados
+   van envueltos en <Tooltip><span>, y ese span es el que hay que medir). */
 .cells {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
+}
+
+@media (width >= 800px) {
+  .cells > .cell,
+  .cells > span {
+    flex: 0 0 calc(25% - 6px);
+    width: auto;
+  }
 }
 
 .cell {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
   width: 100%;
   height: 44px;
@@ -98,11 +117,12 @@
 }
 
 .teamName {
-  flex: 1;
+  flex: 0 1 auto;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  text-align: left;
+  text-align: center;
 }
 
 .available {
@@ -149,6 +169,17 @@
   color: #9a9ab0;
 }
 
+/* equipo de bye elegido desde la sección de abajo — sigue sin poder
+   tocarse desde acá, pero se nota que ya está elegido con un toque
+   amarillo sutil sobre el mismo gris deshabilitado. */
+.byeSelected {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background-color: #332d1d;
+  border-color: #7a6a35;
+  color: #c9bd8a;
+}
+
 /* en bye pero seleccionable (ya estaba en el portfolio de una semana anterior) */
 .byeAvailable {
   background-color: #103a3f;
@@ -167,14 +198,15 @@
   .row,
   .cells {
     display: flex;
+    flex-wrap: nowrap;
     overflow-x: scroll;
     gap: 4px;
     padding-bottom: 2px;
   }
 
-  /* en mobile la última fila incompleta no se centra — se desarma para que
-     sus celdas queden como hermanas directas de .seedLabel, igual que
-     cualquier otra fila (necesario para el scroll y el sticky del label) */
+  /* en mobile .row sigue siendo el único contenedor con scroll — .rowCellsCentered
+     se "desarma" para que sus celdas queden como hermanas directas de
+     .seedLabel (necesario para el sticky del seed label) */
   .rowCellsCentered {
     display: contents;
   }

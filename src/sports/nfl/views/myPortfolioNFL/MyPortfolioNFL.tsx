@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+import { useEffect, useState } from "react";
 import { Box, Button, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioNFL.module.css";
@@ -13,6 +14,9 @@ import { TeamSeedGrid } from "../../components/TeamSeedGrid/TeamSeedGrid";
 import { ByeTeamsList } from "../../components/TeamSeedGrid/ByeTeamsList";
 import { usePortfolioNflData } from "@/hooks/usePortfolioNflData";
 import { usePortfolioNflActions } from "@/hooks/usePortfolioNflActions";
+
+// aviso flotante: aparece cuando falta esto para el corte de edición
+const CUTOFF_WARNING_MINUTES = 3;
 
 const MyPortfolioNFL = () => {
   const params = useParams();
@@ -29,8 +33,9 @@ const MyPortfolioNFL = () => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
-    availableByeTeams,
     maxByeTeams,
+    isEditableTime,
+    editCutoffAt,
     weekParameter,
     tournamentId,
     isLoadingData,
@@ -52,48 +57,82 @@ const MyPortfolioNFL = () => {
     teamsDynamics,
     validTournament,
     weekParameter,
+    isEditableTime,
   });
 
   const teams = teamsComplete ?? [];
   const selected = selectedTeams ?? [];
+
+  const [cutoffCountdown, setCutoffCountdown] = useState("");
+  const [dismissedCutoffWarning, setDismissedCutoffWarning] = useState(false);
+  const cutoffTime = editCutoffAt ? editCutoffAt.getTime() : null;
+
+  useEffect(() => {
+    if (!cutoffTime) {
+      setCutoffCountdown("");
+      return;
+    }
+
+    const tick = () => {
+      const msLeft = cutoffTime - Date.now();
+      const warningWindowMs = CUTOFF_WARNING_MINUTES * 60 * 1000;
+      if (msLeft <= 0 || msLeft > warningWindowMs) {
+        setCutoffCountdown("");
+        return;
+      }
+      const totalSeconds = Math.floor(msLeft / 1000);
+      const m = Math.floor(totalSeconds / 60);
+      const s = totalSeconds % 60;
+      setCutoffCountdown(`${m}:${String(s).padStart(2, "0")}`);
+    };
+
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [cutoffTime]);
+
+  // bye_team_next_week (y por lo tanto esta pantalla) siempre habla de la
+  // semana siguiente a la ronda actual del torneo.
+  const nextWeekNumber = (validTournament?.[0]?.current_round ?? 0) + 1;
 
   const isTeamSelected = (team) => selected.some((t) => t && t.id === team.id);
 
   const isTeamBlocked = (team) =>
     (teamsBloqued ?? []).some((t) => t.id === team.id);
 
-  const isGridFull = selected.length > 0 && selected.every((t) => t && t.name);
+  // los objetos de equipo que vienen de un portfolio guardado
+  // (AllPortfolios[0].teams) no siempre traen bye_team_next_week — se busca
+  // el equipo "canónico" en teamsComplete por id para no perder el dato.
+  const isTeamOnBye = (team) => {
+    const canonical = teams.find((t) => t.id === team?.id);
+    return !!(canonical?.bye_team_next_week ?? team?.bye_team_next_week);
+  };
 
-  const isTeamOnBye = (team) => !!team?.bye_team_current_week;
-
-  const availableByeTeamIds = new Set(
-    (availableByeTeams ?? []).map((t) =>
-      typeof t === "object" && t !== null ? t.id : t,
-    ),
-  );
+  // los bye teams seleccionados van SIEMPRE después de los primeros
+  // numberInputs cupos (que son solo para equipos de la semana) — son un
+  // extra aparte, no compiten por esos cupos.
+  const weekSelectedCount = selected.filter(
+    (t) => t && t.name && !isTeamOnBye(t),
+  ).length;
+  const isGridFull = weekSelectedCount >= numberInputs;
 
   const currentByeCount = selected.filter((t) => t && isTeamOnBye(t)).length;
 
-  // un bye team solo se muestra como seleccionable si además todavía hay
-  // cupo disponible (BYTEPO) — si ya se llegó al máximo, se ve bloqueado
-  // aunque el equipo en sí sea elegible.
-  const isByeTeamSelectable = (team) =>
-    availableByeTeamIds.has(team.id) && currentByeCount < maxByeTeams;
+  // tope BYTEPO (sin la restricción de "ya estaba en el portfolio de una
+  // semana anterior" — esa se quitó, pero el máximo de cuántos se pueden
+  // elegir sigue aplicando).
+  const isByeTeamSelectable = () => currentByeCount < maxByeTeams;
 
   const byeTeams = teams.filter(isTeamOnBye);
-  const weekTeams = teams.filter((t) => !isTeamOnBye(t));
 
   const handleToggleTeam = (team) => {
-    if (isTeamBlocked(team)) {
-      toast.info("This team is not available and cannot be modified.");
-      return;
-    }
-
     const onBye = isTeamOnBye(team);
-    if (onBye && !isByeTeamSelectable(team)) {
-      toast.info(
-        "This team is on a bye week and was not part of a previous selection.",
-      );
+
+    // /teams/not-available también trae a los equipos en bye (por eso no
+    // se pueden elegir arriba), pero ese bloqueo no debe aplicar cuando se
+    // seleccionan desde la sección Bye — ahí es donde SÍ deben poder elegirse.
+    if (!onBye && isTeamBlocked(team)) {
+      toast.info("This team is not available and cannot be modified.");
       return;
     }
 
@@ -102,19 +141,32 @@ const MyPortfolioNFL = () => {
     );
     if (alreadySelectedIndex !== -1) {
       const next = [...selected];
-      next[alreadySelectedIndex] = "";
+      if (alreadySelectedIndex < numberInputs) {
+        // equipo de la semana: se libera el cupo, no se borra la posición
+        next[alreadySelectedIndex] = "";
+      } else {
+        // bye team extra: se quita del todo, no deja hueco
+        next.splice(alreadySelectedIndex, 1);
+      }
       setSelectedTeams(next);
       return;
     }
 
-    if (onBye && currentByeCount >= maxByeTeams) {
-      toast.info(
-        `You can only select up to ${maxByeTeams} bye-week team${maxByeTeams === 1 ? "" : "s"}.`,
-      );
+    if (onBye) {
+      if (currentByeCount >= maxByeTeams) {
+        toast.info(
+          `You can only select up to ${maxByeTeams} bye-week team${maxByeTeams === 1 ? "" : "s"}.`,
+        );
+        return;
+      }
+      // extra: se agrega al final, no ocupa un cupo de numberInputs
+      setSelectedTeams([...selected, team]);
       return;
     }
 
-    const emptyIndex = selected.findIndex((t) => !t || !t.name);
+    const emptyIndex = selected.findIndex(
+      (t, idx) => idx < numberInputs && (!t || !t.name),
+    );
     if (emptyIndex === -1) {
       toast.info("You already selected the maximum number of teams.");
       return;
@@ -130,19 +182,36 @@ const MyPortfolioNFL = () => {
   }
 
   return (
-    <Grid
-      container
-      justifyContent={"center"}
-      alignContent={"start"}
-      size={12}
-      style={{
-        minHeight: "700px",
-        height: "calc(100vh - 56px)",
-        overflowY: "scroll",
-        overflowX: "hidden",
-      }}
-      className={`${classes.gridInstructions}`}
-    >
+    <>
+      {cutoffCountdown && !dismissedCutoffWarning && (
+        <div className={classes.cutoffBanner}>
+          <span>
+            Editing will lock in <strong>{cutoffCountdown}</strong> — save
+            your changes now.
+          </span>
+          <button
+            type="button"
+            className={classes.cutoffBannerClose}
+            aria-label="Dismiss"
+            onClick={() => setDismissedCutoffWarning(true)}
+          >
+            ×
+          </button>
+        </div>
+      )}
+      <Grid
+        container
+        justifyContent={"center"}
+        alignContent={"start"}
+        size={12}
+        style={{
+          minHeight: "700px",
+          height: "calc(100vh - 56px)",
+          overflowY: "scroll",
+          overflowX: "hidden",
+        }}
+        className={`${classes.gridInstructions}`}
+      >
       <Grid size={{ xs: 12, sm: 10, lg: 10 }}>
         <Box
           component="section"
@@ -210,16 +279,16 @@ const MyPortfolioNFL = () => {
               style={{ marginTop: "30px" }}
             >
               <div className={classes.sectionLabel}>
-                Week
+                Week {nextWeekNumber}
                 <span className={classes.sectionCount}>
-                  {selected.filter((t) => t && t.name).length} / {numberInputs}{" "}
-                  selected
+                  {weekSelectedCount} / {numberInputs} selected
                 </span>
               </div>
               <TeamSeedGrid
-                teams={weekTeams}
+                teams={teams}
                 isTeamSelected={isTeamSelected}
                 isTeamBlocked={isTeamBlocked}
+                isTeamOnBye={isTeamOnBye}
                 isGridFull={isGridFull}
                 onToggleTeam={handleToggleTeam}
                 getSeed={getSeed}
@@ -229,12 +298,10 @@ const MyPortfolioNFL = () => {
               {byeTeams.length > 0 && (
                 <>
                   <div className={classes.sectionLabel}>
-                    Bye
-                    {maxByeTeams > 0 && (
-                      <span className={classes.sectionCount}>
-                        {currentByeCount} selected
-                      </span>
-                    )}
+                    Bye Week {nextWeekNumber}
+                    <span className={classes.sectionCount}>
+                      {currentByeCount} selected
+                    </span>
                   </div>
                   <ByeTeamsList
                     teams={byeTeams}
@@ -289,7 +356,8 @@ const MyPortfolioNFL = () => {
           </Grid>
         </Box>
       </Grid>
-    </Grid>
+      </Grid>
+    </>
   );
 };
 

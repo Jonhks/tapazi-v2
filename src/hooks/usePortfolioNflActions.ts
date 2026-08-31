@@ -24,6 +24,7 @@ interface UsePortfolioNflActionsProps {
   teamsDynamics: Team[];
   validTournament: Tournament[];
   weekParameter: number | null;
+  isEditableTime: boolean;
 }
 
 export const usePortfolioNflActions = ({
@@ -36,6 +37,7 @@ export const usePortfolioNflActions = ({
   teamsDynamics,
   validTournament,
   weekParameter,
+  isEditableTime,
 }: UsePortfolioNflActionsProps) => {
   const queryClient = useQueryClient();
 
@@ -72,9 +74,17 @@ export const usePortfolioNflActions = ({
     },
   });
 
-  const areAllInputsValid = () =>
-    selectedTeams?.length === numberInputs &&
-    selectedTeams.every((team) => team && team.name);
+  // Los bye teams seleccionados son un extra que se agrega DESPUÉS de los
+  // primeros numberInputs cupos (ver usePortfolioNflData/MyPortfolioNFL) —
+  // por eso solo se valida esa porción, sin importar cuántos bye extra haya.
+  const areAllInputsValid = () => {
+    if (!isEditableTime) return false;
+    const weekTeams = selectedTeams?.slice(0, numberInputs) ?? [];
+    return (
+      weekTeams.length === numberInputs &&
+      weekTeams.every((team) => team && team.name)
+    );
+  };
 
   const getSeed = (team: Team) => {
     let seed = "";
@@ -321,6 +331,13 @@ export const usePortfolioNflActions = ({
 
   // Verifica saldo antes de confirmar (solo en creación, no en edición)
   const addportFolioAlert = async () => {
+    if (!isEditableTime) {
+      toast.error(
+        "Editing is closed — the tournament starts in less than 5 minutes.",
+      );
+      return;
+    }
+
     if (!AllPortfolios?.length) {
       if (!tournamentId) return;
       try {

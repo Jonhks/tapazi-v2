@@ -84,12 +84,17 @@ type SeedTeamStat = {
   bye_team_current_week: boolean;
 };
 
+type SeedTeamWithCrest = SeedTeamStat & {
+  crest: string | null;
+};
+
 const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
   <Box
     display="flex"
     alignItems="center"
     justifyContent="start"
     gap={1}
+    sx={{ width: "100%" }}
   >
     <Box
       sx={{
@@ -138,7 +143,9 @@ function ScoreTable<TData>({
         <thead>
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header, index) => (
+              {headerGroup.headers.map((header, index) => {
+                const align = header.column.columnDef.meta?.align ?? "center";
+                return (
                 <th
                   key={header.id}
                   onClick={header.column.getToggleSortingHandler()}
@@ -154,7 +161,7 @@ function ScoreTable<TData>({
                     color: "white",
                     fontWeight: "bold",
                     fontSize: "14px",
-                    textAlign: "center",
+                    textAlign: align,
                     padding: "12px",
                     cursor: "pointer",
                     whiteSpace: "nowrap",
@@ -165,7 +172,8 @@ function ScoreTable<TData>({
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "center",
+                        justifyContent:
+                          align === "left" ? "flex-start" : "center",
                       }}
                     >
                       <div>
@@ -211,7 +219,8 @@ function ScoreTable<TData>({
                     </div>
                   )}
                 </th>
-              ))}
+                );
+              })}
             </tr>
           ))}
         </thead>
@@ -227,6 +236,7 @@ function ScoreTable<TData>({
                 {row.getVisibleCells().map((cell, index) => {
                   const isSticky = index === 0 || index === columnsLength - 1;
                   const isCellHovered = !isSticky && hoveredCellId === cell.id;
+                  const align = cell.column.columnDef.meta?.align ?? "center";
                   const bg = isCellHovered
                     ? "#1c1c1c"
                     : isRowHovered
@@ -252,7 +262,7 @@ function ScoreTable<TData>({
                         color: "white",
                         fontWeight: "bold",
                         fontSize: "12px",
-                        textAlign: "center",
+                        textAlign: align,
                         padding: "8px",
                         whiteSpace: "nowrap",
                         transition: "background-color 0.15s ease",
@@ -429,6 +439,7 @@ const StatsNfl = () => {
       {
         header: "Home",
         accessorKey: "home_team",
+        meta: { align: "left" },
         cell: (info: CellContext<ScheduleWithCrests, unknown>) => (
           <TeamDisplay
             name={info.getValue() as string}
@@ -439,6 +450,7 @@ const StatsNfl = () => {
       {
         header: "Away",
         accessorKey: "away_team",
+        meta: { align: "left" },
         cell: (info: CellContext<ScheduleWithCrests, unknown>) => (
           <TeamDisplay
             name={info.getValue() as string}
@@ -462,16 +474,26 @@ const StatsNfl = () => {
     [],
   );
 
-  const seedRows: SeedTeamStat[] = useMemo(() => {
+  const seedRows: SeedTeamWithCrest[] = useMemo(() => {
     if (!Array.isArray(seedPerWeekNflData)) return [];
-    return seedPerWeekNflData;
-  }, [seedPerWeekNflData]);
+    return seedPerWeekNflData.map((item: SeedTeamStat) => ({
+      ...item,
+      crest: teamsMap[item.name?.toUpperCase()] ?? null,
+    }));
+  }, [seedPerWeekNflData, teamsMap]);
 
-  const seedColumns = useMemo<ColumnDef<SeedTeamStat>[]>(
+  const seedColumns = useMemo<ColumnDef<SeedTeamWithCrest>[]>(
     () => [
       {
         header: "Team",
         accessorKey: "name",
+        meta: { align: "left" },
+        cell: (info: CellContext<SeedTeamWithCrest, unknown>) => (
+          <TeamDisplay
+            name={info.getValue() as string}
+            crest={info.row.original.crest || ""}
+          />
+        ),
       },
       {
         header: "Seed",
@@ -480,7 +502,7 @@ const StatsNfl = () => {
       {
         header: "Bye Week",
         accessorKey: "bye_team_current_week",
-        cell: (info: CellContext<SeedTeamStat, unknown>) =>
+        cell: (info: CellContext<SeedTeamWithCrest, unknown>) =>
           info.getValue() ? "Yes" : "No",
       },
     ],
@@ -492,6 +514,7 @@ const StatsNfl = () => {
       {
         header: "Portfolio",
         accessorKey: "portfolio",
+        meta: { align: "left" },
         cell: (info: CellContext<PortfolioWithCrests, unknown>) => (
           <span style={{ color: "#05fa87" }}>{info.getValue() as string}</span>
         ),
@@ -500,6 +523,7 @@ const StatsNfl = () => {
         header: `Team ${i + 1}`,
         accessorFn: (row: PortfolioWithCrests) => row.teams?.[i]?.name || "",
         id: `team_${i}`,
+        meta: { align: "left" as const },
         cell: (info: CellContext<PortfolioWithCrests, unknown>) => {
           const teamName = info.getValue() as string;
           const originalRow = info.row.original as PortfolioWithCrests;
