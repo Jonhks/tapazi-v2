@@ -33,6 +33,7 @@ const MyPortfolioNFL = () => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    availableByeTeams,
     maxByeTeams,
     isEditableTime,
     editCutoffAt,
@@ -118,10 +119,18 @@ const MyPortfolioNFL = () => {
 
   const currentByeCount = selected.filter((t) => t && isTeamOnBye(t)).length;
 
-  // tope BYTEPO (sin la restricción de "ya estaba en el portfolio de una
-  // semana anterior" — esa se quitó, pero el máximo de cuántos se pueden
-  // elegir sigue aplicando).
-  const isByeTeamSelectable = () => currentByeCount < maxByeTeams;
+  // sports/teams/available-bye-teams-per-portfolio devuelve los bye teams
+  // que ya vienen "arrastrados" del portfolio (ej. por streak de semanas
+  // anteriores) — esos NO se pueden tocar desde acá, quedan bloqueados.
+  const lockedByeTeamIds = new Set(
+    (availableByeTeams ?? []).map((t) =>
+      typeof t === "object" && t !== null ? t.team_id : t,
+    ),
+  );
+
+  // tope BYTEPO también sigue aplicando sobre lo que sí es libre de elegir.
+  const isByeTeamSelectable = (team) =>
+    !lockedByeTeamIds.has(team.id) && currentByeCount < maxByeTeams;
 
   const byeTeams = teams.filter(isTeamOnBye);
 
@@ -133,6 +142,13 @@ const MyPortfolioNFL = () => {
     // seleccionan desde la sección Bye — ahí es donde SÍ deben poder elegirse.
     if (!onBye && isTeamBlocked(team)) {
       toast.info("This team is not available and cannot be modified.");
+      return;
+    }
+
+    if (onBye && lockedByeTeamIds.has(team.id)) {
+      toast.info(
+        "This team is already locked into your portfolio and can't be changed.",
+      );
       return;
     }
 
@@ -307,6 +323,7 @@ const MyPortfolioNFL = () => {
                     teams={byeTeams}
                     isTeamSelected={isTeamSelected}
                     isByeTeamSelectable={isByeTeamSelectable}
+                    isByeTeamLocked={(team) => lockedByeTeamIds.has(team.id)}
                     onToggleTeam={handleToggleTeam}
                     getSeed={getSeed}
                     getMultiplier={getMultiplier}

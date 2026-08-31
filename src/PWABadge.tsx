@@ -3,11 +3,23 @@ import classes from "./PWABadge.module.css";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { useVersionCheck } from "./hooks/useVersionCheck";
 
+// mismo intervalo que useVersionCheck — solo revisa si hay un SW nuevo
+// (registration.update() no lo activa, solo lo descarga en segundo plano;
+// aplicar el cambio sigue siendo manual, vía el botón "Reload" de abajo).
+const SW_UPDATE_CHECK_INTERVAL_MS = 5 * 60 * 1000;
+
 function PWABadge() {
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
-  } = useRegisterSW();
+  } = useRegisterSW({
+    onRegisteredSW(_swUrl, registration) {
+      if (!registration) return;
+      setInterval(() => {
+        registration.update();
+      }, SW_UPDATE_CHECK_INTERVAL_MS);
+    },
+  });
 
   const { needUpdate, dismiss } = useVersionCheck();
 
