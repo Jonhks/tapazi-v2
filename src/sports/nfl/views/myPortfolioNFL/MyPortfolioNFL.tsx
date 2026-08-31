@@ -119,18 +119,18 @@ const MyPortfolioNFL = () => {
 
   const currentByeCount = selected.filter((t) => t && isTeamOnBye(t)).length;
 
-  // sports/teams/available-bye-teams-per-portfolio devuelve los bye teams
-  // que ya vienen "arrastrados" del portfolio (ej. por streak de semanas
-  // anteriores) — esos NO se pueden tocar desde acá, quedan bloqueados.
-  const lockedByeTeamIds = new Set(
+  // sports/teams/available-bye-teams-per-portfolio devuelve los ÚNICOS bye
+  // teams que se pueden seleccionar en este portfolio (porque ya estaban
+  // seleccionados en una semana anterior) — el resto queda bloqueado.
+  const availableByeTeamIds = new Set(
     (availableByeTeams ?? []).map((t) =>
       typeof t === "object" && t !== null ? t.team_id : t,
     ),
   );
 
-  // tope BYTEPO también sigue aplicando sobre lo que sí es libre de elegir.
+  // además del tope BYTEPO sobre lo que sí es elegible.
   const isByeTeamSelectable = (team) =>
-    !lockedByeTeamIds.has(team.id) && currentByeCount < maxByeTeams;
+    availableByeTeamIds.has(team.id) && currentByeCount < maxByeTeams;
 
   const byeTeams = teams.filter(isTeamOnBye);
 
@@ -142,13 +142,6 @@ const MyPortfolioNFL = () => {
     // seleccionan desde la sección Bye — ahí es donde SÍ deben poder elegirse.
     if (!onBye && isTeamBlocked(team)) {
       toast.info("This team is not available and cannot be modified.");
-      return;
-    }
-
-    if (onBye && lockedByeTeamIds.has(team.id)) {
-      toast.info(
-        "This team is already locked into your portfolio and can't be changed.",
-      );
       return;
     }
 
@@ -169,6 +162,12 @@ const MyPortfolioNFL = () => {
     }
 
     if (onBye) {
+      if (!availableByeTeamIds.has(team.id)) {
+        toast.info(
+          "This team is on a bye week and was not part of a previous selection.",
+        );
+        return;
+      }
       if (currentByeCount >= maxByeTeams) {
         toast.info(
           `You can only select up to ${maxByeTeams} bye-week team${maxByeTeams === 1 ? "" : "s"}.`,
@@ -323,7 +322,6 @@ const MyPortfolioNFL = () => {
                     teams={byeTeams}
                     isTeamSelected={isTeamSelected}
                     isByeTeamSelectable={isByeTeamSelectable}
-                    isByeTeamLocked={(team) => lockedByeTeamIds.has(team.id)}
                     onToggleTeam={handleToggleTeam}
                     getSeed={getSeed}
                     getMultiplier={getMultiplier}

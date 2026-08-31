@@ -7,25 +7,21 @@ interface Props {
   teams: NflTeam[];
   isTeamSelected: (team: NflTeam) => boolean;
   isByeTeamSelectable: (team: NflTeam) => boolean;
-  /** true si viene de available-bye-teams-per-portfolio (ya arrastrado, no se toca). */
-  isByeTeamLocked: (team: NflTeam) => boolean;
   onToggleTeam: (team: NflTeam) => void;
   getSeed: (team: NflTeam) => string | number;
   getMultiplier: (team: NflTeam) => string | number;
 }
 
 /**
- * Equipos que descansan esta semana (bye week) — se pueden seleccionar/
- * quitar libremente desde acá hasta llegar al tope (BYTEPO); una vez
- * alcanzado, los que no están elegidos quedan bloqueados. Los que ya vienen
- * arrastrados del portfolio (available-bye-teams-per-portfolio) siempre
- * quedan bloqueados, sin importar el tope.
+ * Equipos que descansan esta semana (bye week) — solo los que vienen en
+ * available-bye-teams-per-portfolio se pueden seleccionar/quitar desde acá
+ * (los que ya estaban en el portfolio de una semana anterior), y hasta
+ * llegar al tope (BYTEPO). El resto queda bloqueado.
  */
 export function ByeTeamsList({
   teams,
   isTeamSelected,
   isByeTeamSelectable,
-  isByeTeamLocked,
   onToggleTeam,
   getSeed,
   getMultiplier,
@@ -37,10 +33,7 @@ export function ByeTeamsList({
       {teams.map((team) => {
         const selected = isTeamSelected(team);
         const selectable = isByeTeamSelectable(team);
-        const locked = isByeTeamLocked(team);
-        // arrastrado del portfolio: nunca se toca desde acá, ni para
-        // seleccionarlo ni para quitarlo, así ya esté elegido.
-        const clickable = !locked && (selected || selectable);
+        const clickable = selected || selectable;
         const stateClass = selected
           ? classes.selected
           : selectable
@@ -68,14 +61,11 @@ export function ByeTeamsList({
           </button>
         );
 
-        if (!clickable) {
-          const title = locked
-            ? "This team is already locked into your portfolio and can't be changed"
-            : "You already selected the maximum number of bye-week teams";
+        if (!selected && !selectable) {
           return (
             <Tooltip
               key={team.id}
-              title={title}
+              title="This team is on a bye week and was not part of a previous selection"
             >
               <span>{cell}</span>
             </Tooltip>
