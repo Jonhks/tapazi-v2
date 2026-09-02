@@ -1,12 +1,14 @@
-import { Box } from "@mui/material";
+import { Box, IconButton, Tooltip } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./InstructionsNfl.module.css";
+import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import Loader from "../../components/NFLBallLoader/NFLBallLoader";
 import type { Instructions } from "@/types/index";
 import { getInstructionsNfl } from "@/api/nfl/InstructionsNflApi";
 import { getTournaments } from "@/api/nfl/HomeNflApiNfl";
+import { downloadTextFile } from "@/utils/downloadTextFile";
 
 const InstructionsNfl = () => {
   const params = useParams();
@@ -26,6 +28,15 @@ const InstructionsNfl = () => {
     queryFn: () => getInstructionsNfl(tournamentIdNfl),
     enabled: Boolean(tournamentIdNfl),
   });
+
+  const handleDownload = () => {
+    if (!instructionsData?.length) return;
+    const content = instructionsData
+      .map((paragraph: Instructions) => paragraph.description)
+      .filter(Boolean)
+      .join("\n\n");
+    downloadTextFile("NFL Instructions", content);
+  };
 
   return (
     <div
@@ -51,10 +62,21 @@ const InstructionsNfl = () => {
               component="section"
               className={classes.boxInstructions}
             >
-              <p className={classes.titleInstructions}>
-                {instructionsData[0].description ||
-                  "Sin información disponible"}
-              </p>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: 48, flexShrink: 0 }} />
+                <p className={classes.titleInstructions} style={{ flex: 1 }}>
+                  {instructionsData[0].description ||
+                    "Sin información disponible"}
+                </p>
+                <Tooltip title="Download instructions">
+                  <IconButton
+                    onClick={handleDownload}
+                    sx={{ color: "#D4AF37", flexShrink: 0 }}
+                  >
+                    <FileDownloadOutlinedIcon />
+                  </IconButton>
+                </Tooltip>
+              </div>
               <Grid
                 size={12}
                 className={`${classes.subBoxInstructions}`}

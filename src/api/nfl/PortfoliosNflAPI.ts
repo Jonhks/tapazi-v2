@@ -165,6 +165,21 @@ export const getAvailableByeTeamsPerPortfolio = async (
   }
 };
 
+export const getPortfolioPerWeek = async (
+  portfolioId: string,
+  week: string,
+) => {
+  try {
+    const url = `/portfolios/${portfolioId}/per-week?week=${week}`;
+    const { data } = await apiEnv.get(url);
+    return data.teams ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
+  }
+};
+
 export const getParameterWeek = async (id: string, parameter: string) => {
   try {
     const url = `/tournaments/${id}/parameters?key=${parameter}`;

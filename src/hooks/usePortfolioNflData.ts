@@ -11,6 +11,7 @@ import {
   getTeamsDynamics,
   getParameterWeek,
   getAvailableByeTeamsPerPortfolio,
+  getPortfolioPerWeek,
 } from "@/api/nfl/PortfoliosNflAPI";
 import { getParameter } from "@/api/shared/TournamentsAPI";
 import { isEditableBeforeCutoff, getEditCutoffDate } from "@/utils/getDaysLeft";
@@ -147,6 +148,18 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     enabled: Boolean(tournamentId),
   });
 
+  // 11. Seed/streak de la semana actual del portfolio — se usa para mostrar
+  // el seed/multiplier real de los equipos de bye (sección de abajo).
+  const currentRound = validTournament?.[0]?.current_round;
+  const { data: byeWeekStatsData, isLoading: isLoadingByeWeekStats } =
+    useQuery({
+      queryKey: ["nflPortfolioPerWeek", portfolios, currentRound],
+      queryFn: () =>
+        getPortfolioPerWeek(portfolios?.[0]?.id, String(currentRound)),
+      retry: 1,
+      enabled: Boolean(portfolios?.[0]?.id && currentRound),
+    });
+
   // --- Sincronización de estados ---
 
   useEffect(() => {
@@ -266,7 +279,8 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     isLoadingWeekParameter ||
     isLoadingTeamsNotAvailable ||
     isLoadingAvailableByeTeams ||
-    isLoadingMaxByeTeams;
+    isLoadingMaxByeTeams ||
+    isLoadingByeWeekStats;
 
   return {
     validTournament,
@@ -280,6 +294,7 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     teamsDynamics,
     availableByeTeams,
     maxByeTeams,
+    byeWeekStats: byeWeekStatsData ?? [],
     isEditableTime,
     editCutoffAt:
       tournamentDateData && tournamentHourData

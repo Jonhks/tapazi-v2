@@ -35,6 +35,7 @@ const MyPortfolioNFL = () => {
     teamsDynamics,
     availableByeTeams,
     maxByeTeams,
+    byeWeekStats,
     isEditableTime,
     editCutoffAt,
     weekParameter,
@@ -134,6 +135,16 @@ const MyPortfolioNFL = () => {
 
   const byeTeams = teams.filter(isTeamOnBye);
 
+  // seed/multiplier reales de los equipos de bye — vienen de
+  // portfolios/:id/per-week?week={ronda actual}, no del cálculo normal
+  // de getSeed/getMultiplier (que es para equipos de la semana).
+  const byeWeekStatsById = new Map(
+    (byeWeekStats ?? []).map((t) => [t.team_id, t]),
+  );
+  const getByeSeed = (team) => byeWeekStatsById.get(team.id)?.seed ?? getSeed(team);
+  const getByeMultiplier = (team) =>
+    byeWeekStatsById.get(team.id)?.streak_multiplier ?? getMultiplier(team);
+
   const handleToggleTeam = (team) => {
     const onBye = isTeamOnBye(team);
 
@@ -201,8 +212,8 @@ const MyPortfolioNFL = () => {
       {cutoffCountdown && !dismissedCutoffWarning && (
         <div className={classes.cutoffBanner}>
           <span>
-            Editing will lock in <strong>{cutoffCountdown}</strong> — save
-            your changes now.
+            Editing will lock in <strong>{cutoffCountdown}</strong> — save your
+            changes now.
           </span>
           <button
             type="button"
@@ -227,150 +238,150 @@ const MyPortfolioNFL = () => {
         }}
         className={`${classes.gridInstructions}`}
       >
-      <Grid size={{ xs: 12, sm: 10, lg: 10 }}>
-        <Box
-          component="section"
-          className={classes.boxPortfolio}
-          m={3}
-        >
-          <div
-            className={classes.headerPortfolio}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+        <Grid size={{ xs: 12, sm: 10, lg: 10 }}>
+          <Box
+            component="section"
+            className={classes.boxPortfolio}
+            m={3}
           >
-            <div style={{ color: "white" }}>
-              <EmojiEventsOutlinedIcon
-                color="inherit"
-                style={{ fontSize: "2.6rem" }}
-              />
-              <h2 style={{ color: "#D4AF37", fontSize: "40px" }}>
-                My Portfolio
-                <p
-                  style={{
-                    color: "white",
-                    fontSize: "16px",
-                    fontWeight: "normal",
-                  }}
-                >
-                  {validTournament ? validTournament[0]?.name : "Tournament"}
-                </p>
-              </h2>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: "22px",
-              fontWeight: "bold",
-            }}
-          >
-            <p style={{ textAlign: "center", color: "#D4AF37" }}>
-              {AllPortfolios && AllPortfolios[0]?.name}
-            </p>
-            <Divider style={{ backgroundColor: "white", width: "60%" }} />
-          </div>
-
-          {numberInputs === 0 ? (
-            <p
+            <div
+              className={classes.headerPortfolio}
               style={{
-                color: "white",
-                fontWeight: "bold",
-                textAlign: "center",
-                fontSize: "24px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              No teams are available for selection.
-            </p>
-          ) : (
-            <Grid
-              size={12}
-              style={{ marginTop: "30px" }}
-            >
-              <div className={classes.sectionLabel}>
-                Week {nextWeekNumber}
-                <span className={classes.sectionCount}>
-                  {weekSelectedCount} / {numberInputs} selected
-                </span>
+              <div style={{ color: "white" }}>
+                <EmojiEventsOutlinedIcon
+                  color="inherit"
+                  style={{ fontSize: "2.6rem" }}
+                />
+                <h2 style={{ color: "#D4AF37", fontSize: "40px" }}>
+                  My Portfolio
+                  <p
+                    style={{
+                      color: "white",
+                      fontSize: "16px",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    {validTournament ? validTournament[0]?.name : "Tournament"}
+                  </p>
+                </h2>
               </div>
-              <TeamSeedGrid
-                teams={teams}
-                isTeamSelected={isTeamSelected}
-                isTeamBlocked={isTeamBlocked}
-                isTeamOnBye={isTeamOnBye}
-                isGridFull={isGridFull}
-                onToggleTeam={handleToggleTeam}
-                getSeed={getSeed}
-                getMultiplier={getMultiplier}
-              />
+            </div>
 
-              {byeTeams.length > 0 && (
-                <>
-                  <div className={classes.sectionLabel}>
-                    Bye Week {nextWeekNumber}
-                    <span className={classes.sectionCount}>
-                      {currentByeCount} selected
-                    </span>
-                  </div>
-                  <ByeTeamsList
-                    teams={byeTeams}
-                    isTeamSelected={isTeamSelected}
-                    isByeTeamSelectable={isByeTeamSelectable}
-                    onToggleTeam={handleToggleTeam}
-                    getSeed={getSeed}
-                    getMultiplier={getMultiplier}
-                  />
-                </>
-              )}
-            </Grid>
-          )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "22px",
+                fontWeight: "bold",
+              }}
+            >
+              <p style={{ textAlign: "center", color: "#D4AF37" }}>
+                {AllPortfolios && AllPortfolios[0]?.name}
+              </p>
+              <Divider style={{ backgroundColor: "white", width: "60%" }} />
+            </div>
 
-          <Grid
-            mt={3}
-            mb={2}
-          >
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button
-                variant="contained"
+            {numberInputs === 0 ? (
+              <p
                 style={{
-                  backgroundColor: `${areAllInputsValid() ? "#05fa87" : "#0c5031ff"}`,
-                  width: "30%",
-                  color: "black",
-                  fontWeight: "bold",
-                  fontSize: "14px",
-                  margin: 10,
-                  "&:disabled": { backgroundColor: "grey" },
-                }}
-                onClick={() => addportFolioAlert()}
-              >
-                {AllPortfolios && AllPortfolios[0]?.teams?.length > 0
-                  ? "EDIT"
-                  : "SUBMIT"}
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                style={{
-                  width: "30%",
                   color: "white",
                   fontWeight: "bold",
-                  fontSize: "14px",
-                  margin: 10,
+                  textAlign: "center",
+                  fontSize: "24px",
                 }}
-                onClick={() => cancelAlert()}
               >
-                Cancel
-              </Button>
-            </div>
-          </Grid>
-        </Box>
-      </Grid>
+                No teams are available for selection.
+              </p>
+            ) : (
+              <Grid
+                size={12}
+                style={{ marginTop: "30px" }}
+              >
+                <div className={classes.sectionLabel}>
+                  Week {nextWeekNumber}
+                  <span className={classes.sectionCount}>
+                    {weekSelectedCount} / {numberInputs} selected
+                  </span>
+                </div>
+                <TeamSeedGrid
+                  teams={teams}
+                  isTeamSelected={isTeamSelected}
+                  isTeamBlocked={isTeamBlocked}
+                  isTeamOnBye={isTeamOnBye}
+                  isGridFull={isGridFull}
+                  onToggleTeam={handleToggleTeam}
+                  getSeed={getSeed}
+                  getMultiplier={getMultiplier}
+                />
+
+                {byeTeams.length > 0 && (
+                  <>
+                    <div className={classes.sectionLabel}>
+                      Bye Week {nextWeekNumber}
+                      <span className={classes.sectionCount}>
+                        {currentByeCount} selected
+                      </span>
+                    </div>
+                    <ByeTeamsList
+                      teams={byeTeams}
+                      isTeamSelected={isTeamSelected}
+                      isByeTeamSelectable={isByeTeamSelectable}
+                      onToggleTeam={handleToggleTeam}
+                      getSeed={getByeSeed}
+                      getMultiplier={getByeMultiplier}
+                    />
+                  </>
+                )}
+              </Grid>
+            )}
+
+            <Grid
+              mt={3}
+              mb={2}
+            >
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: `${areAllInputsValid() ? "#05fa87" : "#0c5031ff"}`,
+                    width: "30%",
+                    color: "black",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    margin: 10,
+                    "&:disabled": { backgroundColor: "grey" },
+                  }}
+                  onClick={() => addportFolioAlert()}
+                >
+                  {AllPortfolios && AllPortfolios[0]?.teams?.length > 0
+                    ? "EDIT"
+                    : "SUBMIT"}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  style={{
+                    width: "30%",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    margin: 10,
+                  }}
+                  onClick={() => cancelAlert()}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </Grid>
+          </Box>
+        </Grid>
       </Grid>
     </>
   );

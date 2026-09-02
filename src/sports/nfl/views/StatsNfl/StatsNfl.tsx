@@ -8,6 +8,8 @@ import {
   Input,
   InputAdornment,
   Tooltip,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SearchIcon from "@mui/icons-material/Search";
@@ -595,8 +597,14 @@ const StatsNfl = () => {
   const isSchedule = dataType === "SCHEDULE";
   const isSeed = dataType === "SEED";
   const isNarrowTable = isSchedule || isSeed;
+  // combinado: cualquiera de las 3 tablas puede estar cargando su propia
+  // semana/data — solo se usa para el overlay de la tabla, no para tapar
+  // toda la pantalla (eso era lo que causaba el parpadeo al cambiar Data).
+  const isTableLoading = isLoading || isLoadingSchedule || isLoadingSeed;
 
-  if (isLoading || isLoadingSchedule || isLoadingSeed) return <Loader />;
+  // loader de pantalla completa solo en la carga inicial real (antes de
+  // resolver el torneo, nada tiene sentido mostrar todavía).
+  if (!tournamentIdStats) return <Loader />;
 
   return (
     <Grid
@@ -801,6 +809,19 @@ const StatsNfl = () => {
                   }}
                 />
               </div>
+              {isTableLoading && (
+                <Backdrop
+                  open
+                  sx={{
+                    position: "absolute",
+                    zIndex: 5,
+                    backgroundColor: "rgba(10, 10, 10, 0.6)",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <CircularProgress sx={{ color: "#D4AF37" }} />
+                </Backdrop>
+              )}
               {isSchedule ? (
                 <ScoreTable
                   table={scheduleTable}
