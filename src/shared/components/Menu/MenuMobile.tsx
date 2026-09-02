@@ -15,14 +15,17 @@ import AltRouteIcon from "@mui/icons-material/AltRoute";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import InstallMobileIcon from "@mui/icons-material/InstallMobile";
+import UpdateIcon from "@mui/icons-material/Update";
 import { Badge, Menu, MenuItem } from "@mui/material";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 import { messagemodalInstallmobile } from "@/utils/app";
 import WalletModal from "@/shared/components/WalletModal/WalletModal";
 import type { NavItem, SwalConfig } from "./MenuDrawer";
 import { useWalletRemaining } from "@/hooks/useWalletRemaining";
 import type { SportKey } from "@/shared/theme/colors";
+import { useUpdateCheck } from "@/context/UpdateCheck";
 
 // ─── tipos ────────────────────────────────────────────────────────────────────
 
@@ -77,6 +80,7 @@ export default function MenuMobile({
 
   const userName = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
   const { remaining } = useWalletRemaining(userName?.id);
+  const { checkNow } = useUpdateCheck();
 
   const isActive = (id: string) => {
     if (id === "logOut" || isMoreItem(id)) return false;
@@ -127,6 +131,12 @@ export default function MenuMobile({
     });
   };
 
+  const handleCheckForUpdates = async () => {
+    handleMobileMenuClose();
+    const found = await checkNow();
+    if (!found) toast.info("You're on the latest version.");
+  };
+
   // Popup "More"
   const renderMobileMenu = (
     <Menu
@@ -156,6 +166,14 @@ export default function MenuMobile({
           <InstallMobileIcon />
         </IconButton>
         <p>Install</p>
+      </MenuItem>
+
+      {/* Buscar actualización */}
+      <MenuItem onClick={handleCheckForUpdates}>
+        <IconButton size="large" color="inherit">
+          <UpdateIcon />
+        </IconButton>
+        <p>Check for updates</p>
       </MenuItem>
 
       {/* Nombre de usuario */}

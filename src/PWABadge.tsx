@@ -1,49 +1,8 @@
 import classes from "./PWABadge.module.css";
-
-import { useRegisterSW } from "virtual:pwa-register/react";
-import { useVersionCheck } from "./hooks/useVersionCheck";
-
-// mismo intervalo que useVersionCheck — solo revisa si hay un SW nuevo
-// (registration.update() no lo activa, solo lo descarga en segundo plano;
-// aplicar el cambio sigue siendo manual, vía el botón "Reload" de abajo).
-const SW_UPDATE_CHECK_INTERVAL_MS = 5 * 60 * 1000;
+import { useUpdateCheck } from "@/context/UpdateCheck";
 
 function PWABadge() {
-  const {
-    needRefresh: [needRefresh, setNeedRefresh],
-    updateServiceWorker,
-  } = useRegisterSW({
-    onRegisteredSW(_swUrl, registration) {
-      if (!registration) return;
-      setInterval(() => {
-        registration.update();
-      }, SW_UPDATE_CHECK_INTERVAL_MS);
-    },
-  });
-
-  const { needUpdate, dismiss } = useVersionCheck();
-
-  const showToast = needRefresh || needUpdate;
-
-  function close() {
-    setNeedRefresh(false);
-    dismiss();
-  }
-
-  async function handleReload() {
-    if (needRefresh) {
-      updateServiceWorker(true);
-      return;
-    }
-    // Desregistrar SW y limpiar caché para que el reload traiga contenido fresco
-    try {
-      const regs = await navigator.serviceWorker?.getRegistrations() ?? [];
-      await Promise.all(regs.map((r) => r.unregister()));
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => caches.delete(k)));
-    } catch { /* ignore */ }
-    window.location.reload();
-  }
+  const { needUpdate, reload, dismiss } = useUpdateCheck();
 
   return (
     <div
@@ -51,7 +10,7 @@ function PWABadge() {
       role="alert"
       aria-labelledby="toast-message"
     >
-      {showToast && (
+      {needUpdate && (
         <div className={classes.PWABadgeToast}>
           <div className={classes.PWABadgeMessage}>
             <span
@@ -65,13 +24,13 @@ function PWABadge() {
           <div className={classes.PWABadgeButtons}>
             <button
               className={classes.PWABadgeToastButton}
-              onClick={handleReload}
+              onClick={reload}
             >
               Reload
             </button>
             <button
               className={classes.PWABadgeToastButtonCancel}
-              onClick={close}
+              onClick={dismiss}
             >
               Close
             </button>

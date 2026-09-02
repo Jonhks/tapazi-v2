@@ -27,7 +27,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/NFLBallLoader/NFLBallLoader";
-import { getTeamsNfl } from "@/api/nfl/PortfoliosNflAPI";
+import { getTeamsNfl, getParameterWeek } from "@/api/nfl/PortfoliosNflAPI";
 import {
   useReactTable,
   getCoreRowModel,
@@ -347,6 +347,27 @@ const StatsNfl = () => {
     enabled: !!tournamentIdStats,
   });
 
+  // Columnas de equipo de la tabla PORTFOLIO: dinámicas = TEAMXP + BYTEPO
+  // (cupos normales + extra de bye), no un número fijo. El WS de datos ya
+  // trae solo los equipos que corresponda por semana/portfolio — las
+  // columnas de más simplemente quedan vacías para esa fila.
+  const { data: teamxpData } = useQuery({
+    queryKey: ["statsNflTeamxp", tournamentIdStats],
+    queryFn: () => getParameterWeek(tournamentIdStats, "TEAMXP"),
+    enabled: !!tournamentIdStats,
+  });
+
+  const { data: bytepoData } = useQuery({
+    queryKey: ["statsNflBytepo", tournamentIdStats],
+    queryFn: () => getParameterWeek(tournamentIdStats, "BYTEPO"),
+    enabled: !!tournamentIdStats,
+  });
+
+  const teamxp = Number(teamxpData) || 0;
+  const bytepo = Number(bytepoData) || 0;
+  // fallback a 7 (el valor fijo anterior) solo mientras ninguno cargó todavía
+  const maxTeamColumns = teamxp + bytepo > 0 ? teamxp + bytepo : 7;
+
   // PORTFOLIO usa un WS de semanas propio (tournaments/:id/score/weeks);
   // SCHEDULE y SEED comparten el WS genérico tournaments/:id/score/seed/weeks.
   const { data: getScoreWeeks } = useQuery({
@@ -521,7 +542,7 @@ const StatsNfl = () => {
           <span style={{ color: "#05fa87" }}>{info.getValue() as string}</span>
         ),
       },
-      ...Array.from({ length: 7 }, (_, i) => ({
+      ...Array.from({ length: maxTeamColumns }, (_, i) => ({
         header: `Team ${i + 1}`,
         accessorFn: (row: PortfolioWithCrests) => row.teams?.[i]?.name || "",
         id: `team_${i}`,
@@ -549,7 +570,7 @@ const StatsNfl = () => {
         accessorKey: "week_score",
       },
     ],
-    [],
+    [maxTeamColumns],
   );
 
   const table = useReactTable({
