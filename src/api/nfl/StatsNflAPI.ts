@@ -34,3 +34,74 @@ export const getScoreWeeksNfl = async ({
     return;
   }
 };
+
+export const getScoreSeedWeeksNfl = async ({
+  tournamentId,
+}: {
+  tournamentId: string;
+}) => {
+  try {
+    const url = `tournaments/${tournamentId}/score/seed/weeks?sport=nfl`;
+    const { data } = await apiEnv.get(url);
+    return data.weeks ?? [];
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return;
+  }
+};
+
+export const getSchedulePerWeekNfl = async ({
+  sportId,
+  tournamentId,
+  week,
+}: {
+  sportId: string;
+  tournamentId: string;
+  week: string;
+}) => {
+  try {
+    const url = `sports/${sportId}/teams/schedule-per-week?sport=nfl&tournament_id=${tournamentId}&week=${week}`;
+    const { data } = await apiEnv.get(url);
+    if (Array.isArray(data)) return data;
+    return (
+      data?.schedule ??
+      data?.schedule_per_week ??
+      data?.data ??
+      data?.matches ??
+      data?.games ??
+      []
+    );
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
+  }
+};
+
+export const getSeedPerWeekNfl = async ({
+  sportId,
+  tournamentId,
+  week,
+}: {
+  sportId: string;
+  tournamentId: string;
+  week: string;
+}) => {
+  try {
+    const url = `sports/${sportId}/teams/seed-per-week?sport=nfl&tournament_id=${tournamentId}&week=${week}`;
+    const { data } = await apiEnv.get(url);
+    if (Array.isArray(data)) return data;
+    return (
+      data?.teams ??
+      data?.seed_per_week ??
+      data?.data ??
+      data?.seeds ??
+      []
+    );
+  } catch (error) {
+    if (isAxiosError(error) && error.response)
+      throw new Error(error.response.data.error);
+    return [];
+  }
+};

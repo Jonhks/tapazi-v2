@@ -1,6 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
+import { useEffect, useState } from "react";
 import { Box, Button, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioNFL.module.css";
@@ -14,22 +15,8 @@ import { ByeTeamsList } from "../../components/TeamSeedGrid/ByeTeamsList";
 import { usePortfolioNflData } from "@/hooks/usePortfolioNflData";
 import { usePortfolioNflActions } from "@/hooks/usePortfolioNflActions";
 
-// TODO: el backend de NFL aún no expone un campo de "bye week" por equipo
-// (ni en teamSchema ni en las respuestas de /teams, /teams/dynamics, etc.).
-// Mientras tanto usamos esta lista fija (equipos de bye del mockup/ticket)
-// para poder mostrar la sección completa en el muck up. Reemplazar por el
-// campo real (ej. team.bye_week) en cuanto el backend lo entregue.
-const MOCK_BYE_TEAM_NAMES = [
-  "atlanta",
-  "cleveland",
-  "green bay",
-  "seattle",
-  "los angeles rams",
-  "new england",
-];
-
-const isMockByeTeam = (team) =>
-  MOCK_BYE_TEAM_NAMES.some((name) => team?.name?.toLowerCase().includes(name));
+// aviso flotante: aparece cuando falta esto para el corte de edición
+const CUTOFF_WARNING_MINUTES = 3;
 
 const MyPortfolioNFL = () => {
   const params = useParams();
@@ -46,6 +33,11 @@ const MyPortfolioNFL = () => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    availableByeTeams,
+    maxByeTeams,
+    byeWeekStats,
+    isEditableTime,
+    editCutoffAt,
     weekParameter,
     tournamentId,
     isLoadingData,
@@ -67,29 +59,100 @@ const MyPortfolioNFL = () => {
     teamsDynamics,
     validTournament,
     weekParameter,
+    isEditableTime,
   });
 
   const teams = teamsComplete ?? [];
   const selected = selectedTeams ?? [];
+
+  const [cutoffCountdown, setCutoffCountdown] = useState("");
+  const [dismissedCutoffWarning, setDismissedCutoffWarning] = useState(false);
+  const cutoffTime = editCutoffAt ? editCutoffAt.getTime() : null;
+
+  useEffect(() => {
+    if (!cutoffTime) {
+      setCutoffCountdown("");
+      return;
+    }
+
+    const tick = () => {
+      const msLeft = cutoffTime - Date.now();
+      const warningWindowMs = CUTOFF_WARNING_MINUTES * 60 * 1000;
+      if (msLeft <= 0 || msLeft > warningWindowMs) {
+        setCutoffCountdown("");
+        return;
+      }
+      const totalSeconds = Math.floor(msLeft / 1000);
+      const m = Math.floor(totalSeconds / 60);
+      const s = totalSeconds % 60;
+      setCutoffCountdown(`${m}:${String(s).padStart(2, "0")}`);
+    };
+
+    tick();
+    const interval = setInterval(tick, 1000);
+    return () => clearInterval(interval);
+  }, [cutoffTime]);
+
+  // bye_team_next_week (y por lo tanto esta pantalla) siempre habla de la
+  // semana siguiente a la ronda actual del torneo.
+  const nextWeekNumber = (validTournament?.[0]?.current_round ?? 0) + 1;
 
   const isTeamSelected = (team) => selected.some((t) => t && t.id === team.id);
 
   const isTeamBlocked = (team) =>
     (teamsBloqued ?? []).some((t) => t.id === team.id);
 
-  const isGridFull = selected.length > 0 && selected.every((t) => t && t.name);
+  // los objetos de equipo que vienen de un portfolio guardado
+  // (AllPortfolios[0].teams) no siempre traen bye_team_next_week — se busca
+  // el equipo "canónico" en teamsComplete por id para no perder el dato.
+  const isTeamOnBye = (team) => {
+    const canonical = teams.find((t) => t.id === team?.id);
+    return !!(canonical?.bye_team_next_week ?? team?.bye_team_next_week);
+  };
 
-  const byeTeams = teams.filter(isMockByeTeam);
+  // los bye teams seleccionados van SIEMPRE después de los primeros
+  // numberInputs cupos (que son solo para equipos de la semana) — son un
+  // extra aparte, no compiten por esos cupos.
+  const weekSelectedCount = selected.filter(
+    (t) => t && t.name && !isTeamOnBye(t),
+  ).length;
+  const isGridFull = weekSelectedCount >= numberInputs;
+
+  const currentByeCount = selected.filter((t) => t && isTeamOnBye(t)).length;
+
+  // sports/teams/available-bye-teams-per-portfolio devuelve los ÚNICOS bye
+  // teams que se pueden seleccionar en este portfolio (porque ya estaban
+  // seleccionados en una semana anterior) — el resto queda bloqueado.
+  const availableByeTeamIds = new Set(
+    (availableByeTeams ?? []).map((t) =>
+      typeof t === "object" && t !== null ? t.team_id : t,
+    ),
+  );
+
+  // además del tope BYTEPO sobre lo que sí es elegible.
+  const isByeTeamSelectable = (team) =>
+    availableByeTeamIds.has(team.id) && currentByeCount < maxByeTeams;
+
+  const byeTeams = teams.filter(isTeamOnBye);
+
+  // seed/multiplier reales de los equipos de bye — vienen de
+  // portfolios/:id/per-week?week={ronda actual}, no del cálculo normal
+  // de getSeed/getMultiplier (que es para equipos de la semana).
+  const byeWeekStatsById = new Map(
+    (byeWeekStats ?? []).map((t) => [t.team_id, t]),
+  );
+  const getByeSeed = (team) => byeWeekStatsById.get(team.id)?.seed ?? getSeed(team);
+  const getByeMultiplier = (team) =>
+    byeWeekStatsById.get(team.id)?.streak_multiplier ?? getMultiplier(team);
 
   const handleToggleTeam = (team) => {
-    // un equipo bloqueado/bye no se puede tocar, ni para seleccionarlo ni
-    // para quitarlo si ya estaba elegido de antes.
-    if (isTeamBlocked(team)) {
+    const onBye = isTeamOnBye(team);
+
+    // /teams/not-available también trae a los equipos en bye (por eso no
+    // se pueden elegir arriba), pero ese bloqueo no debe aplicar cuando se
+    // seleccionan desde la sección Bye — ahí es donde SÍ deben poder elegirse.
+    if (!onBye && isTeamBlocked(team)) {
       toast.info("This team is not available and cannot be modified.");
-      return;
-    }
-    if (isMockByeTeam(team)) {
-      toast.info("This team is on a bye week and cannot be modified.");
       return;
     }
 
@@ -98,12 +161,38 @@ const MyPortfolioNFL = () => {
     );
     if (alreadySelectedIndex !== -1) {
       const next = [...selected];
-      next[alreadySelectedIndex] = "";
+      if (alreadySelectedIndex < numberInputs) {
+        // equipo de la semana: se libera el cupo, no se borra la posición
+        next[alreadySelectedIndex] = "";
+      } else {
+        // bye team extra: se quita del todo, no deja hueco
+        next.splice(alreadySelectedIndex, 1);
+      }
       setSelectedTeams(next);
       return;
     }
 
-    const emptyIndex = selected.findIndex((t) => !t || !t.name);
+    if (onBye) {
+      if (!availableByeTeamIds.has(team.id)) {
+        toast.info(
+          "This team is on a bye week and was not part of a previous selection.",
+        );
+        return;
+      }
+      if (currentByeCount >= maxByeTeams) {
+        toast.info(
+          `You can only select up to ${maxByeTeams} bye-week team${maxByeTeams === 1 ? "" : "s"}.`,
+        );
+        return;
+      }
+      // extra: se agrega al final, no ocupa un cupo de numberInputs
+      setSelectedTeams([...selected, team]);
+      return;
+    }
+
+    const emptyIndex = selected.findIndex(
+      (t, idx) => idx < numberInputs && (!t || !t.name),
+    );
     if (emptyIndex === -1) {
       toast.info("You already selected the maximum number of teams.");
       return;
@@ -119,158 +208,182 @@ const MyPortfolioNFL = () => {
   }
 
   return (
-    <Grid
-      container
-      justifyContent={"center"}
-      alignContent={"start"}
-      size={12}
-      style={{
-        minHeight: "700px",
-        height: "calc(100vh - 56px)",
-        overflowY: "scroll",
-        overflowX: "hidden",
-      }}
-      className={`${classes.gridInstructions}`}
-    >
-      <Grid size={{ xs: 12, sm: 10, lg: 10 }}>
-        <Box
-          component="section"
-          className={classes.boxPortfolio}
-          m={3}
-        >
-          <div
-            className={classes.headerPortfolio}
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
+    <>
+      {cutoffCountdown && !dismissedCutoffWarning && (
+        <div className={classes.cutoffBanner}>
+          <span>
+            Editing will lock in <strong>{cutoffCountdown}</strong> — save your
+            changes now.
+          </span>
+          <button
+            type="button"
+            className={classes.cutoffBannerClose}
+            aria-label="Dismiss"
+            onClick={() => setDismissedCutoffWarning(true)}
           >
-            <div style={{ color: "white" }}>
-              <EmojiEventsOutlinedIcon
-                color="inherit"
-                style={{ fontSize: "2.6rem" }}
-              />
-              <h2 style={{ color: "#D4AF37", fontSize: "40px" }}>
-                My Portfolio
-                <p
-                  style={{
-                    color: "white",
-                    fontSize: "16px",
-                    fontWeight: "normal",
-                  }}
-                >
-                  {validTournament ? validTournament[0]?.name : "Tournament"}
-                </p>
-              </h2>
-            </div>
-          </div>
-
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
-              alignItems: "center",
-              fontSize: "22px",
-              fontWeight: "bold",
-            }}
+            ×
+          </button>
+        </div>
+      )}
+      <Grid
+        container
+        justifyContent={"center"}
+        alignContent={"start"}
+        size={12}
+        style={{
+          minHeight: "700px",
+          height: "calc(100vh - 56px)",
+          overflowY: "scroll",
+          overflowX: "hidden",
+        }}
+        className={`${classes.gridInstructions}`}
+      >
+        <Grid size={{ xs: 12, sm: 10, lg: 10 }}>
+          <Box
+            component="section"
+            className={classes.boxPortfolio}
+            m={3}
           >
-            <p style={{ textAlign: "center", color: "#D4AF37" }}>
-              {AllPortfolios && AllPortfolios[0]?.name}
-            </p>
-            <Divider style={{ backgroundColor: "white", width: "60%" }} />
-          </div>
-
-          {numberInputs === 0 ? (
-            <p
+            <div
+              className={classes.headerPortfolio}
               style={{
-                color: "white",
-                fontWeight: "bold",
-                textAlign: "center",
-                fontSize: "24px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              No teams are available for selection.
-            </p>
-          ) : (
-            <Grid
-              size={12}
-              style={{ marginTop: "30px" }}
-            >
-              <div className={classes.sectionLabel}>
-                Normal Week
-                <span className={classes.sectionCount}>
-                  {selected.filter((t) => t && t.name).length} / {numberInputs}{" "}
-                  selected
-                </span>
+              <div style={{ color: "white" }}>
+                <EmojiEventsOutlinedIcon
+                  color="inherit"
+                  style={{ fontSize: "2.6rem" }}
+                />
+                <h2 style={{ color: "#D4AF37", fontSize: "40px" }}>
+                  My Portfolio
+                  <p
+                    style={{
+                      color: "white",
+                      fontSize: "16px",
+                      fontWeight: "normal",
+                    }}
+                  >
+                    {validTournament ? validTournament[0]?.name : "Tournament"}
+                  </p>
+                </h2>
               </div>
-              <TeamSeedGrid
-                teams={teams}
-                isTeamSelected={isTeamSelected}
-                isTeamBlocked={isTeamBlocked}
-                isTeamOnBye={isMockByeTeam}
-                isGridFull={isGridFull}
-                onToggleTeam={handleToggleTeam}
-                getSeed={getSeed}
-                getMultiplier={getMultiplier}
-              />
+            </div>
 
-              {byeTeams.length > 0 && (
-                <>
-                  <div className={classes.sectionLabel}>Bye</div>
-                  <ByeTeamsList
-                    teams={byeTeams}
-                    isTeamSelected={isTeamSelected}
-                    getSeed={getSeed}
-                    getMultiplier={getMultiplier}
-                  />
-                </>
-              )}
-            </Grid>
-          )}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                fontSize: "22px",
+                fontWeight: "bold",
+              }}
+            >
+              <p style={{ textAlign: "center", color: "#D4AF37" }}>
+                {AllPortfolios && AllPortfolios[0]?.name}
+              </p>
+              <Divider style={{ backgroundColor: "white", width: "60%" }} />
+            </div>
 
-          <Grid
-            mt={3}
-            mb={2}
-          >
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <Button
-                variant="contained"
+            {numberInputs === 0 ? (
+              <p
                 style={{
-                  backgroundColor: `${areAllInputsValid() ? "#05fa87" : "#0c5031ff"}`,
-                  width: "30%",
-                  color: "black",
-                  fontWeight: "bold",
-                  fontSize: "14px",
-                  margin: 10,
-                  "&:disabled": { backgroundColor: "grey" },
-                }}
-                onClick={() => addportFolioAlert()}
-              >
-                {AllPortfolios && AllPortfolios[0]?.teams?.length > 0
-                  ? "EDIT"
-                  : "SUBMIT"}
-              </Button>
-              <Button
-                variant="contained"
-                color="error"
-                style={{
-                  width: "30%",
                   color: "white",
                   fontWeight: "bold",
-                  fontSize: "14px",
-                  margin: 10,
+                  textAlign: "center",
+                  fontSize: "24px",
                 }}
-                onClick={() => cancelAlert()}
               >
-                Cancel
-              </Button>
-            </div>
-          </Grid>
-        </Box>
+                No teams are available for selection.
+              </p>
+            ) : (
+              <Grid
+                size={12}
+                style={{ marginTop: "30px" }}
+              >
+                <div className={classes.sectionLabel}>
+                  Week {nextWeekNumber}
+                  <span className={classes.sectionCount}>
+                    {weekSelectedCount} / {numberInputs} selected
+                  </span>
+                </div>
+                <TeamSeedGrid
+                  teams={teams}
+                  isTeamSelected={isTeamSelected}
+                  isTeamBlocked={isTeamBlocked}
+                  isTeamOnBye={isTeamOnBye}
+                  isGridFull={isGridFull}
+                  onToggleTeam={handleToggleTeam}
+                  getSeed={getSeed}
+                  getMultiplier={getMultiplier}
+                />
+
+                {byeTeams.length > 0 && (
+                  <>
+                    <div className={classes.sectionLabel}>
+                      Bye Week {nextWeekNumber}
+                      <span className={classes.sectionCount}>
+                        {currentByeCount} selected
+                      </span>
+                    </div>
+                    <ByeTeamsList
+                      teams={byeTeams}
+                      isTeamSelected={isTeamSelected}
+                      isByeTeamSelectable={isByeTeamSelectable}
+                      onToggleTeam={handleToggleTeam}
+                      getSeed={getByeSeed}
+                      getMultiplier={getByeMultiplier}
+                    />
+                  </>
+                )}
+              </Grid>
+            )}
+
+            <Grid
+              mt={3}
+              mb={2}
+            >
+              <div style={{ display: "flex", justifyContent: "center" }}>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: `${areAllInputsValid() ? "#05fa87" : "#0c5031ff"}`,
+                    width: "30%",
+                    color: "black",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    margin: 10,
+                    "&:disabled": { backgroundColor: "grey" },
+                  }}
+                  onClick={() => addportFolioAlert()}
+                >
+                  {AllPortfolios && AllPortfolios[0]?.teams?.length > 0
+                    ? "EDIT"
+                    : "SUBMIT"}
+                </Button>
+                <Button
+                  variant="contained"
+                  color="error"
+                  style={{
+                    width: "30%",
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "14px",
+                    margin: 10,
+                  }}
+                  onClick={() => cancelAlert()}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </Grid>
+          </Box>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

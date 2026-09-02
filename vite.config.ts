@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from "vite-plugin-pwa";
@@ -12,8 +12,24 @@ const commitHash = (() => {
   catch { return "dev"; }
 })();
 
+// El ícono de instalación de la PWA cambia por ambiente (dev/qa/prod) para
+// poder distinguirlos a simple vista. `VITE_APP_ENV` se lee primero de
+// process.env (así se puede fijar directo en el dashboard de Vercel por
+// deploy, sin depender de qué archivo .env local exista) y si no, del
+// .env.<mode> correspondiente.
+const ICON_BY_ENV: Record<string, string> = {
+  development: "icon-dev.png",
+  qa: "icon-qa.png",
+  production: "icon-prod.png",
+};
+
 // https://vite.dev/config/
-export default defineConfig(({ command }) => ({
+export default defineConfig(({ command, mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const appEnv = process.env.VITE_APP_ENV || env.VITE_APP_ENV || "production";
+  const pwaIcon = ICON_BY_ENV[appEnv] ?? ICON_BY_ENV.production;
+
+  return {
   esbuild: {
     drop: command === "build" ? ["console", "debugger"] : [],
   },
@@ -46,33 +62,33 @@ export default defineConfig(({ command }) => ({
         display: "standalone",
         icons: [
           {
-            src: "balones-negros.webp",
+            src: pwaIcon,
             sizes: "192x192",
-            type: "image/webp",
+            type: "image/png",
             purpose: "any",
           },
           {
-            src: "balones-negros.webp",
+            src: pwaIcon,
             sizes: "512x512",
-            type: "image/webp",
+            type: "image/png",
             purpose: "any",
           },
           // Ícono maskable para Android (debe tener padding del 20%)
           {
-            src: "balones-negros.webp",
+            src: pwaIcon,
             sizes: "192x192",
-            type: "image/webp",
+            type: "image/png",
             purpose: "maskable",
           },
           {
-            src: "balones-negros.webp",
+            src: pwaIcon,
             sizes: "512x512",
-            type: "image/webp",
+            type: "image/png",
             purpose: "maskable",
           },
-          // Ícono para Apple Touch (recomendado en PNG)
+          // Ícono para Apple Touch
           {
-            src: "balones-negros.webp",
+            src: pwaIcon,
             sizes: "180x180",
             type: "image/png",
             purpose: "any",
@@ -116,4 +132,5 @@ export default defineConfig(({ command }) => ({
       },
     },
   },
-}));
+  };
+});

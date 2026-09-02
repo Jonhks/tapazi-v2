@@ -73,3 +73,33 @@ export function isDateTimeReached(
   // Comparar las fechas
   return targetDate >= currentDate;
 }
+
+// Arma un Date a partir de una fecha "YYYY-MM-DD" y una hora "HH:MM:SS".
+export function parseDateTime(dateStr: string, timeStr: string): Date {
+  const [year, month, day] = dateStr.split("-").map(Number);
+  const [hours, minutes, seconds] = timeStr.split(":").map(Number);
+  return new Date(year, month - 1, day, hours, minutes, seconds);
+}
+
+// El momento exacto en que se corta la edición: "minutesBefore" minutos
+// antes de la fecha/hora objetivo (ej. 5 min antes de que arranque).
+export function getEditCutoffDate(
+  targetDateStr: string,
+  targetTimeStr: string,
+  minutesBefore: number,
+): Date {
+  const targetDate = parseDateTime(targetDateStr, targetTimeStr);
+  return new Date(targetDate.getTime() - minutesBefore * 60 * 1000);
+}
+
+// Igual que isDateTimeReached, pero adelanta el corte "minutesBefore"
+// minutos antes de la fecha/hora objetivo (ej. bloquear edición 5 min
+// antes de que arranque, no justo al momento exacto).
+export function isEditableBeforeCutoff(
+  targetDateStr: string,
+  targetTimeStr: string,
+  minutesBefore: number,
+): boolean {
+  const cutoff = getEditCutoffDate(targetDateStr, targetTimeStr, minutesBefore);
+  return cutoff >= new Date();
+}
