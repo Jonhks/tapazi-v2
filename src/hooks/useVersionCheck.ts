@@ -8,18 +8,23 @@ export function useVersionCheck() {
   const [needUpdate, setNeedUpdate] = useState(false);
   const currentVersion = import.meta.env.VITE_APP_VERSION as string;
 
-  const check = useCallback(async () => {
+  // devuelve true si encontró una versión nueva — lo usa el botón manual de
+  // "check for updates" para saber si mostrar "ya estás al día" o no.
+  const check = useCallback(async (): Promise<boolean> => {
     try {
       const res = await fetch(`/version.json?t=${Date.now()}`, {
         cache: "no-store",
       });
-      if (!res.ok) return;
+      if (!res.ok) return false;
       const { version } = await res.json();
       if (version && version !== currentVersion) {
         setNeedUpdate(true);
+        return true;
       }
+      return false;
     } catch {
       // Network error — silently ignore
+      return false;
     }
   }, [currentVersion]);
 
@@ -45,5 +50,5 @@ export function useVersionCheck() {
 
   // Nunca se aplica sola — solo prende el aviso; el usuario decide cuándo
   // recargar (botón "Reload" en PWABadge), por si está en medio de algo.
-  return { needUpdate, dismiss: () => setNeedUpdate(false) };
+  return { needUpdate, check, dismiss: () => setNeedUpdate(false) };
 }

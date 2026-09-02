@@ -28,13 +28,16 @@ import Grid from "@mui/material/Grid2";
 import Tooltip from "@mui/material/Tooltip";
 import AltRouteIcon from "@mui/icons-material/AltRoute";
 import InstallDesktopIcon from "@mui/icons-material/InstallDesktop";
+import UpdateIcon from "@mui/icons-material/Update";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 import { messagemodalInstall } from "@/utils/app";
 import WalletModal from "@/shared/components/WalletModal/WalletModal";
 import type { SportKey } from "@/shared/theme/colors";
 import { useWalletRemaining } from "@/hooks/useWalletRemaining";
+import { useUpdateCheck } from "@/context/UpdateCheck";
 
 // ─── tipos exportados para que los wrappers los usen ──────────────────────────
 
@@ -136,6 +139,7 @@ export default function MenuDrawer({
   const location = useLocation();
   const user = JSON.parse(localStorage.getItem("userTapaszi") || "{}");
   const { remaining } = useWalletRemaining(user.id);
+  const { checkNow } = useUpdateCheck();
 
   // Funciona para todas las variantes de ruta: con prefijo de deporte, con slash, sin slash.
   const isActive = (id: string) => {
@@ -186,6 +190,13 @@ export default function MenuDrawer({
       background: swal.bgColor,
       color: swal.textColor ?? "#fff",
     });
+  };
+
+  const handleCheckForUpdates = async () => {
+    const found = await checkNow();
+    if (!found) toast.info("You're on the latest version.");
+    // si sí encontró algo, el aviso de siempre (PWABadge) aparece solo —
+    // este botón nunca aplica el update por su cuenta.
   };
 
   return (
@@ -283,6 +294,21 @@ export default function MenuDrawer({
                 sx={{ marginRight: 5, color: appBarIconColor ?? "inherit" }}
               >
                 <InstallDesktopIcon />
+              </IconButton>
+            </Tooltip>
+
+            {/* Buscar actualización */}
+            <Tooltip
+              title="Check for updates"
+              placement="bottom"
+            >
+              <IconButton
+                color="inherit"
+                onClick={handleCheckForUpdates}
+                edge="end"
+                sx={{ color: appBarIconColor ?? "inherit" }}
+              >
+                <UpdateIcon />
               </IconButton>
             </Tooltip>
           </Box>
