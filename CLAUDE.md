@@ -140,6 +140,8 @@ src/shared/
 │   ├── WalletModal/
 │   │   └── WalletModal.tsx
 │   └── Splash/                                 ← splash de arranque (GSAP), ver detalle abajo
+├── hooks/
+│   └── useDraggable.ts                         ← arrastre por Pointer Events, sin dependencias
 └── theme/
     └── colors.ts                               ← tokens de color por deporte (sportThemes)
 ```
@@ -160,6 +162,8 @@ src/shared/
 | `headerTooltip` | `(colId, idx) => string \| null` | Tooltip en el header de la columna | Props clave: `headerEven`, `headerOdd`, `cellEvenColEvenRow`, `cellEvenColOddRow`, `cellOddColEvenRow`, `cellOddColOddRow`, `accent`, `text`, `searchBg`.
 | `enableCsvExport` | `boolean` (default `false`) | Muestra un botón para descargar la tabla (filtrada/ordenada) como CSV, junto al buscador |
 | `csvFilename` | `string` | Nombre del archivo descargado. Si no se pasa, usa `title`, o `"data"` |
+
+**Modales arrastrables:** `useDraggable()` (`src/shared/hooks/useDraggable.ts`) da `{ position, reset, handleProps }` — `handleProps` va en el elemento que actúa de agarradera (el header del modal) y `position` se suma como `translate(x, y)` sobre el contenido que se mueve. Sin dependencias externas (Pointer Events nativos). Habilitado en `WalletModal`, y en el `Modal`/`TableModal` de detalle de EPL y NFL — llamar `reset()` al cerrar para que la próxima vez que se abra vuelva a su posición centrada. Las confirmaciones de SweetAlert2 y el `TermsOfUseModal` de login quedan fuera a propósito (son popups chicos/bloqueantes, no contenido grande que valga la pena mover).
 
 **Descarga CSV:** `src/utils/exportCsv.ts` expone `downloadTableAsCsv(filename, table)` — genérico, arma el CSV directo desde la instancia de TanStack Table (respeta filtro/orden actual). Usado por `TableBase` (props arriba, habilitado puntualmente en las 7 tablas que solo viven dentro de Stats de ncaa-male/female) y a mano en las tablas hand-rolled de StatsEpl/StatsNfl/StatsWorldCup.
 
@@ -218,9 +222,10 @@ Los aliases están definidos como **array ordenado** en `vite.config.ts` (los es
 
 ### API y entorno
 
-- `VITE_API_URL` controla la URL base; `.env.development` apunta al servidor de test, `.env.production` al de producción.
+- `VITE_API_URL` controla la URL base; `.env.development` apunta al servidor de test, `.env.production` al de producción, `.env.qa` (nuevo, gitignored igual que los otros dos) también al de test por ahora.
 - `src/lib/axios.ts` está en `.gitignore`. Un workflow de GitHub Actions (`protect-axios.yml`) bloquea PRs a `main` que lo modifiquen.
 - Todas las rutas protegidas se envuelven en `<PrivateRoute>`.
+- **`VITE_APP_ENV`** (`development` | `qa` | `production`) — controla qué ícono de instalación usa la PWA (`public/icon-dev.png` / `icon-qa.png` / `icon-prod.png`, mapeados en `vite.config.ts`), para distinguir a simple vista en qué ambiente quedó instalada la app. Solo prod usa el ícono limpio (sin badge); dev/qa llevan un círculo con la letra del ambiente encima. Se lee primero de `process.env` (para poder fijarlo directo en el dashboard de Vercel por deploy, sin depender de qué `.env` local exista) y si no está, del `.env.<mode>` correspondiente. Para probarlo en local: `pnpm build:qa` (usa `.env.qa`) vs `pnpm build` (usa `.env.production`). **Pendiente real:** el build de Vercel para `qa`/`dev` no necesariamente pasa `--mode qa` — hay que confirmar en el dashboard de Vercel que cada deploy target tenga `VITE_APP_ENV` seteado al valor correcto (o el build command actualizado a `pnpm build:qa`), si no, todos van a seguir sirviendo el ícono de producción por default.
 
 ### Flujo de datos
 

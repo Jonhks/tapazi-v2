@@ -10,9 +10,17 @@ import {
   getTeamsNotAvailable,
   getTeamsDynamics,
   getParameterWeek,
+  getAvailableByeTeamsPerPortfolio,
+  getPortfolioPerWeek,
 } from "@/api/nfl/PortfoliosNflAPI";
+import { getParameter } from "@/api/shared/TournamentsAPI";
+import { isEditableBeforeCutoff, getEditCutoffDate } from "@/utils/getDaysLeft";
 
 const WEEK_PARAM_KEY = "WEETOU";
+const MAX_BYE_TEAMS_PARAM_KEY = "BYTEPO";
+const TOURNAMENT_DATE_PARAM_KEY = "DATTOU";
+const TOURNAMENT_HOUR_PARAM_KEY = "HOUTOU";
+const EDIT_CUTOFF_MINUTES = 5;
 
 export const usePortfolioNflData = (userId: string, sportId: string) => {
   const [validTournament, setValidTournament] = useState([]);
@@ -22,6 +30,9 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
   const [teamsBloqued, setTeamsBloqued] = useState([]);
   const [selectedTeams, setSelectedTeams] = useState([]);
   const [weekParameter, setWeekParameter] = useState(null);
+  const [availableByeTeams, setAvailableByeTeams] = useState([]);
+  const [maxByeTeams, setMaxByeTeams] = useState(0);
+  const [isEditableTime, setIsEditableTime] = useState(true);
 
   // 1. Torneos del sport → de aquí sacamos el tournamentId dinámico
   const { data: tournament, isLoading: isLoadingTournament } = useQuery({
@@ -95,6 +106,60 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
       enabled: Boolean(tournamentId),
     });
 
+  // 8. Equipos de bye que sí se pueden seleccionar en este portfolio
+  // (porque ya estaban seleccionados en una semana anterior)
+  const {
+    data: availableByeTeamsData,
+    isLoading: isLoadingAvailableByeTeams,
+  } = useQuery({
+    queryKey: ["nflAvailableByeTeams", userId, portfolios, tournamentId],
+    queryFn: () =>
+      getAvailableByeTeamsPerPortfolio(
+        sportId,
+        tournamentId!,
+        portfolios?.[0]?.id || "0",
+      ),
+    refetchOnWindowFocus: "always",
+    retry: 1,
+    enabled: Boolean(userId && sportId && tournamentId && portfolios?.length > 0),
+  });
+
+  // 9. Máximo de equipos de bye seleccionables por portfolio (parámetro BYTEPO)
+  const { data: maxByeTeamsData, isLoading: isLoadingMaxByeTeams } = useQuery({
+    queryKey: ["nflMaxByeTeams", tournamentId],
+    queryFn: () => getParameterWeek(tournamentId!, MAX_BYE_TEAMS_PARAM_KEY),
+    refetchOnWindowFocus: "always",
+    enabled: Boolean(tournamentId),
+  });
+
+  // 10. Fecha/hora de arranque del torneo (DATTOU/HOUTOU) — a partir de
+  // EDIT_CUTOFF_MINUTES antes de ese momento ya no se puede editar el portfolio.
+  const { data: tournamentDateData } = useQuery({
+    queryKey: ["nflTournamentDate", tournamentId],
+    queryFn: () => getParameter(tournamentId!, TOURNAMENT_DATE_PARAM_KEY),
+    refetchOnWindowFocus: "always",
+    enabled: Boolean(tournamentId),
+  });
+
+  const { data: tournamentHourData } = useQuery({
+    queryKey: ["nflTournamentHour", tournamentId],
+    queryFn: () => getParameter(tournamentId!, TOURNAMENT_HOUR_PARAM_KEY),
+    refetchOnWindowFocus: "always",
+    enabled: Boolean(tournamentId),
+  });
+
+  // 11. Seed/streak de la semana actual del portfolio — se usa para mostrar
+  // el seed/multiplier real de los equipos de bye (sección de abajo).
+  const currentRound = validTournament?.[0]?.current_round;
+  const { data: byeWeekStatsData, isLoading: isLoadingByeWeekStats } =
+    useQuery({
+      queryKey: ["nflPortfolioPerWeek", portfolios, currentRound],
+      queryFn: () =>
+        getPortfolioPerWeek(portfolios?.[0]?.id, String(currentRound)),
+      retry: 1,
+      enabled: Boolean(portfolios?.[0]?.id && currentRound),
+    });
+
   // --- Sincronización de estados ---
 
   useEffect(() => {
@@ -137,7 +202,42 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     if (weekParameterData) setWeekParameter(weekParameterData);
   }, [weekParameterData]);
 
-  // Carga equipos seleccionados desde el portfolio guardado, o inicializa vacíos
+  useEffect(() => {
+    if (availableByeTeamsData) setAvailableByeTeams(availableByeTeamsData);
+  }, [availableByeTeamsData]);
+
+  useEffect(() => {
+    if (maxByeTeamsData !== undefined) {
+      const parsed = Number(maxByeTeamsData);
+      setMaxByeTeams(Number.isNaN(parsed) ? 0 : parsed);
+    }
+  }, [maxByeTeamsData]);
+
+  // Recalcula el corte de edición cada 30s — así, si dejas la pantalla
+  // abierta y cruzas el minuto de corte, se bloquea sin necesitar refrescar.
+  useEffect(() => {
+    if (!tournamentDateData || !tournamentHourData) return;
+
+    const recalc = () =>
+      setIsEditableTime(
+        isEditableBeforeCutoff(
+          tournamentDateData,
+          tournamentHourData,
+          EDIT_CUTOFF_MINUTES,
+        ),
+      );
+
+    recalc();
+    const interval = setInterval(recalc, 30 * 1000);
+    return () => clearInterval(interval);
+  }, [tournamentDateData, tournamentHourData]);
+
+  // Carga equipos seleccionados desde el portfolio guardado, o inicializa vacíos.
+  // Los bye teams del portfolio guardado son "extra": no ocupan cupo de
+  // numberInputs, así que se reconstruye el array como
+  // [...cupos de semana (tamaño numberInputs), ...bye teams extra].
+  // El bye status se saca de teamsComplete (dato en vivo), no del team
+  // guardado en el portfolio, porque este último puede no traer esa bandera.
   useEffect(() => {
     if (
       teamsBloqued &&
@@ -145,7 +245,21 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
       AllPortfolios[0]?.teams &&
       teamsComplete
     ) {
-      setSelectedTeams(AllPortfolios[0].teams);
+      const savedTeams = AllPortfolios[0].teams;
+      const byeTeamIds = new Set(
+        teamsComplete
+          .filter((t) => t?.bye_team_next_week)
+          .map((t) => t.id),
+      );
+      const savedWeekTeams = savedTeams.filter((t) => !byeTeamIds.has(t.id));
+      const savedByeTeams = savedTeams.filter((t) => byeTeamIds.has(t.id));
+
+      const weekSlots = Array(numberInputs).fill("");
+      savedWeekTeams.forEach((team, i) => {
+        if (i < numberInputs) weekSlots[i] = team;
+      });
+
+      setSelectedTeams([...weekSlots, ...savedByeTeams]);
     } else if (
       teamsBloqued &&
       AllPortfolios &&
@@ -163,7 +277,10 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     isLoadingNumberInputs ||
     isLoadingTeamsDynamics ||
     isLoadingWeekParameter ||
-    isLoadingTeamsNotAvailable;
+    isLoadingTeamsNotAvailable ||
+    isLoadingAvailableByeTeams ||
+    isLoadingMaxByeTeams ||
+    isLoadingByeWeekStats;
 
   return {
     validTournament,
@@ -175,6 +292,18 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    availableByeTeams,
+    maxByeTeams,
+    byeWeekStats: byeWeekStatsData ?? [],
+    isEditableTime,
+    editCutoffAt:
+      tournamentDateData && tournamentHourData
+        ? getEditCutoffDate(
+            tournamentDateData,
+            tournamentHourData,
+            EDIT_CUTOFF_MINUTES,
+          )
+        : null,
     weekParameter,
     tournamentId,
     isLoadingData,

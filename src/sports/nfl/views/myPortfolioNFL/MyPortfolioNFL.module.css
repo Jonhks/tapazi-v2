@@ -139,6 +139,45 @@
   font-weight: bold !important;
 }
 
+.cutoffBanner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #2a1f0a;
+  border: 1px solid #D4AF37;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: #f0dca0;
+  font-weight: bold;
+  font-size: 14px;
+  max-width: calc(100vw - 32px);
+}
+
+.cutoffBanner strong {
+  color: #D4AF37;
+  font-variant-numeric: tabular-nums;
+}
+
+.cutoffBannerClose {
+  background: none;
+  border: none;
+  color: #f0dca0;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0 0 4px;
+}
+
+.cutoffBannerClose:hover {
+  color: #D4AF37;
+}
+
 @media (width < 800px) {
   .boxPortfolio {
     margin-top: 2rem;

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -11,6 +11,7 @@ import { useQuery } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableBase } from "@/shared/components/Table/TableBase";
 import EmptyState from "@/shared/components/EmptyState/EmptyState";
+import { useDraggable } from "@/shared/hooks/useDraggable";
 import {
   getWalletTransactions,
   getWalletTotals,
@@ -48,6 +49,14 @@ export default function WalletModal({
   sportKey = "ncaaMale",
 }: WalletModalProps) {
   const theme = sportThemes[sportKey];
+  const { position, reset, handleProps } = useDraggable();
+
+  // Resetea la posición al ABRIR (no al cerrar) — el Dialog anima su
+  // cierre (~225ms de fade), así que resetear en el close hace que el
+  // modal "salte" al centro mientras todavía se está desvaneciendo.
+  useEffect(() => {
+    if (open) reset();
+  }, [open, reset]);
 
   // staleTime: 0 → siempre refetch al abrir el modal para mostrar saldo actualizado
   const queryOpts = {
@@ -191,12 +200,16 @@ export default function WalletModal({
           border: `2px solid ${theme.accent}`,
           borderRadius: "8px",
           color: "#fff",
+          transform: `translate(${position.x}px, ${position.y}px)`,
         },
       }}
     >
       <DialogContent sx={{ p: 3 }}>
-        {/* Header */}
-        <Box sx={{ textAlign: "center", mb: 2 }}>
+        {/* Header — también funciona como agarradera para arrastrar el modal */}
+        <Box
+          {...handleProps}
+          sx={{ textAlign: "center", mb: 2 }}
+        >
           <Typography
             variant="h5"
             sx={{

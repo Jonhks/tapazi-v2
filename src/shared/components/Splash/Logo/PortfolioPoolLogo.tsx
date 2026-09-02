@@ -24,11 +24,6 @@ export function PortfolioPoolLogo(props: SVGProps<SVGSVGElement>) {
           d="M110 10h30a16 16 0 0 1 0 32h-18v18h-12z"
           fill="currentColor"
         />
-        <path
-          d="M122 42h6v6l-3 3-3-3z"
-          fill="currentColor"
-          opacity={0.85}
-        />
       </g>
       <text
         data-logo-word

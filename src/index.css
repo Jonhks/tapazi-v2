@@ -35,6 +35,10 @@
 
 body {
   font-family: "Raleway", sans-serif;
+  /* toda la app es de tema oscuro — sin esto, cualquier frame en blanco
+     entre transiciones (ej. el splash desvaneciéndose antes de navegar)
+     deja ver el blanco por defecto del navegador */
+  background-color: #000;
 }
 
 .css-1tktgsa-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
