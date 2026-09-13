@@ -62,16 +62,21 @@ const InstructionsNfl = () => {
               component="section"
               className={classes.boxInstructions}
             >
-              <div style={{ display: "flex", alignItems: "center" }}>
+              <div
+                style={{ display: "flex", alignItems: "center", width: "100%" }}
+              >
                 <div style={{ width: 48, flexShrink: 0 }} />
-                <p className={classes.titleInstructions} style={{ flex: 1 }}>
+                <p
+                  className={classes.titleInstructions}
+                  style={{ flex: 1 }}
+                >
                   {instructionsData[0].description ||
                     "Sin información disponible"}
                 </p>
                 <Tooltip title="Download instructions">
                   <IconButton
                     onClick={handleDownload}
-                    sx={{ color: "#D4AF37", flexShrink: 0 }}
+                    sx={{ color: "#ffffff", flexShrink: 0 }}
                   >
                     <FileDownloadOutlinedIcon />
                   </IconButton>

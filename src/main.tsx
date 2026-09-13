@@ -12,7 +12,9 @@ import {
   setupChunkErrorReload,
   clearChunkReloadFlag,
 } from "./utils/chunkErrorReload.ts";
+import { initSentry } from "./lib/sentry.ts";
 
+initSentry();
 setupChunkErrorReload();
 // si seguimos vivos varios segundos después de montar, la app está estable
 // (haya habido un reload por chunk viejo o no) — se libera el "un solo
