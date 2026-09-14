@@ -30,6 +30,18 @@ export default defineConfig(({ command, mode }) => {
   const appEnv = process.env.VITE_APP_ENV || env.VITE_APP_ENV || "production";
   const pwaIcon = ICON_BY_ENV[appEnv] ?? ICON_BY_ENV.production;
 
+  // TEMPORAL — diagnóstico de variables de entorno en el build de Vercel.
+  // Esto corre en Node durante el build (llega a Build Logs), nunca al
+  // navegador. Borrar en cuanto se confirme que VITE_SENTRY_DSN llega bien.
+  console.log(
+    "[env-debug] mode:",
+    mode,
+    "| process.env SENTRY/VITE keys:",
+    Object.keys(process.env).filter((k) => k.includes("SENTRY") || k.startsWith("VITE_")),
+    "| loadEnv() SENTRY/VITE keys:",
+    Object.keys(env).filter((k) => k.includes("SENTRY") || k.startsWith("VITE_")),
+  );
+
   return {
   esbuild: {
     drop: command === "build" ? ["console", "debugger"] : [],
