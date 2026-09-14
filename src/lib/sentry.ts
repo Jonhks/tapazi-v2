@@ -36,3 +36,5 @@ export function initSentry() {
 }
 
 export { Sentry };
+// diagnóstico: forzar un build limpio para reverificar VITE_SENTRY_DSN
+
