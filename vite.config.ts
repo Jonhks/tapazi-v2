@@ -33,13 +33,19 @@ export default defineConfig(({ command, mode }) => {
   // TEMPORAL — diagnóstico de variables de entorno en el build de Vercel.
   // Esto corre en Node durante el build (llega a Build Logs), nunca al
   // navegador. Borrar en cuanto se confirme que VITE_SENTRY_DSN llega bien.
+  const envTotalBytes = Object.entries(process.env).reduce(
+    (sum, [k, v]) => sum + k.length + (v?.length ?? 0),
+    0,
+  );
   console.log(
     "[env-debug] mode:",
     mode,
-    "| process.env SENTRY/VITE keys:",
+    "| total process.env vars:",
+    Object.keys(process.env).length,
+    "| total bytes (aprox, límite Vercel 64KB):",
+    envTotalBytes,
+    "| SENTRY/VITE keys:",
     Object.keys(process.env).filter((k) => k.includes("SENTRY") || k.startsWith("VITE_")),
-    "| loadEnv() SENTRY/VITE keys:",
-    Object.keys(env).filter((k) => k.includes("SENTRY") || k.startsWith("VITE_")),
   );
 
   return {
