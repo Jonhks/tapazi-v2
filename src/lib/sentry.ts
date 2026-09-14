@@ -5,6 +5,11 @@ import * as Sentry from "@sentry/react";
  * prende/apaga con VITE_SENTRY_ENABLE_DEV (true/false) en .env.development,
  * sin tocar el DSN ni reiniciar nada más que el dev server. En qa/production
  * siempre está prendido si hay DSN.
+ *
+ * Nota: la config (dsn/environment/etc) se arma en un objeto aparte antes
+ * de llamar a init — así, si algún día vuelve a faltar el DSN en el build,
+ * es más fácil detectarlo inspeccionando el bundle en vez de que el
+ * minificador elimine todo el bloque de una.
  */
 export function initSentry() {
   const dsn = import.meta.env.VITE_SENTRY_DSN;
