@@ -1,10 +1,6 @@
 import { useMemo, useState, useEffect } from "react";
 import classes from "./StatsEpl.module.css";
 import {
-  // FormControl,
-  // FormControlLabel,
-  // Radio,
-  // RadioGroup,
   Typography,
   Zoom,
   Box,
@@ -12,6 +8,8 @@ import {
   Input,
   InputAdornment,
   Tooltip,
+  Backdrop,
+  CircularProgress,
 } from "@mui/material";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SearchIcon from "@mui/icons-material/Search";
@@ -19,7 +17,13 @@ import FileDownloadOutlinedIcon from "@mui/icons-material/FileDownloadOutlined";
 import DropDownHistory from "../../components/Inputs/DropdDownHistory";
 import Grid from "@mui/material/Grid2";
 import { downloadTableAsCsv } from "@/utils/exportCsv";
-import { getScoreWeeksEpl, getStatsEpl } from "@/api/epl/StatsEplAPI";
+import {
+  getScoreWeeksEpl,
+  getScoreSeedWeeksEpl,
+  getSchedulePerWeekEpl,
+  getSeedPerWeekEpl,
+  getStatsEpl,
+} from "@/api/epl/StatsEplAPI";
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/EPLBallLoader/EPLBallLoader";
@@ -33,6 +37,7 @@ import {
   SortingState,
   ColumnDef,
   CellContext,
+  Table,
 } from "@tanstack/react-table";
 import { getTournaments } from "@/api/epl/HistoryEPLAPI";
 
@@ -51,12 +56,6 @@ type PortfolioStat = {
   week_score: number;
 };
 
-type ScoreWeek = {
-  id: string;
-  week: number;
-  label: string;
-};
-
 type TeamWithCrest = {
   name: string;
   crest: string | null;
@@ -68,12 +67,35 @@ type PortfolioWithCrests = {
   teams: TeamWithCrest[];
 };
 
+type ScheduleMatch = {
+  home_team: string;
+  away_team: string;
+  match_date: string | null;
+  match_time: string | null;
+};
+
+type ScheduleWithCrests = ScheduleMatch & {
+  home_crest: string | null;
+  away_crest: string | null;
+};
+
+type SeedTeamStat = {
+  id: number;
+  name: string;
+  seed: number;
+};
+
+type SeedTeamWithCrest = SeedTeamStat & {
+  crest: string | null;
+};
+
 const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
   <Box
     display="flex"
     alignItems="center"
     justifyContent="start"
     gap={1}
+    sx={{ width: "100%" }}
   >
     <Box
       sx={{
@@ -95,21 +117,186 @@ const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
   </Box>
 );
 
+function ScoreTable<TData>({
+  table,
+  columnsLength,
+  hoveredRowId,
+  setHoveredRowId,
+  hoveredCellId,
+  setHoveredCellId,
+}: {
+  table: Table<TData>;
+  columnsLength: number;
+  hoveredRowId: string | null;
+  setHoveredRowId: (id: string | null) => void;
+  hoveredCellId: string | null;
+  setHoveredCellId: (id: string | null) => void;
+}) {
+  return (
+    <div style={{ width: "100%", overflowX: "scroll" }}>
+      <table
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          minWidth: "max-content",
+        }}
+      >
+        <thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <tr key={headerGroup.id}>
+              {headerGroup.headers.map((header, index) => {
+                const align = header.column.columnDef.meta?.align ?? "center";
+                return (
+                  <th
+                    key={header.id}
+                    onClick={header.column.getToggleSortingHandler()}
+                    style={{
+                      position:
+                        index === 0 || index === columnsLength - 1
+                          ? "sticky"
+                          : "static",
+                      left: index === 0 ? 0 : undefined,
+                      right: index === columnsLength - 1 ? 0 : undefined,
+                      backgroundColor: "#2C0C37",
+                      zIndex: index === 0 || index === columnsLength - 1 ? 4 : 2,
+                      color: "white",
+                      fontWeight: "bold",
+                      fontSize: "14px",
+                      textAlign: align,
+                      padding: "12px",
+                      cursor: "pointer",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    {header.isPlaceholder ? null : (
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent:
+                            align === "left" ? "flex-start" : "center",
+                        }}
+                      >
+                        <div>
+                          {flexRender(
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
+                        </div>
+                        <span
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          {{
+                            asc: (
+                              <ArrowUpwardIcon
+                                style={{
+                                  fontSize: "20px",
+                                  marginLeft: "4px",
+                                }}
+                              />
+                            ),
+                            desc: (
+                              <ArrowUpwardIcon
+                                style={{
+                                  transform: "rotate(180deg)",
+                                  fontSize: "20px",
+                                  marginLeft: "4px",
+                                }}
+                              />
+                            ),
+                          }[header.column.getIsSorted() as string] ?? (
+                            <ArrowUpwardIcon
+                              style={{
+                                color: "gray",
+                                fontSize: "18px",
+                                marginLeft: "4px",
+                              }}
+                            />
+                          )}
+                        </span>
+                      </div>
+                    )}
+                  </th>
+                );
+              })}
+            </tr>
+          ))}
+        </thead>
+        <tbody>
+          {table.getRowModel().rows.map((row) => {
+            const isRowHovered = hoveredRowId === row.id;
+            return (
+              <tr
+                key={row.id}
+                onMouseEnter={() => setHoveredRowId(row.id)}
+                onMouseLeave={() => setHoveredRowId(null)}
+              >
+                {row.getVisibleCells().map((cell, index) => {
+                  const isSticky = index === 0 || index === columnsLength - 1;
+                  const isCellHovered = !isSticky && hoveredCellId === cell.id;
+                  const align = cell.column.columnDef.meta?.align ?? "center";
+                  const bg = isCellHovered
+                    ? "#2C0C37"
+                    : isRowHovered
+                      ? "#320D46"
+                      : isSticky
+                        ? "#2C0C37"
+                        : "#380F55";
+                  return (
+                    <td
+                      key={cell.id}
+                      onMouseEnter={
+                        !isSticky ? () => setHoveredCellId(cell.id) : undefined
+                      }
+                      onMouseLeave={
+                        !isSticky ? () => setHoveredCellId(null) : undefined
+                      }
+                      style={{
+                        position: isSticky ? "sticky" : "static",
+                        left: index === 0 ? 0 : undefined,
+                        right: index === columnsLength - 1 ? 0 : undefined,
+                        backgroundColor: bg,
+                        zIndex: isSticky ? 3 : 1,
+                        color: "white",
+                        fontWeight: "bold",
+                        fontSize: "12px",
+                        textAlign: align,
+                        padding: "8px",
+                        whiteSpace: "nowrap",
+                        transition: "background-color 0.15s ease",
+                      }}
+                    >
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    </td>
+                  );
+                })}
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 const StatsEpl = () => {
   const [tournament, setTournament] = useState<string>("");
   const [dataType, setDataType] = useState("PORTFOLIO");
   const [weekType, setWeekType] = useState<string>("");
 
-  // const [sortOrder, setSortOrder] = useState("Score (Desc)");
-
-  const dataTypes = [{ id: "1", name: "PORTFOLIO" }];
-  // const weekTypes = [{ id: "1", name: "WEEK" }];
+  const dataTypes = [
+    { id: "1", name: "PORTFOLIO" },
+    { id: "2", name: "SCHEDULE" },
+    { id: "3", name: "SEED" },
+  ];
 
   const params = useParams();
   const userId = params.userId!;
+  const sportId = "2";
 
-  // ✅ FIX 1: SortingState inicializado con el valor por defecto correcto
-  // ANTES: useState([]) — la tabla no sabía que debía ordenar por score al inicio
   const [sorting, setSorting] = useState<SortingState>([
     { id: "week_score", desc: true },
   ]);
@@ -119,7 +306,7 @@ const StatsEpl = () => {
 
   const { data: tournamentsEpl } = useQuery({
     queryKey: ["tournamentsEpl", userId],
-    queryFn: () => getTournaments("2"),
+    queryFn: () => getTournaments(sportId),
   });
 
   const tournamentIdStats = String(tournamentsEpl?.[0]?.id ?? "");
@@ -127,20 +314,54 @@ const StatsEpl = () => {
   const { data: statsEplData, isLoading } = useQuery({
     queryKey: ["statsEpl", userId, tournamentIdStats, weekType],
     queryFn: () => getStatsEpl({ tournamentId: tournamentIdStats, week: weekType }),
-    enabled: !!weekType && !!tournamentIdStats,
+    enabled: dataType === "PORTFOLIO" && !!weekType && !!tournamentIdStats,
+  });
+
+  const { data: scheduleEplData, isLoading: isLoadingSchedule } = useQuery({
+    queryKey: ["scheduleEpl", userId, sportId, tournamentIdStats, weekType],
+    queryFn: () =>
+      getSchedulePerWeekEpl({
+        sportId,
+        tournamentId: tournamentIdStats,
+        week: weekType,
+      }),
+    enabled: dataType === "SCHEDULE" && !!weekType && !!tournamentIdStats,
+  });
+
+  const { data: seedPerWeekEplData, isLoading: isLoadingSeed } = useQuery({
+    queryKey: ["seedPerWeekEpl", userId, sportId, tournamentIdStats, weekType],
+    queryFn: () =>
+      getSeedPerWeekEpl({
+        sportId,
+        tournamentId: tournamentIdStats,
+        week: weekType,
+      }),
+    enabled: dataType === "SEED" && !!weekType && !!tournamentIdStats,
   });
 
   const { data: teamsEplStats } = useQuery({
     queryKey: ["teamsEplStats", tournamentIdStats],
-    queryFn: () => getTeamsEpl("2", tournamentIdStats),
+    queryFn: () => getTeamsEpl(sportId, tournamentIdStats),
     enabled: !!tournamentIdStats,
   });
 
+  // PORTFOLIO usa un WS de semanas propio (tournaments/:id/score/weeks);
+  // SCHEDULE y SEED comparten el WS genérico tournaments/:id/score/seed/weeks.
   const { data: getScoreWeeks } = useQuery({
-    queryKey: ["getScoreWeeksEpl", userId, tournamentIdStats],
-    queryFn: () => getScoreWeeksEpl({ tournamentId: tournamentIdStats }),
+    queryKey: ["getScoreWeeksEpl", userId, tournamentIdStats, dataType],
+    queryFn: () =>
+      dataType === "PORTFOLIO"
+        ? getScoreWeeksEpl({ tournamentId: tournamentIdStats })
+        : getScoreSeedWeeksEpl({ tournamentId: tournamentIdStats }),
     enabled: !!tournamentIdStats,
   });
+
+  useEffect(() => {
+    // al cambiar de Data, la lista de semanas cambia de fuente — se limpia
+    // la semana elegida para que el efecto de abajo tome la primera de la
+    // nueva lista en vez de arrastrar una semana que puede no existir ahí.
+    setWeekType("");
+  }, [dataType]);
 
   useEffect(() => {
     // Si tenemos semanas cargadas y el tipo de score (semana) no está definido
@@ -157,10 +378,19 @@ const StatsEpl = () => {
     }
   }, [tournamentsEpl, tournament]);
 
-  console.log(getScoreWeeks);
-  // ✅ FIX 2: teamsMap con useMemo
-  // ANTES: se recalculaba en cada render → nuevo objeto en memoria → re-render → loop infinito
-  // AHORA: solo se recalcula cuando cambia teamsEplStats (dato real de la API)
+  useEffect(() => {
+    // las columnas de cada Data no comparten ids — se reinicia el
+    // orden/búsqueda para no arrastrar un sort que no aplica a la otra tabla
+    if (dataType === "SCHEDULE") {
+      setSorting([{ id: "match_date", desc: false }]);
+    } else if (dataType === "SEED") {
+      setSorting([{ id: "seed", desc: false }]);
+    } else {
+      setSorting([{ id: "week_score", desc: true }]);
+    }
+    setFiltered("");
+  }, [dataType]);
+
   const teamsMap: Record<string, string> = useMemo(() => {
     return (
       teamsEplStats?.reduce(
@@ -172,14 +402,7 @@ const StatsEpl = () => {
       ) ?? {}
     );
   }, [teamsEplStats]);
-  // ⚠️ Sin useMemo: cada render crea un {} nuevo → React lo detecta como cambio
-  //    → vuelve a renderizar → {} nuevo → render → {} nuevo → LOOP SILENCIOSO
 
-  // ✅ FIX 3: statsWithCrests con useMemo
-  // ANTES: se calculaba directamente en el cuerpo del componente
-  //        → nuevo array en cada render → useReactTable detecta nueva data
-  //        → re-render → nuevo array → re-render → LOOP INFINITO
-  // AHORA: solo se recalcula cuando cambian los datos reales de la API
   const statsWithCrests: PortfolioWithCrests[] = useMemo(() => {
     if (!statsEplData || !teamsMap) return [];
 
@@ -200,18 +423,92 @@ const StatsEpl = () => {
       };
     });
   }, [statsEplData, teamsMap]);
-  // ⚠️ Nota: usamos teamsMap (ya memoizado) como dependencia, NO teamsEplStats directamente
-  //    Si usáramos teamsEplStats aquí y no estuviera memoizado el teamsMap,
-  //    igualmente tendríamos el problema
 
-  // ✅ FIX 4: columns con useMemo (ya estaba, pero era incompleto)
-  // ANTES: useMemo sin dependencias [] está bien para columnas estáticas
-  // AHORA: igual, sin cambios necesarios aquí
+  const scheduleWithCrests: ScheduleWithCrests[] = useMemo(() => {
+    if (!Array.isArray(scheduleEplData)) return [];
+
+    return scheduleEplData.map((item: ScheduleMatch) => ({
+      ...item,
+      home_crest: teamsMap[item.home_team?.toUpperCase()] ?? null,
+      away_crest: teamsMap[item.away_team?.toUpperCase()] ?? null,
+    }));
+  }, [scheduleEplData, teamsMap]);
+
+  const scheduleColumns = useMemo<ColumnDef<ScheduleWithCrests>[]>(
+    () => [
+      {
+        header: "Home",
+        accessorKey: "home_team",
+        meta: { align: "left" },
+        cell: (info: CellContext<ScheduleWithCrests, unknown>) => (
+          <TeamDisplay
+            name={info.getValue() as string}
+            crest={info.row.original.home_crest || ""}
+          />
+        ),
+      },
+      {
+        header: "Away",
+        accessorKey: "away_team",
+        meta: { align: "left" },
+        cell: (info: CellContext<ScheduleWithCrests, unknown>) => (
+          <TeamDisplay
+            name={info.getValue() as string}
+            crest={info.row.original.away_crest || ""}
+          />
+        ),
+      },
+      {
+        header: "Date",
+        accessorKey: "match_date",
+        cell: (info: CellContext<ScheduleWithCrests, unknown>) =>
+          (info.getValue() as string | null) || "—",
+      },
+      {
+        header: "Time",
+        accessorKey: "match_time",
+        cell: (info: CellContext<ScheduleWithCrests, unknown>) =>
+          (info.getValue() as string | null) || "—",
+      },
+    ],
+    [],
+  );
+
+  const seedRows: SeedTeamWithCrest[] = useMemo(() => {
+    if (!Array.isArray(seedPerWeekEplData)) return [];
+    return seedPerWeekEplData.map((item: SeedTeamStat) => ({
+      ...item,
+      crest: teamsMap[item.name?.toUpperCase()] ?? null,
+    }));
+  }, [seedPerWeekEplData, teamsMap]);
+
+  const seedColumns = useMemo<ColumnDef<SeedTeamWithCrest>[]>(
+    () => [
+      {
+        header: "Team",
+        accessorKey: "name",
+        meta: { align: "left" },
+        cell: (info: CellContext<SeedTeamWithCrest, unknown>) => (
+          <TeamDisplay
+            name={info.getValue() as string}
+            crest={info.row.original.crest || ""}
+          />
+        ),
+      },
+      {
+        header: "Seed",
+        accessorKey: "seed",
+      },
+    ],
+    [],
+  );
+
   const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
     () => [
       {
         header: "Portfolio",
         accessorKey: "portfolio",
+        meta: { align: "left" },
         cell: (info: CellContext<PortfolioWithCrests, unknown>) => (
           <span style={{ color: "#05fa87" }}>{info.getValue() as string}</span>
         ),
@@ -220,6 +517,7 @@ const StatsEpl = () => {
         header: `Team ${i + 1}`,
         accessorFn: (row: PortfolioWithCrests) => row.teams?.[i]?.name || "",
         id: `team_${i}`,
+        meta: { align: "left" as const },
         cell: (info: CellContext<PortfolioWithCrests, unknown>) => {
           const teamName = info.getValue() as string;
           const originalRow = info.row.original as PortfolioWithCrests;
@@ -246,33 +544,11 @@ const StatsEpl = () => {
     [],
   );
 
-  // ✅ FIX 5: handleSortChange conectado al sorting de useReactTable
-  // ANTES: solo actualizaba sortOrder (estado local del radio button)
-  //        pero NUNCA llamaba a setSorting → la tabla nunca ordenaba nada
-  //        Había DOS sistemas de sorting completamente desconectados entre sí
-  // AHORA: sortOrder controla la UI del radio, setSorting controla la tabla
-  // const handleSortChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   // setSortOrder(value);
-
-  //   // Conectamos el radio button con el sorting real de TanStack Table
-  //   if (value === "Score (Desc)") {
-  //     setSorting([{ id: "week_score", desc: true }]);
-  //   } else if (value === "gap (Asc)") {
-  //     // "Portfolio (Asc)" en la UI
-  //     setSorting([{ id: "portfolio", desc: false }]);
-  //   } else if (value === "Weight (Desc)") {
-  //     setSorting([{ id: "week_score", desc: true }]);
-  //   } else if (value === "Weight (Asc)") {
-  //     setSorting([{ id: "week_score", desc: false }]);
-  //   }
-  // };
-
   const table = useReactTable({
-    data: statsWithCrests, // ✅ Ahora es estable gracias a useMemo
-    columns, // ✅ Ya era estable
+    data: statsWithCrests,
+    columns,
     state: {
-      sorting, // ✅ Ahora sorting se actualiza desde los radio buttons
+      sorting,
       globalFilter: filtered,
     },
     onSortingChange: setSorting,
@@ -282,7 +558,45 @@ const StatsEpl = () => {
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  if (isLoading) return <Loader />;
+  const scheduleTable = useReactTable({
+    data: scheduleWithCrests,
+    columns: scheduleColumns,
+    state: {
+      sorting,
+      globalFilter: filtered,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setFiltered,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
+  const seedTable = useReactTable({
+    data: seedRows,
+    columns: seedColumns,
+    state: {
+      sorting,
+      globalFilter: filtered,
+    },
+    onSortingChange: setSorting,
+    onGlobalFilterChange: setFiltered,
+    getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+  });
+
+  const isSchedule = dataType === "SCHEDULE";
+  const isSeed = dataType === "SEED";
+  const isNarrowTable = isSchedule || isSeed;
+  // combinado: cualquiera de las 3 tablas puede estar cargando su propia
+  // semana/data — solo se usa para el overlay de la tabla, no para tapar
+  // toda la pantalla (eso era lo que causaba el parpadeo al cambiar Data).
+  const isTableLoading = isLoading || isLoadingSchedule || isLoadingSeed;
+
+  // loader de pantalla completa solo en la carga inicial real (antes de
+  // resolver el torneo, nada tiene sentido mostrar todavía).
+  if (!tournamentIdStats) return <Loader />;
 
   return (
     <Grid
@@ -378,7 +692,7 @@ const StatsEpl = () => {
                       handleChange={(e) =>
                         setWeekType(e.target.value as string)
                       }
-                      options={getScoreWeeks?.map((week: ScoreWeek) => {
+                      options={getScoreWeeks?.map((week: { week: number; label: string }) => {
                         return {
                           ...week,
                           name: week.label,
@@ -389,79 +703,6 @@ const StatsEpl = () => {
                   </Grid>
                 </Grid>
               </Grid>
-
-              {/* Right Column: Radio Buttons */}
-              {/* <Grid
-                size={{ xs: 12, md: 5 }}
-                display="flex"
-                justifyContent="center"
-              >
-                <FormControl>
-                  <RadioGroup
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    name="radio-buttons-group"
-                    value={sortOrder}
-                    onChange={handleSortChange} // ✅ Ahora sí actualiza la tabla
-                  >
-                    <FormControlLabel
-                      value="Score (Desc)"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "white",
-                            "&.Mui-checked": { color: "#05fa87" },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography color="white">Score (Desc)</Typography>
-                      }
-                    />
-                    <FormControlLabel
-                      value="gap (Asc)"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "white",
-                            "&.Mui-checked": { color: "#05fa87" },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography color="white">Portfolio (Asc)</Typography>
-                      }
-                    />
-                    <FormControlLabel
-                      value="Weight (Desc)"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "white",
-                            "&.Mui-checked": { color: "#05fa87" },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography color="white">Weight (Desc)</Typography>
-                      }
-                    />
-                    <FormControlLabel
-                      value="Weight (Asc)"
-                      control={
-                        <Radio
-                          sx={{
-                            color: "white",
-                            "&.Mui-checked": { color: "#05fa87" },
-                          }}
-                        />
-                      }
-                      label={
-                        <Typography color="white">Weight (Asc)</Typography>
-                      }
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Grid> */}
             </Grid>
           </div>
         </div>
@@ -487,15 +728,31 @@ const StatsEpl = () => {
                   textTransform: "uppercase",
                 }}
               >
-                Portfolios - Week: {weekType}
+                {isSchedule ? "Schedule" : isSeed ? "Seed" : "Portfolios"} - Week:{" "}
+                {weekType}
               </Typography>
             </Box>
-            <Box sx={{ width: "100%", borderRadius: "4px", position: "relative" }}>
+            <Box
+              sx={{
+                width: isNarrowTable ? { xs: "100%", md: "50%" } : "100%",
+                mx: isNarrowTable ? "auto" : 0,
+                borderRadius: "4px",
+                position: "relative",
+              }}
+            >
               <Tooltip title="Descargar CSV">
                 <IconButton
-                  onClick={() =>
-                    downloadTableAsCsv(`Stats EPL - Week ${weekType}`, table)
-                  }
+                  onClick={() => {
+                    const label = isSchedule
+                      ? "Schedule"
+                      : isSeed
+                        ? "Seed"
+                        : "Portfolios";
+                    const filename = `Stats EPL - ${label} - Week ${weekType}`;
+                    if (isSchedule) downloadTableAsCsv(filename, scheduleTable);
+                    else if (isSeed) downloadTableAsCsv(filename, seedTable);
+                    else downloadTableAsCsv(filename, table);
+                  }}
                   sx={{
                     color: "white",
                     position: "absolute",
@@ -544,150 +801,47 @@ const StatsEpl = () => {
                   }}
                 />
               </div>
-              <div style={{ width: "100%", overflowX: "scroll" }}>
-                <table
-                  style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                    minWidth: "max-content",
+              {isTableLoading && (
+                <Backdrop
+                  open
+                  sx={{
+                    position: "absolute",
+                    zIndex: 5,
+                    backgroundColor: "rgba(10, 10, 10, 0.6)",
+                    borderRadius: "4px",
                   }}
                 >
-                  <thead>
-                    {table.getHeaderGroups().map((headerGroup) => (
-                      <tr key={headerGroup.id}>
-                        {headerGroup.headers.map((header, index) => (
-                          <th
-                            key={header.id}
-                            onClick={header.column.getToggleSortingHandler()}
-                            style={{
-                              position:
-                                index === 0 || index === columns.length - 1
-                                  ? "sticky"
-                                  : "static",
-                              left: index === 0 ? 0 : undefined,
-                              right:
-                                index === columns.length - 1 ? 0 : undefined,
-                              backgroundColor: "#2C0C37",
-                              zIndex:
-                                index === 0 || index === columns.length - 1
-                                  ? 4
-                                  : 2,
-                              color: "white",
-                              fontWeight: "bold",
-                              fontSize: "14px",
-                              textAlign: "center",
-                              padding: "12px",
-                              cursor: "pointer",
-                              whiteSpace: "nowrap",
-                            }}
-                          >
-                            {header.isPlaceholder ? null : (
-                              <div
-                                style={{
-                                  display: "flex",
-                                  alignItems: "center",
-                                  justifyContent: "center",
-                                }}
-                              >
-                                <div>
-                                  {flexRender(
-                                    header.column.columnDef.header,
-                                    header.getContext(),
-                                  )}
-                                </div>
-                                <span
-                                  style={{
-                                    display: "flex",
-                                    alignItems: "center",
-                                  }}
-                                >
-                                  {{
-                                    asc: (
-                                      <ArrowUpwardIcon
-                                        style={{
-                                          fontSize: "20px",
-                                          marginLeft: "4px",
-                                        }}
-                                      />
-                                    ),
-                                    desc: (
-                                      <ArrowUpwardIcon
-                                        style={{
-                                          transform: "rotate(180deg)",
-                                          fontSize: "20px",
-                                          marginLeft: "4px",
-                                        }}
-                                      />
-                                    ),
-                                  }[header.column.getIsSorted() as string] ?? (
-                                    <ArrowUpwardIcon
-                                      style={{
-                                        color: "gray",
-                                        fontSize: "18px",
-                                        marginLeft: "4px",
-                                      }}
-                                    />
-                                  )}
-                                </span>
-                              </div>
-                            )}
-                          </th>
-                        ))}
-                      </tr>
-                    ))}
-                  </thead>
-                  <tbody>
-                    {table.getRowModel().rows.map((row) => {
-                      const isRowHovered = hoveredRowId === row.id;
-                      return (
-                        <tr
-                          key={row.id}
-                          onMouseEnter={() => setHoveredRowId(row.id)}
-                          onMouseLeave={() => setHoveredRowId(null)}
-                        >
-                          {row.getVisibleCells().map((cell, index) => {
-                            const isSticky =
-                              index === 0 || index === columns.length - 1;
-                            const isCellHovered = !isSticky && hoveredCellId === cell.id;
-                            const bg = isCellHovered
-                              ? "#2C0C37"
-                              : isRowHovered
-                                ? "#320D46"
-                                : isSticky ? "#2C0C37" : "#380F55";
-                            return (
-                              <td
-                                key={cell.id}
-                                onMouseEnter={!isSticky ? () => setHoveredCellId(cell.id) : undefined}
-                                onMouseLeave={!isSticky ? () => setHoveredCellId(null) : undefined}
-                                style={{
-                                  position: isSticky ? "sticky" : "static",
-                                  left: index === 0 ? 0 : undefined,
-                                  right:
-                                    index === columns.length - 1 ? 0 : undefined,
-                                  backgroundColor: bg,
-                                  zIndex: isSticky ? 3 : 1,
-                                  color: "white",
-                                  fontWeight: "bold",
-                                  fontSize: "12px",
-                                  textAlign: "center",
-                                  padding: "8px",
-                                  whiteSpace: "nowrap",
-                                  transition: "background-color 0.15s ease",
-                                }}
-                              >
-                                {flexRender(
-                                  cell.column.columnDef.cell,
-                                  cell.getContext(),
-                                )}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
+                  <CircularProgress sx={{ color: "#05fa87" }} />
+                </Backdrop>
+              )}
+              {isSchedule ? (
+                <ScoreTable
+                  table={scheduleTable}
+                  columnsLength={scheduleColumns.length}
+                  hoveredRowId={hoveredRowId}
+                  setHoveredRowId={setHoveredRowId}
+                  hoveredCellId={hoveredCellId}
+                  setHoveredCellId={setHoveredCellId}
+                />
+              ) : isSeed ? (
+                <ScoreTable
+                  table={seedTable}
+                  columnsLength={seedColumns.length}
+                  hoveredRowId={hoveredRowId}
+                  setHoveredRowId={setHoveredRowId}
+                  hoveredCellId={hoveredCellId}
+                  setHoveredCellId={setHoveredCellId}
+                />
+              ) : (
+                <ScoreTable
+                  table={table}
+                  columnsLength={columns.length}
+                  hoveredRowId={hoveredRowId}
+                  setHoveredRowId={setHoveredRowId}
+                  hoveredCellId={hoveredCellId}
+                  setHoveredCellId={setHoveredCellId}
+                />
+              )}
             </Box>
           </Grid>
         </Zoom>

@@ -139,6 +139,7 @@
   font-weight: bold !important;
 }
 
+/* cutoff de edición — desactivado (comentado a pedido)
 .cutoffBanner {
   position: fixed;
   bottom: 24px;
@@ -177,6 +178,7 @@
 .cutoffBannerClose:hover {
   color: #D4AF37;
 }
+*/
 
 @media (width < 800px) {
   .boxPortfolio {

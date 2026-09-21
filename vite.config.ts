@@ -2,6 +2,7 @@ import { defineConfig, loadEnv } from "vite";
 import { fileURLToPath, URL } from "node:url";
 import react from "@vitejs/plugin-react-swc";
 import { VitePWA } from "vite-plugin-pwa";
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { execSync } from "child_process";
 import fs from "node:fs";
 
@@ -28,6 +29,24 @@ export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), "");
   const appEnv = process.env.VITE_APP_ENV || env.VITE_APP_ENV || "production";
   const pwaIcon = ICON_BY_ENV[appEnv] ?? ICON_BY_ENV.production;
+
+  // TEMPORAL — diagnóstico de variables de entorno en el build de Vercel.
+  // Esto corre en Node durante el build (llega a Build Logs), nunca al
+  // navegador. Borrar en cuanto se confirme que VITE_SENTRY_DSN llega bien.
+  const envTotalBytes = Object.entries(process.env).reduce(
+    (sum, [k, v]) => sum + k.length + (v?.length ?? 0),
+    0,
+  );
+  console.log(
+    "[env-debug] mode:",
+    mode,
+    "| total process.env vars:",
+    Object.keys(process.env).length,
+    "| total bytes (aprox, límite Vercel 64KB):",
+    envTotalBytes,
+    "| SENTRY/VITE keys:",
+    Object.keys(process.env).filter((k) => k.includes("SENTRY") || k.startsWith("VITE_")),
+  );
 
   return {
   esbuild: {
@@ -108,6 +127,20 @@ export default defineConfig(({ command, mode }) => {
         maximumFileSizeToCacheInBytes: 7000000,
       },
     }),
+    // Sube source maps a Sentry para ver stack traces legibles (no
+    // minificados) y los borra del build antes de publicarlo, para no
+    // dejarlos servidos públicamente en Vercel. Sin SENTRY_AUTH_TOKEN (dev
+    // local, o un fork sin las credenciales) el plugin no hace nada — no
+    // rompe el build. Debe ir al final del array de plugins.
+    sentryVitePlugin({
+      org: process.env.SENTRY_ORG,
+      project: process.env.SENTRY_PROJECT,
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      disable: !process.env.SENTRY_AUTH_TOKEN,
+      sourcemaps: {
+        filesToDeleteAfterUpload: ["**/*.js.map"],
+      },
+    }),
   ],
   resolve: {
     alias: [
@@ -123,6 +156,9 @@ export default defineConfig(({ command, mode }) => {
     ],
   },
   build: {
+    // necesario para que @sentry/vite-plugin tenga qué subir — se borran
+    // del dist antes de publicar (ver sourcemaps.filesToDeleteAfterUpload)
+    sourcemap: true,
     rollupOptions: {
       output: {
         manualChunks: {

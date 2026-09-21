@@ -1,7 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 
-import { useEffect, useState } from "react";
+// useEffect/useState solo se usaban para el cutoff de edición — desactivado
+// (comentado a pedido). Descomentar junto con el resto de esa funcionalidad.
+// import { useEffect, useState } from "react";
 import { Box, Button, Divider } from "@mui/material";
 import Grid from "@mui/material/Grid2";
 import classes from "./MyPortfolioNFL.module.css";
@@ -15,8 +17,9 @@ import { ByeTeamsList } from "../../components/TeamSeedGrid/ByeTeamsList";
 import { usePortfolioNflData } from "@/hooks/usePortfolioNflData";
 import { usePortfolioNflActions } from "@/hooks/usePortfolioNflActions";
 
-// aviso flotante: aparece cuando falta esto para el corte de edición
-const CUTOFF_WARNING_MINUTES = 3;
+// cutoff de edición — desactivado (comentado a pedido). aviso flotante que
+// aparecía cuando faltaba esto para el corte de edición:
+// const CUTOFF_WARNING_MINUTES = 3;
 
 const MyPortfolioNFL = () => {
   const params = useParams();
@@ -36,8 +39,8 @@ const MyPortfolioNFL = () => {
     availableByeTeams,
     maxByeTeams,
     byeWeekStats,
-    isEditableTime,
-    editCutoffAt,
+    // isEditableTime,
+    // editCutoffAt,
     weekParameter,
     tournamentId,
     isLoadingData,
@@ -59,39 +62,41 @@ const MyPortfolioNFL = () => {
     teamsDynamics,
     validTournament,
     weekParameter,
-    isEditableTime,
+    // isEditableTime,
   });
 
   const teams = teamsComplete ?? [];
   const selected = selectedTeams ?? [];
 
-  const [cutoffCountdown, setCutoffCountdown] = useState("");
-  const [dismissedCutoffWarning, setDismissedCutoffWarning] = useState(false);
-  const cutoffTime = editCutoffAt ? editCutoffAt.getTime() : null;
-
-  useEffect(() => {
-    if (!cutoffTime) {
-      setCutoffCountdown("");
-      return;
-    }
-
-    const tick = () => {
-      const msLeft = cutoffTime - Date.now();
-      const warningWindowMs = CUTOFF_WARNING_MINUTES * 60 * 1000;
-      if (msLeft <= 0 || msLeft > warningWindowMs) {
-        setCutoffCountdown("");
-        return;
-      }
-      const totalSeconds = Math.floor(msLeft / 1000);
-      const m = Math.floor(totalSeconds / 60);
-      const s = totalSeconds % 60;
-      setCutoffCountdown(`${m}:${String(s).padStart(2, "0")}`);
-    };
-
-    tick();
-    const interval = setInterval(tick, 1000);
-    return () => clearInterval(interval);
-  }, [cutoffTime]);
+  // cutoff de edición — desactivado (comentado a pedido). Countdown flotante
+  // que avisaba cuando faltaba poco para el corte de edición:
+  // const [cutoffCountdown, setCutoffCountdown] = useState("");
+  // const [dismissedCutoffWarning, setDismissedCutoffWarning] = useState(false);
+  // const cutoffTime = editCutoffAt ? editCutoffAt.getTime() : null;
+  //
+  // useEffect(() => {
+  //   if (!cutoffTime) {
+  //     setCutoffCountdown("");
+  //     return;
+  //   }
+  //
+  //   const tick = () => {
+  //     const msLeft = cutoffTime - Date.now();
+  //     const warningWindowMs = CUTOFF_WARNING_MINUTES * 60 * 1000;
+  //     if (msLeft <= 0 || msLeft > warningWindowMs) {
+  //       setCutoffCountdown("");
+  //       return;
+  //     }
+  //     const totalSeconds = Math.floor(msLeft / 1000);
+  //     const m = Math.floor(totalSeconds / 60);
+  //     const s = totalSeconds % 60;
+  //     setCutoffCountdown(`${m}:${String(s).padStart(2, "0")}`);
+  //   };
+  //
+  //   tick();
+  //   const interval = setInterval(tick, 1000);
+  //   return () => clearInterval(interval);
+  // }, [cutoffTime]);
 
   // bye_team_next_week (y por lo tanto esta pantalla) siempre habla de la
   // semana siguiente a la ronda actual del torneo.
@@ -209,6 +214,7 @@ const MyPortfolioNFL = () => {
 
   return (
     <>
+      {/* cutoff de edición — desactivado (comentado a pedido)
       {cutoffCountdown && !dismissedCutoffWarning && (
         <div className={classes.cutoffBanner}>
           <span>
@@ -225,6 +231,7 @@ const MyPortfolioNFL = () => {
           </button>
         </div>
       )}
+      */}
       <Grid
         container
         justifyContent={"center"}
