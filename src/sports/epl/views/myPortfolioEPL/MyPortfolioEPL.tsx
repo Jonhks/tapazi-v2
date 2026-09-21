@@ -24,6 +24,10 @@ import Loader from "../../components/EPLBallLoader/EPLBallLoader";
 import { usePortfolioEplData } from "@/hooks/usePortfolioEplData";
 import { usePortfolioEplActions } from "@/hooks/usePortfolioEplActions";
 
+// cutoff de edición — comentado a pedido, portado de NFL (no debe funcionar).
+// aviso flotante que aparecería cuando faltara esto para el corte de edición:
+// const CUTOFF_WARNING_MINUTES = 3;
+
 const MyPortfolioEPL = () => {
   const params = useParams();
   const userId = params.userId!;
@@ -39,6 +43,8 @@ const MyPortfolioEPL = () => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    // isEditableTime,
+    // editCutoffAt,
     weekParameter,
     tournamentId,
     isLoadingData,
@@ -60,7 +66,40 @@ const MyPortfolioEPL = () => {
     teamsDynamics,
     validTournament,
     weekParameter,
+    // isEditableTime,
   });
+
+  // cutoff de edición — comentado a pedido, portado de NFL (no debe
+  // funcionar). Countdown flotante que avisaría cuando faltara poco para el
+  // corte de edición. Para activarlo hace falta también importar
+  // { useEffect, useState } de "react" arriba.
+  // const [cutoffCountdown, setCutoffCountdown] = useState("");
+  // const [dismissedCutoffWarning, setDismissedCutoffWarning] = useState(false);
+  // const cutoffTime = editCutoffAt ? editCutoffAt.getTime() : null;
+  //
+  // useEffect(() => {
+  //   if (!cutoffTime) {
+  //     setCutoffCountdown("");
+  //     return;
+  //   }
+  //
+  //   const tick = () => {
+  //     const msLeft = cutoffTime - Date.now();
+  //     const warningWindowMs = CUTOFF_WARNING_MINUTES * 60 * 1000;
+  //     if (msLeft <= 0 || msLeft > warningWindowMs) {
+  //       setCutoffCountdown("");
+  //       return;
+  //     }
+  //     const totalSeconds = Math.floor(msLeft / 1000);
+  //     const m = Math.floor(totalSeconds / 60);
+  //     const s = totalSeconds % 60;
+  //     setCutoffCountdown(`${m}:${String(s).padStart(2, "0")}`);
+  //   };
+  //
+  //   tick();
+  //   const interval = setInterval(tick, 1000);
+  //   return () => clearInterval(interval);
+  // }, [cutoffTime]);
 
   const checkNotValidTeam = (team: any) =>
     teamsBloqued.some((bloquedTeam) => bloquedTeam.id === team.id);
@@ -230,7 +269,26 @@ const MyPortfolioEPL = () => {
   }
 
   return (
-    <Grid
+    <>
+      {/* cutoff de edición — comentado a pedido, portado de NFL (no debe funcionar)
+      {cutoffCountdown && !dismissedCutoffWarning && (
+        <div className={classes.cutoffBanner}>
+          <span>
+            Editing will lock in <strong>{cutoffCountdown}</strong> — save your
+            changes now.
+          </span>
+          <button
+            type="button"
+            className={classes.cutoffBannerClose}
+            aria-label="Dismiss"
+            onClick={() => setDismissedCutoffWarning(true)}
+          >
+            ×
+          </button>
+        </div>
+      )}
+      */}
+      <Grid
       container
       justifyContent={"center"}
       alignContent={"start"}
@@ -363,6 +421,7 @@ const MyPortfolioEPL = () => {
         </Box>
       </Grid>
     </Grid>
+    </>
   );
 };
 

@@ -11,6 +11,10 @@
 }
 
 .containerApp {
+  /* fallback mientras se descarga la imagen remota — sin esto se ve
+     un flash en blanco al cambiar de vista (el contenedor se
+     remonta con un fondo de S3 en vez de un asset local) */
+  background-color: #000;
   background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/sports/epl/home/back_home_epl.png");
   background-size: cover;
   background-repeat: no-repeat;
@@ -37,6 +41,8 @@
 }
 
 .containerStats {
+  /* mismo fallback que .containerApp — evita el flash en blanco */
+  background-color: #000;
   background-image: url("https://s3.mx-central-1.amazonaws.com/portfolio.pool/sports/epl/stats/back_stats.png?quality=20&format=webp");
   background-size: cover;
   background-repeat: no-repeat;

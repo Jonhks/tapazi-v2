@@ -13,14 +13,18 @@ import {
   getAvailableByeTeamsPerPortfolio,
   getPortfolioPerWeek,
 } from "@/api/nfl/PortfoliosNflAPI";
-import { getParameter } from "@/api/shared/TournamentsAPI";
-import { isEditableBeforeCutoff, getEditCutoffDate } from "@/utils/getDaysLeft";
+// FEATURE DESACTIVADA (comentada a pedido) — bloqueo de edición 5 min antes
+// del arranque del torneo. Para reactivar: descomentar este import + los
+// bloques marcados "cutoff de edición" más abajo en este archivo, en
+// usePortfolioNflActions.ts y en MyPortfolioNFL.tsx.
+// import { getParameter } from "@/api/shared/TournamentsAPI";
+// import { isEditableBeforeCutoff, getEditCutoffDate } from "@/utils/getDaysLeft";
 
 const WEEK_PARAM_KEY = "WEETOU";
 const MAX_BYE_TEAMS_PARAM_KEY = "BYTEPO";
-const TOURNAMENT_DATE_PARAM_KEY = "DATTOU";
-const TOURNAMENT_HOUR_PARAM_KEY = "HOUTOU";
-const EDIT_CUTOFF_MINUTES = 5;
+// const TOURNAMENT_DATE_PARAM_KEY = "DATTOU";
+// const TOURNAMENT_HOUR_PARAM_KEY = "HOUTOU";
+// const EDIT_CUTOFF_MINUTES = 5;
 
 export const usePortfolioNflData = (userId: string, sportId: string) => {
   const [validTournament, setValidTournament] = useState([]);
@@ -32,7 +36,7 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
   const [weekParameter, setWeekParameter] = useState(null);
   const [availableByeTeams, setAvailableByeTeams] = useState([]);
   const [maxByeTeams, setMaxByeTeams] = useState(0);
-  const [isEditableTime, setIsEditableTime] = useState(true);
+  // const [isEditableTime, setIsEditableTime] = useState(true);
 
   // 1. Torneos del sport → de aquí sacamos el tournamentId dinámico
   const { data: tournament, isLoading: isLoadingTournament } = useQuery({
@@ -132,21 +136,22 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     enabled: Boolean(tournamentId),
   });
 
-  // 10. Fecha/hora de arranque del torneo (DATTOU/HOUTOU) — a partir de
-  // EDIT_CUTOFF_MINUTES antes de ese momento ya no se puede editar el portfolio.
-  const { data: tournamentDateData } = useQuery({
-    queryKey: ["nflTournamentDate", tournamentId],
-    queryFn: () => getParameter(tournamentId!, TOURNAMENT_DATE_PARAM_KEY),
-    refetchOnWindowFocus: "always",
-    enabled: Boolean(tournamentId),
-  });
+  // 10. cutoff de edición — DESACTIVADO (comentado a pedido). Fecha/hora de
+  // arranque del torneo (DATTOU/HOUTOU) — a partir de EDIT_CUTOFF_MINUTES
+  // antes de ese momento ya no se podía editar el portfolio.
+  // const { data: tournamentDateData } = useQuery({
+  //   queryKey: ["nflTournamentDate", tournamentId],
+  //   queryFn: () => getParameter(tournamentId!, TOURNAMENT_DATE_PARAM_KEY),
+  //   refetchOnWindowFocus: "always",
+  //   enabled: Boolean(tournamentId),
+  // });
 
-  const { data: tournamentHourData } = useQuery({
-    queryKey: ["nflTournamentHour", tournamentId],
-    queryFn: () => getParameter(tournamentId!, TOURNAMENT_HOUR_PARAM_KEY),
-    refetchOnWindowFocus: "always",
-    enabled: Boolean(tournamentId),
-  });
+  // const { data: tournamentHourData } = useQuery({
+  //   queryKey: ["nflTournamentHour", tournamentId],
+  //   queryFn: () => getParameter(tournamentId!, TOURNAMENT_HOUR_PARAM_KEY),
+  //   refetchOnWindowFocus: "always",
+  //   enabled: Boolean(tournamentId),
+  // });
 
   // 11. Seed/streak de la semana actual del portfolio — se usa para mostrar
   // el seed/multiplier real de los equipos de bye (sección de abajo).
@@ -213,24 +218,23 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     }
   }, [maxByeTeamsData]);
 
-  // Recalcula el corte de edición cada 30s — así, si dejas la pantalla
-  // abierta y cruzas el minuto de corte, se bloquea sin necesitar refrescar.
-  useEffect(() => {
-    if (!tournamentDateData || !tournamentHourData) return;
-
-    const recalc = () =>
-      setIsEditableTime(
-        isEditableBeforeCutoff(
-          tournamentDateData,
-          tournamentHourData,
-          EDIT_CUTOFF_MINUTES,
-        ),
-      );
-
-    recalc();
-    const interval = setInterval(recalc, 30 * 1000);
-    return () => clearInterval(interval);
-  }, [tournamentDateData, tournamentHourData]);
+  // Recalcula el corte de edición cada 30s — DESACTIVADO (comentado a pedido).
+  // useEffect(() => {
+  //   if (!tournamentDateData || !tournamentHourData) return;
+  //
+  //   const recalc = () =>
+  //     setIsEditableTime(
+  //       isEditableBeforeCutoff(
+  //         tournamentDateData,
+  //         tournamentHourData,
+  //         EDIT_CUTOFF_MINUTES,
+  //       ),
+  //     );
+  //
+  //   recalc();
+  //   const interval = setInterval(recalc, 30 * 1000);
+  //   return () => clearInterval(interval);
+  // }, [tournamentDateData, tournamentHourData]);
 
   // Carga equipos seleccionados desde el portfolio guardado, o inicializa vacíos.
   // Los bye teams del portfolio guardado son "extra": no ocupan cupo de
@@ -295,15 +299,15 @@ export const usePortfolioNflData = (userId: string, sportId: string) => {
     availableByeTeams,
     maxByeTeams,
     byeWeekStats: byeWeekStatsData ?? [],
-    isEditableTime,
-    editCutoffAt:
-      tournamentDateData && tournamentHourData
-        ? getEditCutoffDate(
-            tournamentDateData,
-            tournamentHourData,
-            EDIT_CUTOFF_MINUTES,
-          )
-        : null,
+    // isEditableTime,
+    // editCutoffAt:
+    //   tournamentDateData && tournamentHourData
+    //     ? getEditCutoffDate(
+    //         tournamentDateData,
+    //         tournamentHourData,
+    //         EDIT_CUTOFF_MINUTES,
+    //       )
+    //     : null,
     weekParameter,
     tournamentId,
     isLoadingData,

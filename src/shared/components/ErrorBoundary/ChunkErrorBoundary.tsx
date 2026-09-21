@@ -3,6 +3,7 @@ import {
   isChunkLoadError,
   reloadOnceForChunkError,
 } from "@/utils/chunkErrorReload";
+import { Sentry } from "@/lib/sentry";
 
 interface Props {
   children: ReactNode;
@@ -36,6 +37,7 @@ export class ChunkErrorBoundary extends Component<Props, State> {
       return;
     }
     console.error(error, info);
+    Sentry.captureException(error, { extra: { componentStack: info.componentStack } });
   }
 
   render() {
