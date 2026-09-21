@@ -23,6 +23,7 @@ interface UsePortfolioEplActionsProps {
   teamsDynamics: any[];
   validTournament: any[];
   weekParameter: number | null;
+  // isEditableTime: boolean; // cutoff de edición — comentado a pedido, portado de NFL
 }
 
 export const usePortfolioEplActions = ({
@@ -35,6 +36,7 @@ export const usePortfolioEplActions = ({
   teamsDynamics,
   validTournament,
   weekParameter,
+  // isEditableTime,
 }: UsePortfolioEplActionsProps) => {
   const queryClient = useQueryClient();
 
@@ -71,9 +73,13 @@ export const usePortfolioEplActions = ({
     },
   });
 
-  const areAllInputsValid = () =>
-    selectedTeams?.length === numberInputs &&
-    selectedTeams.every((team) => team && team.name);
+  const areAllInputsValid = () => {
+    // if (!isEditableTime) return false; // cutoff de edición — comentado a pedido, portado de NFL
+    return (
+      selectedTeams?.length === numberInputs &&
+      selectedTeams.every((team) => team && team.name)
+    );
+  };
 
   const getSeed = (team: any) => {
     let seed = "";
@@ -320,6 +326,14 @@ export const usePortfolioEplActions = ({
 
   // Verifica saldo antes de confirmar (solo en creación, no en edición)
   const addportFolioAlert = async () => {
+    // cutoff de edición — comentado a pedido, portado de NFL (no debe funcionar)
+    // if (!isEditableTime) {
+    //   toast.error(
+    //     "Editing is closed — the tournament starts in less than 5 minutes.",
+    //   );
+    //   return;
+    // }
+
     if (!AllPortfolios?.length) {
       if (!tournamentId) return;
       try {

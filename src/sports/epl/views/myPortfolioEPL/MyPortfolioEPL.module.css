@@ -113,6 +113,47 @@
   font-weight: bold !important;
 }
 
+/* cutoff de edición — comentado a pedido, portado de NFL (no debe funcionar)
+.cutoffBanner {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1300;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #200930;
+  border: 1px solid #05fa87;
+  border-radius: 10px;
+  padding: 12px 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  color: white;
+  font-weight: bold;
+  font-size: 14px;
+  max-width: calc(100vw - 32px);
+}
+
+.cutoffBanner strong {
+  color: #05fa87;
+  font-variant-numeric: tabular-nums;
+}
+
+.cutoffBannerClose {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0 0 4px;
+}
+
+.cutoffBannerClose:hover {
+  color: #05fa87;
+}
+*/
+
 @media (width < 800px) {
   .boxPortfolio {
     margin-top: 2rem;

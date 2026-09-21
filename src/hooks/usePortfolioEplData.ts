@@ -11,8 +11,17 @@ import {
   getTeamsDynamics,
   getParameterWeek,
 } from "@/api/epl/PortfoliosEplAPI";
+// cutoff de edición — código portado de NFL, dejado comentado a pedido (no
+// debe funcionar). Para activarlo: descomentar este import + los bloques
+// marcados "cutoff de edición" más abajo en este archivo, en
+// usePortfolioEplActions.ts y en MyPortfolioEPL.tsx.
+// import { getParameter } from "@/api/shared/TournamentsAPI";
+// import { isEditableBeforeCutoff, getEditCutoffDate } from "@/utils/getDaysLeft";
 
 const WEEK_PARAM_KEY = "WEETOU";
+// const TOURNAMENT_DATE_PARAM_KEY = "DATTOU";
+// const TOURNAMENT_HOUR_PARAM_KEY = "HOUTOU";
+// const EDIT_CUTOFF_MINUTES = 5;
 
 export const usePortfolioEplData = (userId: string, sportId: string) => {
   const [validTournament, setValidTournament] = useState([]);
@@ -22,6 +31,7 @@ export const usePortfolioEplData = (userId: string, sportId: string) => {
   const [teamsBloqued, setTeamsBloqued] = useState([]);
   const [selectedTeams, setSelectedTeams] = useState([]);
   const [weekParameter, setWeekParameter] = useState(null);
+  // const [isEditableTime, setIsEditableTime] = useState(true);
 
   // 1. Torneos del sport → de aquí sacamos el tournamentId dinámico
   const { data: tournament, isLoading: isLoadingTournament } = useQuery({
@@ -95,6 +105,23 @@ export const usePortfolioEplData = (userId: string, sportId: string) => {
       enabled: Boolean(tournamentId),
     });
 
+  // cutoff de edición — DESACTIVADO (comentado a pedido, portado de NFL).
+  // Fecha/hora de arranque del torneo (DATTOU/HOUTOU) — a partir de
+  // EDIT_CUTOFF_MINUTES antes de ese momento ya no se podría editar el portfolio.
+  // const { data: tournamentDateData } = useQuery({
+  //   queryKey: ["eplTournamentDate", tournamentId],
+  //   queryFn: () => getParameter(tournamentId!, TOURNAMENT_DATE_PARAM_KEY),
+  //   refetchOnWindowFocus: "always",
+  //   enabled: Boolean(tournamentId),
+  // });
+
+  // const { data: tournamentHourData } = useQuery({
+  //   queryKey: ["eplTournamentHour", tournamentId],
+  //   queryFn: () => getParameter(tournamentId!, TOURNAMENT_HOUR_PARAM_KEY),
+  //   refetchOnWindowFocus: "always",
+  //   enabled: Boolean(tournamentId),
+  // });
+
   // --- Sincronización de estados ---
 
   useEffect(() => {
@@ -137,6 +164,24 @@ export const usePortfolioEplData = (userId: string, sportId: string) => {
     if (weekParameterData) setWeekParameter(weekParameterData);
   }, [weekParameterData]);
 
+  // Recalcula el corte de edición cada 30s — DESACTIVADO (comentado a pedido).
+  // useEffect(() => {
+  //   if (!tournamentDateData || !tournamentHourData) return;
+  //
+  //   const recalc = () =>
+  //     setIsEditableTime(
+  //       isEditableBeforeCutoff(
+  //         tournamentDateData,
+  //         tournamentHourData,
+  //         EDIT_CUTOFF_MINUTES,
+  //       ),
+  //     );
+  //
+  //   recalc();
+  //   const interval = setInterval(recalc, 30 * 1000);
+  //   return () => clearInterval(interval);
+  // }, [tournamentDateData, tournamentHourData]);
+
   // Carga equipos seleccionados desde el portfolio guardado, o inicializa vacíos
   useEffect(() => {
     if (
@@ -175,6 +220,15 @@ export const usePortfolioEplData = (userId: string, sportId: string) => {
     selectedTeams,
     setSelectedTeams,
     teamsDynamics,
+    // isEditableTime,
+    // editCutoffAt:
+    //   tournamentDateData && tournamentHourData
+    //     ? getEditCutoffDate(
+    //         tournamentDateData,
+    //         tournamentHourData,
+    //         EDIT_CUTOFF_MINUTES,
+    //       )
+    //     : null,
     weekParameter,
     tournamentId,
     isLoadingData,
