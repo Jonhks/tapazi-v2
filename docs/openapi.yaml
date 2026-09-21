@@ -11,8 +11,9 @@ info:
     | NCAA Female | `ncaa`        | 3        |
     | EPL         | `epl`         | 2        |
     | World Cup   | `world-cup`   | 4        |
+    | NFL         | `nfl`         | 5 (pending backend confirmation) |
 
-  version: 3.1.0
+  version: 3.2.0
   contact:
     email: jonhgx@gmail.com
 
@@ -53,6 +54,17 @@ tags:
     description: Score and stats for FIFA World Cup, by group round.
   - name: World Cup - History
     description: Historical reports for FIFA World Cup (not wired up in the frontend yet).
+  - name: NFL - Home
+    description: Home screen — `sport=nfl`, sport_id 5 (pending backend confirmation).
+  - name: NFL - Portfolios
+    description: |
+      Portfolio CRUD for NFL, weekly (like EPL) plus bye-week team selection
+      (a team on its bye week can still be picked as an "extra" slot if it was
+      already selected the week before it went on bye).
+  - name: NFL - Stats
+    description: Score and stats for NFL — Portfolio, Schedule and Seed data views.
+  - name: NFL - History
+    description: Historical reports for NFL.
 
 x-tagGroups:
   - name: Auth
@@ -83,6 +95,8 @@ x-tagGroups:
         World Cup - Stats,
         World Cup - History,
       ]
+  - name: NFL
+    tags: [NFL - Home, NFL - Portfolios, NFL - Stats, NFL - History]
 
 paths:
   /countries:
@@ -225,6 +239,10 @@ paths:
     get:
       tags: [Auth]
       summary: Get participant wallet
+      description: |
+        Not currently called by the frontend — superseded by the three
+        specific endpoints below (`wallet-remaining`, `wallet-totals`,
+        `wallet-transactions`), used by the shared `WalletModal` component.
       parameters:
         - name: participantId
           in: path
@@ -244,14 +262,200 @@ paths:
                     items:
                       $ref: "#/components/schemas/Wallet"
 
+  /participants/{participantId}/wallet-remaining:
+    get:
+      tags: [Auth]
+      summary: Get participant's remaining wallet balance
+      description: Used to check funds before confirming a portfolio purchase.
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 121
+      responses:
+        "200":
+          description: Remaining balance
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  wallet_remaining: { type: number, format: float, example: 50.0 }
+
+  /participants/{participantId}/wallet-totals:
+    get:
+      tags: [Auth]
+      summary: Get participant's wallet totals (in/out)
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 121
+      responses:
+        "200":
+          description: Totals in/out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totals:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/WalletTotals"
+
+  /participants/{participantId}/wallet-transactions:
+    get:
+      tags: [Auth]
+      summary: Get participant's wallet transaction history
+      description: Response is the array directly (not wrapped in an object).
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 121
+      responses:
+        "200":
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/WalletTransaction"
+
+  /participants/{participantId}/buy-portfolio:
+    post:
+      tags: [Auth]
+      summary: Buy a portfolio (charge the wallet)
+      description: |
+        Called right after `POST /portfolios` creates a new portfolio, to
+        charge its price (`PRCXPO` tournament parameter) against the
+        participant's wallet. If this fails, the frontend soft-removes the
+        just-created portfolio via `PUT /portfolios/{id}/remove`.
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 1
+        - name: tournament_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 3
+        - name: portfolio_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 123
+      responses:
+        "200":
+          description: Purchase result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code: { type: string }
+                  success: { type: boolean }
+                  message: { type: string }
+                  amount: { type: number, format: float }
+                  required: { type: number, format: float }
+                  available: { type: number, format: float }
+
+  /participants/{participantId}/remove-portfolio:
+    post:
+      tags: [Auth]
+      summary: Refund/cancel a portfolio purchase
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 1
+        - name: tournament_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 3
+        - name: portfolio_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 123
+      responses:
+        "200":
+          description: Portfolio purchase removed
+
+  /participants/{participantId}/show-terms-of-use:
+    get:
+      tags: [Auth]
+      summary: Check if terms-of-use must be shown — World Cup only
+      description: |
+        Triggered from the Login view. Always called with `?sport=wc` — World
+        Cup is the only sport with a terms-of-use gate today.
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 121
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [wc] }
+          example: wc
+      responses:
+        "200":
+          description: Terms-of-use status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  enable_terms_of_use: { type: boolean }
+                  accepted_terms_of_use: { type: boolean }
+                  tournament_id: { type: integer }
+
+  /participants/{participantId}/accept-terms-of-use:
+    post:
+      tags: [Auth]
+      summary: Accept terms-of-use — World Cup only
+      parameters:
+        - name: participantId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 121
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [wc] }
+          example: wc
+      responses:
+        "200":
+          description: Terms-of-use accepted
+
   /sports/{sportId}/tournaments:
     get:
-      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
+      tags:
+        [
+          NCAA Male - Home,
+          NCAA Female - Home,
+          EPL - Home,
+          World Cup - Home,
+          NFL - Home,
+        ]
       summary: Get tournaments by sport
       description: |
         - NCAA Male: `sportId=1`
         - NCAA Female: `sportId=3`
         - EPL: `sportId=2`
+        - NFL: `sportId=5` (pending backend confirmation)
       parameters:
         - name: sportId
           in: path
@@ -271,9 +475,42 @@ paths:
                     items:
                       $ref: "#/components/schemas/Tournament"
 
+  /tournaments/{tournamentId}:
+    get:
+      tags:
+        [
+          NCAA Male - Home,
+          NCAA Female - Home,
+          EPL - Home,
+          World Cup - Home,
+          NFL - Home,
+        ]
+      summary: Get tournament detail
+      description: Not currently called directly by the frontend (present in the backend/Postman collection).
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 1
+      responses:
+        "200":
+          description: Tournament detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Tournament"
+
   /tournaments/{tournamentId}/stats:
     get:
-      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
+      tags:
+        [
+          NCAA Male - Home,
+          NCAA Female - Home,
+          EPL - Home,
+          World Cup - Home,
+          NFL - Home,
+        ]
       summary: Get tournament stats / participant count
       parameters:
         - name: tournamentId
@@ -296,11 +533,21 @@ paths:
 
   /tournaments/{tournamentId}/parameters:
     get:
-      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
+      tags:
+        [
+          NCAA Male - Home,
+          NCAA Female - Home,
+          EPL - Home,
+          World Cup - Home,
+          NFL - Home,
+          NFL - Portfolios,
+          NFL - Stats,
+        ]
       summary: Get tournament parameter by key
       description: |
         Common keys: `POPONA`, `HOINFO`, `DATTOU`, `HOUTOU`, `RECODE`,
-        `TEAMXP` (EPL — team slots per portfolio), `WEETOU` (EPL — current week),
+        `TEAMXP` (EPL/NFL — team slots per portfolio), `WEETOU` (EPL/NFL — current week),
+        `BYTEPO` (NFL only — max bye-week teams selectable per portfolio),
         `PORTXP` (World Cup — portfolio XP), `PRCXPO` (all sports — portfolio price, used for wallet balance check)
       parameters:
         - name: tournamentId
@@ -314,7 +561,7 @@ paths:
           schema:
             type: string
             enum:
-              [POPONA, HOINFO, DATTOU, HOUTOU, RECODE, TEAMXP, WEETOU, PORTXP, PRCXPO]
+              [POPONA, HOINFO, DATTOU, HOUTOU, RECODE, TEAMXP, WEETOU, BYTEPO, PORTXP, PRCXPO]
           example: POPONA
       responses:
         "200":
@@ -328,7 +575,14 @@ paths:
 
   /tournaments/{tournamentId}/instructions:
     get:
-      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
+      tags:
+        [
+          NCAA Male - Home,
+          NCAA Female - Home,
+          EPL - Home,
+          World Cup - Home,
+          NFL - Home,
+        ]
       summary: Get tournament instructions
       parameters:
         - name: tournamentId
@@ -351,7 +605,14 @@ paths:
 
   /tournaments/{tournamentId}/payouts:
     get:
-      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
+      tags:
+        [
+          NCAA Male - Home,
+          NCAA Female - Home,
+          EPL - Home,
+          World Cup - Home,
+          NFL - Home,
+        ]
       summary: Get tournament payouts
       parameters:
         - name: tournamentId
@@ -378,12 +639,20 @@ paths:
 
   /tournaments/{tournamentId}/score/home:
     get:
-      tags: [NCAA Male - Home, NCAA Female - Home, EPL - Home, World Cup - Home]
+      tags:
+        [
+          NCAA Male - Home,
+          NCAA Female - Home,
+          EPL - Home,
+          World Cup - Home,
+          NFL - Home,
+        ]
       summary: Get home screen score
       description: |
         - **NCAA Male/Female:** `?participant_id={id}&sport=ncaa`
         - **EPL:** `?participant_id={id}&sport=epl`
         - **World Cup:** `?participant_id={id}&sport=wc`
+        - **NFL:** `?participant_id={id}&sport=nfl`
       parameters:
         - name: tournamentId
           in: path
@@ -398,11 +667,62 @@ paths:
           in: query
           schema:
             type: string
-            enum: [ncaa, epl, wc]
+            enum: [ncaa, epl, wc, nfl]
           example: ncaa
       responses:
         "200":
           description: Home score data
+
+  /tournaments/{tournamentId}/portfolios/home:
+    get:
+      tags: [World Cup - Home]
+      summary: Get participant's home portfolios — World Cup only
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 6
+        - name: participant_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 1
+      responses:
+        "200":
+          description: Home portfolios data
+
+  /tournaments/{tournamentId}/terms-of-use:
+    get:
+      tags: [Auth]
+      summary: Get terms-of-use text — World Cup only
+      description: Triggered from the Login view, always with `?sport=wc`.
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 3
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [wc] }
+          example: wc
+      responses:
+        "200":
+          description: Terms-of-use paragraphs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        description: { type: string }
+                        highlighted: { type: boolean }
 
   /participants/{participantId}/portfolios:
     get:
@@ -412,12 +732,14 @@ paths:
           NCAA Female - Portfolios,
           EPL - Portfolios,
           World Cup - Portfolios,
+          NFL - Portfolios,
         ]
       summary: Get participant portfolios
       description: |
         - **NCAA:** `?tournament_id={id}&sport=ncaa`
         - **EPL:** `?tournament_id={id}&sport=epl` (add `&portfolio_id={id}` to filter by portfolio)
         - **World Cup:** `?tournament_id={id}&sport=wc`
+        - **NFL:** `?tournament_id={id}&sport=nfl`
       parameters:
         - name: participantId
           in: path
@@ -460,6 +782,7 @@ paths:
           NCAA Female - Portfolios,
           EPL - Portfolios,
           World Cup - Portfolios,
+          NFL - Portfolios,
         ]
       summary: Create portfolio
       requestBody:
@@ -476,14 +799,20 @@ paths:
 
   /portfolios/{portfolioId}:
     put:
-      tags: [NCAA Male - Portfolios, EPL - Portfolios, World Cup - Portfolios]
+      tags:
+        [
+          NCAA Male - Portfolios,
+          EPL - Portfolios,
+          World Cup - Portfolios,
+          NFL - Portfolios,
+        ]
       summary: Update portfolio
       description: |
         Not available for NCAA Female (female only creates/removes portfolios, never edits).
 
         Body shape differs by sport:
         - **NCAA Male / World Cup:** full object, same shape as `POST /portfolios` (`PortfolioCreateRequest`).
-        - **EPL:** `{ teams: [...] }` only (`PortfolioUpdateRequest`).
+        - **EPL / NFL:** `{ teams: [...] }` only (`PortfolioUpdateRequest`).
       parameters:
         - name: portfolioId
           in: path
@@ -569,6 +898,7 @@ paths:
           NCAA Female - Portfolios,
           EPL - Portfolios,
           World Cup - Portfolios,
+          NFL - Portfolios,
         ]
       summary: Get teams not available for selection
       parameters:
@@ -662,8 +992,12 @@ paths:
 
   /portfolios/{portfolioId}/per-week:
     get:
-      tags: [EPL - Portfolios]
-      summary: Get EPL portfolio by gameweek
+      tags: [EPL - Portfolios, NFL - Portfolios, NFL - Home]
+      summary: Get portfolio by gameweek
+      description: |
+        - **EPL:** used by the Portfolios view.
+        - **NFL:** used both by Home (weekly score breakdown) and by the
+          Portfolios view to get real seed/multiplier for bye-week teams.
       parameters:
         - name: portfolioId
           in: path
@@ -696,6 +1030,7 @@ paths:
           NCAA Female - Portfolios,
           EPL - Portfolios,
           World Cup - Portfolios,
+          NFL - Portfolios,
         ]
       summary: Soft-remove portfolio from tournament
       description: |
@@ -719,8 +1054,8 @@ paths:
 
   /sports/{sportId}/teams/dynamics:
     get:
-      tags: [EPL - Portfolios]
-      summary: Get team dynamics — EPL only
+      tags: [EPL - Portfolios, NFL - Portfolios]
+      summary: Get team dynamics — EPL and NFL
       description: Dynamic team availability based on current standings.
       parameters:
         - name: sportId
@@ -742,6 +1077,127 @@ paths:
         "200":
           description: Team dynamics data
 
+  /sports/{sportId}/teams/schedule-per-week:
+    get:
+      tags: [EPL - Stats, NFL - Stats]
+      summary: Get the week's schedule (matches) — Stats "Schedule" data view
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 2
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [epl, nfl] }
+          example: epl
+        - name: tournament_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 3
+        - name: week
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 6
+      responses:
+        "200":
+          description: Matches for the week
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schedule:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ScheduleMatch"
+
+  /sports/{sportId}/teams/seed-per-week:
+    get:
+      tags: [EPL - Stats, NFL - Stats]
+      summary: Get seed per team for the week — Stats "Seed" data view
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 2
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [epl, nfl] }
+          example: epl
+        - name: tournament_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 3
+        - name: week
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 6
+      responses:
+        "200":
+          description: Seed per team for the week
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  teams:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/SeedTeam"
+
+  /sports/{sportId}/teams/available-bye-teams-per-portfolio:
+    get:
+      tags: [NFL - Portfolios]
+      summary: Get bye-week teams eligible for a portfolio — NFL only
+      description: |
+        Teams on their bye week that can still be picked as an "extra" slot in
+        this specific portfolio, because they were already selected the week
+        before they went on bye. Combined on the frontend with the `BYTEPO`
+        tournament parameter (max bye teams selectable per portfolio).
+      parameters:
+        - name: sportId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 5
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [nfl] }
+          example: nfl
+        - name: tournament_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 10
+        - name: portfolio_id
+          in: query
+          required: true
+          schema: { type: integer }
+          example: 926
+      responses:
+        "200":
+          description: Bye-week teams available for this portfolio
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  teams:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        team_id: { type: integer }
+
   /sports/{sportId}/teams:
     get:
       tags:
@@ -751,12 +1207,15 @@ paths:
           EPL - Portfolios,
           EPL - Stats,
           World Cup - Portfolios,
+          NFL - Portfolios,
+          NFL - Stats,
         ]
       summary: Get teams by sport
       description: |
         - **NCAA:** `sportId=1|3`, `?sport=ncaa&tournament_id={id}` — Stats view.
         - **EPL:** `sportId=2`, `?sport=epl&tournament_id={id}` — used by both Portfolios and Stats views.
         - **World Cup:** `sportId=4` (hardcoded in the frontend pending backend confirmation), `?sport=wc&tournament_id={id}` — Portfolios view.
+        - **NFL:** `sportId=5` (pending backend confirmation), `?sport=nfl&tournament_id={id}` — used by both Portfolios and Stats views.
       parameters:
         - name: sportId
           in: path
@@ -767,7 +1226,7 @@ paths:
           in: query
           schema:
             type: string
-            enum: [ncaa, epl, wc]
+            enum: [ncaa, epl, wc, nfl]
           example: ncaa
         - name: tournament_id
           in: query
@@ -815,8 +1274,12 @@ paths:
 
   /tournaments/{tournamentId}/score/weeks:
     get:
-      tags: [NCAA Male - Stats, EPL - Stats]
+      tags: [NCAA Male - Stats, EPL - Stats, NFL - Stats]
       summary: Get available score weeks
+      description: |
+        NFL uses this one for the Stats "Portfolio" data view specifically —
+        see `score/seed/weeks` below for the weeks list used by the
+        "Schedule"/"Seed" data views (NFL and EPL).
       parameters:
         - name: tournamentId
           in: path
@@ -834,12 +1297,47 @@ paths:
                   weeks:
                     type: array
                     items:
-                      $ref: "#/components/schemas/Week"
+                      $ref: "#/components/schemas/ScoreWeek"
+
+  /tournaments/{tournamentId}/score/seed/weeks:
+    get:
+      tags: [EPL - Stats, NFL - Stats]
+      summary: Get available weeks for the Schedule/Seed data views
+      description: |
+        Generic weeks list shared by `schedule-per-week` and `seed-per-week`
+        above — separate from `score/weeks`, which feeds the Stats
+        "Portfolio" data view instead.
+      parameters:
+        - name: tournamentId
+          in: path
+          required: true
+          schema: { type: integer }
+          example: 10
+        - name: sport
+          in: query
+          required: true
+          schema: { type: string, enum: [epl, nfl] }
+          example: nfl
+      responses:
+        "200":
+          description: List of available weeks
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  weeks:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ScoreWeek"
 
   /tournaments/{tournamentId}/score/stats/portfolio:
     get:
-      tags: [NCAA Male - Stats, EPL - Stats]
+      tags: [NCAA Male - Stats]
       summary: Get portfolio stats by week
+      description: |
+        NCAA Male only — EPL and NFL call the plural `score/stats/portfolios`
+        path above instead (same purpose, different path).
       parameters:
         - name: tournamentId
           in: path
@@ -856,32 +1354,42 @@ paths:
 
   /tournaments/{tournamentId}/score/stats/portfolios:
     get:
-      tags: [World Cup - Home, World Cup - Stats]
-      summary: Get portfolio team composition by round — World Cup only
+      tags: [World Cup - Home, World Cup - Stats, EPL - Stats, NFL - Stats]
+      summary: Get portfolio team composition (plural) — shared by EPL, NFL and World Cup
       description: |
-        World Cup equivalent of `score/stats/portfolio` (singular), but keyed by
-        group `round` instead of `week`. Used by the Home view (fixed at
-        `round=1`, the first group round) to render team compositions, and by the
-        Stats view for the selected round.
+        Same path used three ways depending on sport:
+        - **EPL / NFL:** `?week={week}` — the Stats "Portfolio" data view.
+          Functionally equivalent to `score/stats/portfolio` (singular) below,
+          just under the plural path — NCAA Male is the only sport still on
+          the singular one.
+        - **World Cup:** `?round={round}&sport=wc` — keyed by group round
+          instead of week. Used by the Home view (fixed at `round=1`, the
+          first group round) to render team compositions, and by the Stats
+          view for the selected round.
       parameters:
         - name: tournamentId
           in: path
           required: true
           schema: { type: integer }
           example: 4
+        - name: week
+          in: query
+          description: EPL / NFL only
+          schema: { type: integer }
+          example: 6
         - name: round
           in: query
-          required: true
+          description: World Cup only
           schema: { type: string }
           example: "1"
         - name: sport
           in: query
-          required: true
+          description: World Cup only — EPL/NFL don't send this param here
           schema: { type: string, enum: [wc] }
           example: wc
       responses:
         "200":
-          description: Portfolio team composition per round
+          description: Portfolio team composition, per week (EPL/NFL) or round (World Cup)
 
   /tournaments/{tournamentId}/score/rounds:
     get:
@@ -1071,7 +1579,13 @@ paths:
 
   /reports/teams-per-year-log:
     get:
-      tags: [NCAA Male - History, NCAA Female - History, World Cup - History]
+      tags:
+        [
+          NCAA Male - History,
+          NCAA Female - History,
+          World Cup - History,
+          NFL - History,
+        ]
       summary: Get teams per year log
       parameters:
         - name: tournament_id
@@ -1094,7 +1608,13 @@ paths:
 
   /reports/historical-perfect-portfolios-header:
     get:
-      tags: [NCAA Male - History, NCAA Female - History, World Cup - History]
+      tags:
+        [
+          NCAA Male - History,
+          NCAA Female - History,
+          World Cup - History,
+          NFL - History,
+        ]
       summary: Get perfect portfolios header
       responses:
         "200":
@@ -1111,7 +1631,7 @@ paths:
 
   /reports/historical-perfect-portfolios-history:
     get:
-      tags: [NCAA Male - History, NCAA Female - History]
+      tags: [NCAA Male - History, NCAA Female - History, NFL - History]
       summary: Get perfect portfolios history by year
       parameters:
         - name: year
@@ -1139,7 +1659,13 @@ paths:
 
   /reports/historical-all-rounds:
     get:
-      tags: [NCAA Male - History, NCAA Female - History, World Cup - History]
+      tags:
+        [
+          NCAA Male - History,
+          NCAA Female - History,
+          World Cup - History,
+          NFL - History,
+        ]
       summary: Get historical all rounds
       parameters:
         - name: order-by
@@ -1154,7 +1680,7 @@ paths:
 
   /reports/teams-picked-log-history:
     get:
-      tags: [NCAA Male - History, NCAA Female - History]
+      tags: [NCAA Male - History, NCAA Female - History, NFL - History]
       summary: Get teams picked log — historical by year
       parameters:
         - name: tournament_id
@@ -1307,12 +1833,33 @@ components:
         description: { type: string }
         highlighted: { type: boolean }
 
-    Week:
+    ScoreWeek:
+      type: object
+      description: |
+        Actual shape returned by `score/weeks` and `score/seed/weeks` — not
+        to be confused with `Week` above (used by other older report/portfolio
+        endpoints).
+      properties:
+        week: { type: integer, example: 6 }
+        label: { type: string, example: "Week 6" }
+
+    ScheduleMatch:
+      type: object
+      properties:
+        home_team: { type: string }
+        away_team: { type: string }
+        match_date: { type: string, nullable: true, example: "2026-09-21" }
+        match_time: { type: string, nullable: true, example: "13:00" }
+
+    SeedTeam:
       type: object
       properties:
         id: { type: integer }
         name: { type: string }
-        number: { type: integer }
+        seed: { type: integer }
+        bye_team_current_week:
+          type: boolean
+          description: NFL only.
 
     Wallet:
       type: object
@@ -1320,6 +1867,26 @@ components:
         id: { type: integer }
         balance: { type: number, format: float }
         currency: { type: string }
+
+    WalletTotals:
+      type: object
+      properties:
+        sum_in: { type: number, format: float }
+        sum_out: { type: number, format: float }
+        sum_in_minus_out: { type: number, format: float }
+
+    WalletTransaction:
+      type: object
+      properties:
+        wallet_in: { type: number, format: float }
+        wallet_out: { type: number, format: float }
+        date: { type: string }
+        time: { type: string }
+        origin: { type: string }
+        portfolio_name: { type: string }
+        tournament_name: { type: string }
+        sport_hex_color: { type: string }
+        canceled: { type: boolean }
 
     MostPickedTeam:
       type: object
