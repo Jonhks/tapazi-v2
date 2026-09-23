@@ -9,6 +9,7 @@ import {
   Input,
   InputAdornment,
   CircularProgress,
+  Typography,
 } from "@mui/material";
 import classes from "./Login.module.css";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
@@ -30,8 +31,11 @@ import {
 } from "@/api/AuthAPI";
 import type { TermsEntry } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import TermsOfUseModal from "./TermsOfUseModal";
+import ReportBugModal from "@/shared/components/ReportBugModal/ReportBugModal";
 import { getEnvLabel } from "@/utils/envLabel";
+import { resetAppState } from "@/utils/resetAppState";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -42,6 +46,24 @@ const Login = () => {
   const [termsOpen, setTermsOpen] = useState(false);
   const [termsContent, setTermsContent] = useState<TermsEntry[]>([]);
   const [isCheckingTerms, setIsCheckingTerms] = useState(false);
+  const [reportBugOpen, setReportBugOpen] = useState(false);
+
+  const handleResetAppState = async () => {
+    const result = await Swal.fire({
+      title: "Reset app data?",
+      text: "This will log you out and clear all local data. Use this only if the app is stuck or not loading correctly.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#D4AF37",
+      cancelButtonColor: "#666",
+      color: "white",
+      background: "#0a0a0a",
+      confirmButtonText: "Yes, reset it",
+    });
+    if (result.isConfirmed) {
+      await resetAppState();
+    }
+  };
 
   const handleClickShowPassword = () => setShowPassword(!showPassword);
   const handleMouseDownPassword = (
@@ -276,8 +298,50 @@ const Login = () => {
                 <p className={classes.subtitle}>PortfolioPaul, LLC (2025)</p>
               </Box>
               <p className={classes.version}>
-                Version {import.meta.env.VITE_APP_VERSION} ({import.meta.env.VITE_APP_COMMIT}) — {getEnvLabel()}
+                Version {import.meta.env.VITE_APP_VERSION} ({import.meta.env.VITE_APP_COMMIT})
+                {getEnvLabel() && ` — ${getEnvLabel()}`}
               </p>
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: 2,
+                  mt: 1,
+                }}
+              >
+                <Typography
+                  component="button"
+                  onClick={() => setReportBugOpen(true)}
+                  sx={{
+                    fontSize: 12,
+                    color: "rgb(148, 197, 249)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    p: 0,
+                    textDecoration: "underline",
+                    textShadow: "0px 1px 3px rgba(0,0,0,0.95), 0px 0px 6px rgba(0,0,0,0.7)",
+                  }}
+                >
+                  Report a problem
+                </Typography>
+                <Typography
+                  component="button"
+                  onClick={handleResetAppState}
+                  sx={{
+                    fontSize: 12,
+                    color: "rgb(148, 197, 249)",
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    p: 0,
+                    textDecoration: "underline",
+                    textShadow: "0px 1px 3px rgba(0,0,0,0.95), 0px 0px 6px rgba(0,0,0,0.7)",
+                  }}
+                >
+                  Trouble loading? Reset app data
+                </Typography>
+              </Box>
             </Container>
           </Grid>
         </Slide>
@@ -288,6 +352,12 @@ const Login = () => {
         terms={termsContent}
         onAccept={handleAcceptTerms}
         onCancel={handleCancelTerms}
+      />
+
+      <ReportBugModal
+        open={reportBugOpen}
+        onClose={() => setReportBugOpen(false)}
+        source="login"
       />
     </>
   );
