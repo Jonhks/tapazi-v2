@@ -41,4 +41,12 @@ export function clearChunkReloadFlag() {
   sessionStorage.removeItem(RELOAD_FLAG_KEY);
 }
 
+/** true si ya se gastó el único auto-reload de esta sesión — usado por
+ * ChunkErrorBoundary para decidir si mostrar la pantalla transitoria de
+ * "Updating…" (reload en camino) o la de error real con botón manual
+ * (ya se intentó y el problema sigue). */
+export function hasAttemptedChunkReload(): boolean {
+  return sessionStorage.getItem(RELOAD_FLAG_KEY) === "1";
+}
+
 export { reloadOnce as reloadOnceForChunkError };
