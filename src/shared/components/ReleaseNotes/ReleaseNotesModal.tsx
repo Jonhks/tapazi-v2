@@ -48,10 +48,9 @@ export default function ReleaseNotesModal({
       }}
     >
       <DialogContent sx={{ p: 3 }}>
-        <Box
-          {...handleProps}
-          sx={{ textAlign: "center", mb: 1, position: "relative" }}
-        >
+        <Box sx={{ position: "relative", mb: 1 }}>
+          {/* Fuera del Box con handleProps: si quedara adentro, el pointer
+              capture del drag se come el click y el botón deja de cerrar. */}
           <IconButton
             onClick={onClose}
             aria-label="Close"
@@ -59,29 +58,34 @@ export default function ReleaseNotesModal({
           >
             <CloseIcon />
           </IconButton>
-          <Typography
-            variant="h5"
-            sx={{
-              fontWeight: 800,
-              color: "#fff",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 1,
-              letterSpacing: 2,
-              textTransform: "uppercase",
-            }}
+          <Box
+            {...handleProps}
+            sx={{ textAlign: "center" }}
           >
-            <HistoryIcon sx={{ color: "#3ED076", fontSize: 28 }} />
-            Release Notes
-          </Typography>
-          <Typography sx={{ color: "#888", fontSize: 12, mt: 0.5 }}>
-            v{import.meta.env.VITE_APP_VERSION} (
-            {import.meta.env.VITE_APP_COMMIT}) — currently installed version
-          </Typography>
-          <Typography sx={{ color: "#666", fontSize: 12 }}>
-            Environment: {getEnvLabel()}
-          </Typography>
+            <Typography
+              variant="h5"
+              sx={{
+                fontWeight: 800,
+                color: "#fff",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1,
+                letterSpacing: 2,
+                textTransform: "uppercase",
+              }}
+            >
+              <HistoryIcon sx={{ color: "#3ED076", fontSize: 28 }} />
+              Release Notes
+            </Typography>
+            <Typography sx={{ color: "#888", fontSize: 12, mt: 0.5 }}>
+              v{import.meta.env.VITE_APP_VERSION} (
+              {import.meta.env.VITE_APP_COMMIT}) — currently installed version
+            </Typography>
+            <Typography sx={{ color: "#666", fontSize: 12 }}>
+              Environment: {getEnvLabel()}
+            </Typography>
+          </Box>
         </Box>
 
         <Box
