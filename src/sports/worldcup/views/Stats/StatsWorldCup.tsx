@@ -391,7 +391,7 @@ const StatsWorldCup = () => {
               </Typography>
             </Box>
             <Box sx={{ width: "100%", borderRadius: "4px", position: "relative" }}>
-              <Tooltip title="Descargar CSV">
+              <Tooltip title="Download CSV">
                 <IconButton
                   onClick={() =>
                     downloadTableAsCsv(

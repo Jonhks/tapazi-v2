@@ -769,7 +769,7 @@ const StatsNfl = () => {
                 position: "relative",
               }}
             >
-              <Tooltip title="Descargar CSV">
+              <Tooltip title="Download CSV">
                 <IconButton
                   onClick={() => {
                     const label = isSchedule

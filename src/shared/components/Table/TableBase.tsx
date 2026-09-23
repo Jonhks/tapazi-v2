@@ -181,7 +181,7 @@ export function TableBase<T>({
           }}
         >
           {enableCsvExport && (
-            <Tooltip title="Descargar CSV">
+            <Tooltip title="Download CSV">
               <IconButton
                 onClick={() =>
                   downloadTableAsCsv(csvFilename || title || "data", table)
