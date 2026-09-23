@@ -1,7 +1,10 @@
+// Solo dev muestra texto — el ícono instalado ya trae su propia letra
+// (D/T/P) para qa/producción, así que el label ahí queda vacío a propósito
+// (quien lo renderice debe ocultar el "— " completo cuando esto da "").
 const ENV_LABELS: Record<string, string> = {
-  production: "Production",
-  qa: "QA",
-  development: "Development",
+  production: "",
+  qa: "",
+  development: "dev",
 };
 
 // Mismo fallback que usa vite.config.ts para el ícono de la PWA — si
