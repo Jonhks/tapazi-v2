@@ -36,7 +36,6 @@ export function UpdateCheckProvider({ children }: { children: ReactNode }) {
 
   const {
     needRefresh: [needRefresh, setNeedRefresh],
-    updateServiceWorker,
   } = useRegisterSW({
     onRegisteredSW(_swUrl, registration) {
       registrationRef.current = registration ?? null;
@@ -58,21 +57,28 @@ export function UpdateCheckProvider({ children }: { children: ReactNode }) {
     return found;
   }, [check]);
 
+  // Siempre termina en un window.location.reload() real, sin importar qué
+  // tan lejos llegue la limpieza — antes, si needRefresh era true, se
+  // dependía de que updateServiceWorker(true) completara su propia promesa
+  // para recargar, y si esa activación no se resolvía limpio (pasa seguido
+  // con service workers), el botón "Reload" simplemente no hacía nada. Acá
+  // se desregistra todo y se borra el caché a mano — más simple y sin ese
+  // punto de falla — con un timeout de por si algún paso se cuelga.
   const reload = useCallback(async () => {
-    if (needRefresh) {
-      await updateServiceWorker(true);
-      return;
-    }
-    try {
+    const cleanup = async () => {
       const regs = (await navigator.serviceWorker?.getRegistrations()) ?? [];
       await Promise.all(regs.map((r) => r.unregister()));
       const keys = await caches.keys();
       await Promise.all(keys.map((k) => caches.delete(k)));
+    };
+    const timeout = new Promise((resolve) => setTimeout(resolve, 3000));
+    try {
+      await Promise.race([cleanup(), timeout]);
     } catch {
-      /* ignore */
+      /* ignore — igual recargamos abajo */
     }
     window.location.reload();
-  }, [needRefresh, updateServiceWorker]);
+  }, []);
 
   const dismiss = useCallback(() => {
     setNeedRefresh(false);
