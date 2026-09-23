@@ -77,10 +77,10 @@ export default function ReleaseNotesModal({
           </Typography>
           <Typography sx={{ color: "#888", fontSize: 12, mt: 0.5 }}>
             v{import.meta.env.VITE_APP_VERSION} (
-            {import.meta.env.VITE_APP_COMMIT}) — versión actualmente instalada
+            {import.meta.env.VITE_APP_COMMIT}) — currently installed version
           </Typography>
           <Typography sx={{ color: "#666", fontSize: 12 }}>
-            Ambiente: {getEnvLabel()}
+            Environment: {getEnvLabel()}
           </Typography>
         </Box>
 
@@ -95,7 +95,7 @@ export default function ReleaseNotesModal({
         >
           {releaseNotes.length === 0 && (
             <Typography sx={{ color: "#888", textAlign: "center", mt: 4 }}>
-              No hay historial disponible.
+              No history available.
             </Typography>
           )}
 
