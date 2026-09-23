@@ -31,6 +31,7 @@ import {
 import type { TermsEntry } from "@/api/AuthAPI";
 import { toast } from "react-toastify";
 import TermsOfUseModal from "./TermsOfUseModal";
+import { getEnvLabel } from "@/utils/envLabel";
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -275,7 +276,7 @@ const Login = () => {
                 <p className={classes.subtitle}>PortfolioPaul, LLC (2025)</p>
               </Box>
               <p className={classes.version}>
-                Version {import.meta.env.VITE_APP_VERSION} ({import.meta.env.VITE_APP_COMMIT})
+                Version {import.meta.env.VITE_APP_VERSION} ({import.meta.env.VITE_APP_COMMIT}) — {getEnvLabel()}
               </p>
             </Container>
           </Grid>
