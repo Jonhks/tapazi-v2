@@ -82,9 +82,11 @@ export default function ReleaseNotesModal({
               v{import.meta.env.VITE_APP_VERSION} (
               {import.meta.env.VITE_APP_COMMIT}) — currently installed version
             </Typography>
-            <Typography sx={{ color: "#666", fontSize: 12 }}>
-              Environment: {getEnvLabel()}
-            </Typography>
+            {getEnvLabel() && (
+              <Typography sx={{ color: "#666", fontSize: 12 }}>
+                Environment: {getEnvLabel()}
+              </Typography>
+            )}
           </Box>
         </Box>
 

@@ -18,6 +18,7 @@ import {
 } from "react";
 import { useRegisterSW } from "virtual:pwa-register/react";
 import { useVersionCheck } from "@/hooks/useVersionCheck";
+import { clearServiceWorkerAndCaches } from "@/utils/swCacheCleanup";
 
 const SW_UPDATE_CHECK_INTERVAL_MS = 5 * 60 * 1000;
 
@@ -65,18 +66,7 @@ export function UpdateCheckProvider({ children }: { children: ReactNode }) {
   // se desregistra todo y se borra el caché a mano — más simple y sin ese
   // punto de falla — con un timeout de por si algún paso se cuelga.
   const reload = useCallback(async () => {
-    const cleanup = async () => {
-      const regs = (await navigator.serviceWorker?.getRegistrations()) ?? [];
-      await Promise.all(regs.map((r) => r.unregister()));
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => caches.delete(k)));
-    };
-    const timeout = new Promise((resolve) => setTimeout(resolve, 3000));
-    try {
-      await Promise.race([cleanup(), timeout]);
-    } catch {
-      /* ignore — igual recargamos abajo */
-    }
+    await clearServiceWorkerAndCaches();
     window.location.reload();
   }, []);
 
