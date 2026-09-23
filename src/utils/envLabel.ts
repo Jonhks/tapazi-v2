@@ -1,7 +1,7 @@
 const ENV_LABELS: Record<string, string> = {
-  production: "Producción",
+  production: "Production",
   qa: "QA",
-  development: "Desarrollo",
+  development: "Development",
 };
 
 // Mismo fallback que usa vite.config.ts para el ícono de la PWA — si
