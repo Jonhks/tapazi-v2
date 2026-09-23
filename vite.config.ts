@@ -13,6 +13,55 @@ const commitHash = (() => {
   catch { return "dev"; }
 })();
 
+// Release notes: agrupa el historial de commits por versión, usando los
+// commits "chore(release): bump version to X" como límite entre grupos —
+// esos commits marcan cuándo package.json pasó a decir esa versión, así que
+// todo lo acumulado justo antes de uno de ellos es lo que trae esa versión.
+// Se descartan del contenido (son ruido, no aportan nada) igual que los
+// merges automáticos (pull request / remote-tracking branch). Si git log
+// falla (ej. clone shallow sin historial) o no hay commits, queda un array
+// vacío — la vista de Release Notes simplemente no muestra nada, no rompe.
+type ReleaseGroup = { version: string; commits: { hash: string; subject: string }[] };
+
+const releaseNotes: ReleaseGroup[] = (() => {
+  const MAX_COMMITS_SCANNED = 300;
+  const MAX_RELEASES_SHOWN = 20;
+  const BUMP_PATTERN = /^chore\(release\): bump version to ([\d.]+)/;
+  const NOISE_PATTERN = /^Merge (pull request|remote-tracking branch|branch)/i;
+
+  try {
+    const log = execSync(
+      `git log --pretty=format:"%h%x01%s" -${MAX_COMMITS_SCANNED}`,
+    ).toString();
+
+    const releases: ReleaseGroup[] = [];
+    let current: ReleaseGroup = { version, commits: [] };
+
+    for (const line of log.split("\n")) {
+      const [hash, subject] = line.split("\x01");
+      if (!hash || !subject) continue;
+
+      const bumpMatch = subject.match(BUMP_PATTERN);
+      if (bumpMatch) {
+        releases.push(current);
+        current = { version: bumpMatch[1], commits: [] };
+        continue;
+      }
+
+      if (NOISE_PATTERN.test(subject)) continue;
+
+      current.commits.push({ hash, subject });
+    }
+    releases.push(current);
+
+    // Grupos sin commits reales (dos bumps seguidos sin nada en medio) no
+    // aportan nada a la vista — se descartan.
+    return releases.filter((r) => r.commits.length > 0).slice(0, MAX_RELEASES_SHOWN);
+  } catch {
+    return [];
+  }
+})();
+
 // El ícono de instalación de la PWA cambia por ambiente (dev/qa/prod) para
 // poder distinguirlos a simple vista. `VITE_APP_ENV` se lee primero de
 // process.env (así se puede fijar directo en el dashboard de Vercel por
@@ -55,6 +104,7 @@ export default defineConfig(({ command, mode }) => {
   define: {
     "import.meta.env.VITE_APP_VERSION": JSON.stringify(version),
     "import.meta.env.VITE_APP_COMMIT": JSON.stringify(commitHash),
+    "import.meta.env.VITE_RELEASE_NOTES": JSON.stringify(releaseNotes),
   },
   plugins: [
     {

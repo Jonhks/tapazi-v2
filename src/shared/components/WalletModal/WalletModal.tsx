@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,6 +12,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableBase } from "@/shared/components/Table/TableBase";
 import EmptyState from "@/shared/components/EmptyState/EmptyState";
 import { useDraggable } from "@/shared/hooks/useDraggable";
+import ReleaseNotesModal from "@/shared/components/ReleaseNotes/ReleaseNotesModal";
 import {
   getWalletTransactions,
   getWalletTotals,
@@ -50,6 +51,7 @@ export default function WalletModal({
 }: WalletModalProps) {
   const theme = sportThemes[sportKey];
   const { position, reset, handleProps } = useDraggable();
+  const [releaseNotesOpen, setReleaseNotesOpen] = useState(false);
 
   // Resetea la posición al ABRIR (no al cerrar) — el Dialog anima su
   // cierre (~225ms de fade), así que resetear en el close hace que el
@@ -189,6 +191,7 @@ export default function WalletModal({
   );
 
   return (
+    <>
     <Dialog
       open={open}
       onClose={onClose}
@@ -339,12 +342,29 @@ export default function WalletModal({
           </Box>
         )}
         <Box sx={{ textAlign: "right", mt: 1 }}>
-          <Typography sx={{ fontSize: 10, color: "#555" }}>
+          <Typography
+            component="button"
+            onClick={() => setReleaseNotesOpen(true)}
+            sx={{
+              fontSize: 10,
+              color: "#555",
+              background: "none",
+              border: "none",
+              cursor: "pointer",
+              p: 0,
+              "&:hover": { color: theme.accent, textDecoration: "underline" },
+            }}
+          >
             v{import.meta.env.VITE_APP_VERSION} (
             {import.meta.env.VITE_APP_COMMIT})
           </Typography>
         </Box>
       </DialogContent>
     </Dialog>
+    <ReleaseNotesModal
+      open={releaseNotesOpen}
+      onClose={() => setReleaseNotesOpen(false)}
+    />
+    </>
   );
 }
