@@ -14,6 +14,8 @@ import { Sentry } from "@/lib/sentry";
 export interface ReportBugModalProps {
   open: boolean;
   onClose: () => void;
+  /** Se llama solo cuando el reporte SÍ se mandó (no al cancelar/cerrar). */
+  onSubmitted?: () => void;
   /** Tag libre para saber desde dónde se mandó (ej. "login"). */
   source: string;
 }
@@ -21,6 +23,7 @@ export interface ReportBugModalProps {
 export default function ReportBugModal({
   open,
   onClose,
+  onSubmitted,
   source,
 }: ReportBugModalProps) {
   const [message, setMessage] = useState("");
@@ -47,6 +50,7 @@ export default function ReportBugModal({
     });
     setSubmitting(false);
     toast.success("Thanks — your report was sent.");
+    onSubmitted?.();
     handleClose();
   };
 
