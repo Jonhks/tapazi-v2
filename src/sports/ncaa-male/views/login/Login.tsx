@@ -47,6 +47,13 @@ const Login = () => {
   const [termsContent, setTermsContent] = useState<TermsEntry[]>([]);
   const [isCheckingTerms, setIsCheckingTerms] = useState(false);
   const [reportBugOpen, setReportBugOpen] = useState(false);
+  // El botón de "reportar" solo aparece DESPUÉS de que ya intentaron
+  // refrescar — se marca con un query param porque resetAppState() borra
+  // localStorage/sessionStorage/cookies como parte de la limpieza, así que
+  // ninguno de esos sobrevive para recordar "ya lo intentó".
+  const [alreadyTriedRefresh] = useState(
+    () => new URLSearchParams(window.location.search).get("triedRefresh") === "1",
+  );
 
   const handleResetAppState = async () => {
     const result = await Swal.fire({
@@ -61,7 +68,7 @@ const Login = () => {
       confirmButtonText: "Yes, reset it",
     });
     if (result.isConfirmed) {
-      await resetAppState();
+      await resetAppState(`${window.location.pathname}?triedRefresh=1`);
     }
   };
 
@@ -303,44 +310,56 @@ const Login = () => {
               </p>
               <Box
                 sx={{
-                  display: "flex",
-                  justifyContent: "center",
-                  gap: 2,
-                  mt: 1,
+                  mt: 2,
+                  mx: "auto",
+                  maxWidth: 320,
+                  textAlign: "center",
+                  backgroundColor: "rgba(0,0,0,0.45)",
+                  border: "1px solid rgba(255,255,255,0.15)",
+                  borderRadius: "8px",
+                  p: 1.5,
                 }}
               >
-                <Typography
-                  component="button"
-                  onClick={() => setReportBugOpen(true)}
-                  sx={{
-                    fontSize: 12,
-                    color: "rgb(148, 197, 249)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    p: 0,
-                    textDecoration: "underline",
-                    textShadow: "0px 1px 3px rgba(0,0,0,0.95), 0px 0px 6px rgba(0,0,0,0.7)",
-                  }}
-                >
-                  Report a problem
+                <Typography sx={{ fontSize: 12, color: "#ddd", mb: 1 }}>
+                  Having trouble logging in? Try refreshing the page using the
+                  button below.
                 </Typography>
-                <Typography
-                  component="button"
+                <Button
+                  size="small"
+                  variant="outlined"
                   onClick={handleResetAppState}
                   sx={{
+                    color: "#fff",
+                    borderColor: "rgba(255,255,255,0.4)",
                     fontSize: 12,
-                    color: "rgb(148, 197, 249)",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    p: 0,
-                    textDecoration: "underline",
-                    textShadow: "0px 1px 3px rgba(0,0,0,0.95), 0px 0px 6px rgba(0,0,0,0.7)",
+                    "&:hover": { borderColor: "#fff" },
                   }}
                 >
-                  Trouble loading? Reset app data
-                </Typography>
+                  Refresh Page
+                </Button>
+
+                {/* Solo aparece si ya vino de un refresh (?triedRefresh=1) —
+                    no lo mostramos como primera opción a propósito. */}
+                {alreadyTriedRefresh && (
+                  <Typography sx={{ fontSize: 12, color: "#ddd", mt: 1 }}>
+                    Still not working?{" "}
+                    <Typography
+                      component="button"
+                      onClick={() => setReportBugOpen(true)}
+                      sx={{
+                        fontSize: 12,
+                        color: "rgb(148, 197, 249)",
+                        background: "none",
+                        border: "none",
+                        cursor: "pointer",
+                        p: 0,
+                        textDecoration: "underline",
+                      }}
+                    >
+                      Report the problem
+                    </Typography>
+                  </Typography>
+                )}
               </Box>
             </Container>
           </Grid>

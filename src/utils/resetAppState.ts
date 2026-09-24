@@ -4,7 +4,12 @@ import { clearServiceWorkerAndCaches } from "./swCacheCleanup";
 // "hay versión nueva" y NO debe desloguear a nadie), esto es un reset
 // completo — pensado para el botón de "algo se rompió" en Login: borra
 // también localStorage/sessionStorage/cookies, así que sí cierra la sesión.
-export async function resetAppState(): Promise<void> {
+//
+// `redirectTo` (opcional): a dónde ir después de limpiar, en vez de recargar
+// la misma URL — útil para dejar una marca en la URL (query param) que sí
+// sobrevive, ya que localStorage/sessionStorage/cookies quedan borrados acá
+// mismo arriba.
+export async function resetAppState(redirectTo?: string): Promise<void> {
   await clearServiceWorkerAndCaches();
   try {
     localStorage.clear();
@@ -17,5 +22,9 @@ export async function resetAppState(): Promise<void> {
   } catch {
     /* ignore — igual recargamos abajo */
   }
-  window.location.reload();
+  if (redirectTo) {
+    window.location.href = redirectTo;
+  } else {
+    window.location.reload();
+  }
 }
