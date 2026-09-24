@@ -51,9 +51,20 @@ const Login = () => {
   // refrescar — se marca con un query param porque resetAppState() borra
   // localStorage/sessionStorage/cookies como parte de la limpieza, así que
   // ninguno de esos sobrevive para recordar "ya lo intentó".
-  const [alreadyTriedRefresh] = useState(
+  const [alreadyTriedRefresh, setAlreadyTriedRefresh] = useState(
     () => new URLSearchParams(window.location.search).get("triedRefresh") === "1",
   );
+
+  // Una vez que SÍ mandan el reporte, se esconde de nuevo — no tendría
+  // sentido dejarlo visible después de ya haberlo usado. Se limpia el query
+  // param de la URL (sin recargar) para que quede consistente si refrescan
+  // la página a mano más tarde.
+  const handleBugReportSubmitted = () => {
+    setAlreadyTriedRefresh(false);
+    const url = new URL(window.location.href);
+    url.searchParams.delete("triedRefresh");
+    window.history.replaceState({}, "", url);
+  };
 
   const handleResetAppState = async () => {
     const result = await Swal.fire({
@@ -376,6 +387,7 @@ const Login = () => {
       <ReportBugModal
         open={reportBugOpen}
         onClose={() => setReportBugOpen(false)}
+        onSubmitted={handleBugReportSubmitted}
         source="login"
       />
     </>
