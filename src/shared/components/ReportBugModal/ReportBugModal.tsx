@@ -112,7 +112,7 @@ export default function ReportBugModal({
 
         <TextField
           fullWidth
-          placeholder="Email (optional, if you want a reply)"
+          placeholder="Email/User (optional, if you want a reply)"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           disabled={submitting}
