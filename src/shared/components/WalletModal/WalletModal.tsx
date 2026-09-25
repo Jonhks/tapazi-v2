@@ -52,6 +52,10 @@ export default function WalletModal({
   const theme = sportThemes[sportKey];
   const { position, reset, handleProps } = useDraggable();
   const [releaseNotesOpen, setReleaseNotesOpen] = useState(false);
+  // Release Notes es una herramienta interna — solo la cuenta de Eduardo
+  // (participant id 2) puede verla/abrirla, para todos los demás la
+  // versión queda como texto plano, sin click.
+  const isEduardo = participantId === "2";
 
   // Resetea la posición al ABRIR (no al cerrar) — el Dialog anima su
   // cierre (~225ms de fade), así que resetear en el close hace que el
@@ -342,29 +346,38 @@ export default function WalletModal({
           </Box>
         )}
         <Box sx={{ textAlign: "right", mt: 1 }}>
-          <Typography
-            component="button"
-            onClick={() => setReleaseNotesOpen(true)}
-            sx={{
-              fontSize: 10,
-              color: "#555",
-              background: "none",
-              border: "none",
-              cursor: "pointer",
-              p: 0,
-              "&:hover": { color: theme.accent, textDecoration: "underline" },
-            }}
-          >
-            v{import.meta.env.VITE_APP_VERSION} (
-            {import.meta.env.VITE_APP_COMMIT})
-          </Typography>
+          {isEduardo ? (
+            <Typography
+              component="button"
+              onClick={() => setReleaseNotesOpen(true)}
+              sx={{
+                fontSize: 10,
+                color: "#555",
+                background: "none",
+                border: "none",
+                cursor: "pointer",
+                p: 0,
+                "&:hover": { color: theme.accent, textDecoration: "underline" },
+              }}
+            >
+              v{import.meta.env.VITE_APP_VERSION} (
+              {import.meta.env.VITE_APP_COMMIT})
+            </Typography>
+          ) : (
+            <Typography sx={{ fontSize: 10, color: "#555" }}>
+              v{import.meta.env.VITE_APP_VERSION} (
+              {import.meta.env.VITE_APP_COMMIT})
+            </Typography>
+          )}
         </Box>
       </DialogContent>
     </Dialog>
-    <ReleaseNotesModal
-      open={releaseNotesOpen}
-      onClose={() => setReleaseNotesOpen(false)}
-    />
+    {isEduardo && (
+      <ReleaseNotesModal
+        open={releaseNotesOpen}
+        onClose={() => setReleaseNotesOpen(false)}
+      />
+    )}
     </>
   );
 }
