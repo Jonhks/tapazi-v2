@@ -110,7 +110,7 @@ export default function ReportBugModal({
           }}
         />
 
-        <TextField
+        {/* <TextField
           fullWidth
           placeholder="Email/User (optional, if you want a reply)"
           value={email}
@@ -124,7 +124,7 @@ export default function ReportBugModal({
               "&:hover fieldset": { borderColor: "#555" },
             },
           }}
-        />
+        /> */}
 
         <Box sx={{ display: "flex", justifyContent: "center", gap: 2 }}>
           <Button
