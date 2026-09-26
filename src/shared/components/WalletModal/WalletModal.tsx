@@ -55,7 +55,10 @@ export default function WalletModal({
   // Release Notes es una herramienta interna — solo la cuenta de Eduardo
   // (participant id 2) puede verla/abrirla, para todos los demás la
   // versión queda como texto plano, sin click.
-  const isEduardo = participantId === "2";
+  // participantId llega tipado como string, pero en realidad viene de
+  // JSON.parse(localStorage) sin tipar — el backend lo manda como número,
+  // así que comparar con === "2" nunca daba true. String() lo normaliza.
+  const isEduardo = String(participantId) === "2";
 
   // Resetea la posición al ABRIR (no al cerrar) — el Dialog anima su
   // cierre (~225ms de fade), así que resetear en el close hace que el
