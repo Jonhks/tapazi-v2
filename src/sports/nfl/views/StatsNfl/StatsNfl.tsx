@@ -90,7 +90,15 @@ type SeedTeamWithCrest = SeedTeamStat & {
   crest: string | null;
 };
 
-const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
+const TeamDisplay = ({
+  name,
+  crest,
+  isBye,
+}: {
+  name: string;
+  crest: string;
+  isBye?: boolean;
+}) => (
   <Box
     display="flex"
     alignItems="center"
@@ -115,6 +123,22 @@ const TeamDisplay = ({ name, crest }: { name: string; crest: string }) => (
     >
       {name}
     </Typography>
+    {isBye && (
+      <Typography
+        component="span"
+        sx={{
+          fontSize: "0.6rem",
+          fontWeight: 700,
+          color: "#D4AF37",
+          border: "1px solid #D4AF37",
+          borderRadius: "4px",
+          px: "4px",
+          lineHeight: "14px",
+        }}
+      >
+        BYE
+      </Typography>
+    )}
   </Box>
 );
 
@@ -330,6 +354,9 @@ const StatsNfl = () => {
     enabled: dataType === "SCHEDULE" && !!weekType && !!tournamentIdStats,
   });
 
+  // También se pide en PORTFOLIO (no solo en SEED) — se reusa para marcar
+  // qué equipos estaban en bye esa semana en las columnas Team1...TeamN,
+  // en vez de adivinar por posición de columna.
   const { data: seedPerWeekNflData, isLoading: isLoadingSeed } = useQuery({
     queryKey: ["seedPerWeekNfl", userId, sportId, tournamentIdStats, weekType],
     queryFn: () =>
@@ -338,7 +365,10 @@ const StatsNfl = () => {
         tournamentId: tournamentIdStats,
         week: weekType,
       }),
-    enabled: dataType === "SEED" && !!weekType && !!tournamentIdStats,
+    enabled:
+      (dataType === "SEED" || dataType === "PORTFOLIO") &&
+      !!weekType &&
+      !!tournamentIdStats,
   });
 
   const { data: teamsNflStats } = useQuery({
@@ -532,6 +562,19 @@ const StatsNfl = () => {
     [],
   );
 
+  // Equipos en bye ESA semana (viene del WS de seeds, ya parametrizado por
+  // week) — no depende de en qué columna cayó el equipo dentro del
+  // portfolio, se identifica por nombre real. Confirmado con datos reales
+  // que este WS trae el calendario completo de byes, no solo "hoy".
+  const byeTeamNamesThisWeek = useMemo(() => {
+    if (!Array.isArray(seedPerWeekNflData)) return new Set<string>();
+    return new Set(
+      seedPerWeekNflData
+        .filter((t: SeedTeamStat) => t.bye_team_current_week)
+        .map((t: SeedTeamStat) => t.name?.toUpperCase()),
+    );
+  }, [seedPerWeekNflData]);
+
   const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
     () => [
       {
@@ -556,6 +599,7 @@ const StatsNfl = () => {
             <TeamDisplay
               name={teamName}
               crest={fullTeam.crest || ""}
+              isBye={byeTeamNamesThisWeek.has(teamName.toUpperCase())}
             />
           ) : null;
         },
@@ -570,7 +614,7 @@ const StatsNfl = () => {
         accessorKey: "week_score",
       },
     ],
-    [maxTeamColumns],
+    [maxTeamColumns, byeTeamNamesThisWeek],
   );
 
   const table = useReactTable({
