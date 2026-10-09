@@ -585,8 +585,18 @@ const StatsNfl = () => {
           <span style={{ color: "#05fa87" }}>{info.getValue() as string}</span>
         ),
       },
+      // Las primeras TEAMXP columnas son cupos normales de la semana; las
+      // que sobran hasta maxTeamColumns (= TEAMXP + BYTEPO) son siempre
+      // slots de bye por construcción (ver nota de guardado en
+      // usePortfolioNflData.ts) — el encabezado lo refleja, aunque el
+      // contenido de la celda se marca por nombre real (byeTeamNamesThisWeek).
       ...Array.from({ length: maxTeamColumns }, (_, i) => ({
-        header: `Team ${i + 1}`,
+        // teamxp > 0 evita un header "Bye Team 1..7" falso mientras el
+        // parámetro TEAMXP todavía no carga (maxTeamColumns cae al 7 default).
+        header:
+          teamxp > 0 && i >= teamxp
+            ? `Bye Team ${i - teamxp + 1}`
+            : `Team ${i + 1}`,
         accessorFn: (row: PortfolioWithCrests) => row.teams?.[i]?.name || "",
         id: `team_${i}`,
         meta: { align: "left" as const },
@@ -614,7 +624,7 @@ const StatsNfl = () => {
         accessorKey: "week_score",
       },
     ],
-    [maxTeamColumns, byeTeamNamesThisWeek],
+    [maxTeamColumns, teamxp, byeTeamNamesThisWeek],
   );
 
   const table = useReactTable({
