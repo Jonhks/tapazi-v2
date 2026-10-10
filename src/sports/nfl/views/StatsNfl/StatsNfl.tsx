@@ -456,6 +456,19 @@ const StatsNfl = () => {
     );
   }, [teamsNflStats]);
 
+  // Equipos en bye ESA semana (viene del WS de seeds, ya parametrizado por
+  // week) — se identifica por nombre real, no por posición. Confirmado con
+  // datos reales que este WS trae el calendario completo de byes, no solo
+  // el estado de "hoy", así que sirve igual para cualquier semana pasada.
+  const byeTeamNamesThisWeek = useMemo(() => {
+    if (!Array.isArray(seedPerWeekNflData)) return new Set<string>();
+    return new Set(
+      seedPerWeekNflData
+        .filter((t: SeedTeamStat) => t.bye_team_current_week)
+        .map((t: SeedTeamStat) => t.name?.toUpperCase()),
+    );
+  }, [seedPerWeekNflData]);
+
   const statsWithCrests: PortfolioWithCrests[] = useMemo(() => {
     if (!statsNflData || !teamsMap) return [];
 
@@ -469,13 +482,45 @@ const StatsNfl = () => {
         }),
       );
 
+      // Los equipos en bye esta semana van SIEMPRE en el índice fijo
+      // TEAMXP en adelante (las columnas "Bye Team N", compartidas por
+      // toda la tabla) — no "al final de lo que tenga este portfolio".
+      // Con pocos equipos normales, antes quedaban a mitad de camino en
+      // vez de llegar hasta la columna de bye real.
+      const weekTeams = teamsWithCrests.filter(
+        (t) => !byeTeamNamesThisWeek.has(t.name.toUpperCase()),
+      );
+      const byeTeams = teamsWithCrests.filter((t) =>
+        byeTeamNamesThisWeek.has(t.name.toUpperCase()),
+      );
+
+      let orderedTeams: TeamWithCrest[];
+      if (teamxp > 0 && byeTeams.length > 0) {
+        // OJO: se deja disperso a propósito (índices 0..weekTeams.length-1
+        // con huecos hasta TEAMXP) — compactarlo con un filter acá
+        // reintroduce el bug original, porque vuelve a correr el bye a una
+        // columna temprana en vez de dejarlo en el índice fijo TEAMXP.
+        // accessorFn ya maneja undefined con `|| ""`, no hace falta compactar.
+        orderedTeams = new Array(teamxp + bytepo);
+        weekTeams.forEach((t, idx) => {
+          orderedTeams[idx] = t;
+        });
+        byeTeams.forEach((t, idx) => {
+          orderedTeams[teamxp + idx] = t;
+        });
+      } else {
+        // Sin TEAMXP cargado, o sin bye teams este portfolio: no hay nada
+        // que reubicar, se deja tal cual vino.
+        orderedTeams = teamsWithCrests;
+      }
+
       return {
         portfolio: item.portfolio,
         week_score: item.week_score,
-        teams: teamsWithCrests,
+        teams: orderedTeams,
       };
     });
-  }, [statsNflData, teamsMap]);
+  }, [statsNflData, teamsMap, byeTeamNamesThisWeek, teamxp, bytepo]);
 
   const scheduleWithCrests: ScheduleWithCrests[] = useMemo(() => {
     if (!Array.isArray(scheduleNflData)) return [];
@@ -561,19 +606,6 @@ const StatsNfl = () => {
     ],
     [],
   );
-
-  // Equipos en bye ESA semana (viene del WS de seeds, ya parametrizado por
-  // week) — no depende de en qué columna cayó el equipo dentro del
-  // portfolio, se identifica por nombre real. Confirmado con datos reales
-  // que este WS trae el calendario completo de byes, no solo "hoy".
-  const byeTeamNamesThisWeek = useMemo(() => {
-    if (!Array.isArray(seedPerWeekNflData)) return new Set<string>();
-    return new Set(
-      seedPerWeekNflData
-        .filter((t: SeedTeamStat) => t.bye_team_current_week)
-        .map((t: SeedTeamStat) => t.name?.toUpperCase()),
-    );
-  }, [seedPerWeekNflData]);
 
   const columns = useMemo<ColumnDef<PortfolioWithCrests>[]>(
     () => [
